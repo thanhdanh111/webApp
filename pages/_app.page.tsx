@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import '../styles/sass/index.sass';
+import './login/UI/login.sass';
 import { makeStore } from '../redux/store';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
