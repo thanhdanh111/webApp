@@ -1,0 +1,18 @@
+/node_modules
+/uploads
+/.next
+
+# IDEs and editors
+.vscode
+*.launch
+
+# IDE - VSCode
+.vscode/*
+
+
+# .json file
+package-lock.json
+nodemon-debug.json
+
+#  log file
+npm-debug.log

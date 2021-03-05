@@ -2,7 +2,7 @@ import express from 'express';
 import next from 'next';
 
 // tslint:disable:no-console
-const port = process.env.PORT || 3005;
+const port = process.env.PORT || 5000;
 const env = process.env.NODE_ENV || 'test';
 const isDev = env !== 'production' && env !== 'staging';
 const app = next({ dir: '.', dev: isDev });

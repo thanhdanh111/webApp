@@ -1,25 +1,28 @@
-
 let browser;
 let page;
-let token;
+// let token;
 let viewport;
 
 const puppeteer = require('puppeteer');
 beforeAll(async () => {
-  browser = await puppeteer.launch({
-    headless: false,
-    slowMo: 250,
-  });
+  try {
+    browser = await puppeteer.launch({
+      headless: true,
+      slowMo: 0,
+      ignoreDefaultArgs: ['--no-sandbox'],
+    });
 
-  page = await browser.newPage();
-  viewport = await page.setViewport({ width: 1366 , height: 913 });
-
+    page = await browser.newPage();
+    viewport = await page.setViewport({ width: 1366 , height: 913 });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 describe('Pots Page', () => {
   test('Test delete posts succes', async () => {
-    await page.goto('https://google.com');
-    await page.waitForSelector('#hplogo');
+    await page.goto('http://localhost:5000/home');
+    await page.waitForSelector('.hero-content');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
