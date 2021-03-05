@@ -1,0 +1,109 @@
+# need to set up in gitlab ci variables:
+# @ GIT_REPO
+# @ DEPLOY_AWS_PRIVATE_KEY
+# @ DEPLOY_GIT_PRIVATE_KEY
+# @ DEV_INSTANCE_IP
+# @ PROD_INSTANCE_IP
+
+image: docker:19.03.1
+
+services:
+  - docker:19.03.1-dind
+
+stages:
+  - test
+  - confirm-pipeline
+  - dev-test-build
+  - dev-deploy
+  - prod-test-build
+  - prod-deploy
+
+test:
+  image: sonnguyeninslife/alekzonde-docker-puppeteer-fork
+  stage: test
+  script:
+    - . ops/git_init.sh
+    - npm install
+    - npm i serve
+    - npm run linter-folder
+    - npm run tslint
+    - npm run build
+    - npm run static --silent &
+    - . ops/wait_apis.sh
+    - npm run test -- -u
+    - . ops/git_push_build.sh
+  only:
+    - branches
+  except:
+    refs:
+      - master
+      - dev
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /upload latest screenshots/
+      - $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_BRANCH == "dev"
+
+confirm-pipeline:
+  image: alpine
+  stage: confirm-pipeline
+  when: always
+  script:
+    - echo "this job is to confirm pipeline success only"
+
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /upload latest screenshots/
+
+
+dev-test-build:
+  stage: dev-test-build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN $CI_REGISTRY/coreproducts/snt-app/web-app
+  script:
+    - docker build -t $CI_REGISTRY/coreproducts/snt-app/web-app .
+    - docker run --name company-web -d -p 5000:5000 -e NODE_ENV=staging $CI_REGISTRY/coreproducts/snt-app/web-app
+    - docker push $CI_REGISTRY/coreproducts/snt-app/web-app
+  after_script:
+    - (docker rm `docker ps -a | grep Exited | awk '{ print $1 }'`) || true
+    - (docker rmi `docker images | grep "<none>" | awk '{ print $3 }'` &> /dev/null) || true
+  only:
+    - master
+
+dev-deploy:
+  stage: dev-deploy
+  script:
+    - . ops/key_setup.sh
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker stop company-web || true && docker rm company-web || true"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker rmi $CI_REGISTRY/coreproducts/snt-app/web-app || true"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker login -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN $CI_REGISTRY/coreproducts/snt-app/web-app"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker pull $CI_REGISTRY/coreproducts/snt-app/web-app"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker run --restart always --name company-web -d -p 3005:3005 -e NODE_ENV=staging $CI_REGISTRY/coreproducts/snt-app/web-app"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "(docker rmi `docker images | grep "<none>" | awk '{ print $3 }'` &> /dev/null) || true"
+  only:
+    - master
+
+prod-test-build:
+  stage: prod-test-build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN $CI_REGISTRY/coreproducts/snt-app/web-app
+  script:
+    - docker build -t $CI_REGISTRY/coreproducts/web-apps/company-web-prod .
+    - docker run --name company-web-prod -d -p 3005:3005 -e NODE_ENV=production $CI_REGISTRY/coreproducts/web-apps/company-web-prod
+    - docker push $CI_REGISTRY/coreproducts/web-apps/company-web-prod
+  after_script:
+    - (docker rm `docker ps -a | grep Exited | awk '{ print $1 }'`) || true
+    - (docker rmi `docker images | grep "<none>" | awk '{ print $3 }'` &> /dev/null) || true
+  only:
+    - tags
+
+prod-deploy:
+  stage: prod-deploy
+  script:
+    - . ops/key_setup.sh
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker stop company-web-prod || true && docker rm company-web-prod || true"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker rmi $CI_REGISTRY/coreproducts/web-apps/company-web-prod || true"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker login -u $CI_REGISTRY_USER -p $CI_BUILD_TOKEN $CI_REGISTRY/coreproducts/web-apps/company-web"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker pull $CI_REGISTRY/coreproducts/web-apps/company-web-prod"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "docker run --restart always --name company-web-prod -d -p 3005:3005 -e NODE_ENV=production $CI_REGISTRY/coreproducts/web-apps/company-web-prod"
+    - ssh ec2-user@$DEV_INSTANCE_IP -i ~/.ssh/ec2-cc.pem -o StrictHostKeyChecking=no "(docker rmi `docker images | grep "<none>" | awk '{ print $3 }'` &> /dev/null) || true"
+  only:
+    - tags

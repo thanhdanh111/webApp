@@ -16,7 +16,7 @@ if (['production', 'dev'].includes(config.ENV)) {
 
 function myApp({ Component, pageProps, store }) {
   return (
-    < Provider store={store}>
+    <Provider store={store}>
       <Component {...pageProps} />
     </Provider>
   );
