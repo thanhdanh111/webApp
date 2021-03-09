@@ -4,6 +4,12 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  --drawer-width: 280px;
+  --btn-app-bar: rgb(99, 115, 129);
+  --btn-app-bar-menu: #212B36;
+  -webkit-font-smoothing: antialiased;
+  width: 100%;
+  background-color: rgb(255,255,255);
 }
 
 a {
@@ -13,4 +19,25 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.root {
+  display: flex;
+}
+
+.main-page {
+  flex-grow: 1;
+}
+
+
+body::-webkit-scrollbar, body *::-webkit-scrollbar {
+  width: 6px;
+  height: 0.5px;
+  background-color: rgba(145, 158, 171, 0.24);
+}
+
+body::-webkit-scrollbar-thumb, body ::-webkit-scrollbar-thumb {
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(99, 115, 129, 0.48);
 }

@@ -1,10 +1,12 @@
-import '../styles/globals.css';
-import '../styles/sass/index.sass';
-import { makeStore } from '../redux/store';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import * as Sentry from '@sentry/browser';
+import { ThemeProvider, NoSsr } from '@material-ui/core';
+import '../styles/globals.css';
+import '../styles/sass/index.sass';
 import { config } from '../helpers/get_config';
+import { makeStore } from '../redux/store';
+import theme from '../styles/theme/theme';
 
 if (['production', 'dev'].includes(config.ENV)) {
   Sentry.init({
@@ -17,7 +19,11 @@ if (['production', 'dev'].includes(config.ENV)) {
 function myApp({ Component, pageProps, store }) {
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <NoSsr>
+          <Component {...pageProps} />
+        </NoSsr>
+      </ThemeProvider>
     </Provider>
   );
 }

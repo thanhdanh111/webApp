@@ -13,6 +13,8 @@ const handle = app.getRequestHandler();
   try {
     await app.prepare();
     const server = express();
+    
+    // Render the component to a string.
 
     // Default catch-all handler to allow Next.js to handle all other routes
     server.all('*', (req, res) => handle(req, res));

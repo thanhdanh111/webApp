@@ -1,4 +1,3 @@
-
 interface VehicleValue {
   vehicle: string;
   num?: number;
