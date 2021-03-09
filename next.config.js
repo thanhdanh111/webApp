@@ -12,8 +12,6 @@ if (!isDev)  {
   dotenv.config({path: `.${process.env.NODE_ENV}.env`})
 }
 
-
-
 function HACK_removeMinimizeOptionFromSassLoaders(config) {
   console.warn(
     'HACK: Removing `minimize` option from `sass-loader` entries in Webpack config',

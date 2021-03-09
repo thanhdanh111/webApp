@@ -1,0 +1,161 @@
+.general-tab
+  margin: 20px
+  display: flex
+
+.general-tab > .avatar-section
+  margin: 5px
+  height: 450px
+  width: 20%
+  flex-grow: 2
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+  border-radius: 16px
+  box-shadow: rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) 0px 16px 32px -4px
+
+.general-tab > .avatar-section > .avatar-cricle-border
+  border-color: rgba(145, 158, 171, 0.32)
+  border-style: dashed
+  border-width: 1px
+  position: relative
+  border-radius: 50%
+
+.general-tab > .avatar-section > .avatar-cricle-border > .profile-picture
+  width: 120px
+  height: 120px
+  margin: 10px
+  display: block
+
+.general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay 
+  background-color: rgb(10,10,10)
+  border-radius: 50%
+  margin: 10px
+  opacity: 0
+  transition: .3s ease
+  width: 120px
+  height: 120px
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+  position: absolute
+
+.general-tab > .avatar-section > .avatar-cricle-border:hover .update-image-overlay 
+  opacity: 0.8
+
+.general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-text
+  color: rgb(255, 255, 255)
+  font-size: 0.8rem
+  line-height: 1.5
+  position: absolute
+  top: 50%
+  left: 18%
+  font-weight: 500
+  text-align: center
+
+.general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay  > .update-image-icon
+  position: absolute
+  top: 30%
+  left: 40%
+  color: rgb(255,255,255)
+
+.general-tab > .avatar-section > .upload-avatar-text
+  font-weight: 500
+  font-size: 0.75rem
+  line-height: 1.5
+  color: rgb(99, 115, 129)
+
+.first-line
+  padding-top: 10px
+
+.general-tab > .avatar-section > .public-switch-text
+  padding-top: 2rem
+  font-weight: 500
+  font-size: 1rem
+  line-height: 1.5
+  color: rgb(33, 43, 54)
+
+.general-tab > .information-fillout
+  margin: 5px
+  justify-content: center
+  align-items: center
+  height: 550px
+  width: 60%
+  display: flex
+  flex-wrap: wrap
+  flex-direction: row
+  flex-grow: 3
+  border-radius: 16px
+  box-shadow: rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) 0px 16px 32px -4px
+
+.text-field-container
+  width: 40%
+
+.text-field-container > .text-field-form > .text-field
+  width: 95%
+
+.large-container
+  width: 80%
+
+.large-container > .text-field-form > .text-field
+  width: 97.5%
+
+.general-tab > .information-fillout > .btn-primary-container
+  justify-content: flex-end
+  display: flex
+  width: 76%
+
+
+@media screen and (max-width: 960px)
+  .general-tab
+    flex-wrap: wrap
+    display: flex
+    height: 100%
+    margin: 10px
+
+  .general-tab > .avatar-section
+    width: 100%
+    height: 70vh
+
+  .general-tab > .information-fillout
+    width: 100%
+    height: 100%
+    flex-grow: 1
+  
+  .text-field-container
+    width: 90%
+    padding-top: 2rem
+
+  .text-field-container > .text-field-form > .text-field
+    width: 100%
+
+  .large-container
+    width: 90%
+    padding-top: 2rem
+
+  .large-container > .text-field-form > .text-field
+    width: 100%
+  
+  .general-tab > .information-fillout > .btn-primary-container
+    justify-content: flex-end
+    display: flex
+    width: 88.5%
+    padding-top: 1.5rem
+    padding-bottom: 0.5rem
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .profile-picture
+    width: 100px
+    height: 100px
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay
+    width: 100px
+    height: 100px
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-text
+    top: 50%
+    left: 12.3%
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-icon
+    top: 23.8%
+    left: 38.74%
