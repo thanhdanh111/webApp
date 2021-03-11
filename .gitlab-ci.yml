@@ -5,11 +5,12 @@
 # @ DEV_INSTANCE_IP
 # @ PROD_INSTANCE_IP
 
-image: ubuntu
+image: node:12.21.0-alpine3.12
 
 variables:
-  S3_BUCKET_NAME_STAGING: "snt-web-app-staging"
-  S3_BUCKET_NAME_PRODUCTION: "snt-web-app-production"
+  S3_BUCKET_NAME_STAGING: "staging-app.sntsolutions.io"
+  S3_BUCKET_NAME_PRODUCTION: "app.sntsolutions.io"
+  DEBIAN_FRONTEND: "noninteractive"
   ## todo: create s3 production bucket
 stages:
   - test
@@ -18,9 +19,8 @@ stages:
 
 test:
   stage: test
+  image: sonnguyeninslife/alekzonde-docker-puppeteer-fork
   script:
-    - . ops/git_install.sh
-    - . ops/git_init.sh
     - npm install
     - npm i serve
     - npm run linter-folder
@@ -35,39 +35,28 @@ test:
   except:
     refs:
       - master
-      - dev
 
 staging:
   stage: staging
   script:
-    - . ops/git_install.sh
-    - . ops/git_init.sh
     - npm install
-    - npm i serve
     - npm run linter-folder
+    - npm i serve
     - npm run build
-    - npm run static --silent &
-    - . ops/wait_apis.sh
-    - npm run test -- -u
     - . ops/install_aws_cli.sh
-    - aws s3 cp ./out/ s3://$S3_BUCKET_NAME_STAGING/ --recursive --exclude "*" --include "*.html"
+    - aws s3 cp ./out/ s3://$S3_BUCKET_NAME_STAGING/ --recursive
   only:
     - master
 
 production:
   stage: production
   script:
-    - . ops/git_install.sh
-    - . ops/git_init.sh
     - npm install
-    - npm i serve
     - npm run linter-folder
+    - npm i serve
     - npm run build
-    - npm run static --silent &
-    - . ops/wait_apis.sh
-    - npm run test -- -u
     - . ops/install_aws_cli.sh
-    - aws s3 cp ./out/ s3://$S3_BUCKET_NAME_PRODUCTION/ --recursive --exclude "*" --include "*.html"
+    - aws s3 cp ./out/ s3://$S3_BUCKET_NAME_PRODUCTION/ --recursive
   only:
     - tags
 
