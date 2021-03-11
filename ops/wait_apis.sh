@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# for alpine image
+# apk --no-cache --update add curl
 # disable exitting on error temporarily
 set +e
 

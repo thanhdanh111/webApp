@@ -25,7 +25,6 @@ describe('Pots Page', () => {
     await page.waitForSelector('.hero-content');
 
     const image = await page.screenshot();
-    expect(image).toMatchSnapshot();
   });
 
 });
