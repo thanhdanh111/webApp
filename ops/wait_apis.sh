@@ -9,7 +9,7 @@ set +e
 # do
 #   sleep 5
 #   echo "Try #$i"
-#   nc -4 -d -z -w 1 0.0.0.0 3005 &> /dev/null
+#   nc -4 -d -z -w 1 0.0.0.0 5000 &> /dev/null
 
 #   if [[ $? == 0 ]]; then
 #     break

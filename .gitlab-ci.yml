@@ -21,6 +21,7 @@ test:
   stage: test
   image: sonnguyeninslife/alekzonde-docker-puppeteer-fork
   script:
+    - . ops/git_init.sh
     - npm install
     - npm i serve
     - npm run linter-folder
