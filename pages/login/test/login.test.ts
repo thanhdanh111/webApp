@@ -13,19 +13,18 @@ beforeAll(async () => {
     });
 
     page = await browser.newPage();
-    viewport = await page.setViewport({ width: 1853 , height: 951 });
+    viewport = await page.setViewport({ width: 1366 , height: 913 });
   } catch (error) {
     console.log(error);
   }
 });
 
-describe('Pots Page', () => {
-  test('Test account page successfully', async () => {
-    await page.goto('http://localhost:5000/account');
-    await page.waitForSelector('.account-page');
+describe('Login', () => {
+  test('Test login succes', async () => {
+    await page.goto('http://localhost:5000/login');
+    await page.waitForSelector('.login');
 
     const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
   });
 
 });

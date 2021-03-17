@@ -20,7 +20,7 @@ const handle = app.getRequestHandler();
     server.all('*', (req, res) => handle(req, res));
     server.use((_, res, ne) => {
       res.header('*');
-      res.header('Access-Control-Allow-Origin');
+      res.header('Access-Control-Allow-Origin', '*');
       res.header('Access-Control-Allow-Headers');
       res.header('Origin, X-Requested-With, Content-Type, Accept');
       ne();

@@ -1,17 +1,28 @@
-import React, { } from 'react';
-import { CssBaseline } from '@material-ui/core';
-import Header from '@components/header/header';
-import DrawerUi from '@components/drawer/drawer';
-import AccountPage from './account/index.page';
+import React, { useEffect } from 'react';
+import Login from './login/index.page';
+import { useRouter } from 'next/router';
 
+type Token = string | null;
 const App = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    void checkLogin();
+  }, []);
+
+  async function checkLogin() {
+    const token: Token =  localStorage.getItem('access_token');
+    if (token) {
+      await router.push('/home');
+    }
+
+    return;
+  }
+
   return (
     <>
       <main className='root'>
-          <CssBaseline />
-          <Header />
-          <DrawerUi />
-          <AccountPage />
+         <Login />
       </main>
     </>
   );
