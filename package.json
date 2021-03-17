@@ -4,9 +4,9 @@
   "private": true,
   "sasslintConfig": "/.sass-lint.yml",
   "scripts": {
-    "local": "nodemon -w server/server.js server/server.js",
-    "start:prod": "NODE_ENV=production ts-node --project tsconfig.server.json server/index.ts",
-    "start": "NODE_ENV=local ts-node --project tsconfig.server.json server/index.ts",
+    "local": "nodemon -e ts,tsx,sass,js",
+    "start:prod": "NODE_ENV=production serve out",
+    "start": "NODE_ENV=local next build && next export && serve out",
     "static": "serve out",
     "build": "NODE_ENV=production next build && next export",
     "test": "jest",
