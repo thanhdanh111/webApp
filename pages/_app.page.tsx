@@ -1,4 +1,6 @@
 import './login/UI/login.sass';
+import './users/UI/users.sass';
+import '../components/table/table.sass';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import * as Sentry from '@sentry/browser';
