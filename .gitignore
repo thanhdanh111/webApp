@@ -35,3 +35,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# aws cli
+awscliv2.zip
+aws

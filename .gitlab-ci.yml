@@ -1,0 +1,63 @@
+# need to set up in gitlab ci variables:
+# @ GIT_REPO
+# @ DEPLOY_AWS_PRIVATE_KEY
+# @ DEPLOY_GIT_PRIVATE_KEY
+# @ DEV_INSTANCE_IP
+# @ PROD_INSTANCE_IP
+
+image: node:12.21.0-alpine3.12
+
+variables:
+  S3_BUCKET_NAME_STAGING: "staging-app.sntsolutions.io"
+  S3_BUCKET_NAME_PRODUCTION: "app.sntsolutions.io"
+  DEBIAN_FRONTEND: "noninteractive"
+  ## todo: create s3 production bucket
+stages:
+  - test
+  - staging
+  - production
+
+test:
+  stage: test
+  image: sonnguyeninslife/alekzonde-docker-puppeteer-fork
+  script:
+    - . ops/git_init.sh
+    - npm install
+    - npm i serve
+    - npm run linter-folder
+    - npm run tslint
+    - npm run build
+    - npm run static --silent &
+    - . ops/wait_apis.sh
+    - npm run test -- -u
+    - . ops/git_push_build.sh
+  only:
+    - branches
+  except:
+    refs:
+      - master
+
+staging:
+  stage: staging
+  script:
+    - npm install
+    - npm run linter-folder
+    - npm i serve
+    - npm run build
+    - . ops/install_aws_cli.sh
+    - aws s3 cp ./out/ s3://$S3_BUCKET_NAME_STAGING/ --recursive
+  only:
+    - master
+
+production:
+  stage: production
+  script:
+    - npm install
+    - npm run linter-folder
+    - npm i serve
+    - npm run build
+    - . ops/install_aws_cli.sh
+    - aws s3 cp ./out/ s3://$S3_BUCKET_NAME_PRODUCTION/ --recursive
+  only:
+    - tags
+

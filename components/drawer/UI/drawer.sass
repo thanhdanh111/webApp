@@ -1,0 +1,39 @@
+.drawer-paper
+  width: var(--drawer-width)
+
+.drawer-subheader
+  text-transform: capitalize
+  margin-top: 24px
+  margin-bottom: 12px
+
+.drawer-subheader > .drawer-subheader-text
+  font-size: 0.875rem
+  font-weight: 600
+  line-height: 1.5
+  color: #212B36
+  letter-spacing: 1.2px
+
+.drawer-btn
+  text-transform: capitalize
+  align-items: center
+  display: flex
+
+.drawer-btn > .drawer-btn-text
+  font-size: 1rem
+  font-weight: 500
+  line-height: 1.5714285714285714
+  color: #637381
+
+.drawer-logo
+  width: 40px
+  height: 40px
+
+@media screen and (min-width: 960px)
+  .drawer-nav
+    width: var(--drawer-width)
+    flex-shrink: 0
+
+@media screen and (max-width: 960px)
+  .drawer-nav > .permanent-drawer
+    display: none
+

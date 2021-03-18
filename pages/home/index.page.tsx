@@ -1,5 +1,5 @@
 import React, { } from 'react';
-import HomeUi   from './UI/home';
+import HomeUi from './UI/home';
 
 const Home = () => {
 

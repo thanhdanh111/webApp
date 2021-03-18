@@ -1,0 +1,16 @@
+{
+  "verbose": true,
+  "ignore": ["node_modules", "out", ".next", "pages/*/test/"],
+  "watch": [
+    "server/",
+    "server.ts",
+    "pages/",
+    "styles/",
+    "components/",
+    "constants/",
+    "helpers/",
+    "redux/"
+  ],
+  "ext": "ts json tsx sass",
+  "legacyWatch": true
+}
