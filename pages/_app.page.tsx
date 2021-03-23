@@ -10,6 +10,8 @@ import '../styles/sass/index.sass';
 import { config } from '../helpers/get_config';
 import { makeStore } from '../redux/store';
 import theme from '../styles/theme/theme';
+import React from 'react';
+import Auth from '../components/auth';
 
 if (['production', 'dev'].includes(config.ENV)) {
   Sentry.init({
@@ -24,7 +26,9 @@ function myApp({ Component, pageProps, store }) {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <NoSsr>
-          <Component {...pageProps} />
+          <Auth>
+            <Component {...pageProps} />
+          </Auth>
         </NoSsr>
       </ThemeProvider>
     </Provider>

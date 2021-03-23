@@ -14,12 +14,22 @@ const redirectUrl = `${config.LOCAL_HOST}/auth/google/callback&state=${config.ST
   .split('/')
   .join('%2F');
 const linkAPILogin = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile&access_type=offline&include_granted_scopes=true&response_type=code&client_id=${config.CLIENT_ID}&redirect_uri=${redirectUrl}`;
-
 const LoginUi: FunctionComponent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
+    void logUserIn();
+  }, []);
+
+  async function logUserIn() {
+    const localAccess = localStorage.getItem('access_token');
+
+    if (localAccess) {
+      await router.push('/home');
+      setIsLogin(false);
+    }
+
     const query = qs.parse(window.location.search);
     const token = query.token;
     if (!token) {
@@ -27,15 +37,15 @@ const LoginUi: FunctionComponent = () => {
     }
     const accessToken = token.replace('?token=', '');
     localStorage.setItem('access_token', accessToken);
-    void logUserIn(accessToken);
-  }, []);
-
-  async function logUserIn(access: string) {
     setIsLogin(true);
+
     await Promise.all([
-      dispatch(GetUserDataThunkAction(access)),
-      dispatch(Login(access)),
+      dispatch(GetUserDataThunkAction(accessToken)),
+      dispatch(Login(accessToken)),
     ]);
+
+    localStorage.setItem('access_token', accessToken);
+
     await router.push('/home');
     setIsLogin(false);
   }
