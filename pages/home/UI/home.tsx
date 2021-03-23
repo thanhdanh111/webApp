@@ -36,7 +36,7 @@ const HomeUi: FunctionComponent<BodyProps> = ({ title }) => {
   };
 
   return (
-    <main>
+    <main className='home-page'>
       <div className='hero-content'>
         <Container maxWidth='sm'>
           <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>

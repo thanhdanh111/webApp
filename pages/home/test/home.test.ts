@@ -19,12 +19,12 @@ beforeAll(async () => {
   }
 });
 
-describe('Pots Page', () => {
-  test('Test delete posts succes', async () => {
+describe('Home Page', () => {
+  test('Test ui page home success', async () => {
     await page.goto('http://localhost:5000/home');
-    await page.waitForSelector('.hero-content');
-
+    
     const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
   });
 
 });
