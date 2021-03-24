@@ -16,13 +16,13 @@ beforeAll(async () => {
     page = await browser.newPage();
     const query = qs.parse(page.search);
     token = query.token;
-    viewport = await page.setViewport({ width: 1853 , height: 951 });
+    viewport = await page.setViewport({ width: 1920 , height: 835 });
   } catch (error) {
     console.log(error);
   }
 });
 
-describe('Pots Page', () => {
+describe('Users Page', () => {
   if (!token) {
     test('Test login success', async () => {
       await page.goto('http://localhost:5000/login');
@@ -32,10 +32,11 @@ describe('Pots Page', () => {
     return;
   }
 
-  test('Test account page successfully', async () => {
-    await page.click('http://localhost:5000/account');
-    await page.waitForSelector('.home-page');
+  test('Test UI list users page success', async () => {
+    await page.goto('http://localhost:5000/users');
+    await page.waitForSelector('.users');
   });
+
 });
 
 afterAll(() => {
