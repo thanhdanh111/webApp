@@ -42,7 +42,7 @@ const LoginUi: FunctionComponent = () => {
       dispatch(Login(accessToken)),
     ]);
 
-    await router.push('/');
+    await router.push('/home');
     setIsLogin(false);
   }
 
