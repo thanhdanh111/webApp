@@ -5,7 +5,7 @@
   "sasslintConfig": "/.sass-lint.yml",
   "scripts": {
     "local": "nodemon -e ts,tsx,sass,js",
-    "start:prod": "NODE_ENV=production serve out",
+    "start:prod": "NODE_ENV=production next build && next export && serve out",
     "start": "NODE_ENV=local next build && next export && serve out",
     "static": "serve out",
     "build": "NODE_ENV=production next build && next export",
