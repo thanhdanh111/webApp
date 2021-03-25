@@ -2,7 +2,7 @@ const withSass = require('@zeit/next-sass');
 const withFonts = require('nextjs-fonts');
 
 const dotenv = require('dotenv')
-const isDev = process.env.NODE_ENV === 'test';
+const isDev = process.env.NODE_ENV === 'local';
 
 if (isDev)  {
   dotenv.config({path: '.local.env'})
@@ -30,6 +30,7 @@ function HACK_removeMinimizeOptionFromSassLoaders(config) {
 module.exports = () => {
 
   const config = {
+    productionBrowserSourceMaps: process.env.PRODUCTION_BROWSER_SOURCE_MAPS === 'true',
     COMPANY_ENV: (() => {
       if (isDev) {
         return withSass(withFonts({

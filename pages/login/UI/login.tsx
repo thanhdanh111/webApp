@@ -1,6 +1,5 @@
 import { Box, Button, Container, Grid, Link, Typography } from '@material-ui/core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import AddCircleOutlineSharpIcon from '@material-ui/icons/AddCircleOutlineSharp';
 import { useDispatch } from 'react-redux';
 import { Login } from '../logic/login_actions';
 import { config } from 'helpers/get_config';
@@ -38,15 +37,12 @@ const LoginUi: FunctionComponent = () => {
     const accessToken = token.replace('?token=', '');
     localStorage.setItem('access_token', accessToken);
     setIsLogin(true);
-
     await Promise.all([
       dispatch(GetUserDataThunkAction(accessToken)),
       dispatch(Login(accessToken)),
     ]);
 
-    localStorage.setItem('access_token', accessToken);
-
-    await router.push('/home');
+    await router.push('/');
     setIsLogin(false);
   }
 
@@ -68,7 +64,7 @@ const LoginUi: FunctionComponent = () => {
           </div>
           <div className='btn'>
             <Button className='btn-gg' color='inherit' size='medium' href={linkAPILogin}>
-              <AddCircleOutlineSharpIcon />
+              <Typography className='icon-gg'>G</Typography>
             </Button>
           </div>
         </Grid>

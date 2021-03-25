@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { LoginAction } from './login_type_actions';
-import { checkIsAdmin } from '../../../helpers/check_is_admin';
 import { GetRoles, GetUserData } from './login_actions';
 
 interface ArrayRole {
@@ -12,7 +11,6 @@ interface ArrayRole {
 interface LoginValue {
   value: string;
   userID: string;
-  isAdmin: boolean;
   access: string[];
   roles: ArrayRole[];
   companyID: string;
@@ -22,7 +20,6 @@ interface LoginValue {
 const initialState: LoginValue = {
   value: '',
   userID: '',
-  isAdmin: false,
   access: [],
   roles: [],
   companyID: '',
@@ -42,11 +39,9 @@ export const auth = (state = initialState, action) => {
         value: '',
       };
     case LoginAction.GET_USER_DATA:
-      const isAdmin = checkIsAdmin(action.payload.access);
 
       return {
         ...state,
-        isAdmin,
         companyID: action.payload.companyID,
         userID: action.payload.userID,
         access: action.payload.access,
