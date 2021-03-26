@@ -1,8 +1,9 @@
-let qs = require('qs');
 let browser;
 let page;
-let token;
+// let token;
 let viewport;
+
+const token = process.env.TEST_TOKEN
 
 const puppeteer = require('puppeteer');
 beforeAll(async () => {
@@ -14,26 +15,24 @@ beforeAll(async () => {
     });
 
     page = await browser.newPage();
-    const query = qs.parse(page.search);
-    token = query.token;
     viewport = await page.setViewport({ width: 1853 , height: 951 });
+
+    await page.goto('http://localhost:5000');
+
+    await page.evaluate((token) => {
+      localStorage.setItem('access_token', token);
+    });
   } catch (error) {
     console.log(error);
   }
 });
 
-describe('Home Page', () => {
-  if (!token) {
-    test('Test login success', async () => {
-      await page.goto('http://localhost:5000/login');
-      await page.waitForSelector('.login-page');
-    });
+describe('Pots Page', () => {
+  test('Test invite members page successfully', async () => {
+    await page.goto('http://localhost:5000/invite_members');
 
-    return;
-  }
-
-  test('Test ui page home success', async () => {
-    await page.goto('http://localhost:5000/home');
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
   });
 
 });

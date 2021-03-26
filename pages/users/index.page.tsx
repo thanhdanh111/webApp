@@ -3,9 +3,9 @@ import ListUsers from './UI/users';
 
 const Login = () => {
   return (
-        <React.Fragment>
-            <ListUsers />
-        </React.Fragment>
+    <React.Fragment>
+        <ListUsers />
+    </React.Fragment>
   );
 };
 

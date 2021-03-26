@@ -3,9 +3,9 @@ import LoginUi from './UI/login';
 
 const Login = () => {
   return (
-        <React.Fragment>
-            <LoginUi />
-        </React.Fragment>
+    <React.Fragment>
+      <LoginUi />
+    </React.Fragment>
   );
 };
 

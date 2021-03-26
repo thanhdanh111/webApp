@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { openDrawer } from '@components/header/logic/header_actions';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PersonIcon from '@material-ui/icons/Person';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PublicIcon from '@material-ui/icons/Public';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -17,12 +16,12 @@ import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 const elementIcons = {
   'general.dashboard': <DashboardIcon />,
   'management.user': <PersonIcon />,
-  'management.e-Comemerce': <ShoppingCartIcon />,
   'management.blog': <PublicIcon />,
   'app.mail': <MailOutlineIcon />,
   'app.chat': <ChatIcon />,
   'app.calendar': <TodayIcon />,
   'pages.auth': <SecurityIcon />,
+  'management.invite members': <img alt='logo' width='24px' src='../send_mail.svg'/>,
 };
 
 const drawerElements = {
@@ -30,7 +29,7 @@ const drawerElements = {
   'general.dashboard': ['app', 'E-Commerce', 'Analytics'],
   management: '',
   'management.user': ['profile', 'cards', 'list', 'account'],
-  'management.e-Comemerce': ['shop', 'product', 'list', 'checkout', 'invoice'],
+  'management.invite members': ['shop', 'product', 'list', 'checkout', 'invoice'],
   'management.blog': ['posts', 'post', 'new post'],
   app: '',
   'app.mail': [],
@@ -49,7 +48,7 @@ const drawerElements = {
 };
 
 const DrawerUi: FunctionComponent = ({ }) => {
-  const headerState = useSelector((state) => state.headerReducer);
+  const headerState = useSelector((state) => state.headers);
   const dispatch = useDispatch();
 
   function listItems() {

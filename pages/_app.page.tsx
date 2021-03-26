@@ -3,23 +3,24 @@ import './users/UI/users.sass';
 import '../components/table/table.sass';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
-import * as Sentry from '@sentry/browser';
+// import * as Sentry from '@sentry/browser';
 import { ThemeProvider, NoSsr } from '@material-ui/core';
 import '../styles/globals.css';
 import '../styles/sass/index.sass';
-import { config } from '../helpers/get_config';
+// import { config } from '../helpers/get_config';
 import { makeStore } from '../redux/store';
 import theme from '../styles/theme/theme';
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import Auth from '../components/auth';
 
-if (['production', 'dev'].includes(config.ENV)) {
-  Sentry.init({
-    environment: config.ENV,
-    dsn: config.DNS,
-    tracesSampleRate: 1.0,
-  });
-}
+// if (['production', 'dev'].includes(config.ENV)) {
+//   Sentry.init({
+//     environment: config.ENV,
+//     dsn: config.DNS,
+//     tracesSampleRate: 1.0,
+//   });
+// }
 
 function myApp({ Component, pageProps, store }) {
   return (
@@ -27,7 +28,15 @@ function myApp({ Component, pageProps, store }) {
       <ThemeProvider theme={theme}>
         <NoSsr>
           <Auth>
-            <Component {...pageProps} />
+            <SnackbarProvider
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              maxSnack={100}
+            >
+              <Component {...pageProps} />
+            </SnackbarProvider>
           </Auth>
         </NoSsr>
       </ThemeProvider>
