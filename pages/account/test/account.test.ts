@@ -34,7 +34,7 @@ describe('Pots Page', () => {
 
   test('Test account page successfully', async () => {
     await page.click('http://localhost:5000/account');
-    await page.waitForSelector('.home-page');
+    await page.waitForSelector('.account-page');
   });
 });
 
