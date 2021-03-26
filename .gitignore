@@ -39,3 +39,6 @@ yarn-error.log*
 # aws cli
 awscliv2.zip
 aws
+
+# vscode
+/.vscode

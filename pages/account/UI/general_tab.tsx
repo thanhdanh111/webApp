@@ -48,7 +48,7 @@ const labels = [
 ];
 
 const GeneralTabUi: FunctionComponent = ({}) => {
-  const accountState = useSelector((state) => state.accountReducer);
+  const accountState = useSelector((state) => state.account);
   const dispatch = useDispatch();
   const newState = { };
 
