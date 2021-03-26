@@ -6,7 +6,7 @@ const App = () => {
   return (
     <>
       <main className='root'>
-          <Login />
+          <Login/>
       </main>
     </>
   );
