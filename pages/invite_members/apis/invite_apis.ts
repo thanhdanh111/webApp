@@ -60,10 +60,6 @@ export const getUserCompaniesApi = ({ isAdmin }) => async (dispatch) => {
 
     const token: Token = localStorage.getItem('access_token');
 
-    if (!token) {
-      return;
-    }
-
     const userInfo = await axios.get(`${config.LOCAL_HOST}/users/me`, {
       method: 'GET',
       headers: {
