@@ -23,8 +23,6 @@ describe('Login', () => {
   test('Test login succes', async () => {
     await page.goto('http://localhost:5000/login');
     await page.waitForSelector('.login-page');
-
-    await page.screenshot();
   });
 
 });

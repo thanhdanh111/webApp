@@ -3,83 +3,59 @@ import {
   Drawer, ListItemIcon, List, ListItem, Hidden, ListItemText, ListSubheader, Typography,
 } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import { openDrawer } from '@components/header/logic/header_actions';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import PersonIcon from '@material-ui/icons/Person';
-import PublicIcon from '@material-ui/icons/Public';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import ChatIcon from '@material-ui/icons/Chat';
-import TodayIcon from '@material-ui/icons/Today';
-import SecurityIcon from '@material-ui/icons/Security';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import PeopleIcon from '@material-ui/icons/People';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import HomeIcon from '@material-ui/icons/Home';
 
 const elementIcons = {
-  'general.dashboard': <DashboardIcon />,
-  'management.user': <PersonIcon />,
-  'management.blog': <PublicIcon />,
-  'app.mail': <MailOutlineIcon />,
-  'app.chat': <ChatIcon />,
-  'app.calendar': <TodayIcon />,
-  'pages.auth': <SecurityIcon />,
-  'management.invite members': <img alt='logo' width='24px' src='../send_mail.svg'/>,
+  account: <AccountCircleIcon />,
+  users: <PeopleIcon />,
+  home: <HomeIcon />,
+  invite_members: <img alt='logo' width='24px' src='../send_mail.svg'/>,
 };
 
 const drawerElements = {
-  general: '',
-  'general.dashboard': ['app', 'E-Commerce', 'Analytics'],
-  management: '',
-  'management.user': ['profile', 'cards', 'list', 'account'],
-  'management.invite members': ['shop', 'product', 'list', 'checkout', 'invoice'],
-  'management.blog': ['posts', 'post', 'new post'],
-  app: '',
-  'app.mail': [],
-  'app.chat': [],
-  'app.calendar': [],
-  pages: '',
-  'pages.auth': [],
-  'pages.landing page': [],
-  'pages.pricing': [],
-  'pages.payment': [],
-  kit: '',
-  'kit.foundation': [],
-  'kit.components': [],
-  'kit.charts': [],
-  'kit.map': [],
+  general: ['home', 'users'],
+  management: ['account', 'invite_members'],
 };
 
 const DrawerUi: FunctionComponent = ({ }) => {
   const headerState = useSelector((state) => state.headers);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   function listItems() {
     const items: JSX.Element[] = [];
 
-    for (const name in drawerElements) {
-      if (!name) {
-        continue;
-      }
-
-      const splitedName = name.split('.');
-
-      if (splitedName.length === 1) {
-        items.push(
-          <ListSubheader disableSticky className='drawer-subheader' key={name} component='div' id={`subheader-${name}`}>
-            <Typography className='drawer-subheader-text'>
-              {name}
-            </Typography>
-          </ListSubheader>,
-        );
+    for (const subheaderName in drawerElements) {
+      if (!subheaderName || !drawerElements[subheaderName]?.length) {
         continue;
       }
 
       items.push(
-        <ListItem key={name} className='drawer-btn' button>
-          <ListItemIcon>
-            {elementIcons[name] ?? <InsertDriveFileIcon />}
-          </ListItemIcon>
-          <ListItemText primary={splitedName[1]} className='drawer-btn-text' />
-        </ListItem>,
+        <ListSubheader disableSticky className='drawer-subheader' key={subheaderName} component='div' id={`subheader-${subheaderName}`}>
+          <Typography className='drawer-subheader-text'>
+            {subheaderName}
+          </Typography>
+        </ListSubheader>,
       );
+
+      drawerElements[subheaderName].forEach((elementName) => {
+        const name = elementName;
+        const withoutDashName = name.replace('_', ' ');
+
+        return items.push(
+          <ListItem key={name} className='drawer-btn' button onClick={() => handleChangeRoute(name)}>
+            <ListItemIcon>
+              {elementIcons[name] ?? <InsertDriveFileIcon />}
+            </ListItemIcon>
+            <ListItemText primary={withoutDashName} className='drawer-btn-text' />
+          </ListItem>,
+        );
+      });
     }
 
     return items;
@@ -97,6 +73,14 @@ const DrawerUi: FunctionComponent = ({ }) => {
       </List>
     </div>
   );
+
+  async function handleChangeRoute(pathName) {
+    if (typeof pathName !== 'string' || !pathName.length) {
+      return;
+    }
+
+    await router.push(`/${pathName}`);
+  }
 
   return (
     <nav className='drawer-nav' aria-label='mailbox folders'>
