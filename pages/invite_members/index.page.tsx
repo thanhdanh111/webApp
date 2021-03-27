@@ -44,13 +44,12 @@ function switchTitleflow({ currentPage, companyName }) {
 
 const InviteMembersPage: FunctionComponent = () => {
   const { currentPage, inviteCompany, inviteResultInfo }: InviteStateProps = useSelector((state) => state.inviteMembers);
-  const loginState = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
 
   useEffect(()  =>  {
-    dispatch(getUserCompaniesApi({ isAdmin: loginState.isAdmin }));
+    dispatch(getUserCompaniesApi());
   }, []);
 
   useEffect(pushNotification, [inviteResultInfo]);

@@ -1,0 +1,15 @@
+.main-layout--children
+  flex-grow: 1
+  padding-top: var(--app-bar-height)
+  background-color: rgb(255, 255, 255)
+
+.main-layout--children > .main-layout--children-toolbar
+  min-height: 56px !important
+
+@media screen and (min-width:0px) and (orientation: landscape)
+  .main-layout--children > .main-layout--children-toolbar
+    minHeight: 48px !important
+
+@media screen and (min-width:600px)
+  .main-layout--children > .main-layout--children-toolbar
+    minHeight: 64px !important

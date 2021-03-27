@@ -1,7 +1,5 @@
- const { toMatchImageSnapshot } = require('jest-image-snapshot');
+const { toMatchImageSnapshot } = require('jest-image-snapshot');
 
 require('dotenv').config({ path: './.test.env' });
-
-expect.extend({ toMatchImageSnapshot });
 
 expect.extend({ toMatchImageSnapshot });

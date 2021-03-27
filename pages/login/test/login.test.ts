@@ -24,7 +24,8 @@ describe('Login', () => {
     await page.goto('http://localhost:5000/login');
     await page.waitForSelector('.login-page');
 
-    await page.screenshot();
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
   });
 
 });
