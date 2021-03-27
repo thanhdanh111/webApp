@@ -30,9 +30,7 @@ beforeAll(async () => {
 describe('Pots Page', () => {
   test('Test invite members page successfully', async () => {
     await page.goto('http://localhost:5000/invite_members');
-
-    const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
+    await page.waitForSelector('.invite-members-layout');
   });
 
 });
