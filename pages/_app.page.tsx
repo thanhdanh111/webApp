@@ -13,6 +13,7 @@ import theme from '../styles/theme/theme';
 import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import Auth from '../components/auth';
+import Layout from '@components/pages_layout/pages_layout';
 
 // if (['production', 'dev'].includes(config.ENV)) {
 //   Sentry.init({
@@ -21,6 +22,8 @@ import Auth from '../components/auth';
 //     tracesSampleRate: 1.0,
 //   });
 // }
+
+const withoutLayoutPaths = ['/login'];
 
 function myApp({ Component, pageProps, store }) {
   return (
@@ -35,7 +38,9 @@ function myApp({ Component, pageProps, store }) {
               }}
               maxSnack={100}
             >
-              <Component {...pageProps} />
+              <Layout withoutPaths={withoutLayoutPaths}>
+                <Component {...pageProps} />
+              </Layout>
             </SnackbarProvider>
           </Auth>
         </NoSsr>

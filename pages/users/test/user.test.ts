@@ -1,8 +1,8 @@
 let qs = require('qs');
 let browser;
 let page;
-let token;
 let viewport;
+const token = process.env.TEST_TOKEN;
 
 const puppeteer = require('puppeteer');
 beforeAll(async () => {
@@ -14,27 +14,28 @@ beforeAll(async () => {
     });
 
     page = await browser.newPage();
-    const query = qs.parse(page.search);
-    token = query.token;
+
     viewport = await page.setViewport({ width: 1920 , height: 835 });
+
+    await page.goto('http://localhost:5000/');
+
+    await page.evaluate((token) => {
+      localStorage.setItem('access_token', token);
+    });
+
   } catch (error) {
     console.log(error);
   }
 });
 
 describe('Users Page', () => {
-  if (!token) {
-    test('Test login success', async () => {
-      await page.goto('http://localhost:5000/login');
-      await page.waitForSelector('.login-page');
-    });
-
-    return;
-  }
 
   test('Test UI list users page success', async () => {
     await page.goto('http://localhost:5000/users');
     await page.waitForSelector('.users');
+
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
   });
 
 });

@@ -54,8 +54,9 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
 
 const rolesCouldInvite = ['COMPANY_MANAGER'];
 
-export const getUserCompaniesApi = ({ isAdmin }) => async (dispatch) => {
+export const getUserCompaniesApi = () => async (dispatch) => {
   try {
+    let isAdmin = false;
     await dispatch(inviteLoading({ isLoading: true }));
 
     const token: Token = localStorage.getItem('access_token');
@@ -81,6 +82,12 @@ export const getUserCompaniesApi = ({ isAdmin }) => async (dispatch) => {
 
       userInfo?.data?.access.forEach((access) => {
         const hasInvalidRole = access?.role && !rolesCouldInvite?.includes(access.role);
+
+        if (access?.role && access?.role === 'ADMIN') {
+          isAdmin = true;
+
+          return;
+        }
 
         if (!access.companyID || hasInvalidRole) {
           return;
