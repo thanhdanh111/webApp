@@ -1,5 +1,4 @@
 import { HeaderActionTypes } from './header_actions';
-
 interface HeaderValue {
   isOpenDrawer: boolean;
 }

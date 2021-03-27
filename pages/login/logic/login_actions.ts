@@ -18,9 +18,3 @@ export const GetUserData = (res: object) => {
     payload: res,
   };
 };
-export const GetRoles = (res: object) => {
-  return {
-    type: LoginAction.GET_ROLES,
-    payload: res,
-  };
-};

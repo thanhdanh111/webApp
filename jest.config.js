@@ -5,7 +5,7 @@ module.exports = {
   testTimeout: 120000,
   maxWorkers: 3,
   testRegex: ".test.ts$",
-  maxWorkers: 3,
+  setupFiles: ["dotenv/config"],
   // testMatch: ["**/__tests__/*.(ts|tsx)"],
   setupFilesAfterEnv: ["./jest.setup.js"],
   //   "ts-jest": {

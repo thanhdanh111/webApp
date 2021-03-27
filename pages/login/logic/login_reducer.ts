@@ -1,29 +1,34 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { LoginAction } from './login_type_actions';
-import { GetRoles, GetUserData } from './login_actions';
+import { GetUserData } from './login_actions';
 
-interface ArrayRole {
-  name: string;
-  roleID: string;
+interface Profile {
+  firstName: string;
+  lastName: string;
+  email: string;
+  profilePhoto: string;
+  status: string;
+}
+
+interface ExtendedUser {
+  _id: string;
+  gender: string;
+  userID: string;
 }
 
 interface LoginValue {
   value: string;
   userID: string;
-  access: string[];
-  roles: ArrayRole[];
-  companyID: string;
-  departmentID: string;
+  userProfile: Profile | {};
+  extendedUser: ExtendedUser | {};
 }
 
 const initialState: LoginValue = {
   value: '',
   userID: '',
-  access: [],
-  roles: [],
-  companyID: '',
-  departmentID: '',
+  userProfile: {},
+  extendedUser: {},
 };
 
 export const auth = (state = initialState, action) => {
@@ -42,15 +47,9 @@ export const auth = (state = initialState, action) => {
 
       return {
         ...state,
-        companyID: action.payload.companyID,
+        userProfile: action.payload.userProfile,
         userID: action.payload.userID,
-        access: action.payload.access,
-        departmentID: action.payload.departmentID,
-      };
-    case LoginAction.GET_ROLES:
-      return {
-        ...state,
-        roles: action.payload,
+        extendedUser: action.payload.extendedUser,
       };
     default:
       return state;
@@ -66,8 +65,8 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
+
     dispatch(GetUserData(res.data));
-    dispatch(GetRoles(res.data.roles));
   } catch (error) {
     throw error;
   }

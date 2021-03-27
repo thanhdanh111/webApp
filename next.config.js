@@ -5,7 +5,7 @@ const dotenv = require('dotenv')
 const isDev = process.env.NODE_ENV === 'local';
 
 if (isDev)  {
-  dotenv.config({path: '.local.env'})
+  dotenv.config({ path: '.local.env' })
 }
 
 if (!isDev)  {
@@ -45,7 +45,6 @@ module.exports = () => {
     publicRuntimeConfig:  {
       CLIENT_ENV: process.env.NODE_ENV,
       DNS: 'https://292b38933d2a4e8e9a523348e618adbe@o374091.ingest.sentry.io/5622776',
-      API_HOST: process.env.API_HOST,
       LOCAL_HOST: 'https://7val2au24i.execute-api.ap-southeast-1.amazonaws.com/dev',
       STATE: 'http://localhost:5000',
     },

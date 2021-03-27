@@ -1,5 +1,5 @@
 .app-bar
-  background-color: rgba(255, 255, 255, 0.3) !important
+  background-color: rgba(255, 255, 255, 0.2) !important
   --btn-app-bar: rgb(99, 115, 129)
   --btn-app-bar-menu: #212B36
 
@@ -20,11 +20,106 @@
   width: 80%
   max-width: 380px
 
+
+  .drop-avt
+    overflow: hidden;
+    background: none;
+    border: none;
+    box-shadow: none;
+
+  .drop-avt:hover
+    background: none;
+    box-shadow: none;
+  
+    .drop-avt:active
+    background: none;
+    box-shadow: none;
+
 .btn-appbar
   color: var(--btn-app-bar)
 
 .menu
   color: var(--btn-app-bar-menu)
+
+.menu-drop
+  transform: translate(-10px, 45px);
+
+  .item-drop
+    display: block;
+    width: 250px
+    text-align: center
+
+    .logout_btn
+      width: 100%
+      background: none
+      margin: auto
+      border: 0.1px solid #b0bec5;
+      box-shadow: inherit;
+      text-transform: revert;
+
+    .drop-info
+      display: block
+
+      .info-avatar
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        margin: auto;
+
+      .info-username
+
+      .info-email
+
+  .item-switch
+    height: 40px;
+    background-color: transparent;
+    outline: 0px;
+    border: 0px;
+    margin: 0px;
+    border-radius: 0px;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    color: inherit;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    text-decoration: none;
+    text-align: left;
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    min-height: 48px;
+    box-sizing: border-box;
+    width: auto;
+    white-space: nowrap;
+    font-family: sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.57143;
+    padding: 8px 20px;
+
+    .icon-item
+      font-size: 1rem;
+      margin-right: 16px;
+      width: 24px;
+      height: 24px;
+
+    .text-item
+      font-size: 1rem;
+
+
+
+
+          
+
+.menu-drop
+  .MuiListItem-button:hover
+    background-color:  #fff !important
+
+  .MuiListItem-button:active
+    background-color:  #fff !important
+
 
 @media screen and (min-width: 960px)
   .app-bar

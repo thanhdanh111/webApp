@@ -10,7 +10,15 @@ npm run local
 yarn local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```debug
+-  npm run local
+-  open chrome browser
+-  go to http://localhost:5000
+-  click F12 on your keyboard and choose sources tab
+-  find build file with folder name "." where you will find your desired file converted to js to debug your problems
+```
+
+Open [http://localhost:5000](http://localhost:5000) with your browser to see the result.
 
 ## Lưu ý:
 - không đặt tên viết hoa cho file, chỉ dùng _ để đặt tên (example_file.ts).
