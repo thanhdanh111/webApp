@@ -22,6 +22,8 @@ const DropDown = () => {
       token = localStorage.getItem('access_token');
     }
     if (!token) {
+      void router.push('/login');
+
       return;
     }
     const accessToken = token.replace('?token=', '');
