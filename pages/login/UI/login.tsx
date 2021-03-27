@@ -32,8 +32,6 @@ const LoginUi: FunctionComponent = () => {
     const query = qs.parse(window.location.search);
     const token = query.token;
     if (!token) {
-      await router.push('/login');
-
       return;
     }
     const accessToken = token.replace('?token=', '');

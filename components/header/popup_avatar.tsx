@@ -32,6 +32,11 @@ const DropDown = () => {
   }, []);
 
   async function logUserIn(token: string) {
+
+    if (!token) {
+      return;
+    }
+
     await Promise.all([
       dispatch(GetUserDataThunkAction(token)),
       dispatch(Login(token)),
