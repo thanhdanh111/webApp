@@ -31,7 +31,7 @@ beforeAll(async () => {
 });
 
 describe('Home Page', () => {
-  test('Test ui page home success', async () => {
+  test('Test ui page home success after login', async () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.test-home');
   });
