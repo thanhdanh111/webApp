@@ -2,17 +2,18 @@ import { Avatar, Button, Menu, MenuItem, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { Logout, Login } from 'pages/login/logic/login_actions';
 import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
-import { useDispatch, useSelector, RootStateOrAny } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import { RootState } from 'redux/reducers_registration';
 
 type Token = string | null;
 
 const DropDown = () => {
-  const user = useSelector((state: RootStateOrAny) => state.auth.userProfile);
+  const user = useSelector((state: RootState) => state.auth.userProfile);
   const dispatch = useDispatch();
   const router = useRouter();
 

@@ -35,7 +35,7 @@
       }
     },
     "semicolon": [true, "always"],
-    "await-promise": true,
+    "await-promise": [true, "Dispatch<any>"],
     "no-async-without-await": true,
     "no-floating-promises": [true, {"ignoreVoid": true}],
     "no-null-keyword": false,

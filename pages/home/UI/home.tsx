@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Button, Container, Typography, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { addVehicle } from '../logic/vehicle_actions';
+import { RootState } from 'redux/reducers_registration';
 
 interface DataType {
   title: string;
@@ -10,7 +11,7 @@ interface DataType {
 type BodyProps = DataType;
 
 const HomeUi: FunctionComponent<BodyProps> = ({ title }) => {
-  const vehicle = useSelector((state) => state.reducerVehicle);
+  const vehicle = useSelector((state: RootState) => state.vehicle);
   const dispatch = useDispatch();
 
   const FormVehicle = () => {

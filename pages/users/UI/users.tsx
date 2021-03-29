@@ -1,7 +1,7 @@
 import { Container, Toolbar } from '@material-ui/core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import UserLinkMenu from './user_link_menu';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   headCells,
   actionList,
@@ -13,10 +13,11 @@ import {
 import BaseTable from '@components/table/table';
 import { Data } from '../../../helpers/type';
 import SearchIcon from '@material-ui/icons/Search';
+import { RootState } from 'redux/reducers_registration';
 
 const ListUsers: FunctionComponent = () => {
   const dispatch = useDispatch();
-  const users = useSelector((state: RootStateOrAny) => state.users);
+  const users = useSelector((state: RootState) => state.users);
   const loading = users.loadingList;
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -36,8 +37,8 @@ const ListUsers: FunctionComponent = () => {
   const usersListSearch: Data[] = users && users.listSearch && Array.isArray(users.listSearch)
   ? renderData(users.listSearch) : [];
 
-  const fetchDataUsers = async () => {
-    await dispatch(getPaginationThunkAction());
+  const fetchDataUsers = () => {
+    dispatch(getPaginationThunkAction());
   };
 
   const handleChange = (event) => {

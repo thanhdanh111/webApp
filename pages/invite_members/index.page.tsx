@@ -10,6 +10,7 @@ import { useSnackbar, WithSnackbarProps } from 'notistack';
 import { InviteStateProps } from './logic/invite_interface';
 import { updateInviteResultInfo } from './logic/invite_actions';
 import { returnNotification } from './logic/invite_error_notifications';
+import { RootState } from 'redux/reducers_registration';
 
 export enum InviteMembersPageFlow {
   InviteMembers = 'inviteMembers',
@@ -43,7 +44,11 @@ function switchTitleflow({ currentPage, companyName }) {
 }
 
 const InviteMembersPage: FunctionComponent = () => {
-  const { currentPage, inviteCompany, inviteResultInfo }: InviteStateProps = useSelector((state) => state.inviteMembers);
+  const {
+    currentPage,
+    inviteCompany,
+    inviteResultInfo,
+  }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
 
   const dispatch = useDispatch();
   const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();

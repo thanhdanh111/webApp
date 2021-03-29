@@ -6,6 +6,7 @@ import { backToChooseCompany, updateInviteMembers, updateInviteResultInfo } from
 import { inviteMembersThunkAction } from '../logic/invite_thunk_actions';
 import { InviteResultInfo, InviteStateProps } from '../logic/invite_interface';
 import { InputAndOptionsSelect } from '@components/input_and_options_select/input_and_options_select';
+import { RootState } from 'redux/reducers_registration';
 
 const roles = [
   {
@@ -28,7 +29,11 @@ const roles = [
 
 const InviteMembersUI: FunctionComponent = () => {
   const dispatch = useDispatch();
-  const { inviteCompany, inviteLoading, inviteMembers }: InviteStateProps = useSelector((state) => state.inviteMembers);
+  const {
+    inviteCompany,
+    inviteLoading,
+    inviteMembers,
+  }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
   const inviteMembersLength = inviteMembers.length;
 
   const firstOptions = roles.map((role) =>
@@ -74,7 +79,7 @@ const InviteMembersUI: FunctionComponent = () => {
     inviteMembers[index] = currentMember;
   }
 
-  async function inviteMembersBtn()  {
+  function inviteMembersBtn()  {
     const errorNotifications: InviteResultInfo[] = [];
     const regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
@@ -98,12 +103,12 @@ const InviteMembersUI: FunctionComponent = () => {
     });
 
     if (errorNotifications.length > 0) {
-      await dispatch(updateInviteResultInfo({ inviteResultInfo: errorNotifications }));
+      dispatch(updateInviteResultInfo({ inviteResultInfo: errorNotifications }));
 
       return;
     }
 
-    await dispatch(
+    dispatch(
       inviteMembersThunkAction({
         inviteMembersData,
         companyID: inviteCompany?.companyID,

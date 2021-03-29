@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { publicProfile, saveAccountInfo } from '../logic/account_actions';
+import { RootState } from 'redux/reducers_registration';
 
 const labels = [
   {
@@ -48,7 +49,7 @@ const labels = [
 ];
 
 const GeneralTabUi: FunctionComponent = ({}) => {
-  const accountState = useSelector((state) => state.account);
+  const accountState = useSelector((state: RootState) => state.account);
   const dispatch = useDispatch();
   const newState = { };
 
