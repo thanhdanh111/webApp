@@ -12,7 +12,7 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
     const token: Token =  localStorage.getItem('access_token');
 
     const res = await axios({
-      url: `${config.LOCAL_HOST}/companies/${companyID}/members/invite`,
+      url: `${config.BASE_URL}/companies/${companyID}/members/invite`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ export const getUserCompaniesApi = () => async (dispatch) => {
 
     const token: Token = localStorage.getItem('access_token');
 
-    const userInfo = await axios.get(`${config.LOCAL_HOST}/users/me`, {
+    const userInfo = await axios.get(`${config.BASE_URL}/users/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export const getUserCompaniesApi = () => async (dispatch) => {
     }
 
     const getDepartments = await axios.get(
-      `${config.LOCAL_HOST}/departments?${companiesParams}`,
+      `${config.BASE_URL}/departments?${companiesParams}`,
       {
         method: 'GET',
         headers: {

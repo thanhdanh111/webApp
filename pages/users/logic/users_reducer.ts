@@ -94,7 +94,7 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
     }
 
     const res =
-       await axios.get(`${config.LOCAL_HOST}/userAccesses?companyID=${companyID}&limit=${limit}&cursor=${cursor}`, {
+       await axios.get(`${config.BASE_URL}/userAccesses?companyID=${companyID}&limit=${limit}&cursor=${cursor}`, {
          headers: {
            'Content-Type': 'application/json',
            Authorization: `Bearer ${token}`,
@@ -132,7 +132,7 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
     };
 
     const res =
-     await axios.get(`${config.LOCAL_HOST}/userAccesses`, {
+     await axios.get(`${config.BASE_URL}/userAccesses`, {
        params,
        headers: {
          'Content-Type': 'application/json',
