@@ -30,7 +30,7 @@ beforeAll(async () => {
 
 describe('Users Page', () => {
 
-  test('Test UI list users page success', async () => {
+  test('Test UI list users page successfully after login', async () => {
     await page.goto('http://localhost:5000/users');
     await page.waitForSelector('.users');
 

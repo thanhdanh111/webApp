@@ -22,6 +22,8 @@ const DropDown = () => {
       token = localStorage.getItem('access_token');
     }
     if (!token) {
+      onPushToPage('login');
+
       return;
     }
     const accessToken = token.replace('?token=', '');
@@ -30,6 +32,11 @@ const DropDown = () => {
   }, []);
 
   async function logUserIn(token: string) {
+
+    if (!token) {
+      return;
+    }
+
     await Promise.all([
       dispatch(GetUserDataThunkAction(token)),
       dispatch(Login(token)),
@@ -42,8 +49,12 @@ const DropDown = () => {
       return;
     }
     localStorage.removeItem('access_token');
-    void router.push('/login');
+    onPushToPage('login');
   }
+
+  const onPushToPage = (url: string) => {
+    void router.push(`/${url}`, `/${url}.html`);
+  };
 
   const ActionUser = () => {
     const tokenAuth = typeof localStorage !== 'undefined' && localStorage.getItem('access_token');
@@ -71,7 +82,7 @@ const DropDown = () => {
     }
 
     return (
-      <Button variant='contained' className='logout_btn' color='primary' onClick={() => router.push('/login')}>
+      <Button variant='contained' className='logout_btn' color='primary' onClick={() => onPushToPage('login')}>
          Login
       </Button>
     );
@@ -102,15 +113,15 @@ const DropDown = () => {
           </Button>
           <Menu {...bindMenu(popupState)} className='menu-drop'>
             <MenuItem className='item-drop info-drop'><InfoUser /></MenuItem>
-            <MenuItem className='item-drop action-drop item-switch' onClick={() => router.push('/home')}>
+            <MenuItem className='item-drop action-drop item-switch' onClick={() => onPushToPage('home')}>
               <HomeIcon color='primary' className='icon-item' />
               <Typography className='text-item'>Home</Typography>
             </MenuItem>
-            <MenuItem className='item-drop action-drop item-switch' onClick={() => router.push('/account')}>
+            <MenuItem className='item-drop action-drop item-switch' onClick={() => onPushToPage('account')}>
               <PersonIcon color='primary' className='icon-item' />
               <Typography className='text-item'>Profile</Typography>
             </MenuItem>
-            <MenuItem className='item-drop action-drop item-switch' onClick={() => router.push('/account')}>
+            <MenuItem className='item-drop action-drop item-switch' onClick={() => onPushToPage('account')}>
               <SettingsIcon color='primary' className='icon-item' />
               <Typography className='text-item'>Setting</Typography>
             </MenuItem>
