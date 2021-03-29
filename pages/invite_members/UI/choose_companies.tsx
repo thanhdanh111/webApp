@@ -4,6 +4,7 @@ import { Typography, ListItem } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { chooseInviteCompany } from '../logic/invite_actions';
 import { InviteDepartmentInfo, InviteStateProps } from '../logic/invite_interface';
+import { RootState } from 'redux/reducers_registration';
 
 interface ChoosingCompanyProps {
   name: string;
@@ -15,7 +16,7 @@ type ChoosingCompanyType = ChoosingCompanyProps;
 
 const ChooseCompaniesUI: FunctionComponent = () => {
   const dispatch = useDispatch();
-  const { availInviteCompanies, hasNoCompanies }: InviteStateProps = useSelector((state) => state.inviteMembers);
+  const { availInviteCompanies, hasNoCompanies }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
 
   const ChoosingCompany = (props: ChoosingCompanyType) => {
     const { name, companyID, departments }: ChoosingCompanyType = props;

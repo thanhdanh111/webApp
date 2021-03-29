@@ -23,7 +23,7 @@ import Layout from '@components/pages_layout/pages_layout';
 //   });
 // }
 
-const withoutLayoutPaths = ['/login'];
+const withoutLayoutPaths = ['/login', '/login.html'];
 
 function myApp({ Component, pageProps, store }) {
   return (

@@ -63,7 +63,7 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       return;
     }
 
-    const res = await axios.get(`${config.LOCAL_HOST}/users/me`, {
+    const res = await axios.get(`${config.BASE_URL}/users/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

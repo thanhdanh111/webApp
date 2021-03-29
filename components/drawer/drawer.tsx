@@ -9,6 +9,7 @@ import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import PeopleIcon from '@material-ui/icons/People';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
+import { RootState } from 'redux/reducers_registration';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -23,7 +24,7 @@ const drawerElements = {
 };
 
 const DrawerUi: FunctionComponent = ({ }) => {
-  const headerState = useSelector((state) => state.headers);
+  const headerState = useSelector((state: RootState) => state.headers);
   const dispatch = useDispatch();
   const router = useRouter();
 

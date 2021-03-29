@@ -7,12 +7,12 @@ import { GetUserDataThunkAction } from '../logic/login_reducer';
 import * as qs from 'query-string';
 import { useRouter } from 'next/router';
 import { DisappearedLoading } from 'react-loadingg';
-const redirectUrl = `${config.LOCAL_HOST}/auth/google/callback&state=${config.STATE}`
+const redirectUrl = `${config.BASE_URL}/auth/google/callback&state=${config.STATE}`
   .split(':')
   .join('%3A')
   .split('/')
   .join('%2F');
-const linkAPILogin = `https://accounts.google.com/o/oauth2/v2/auth?scope=profile&access_type=offline&include_granted_scopes=true&response_type=code&client_id=${config.CLIENT_ID}&redirect_uri=${redirectUrl}`;
+const linkAPILogin = `${config.API_LOGIN}&redirect_uri=${redirectUrl}`;
 const LoginUi: FunctionComponent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
