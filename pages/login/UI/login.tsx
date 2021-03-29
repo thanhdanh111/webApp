@@ -25,7 +25,7 @@ const LoginUi: FunctionComponent = () => {
     const localAccess = localStorage.getItem('access_token');
 
     if (localAccess) {
-      await router.push('/home');
+      await router.push('/home', '/home.html');
       setIsLogin(false);
     }
 
@@ -42,7 +42,7 @@ const LoginUi: FunctionComponent = () => {
       dispatch(Login(accessToken)),
     ]);
 
-    await router.push('/home');
+    await router.push('/home', '/home.html');
     setIsLogin(false);
   }
 

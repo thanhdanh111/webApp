@@ -32,7 +32,8 @@ describe('Pots Page', () => {
     await page.goto('http://localhost:5000/invite_members');
     await page.waitForSelector('.invite-members-layout');
 
-    await page.screenshot();
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
   });
 
 });

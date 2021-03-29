@@ -34,7 +34,8 @@ describe('Users Page', () => {
     await page.goto('http://localhost:5000/users');
     await page.waitForSelector('.users');
 
-    await page.screenshot();
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
   });
 
 });

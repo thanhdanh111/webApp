@@ -35,7 +35,8 @@ describe('Home Page', () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.test-home');
 
-    await page.screenshot();
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
   });
 
 });
