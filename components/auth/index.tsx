@@ -15,7 +15,7 @@ const Auth = ({ children }) => {
     const token: Token =  localStorage.getItem('access_token');
 
     if (!token && path !== '/login') {
-      await router.push('/login');
+      await router.push('/login', '/login.html');
       setLoading(false);
 
       return;

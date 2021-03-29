@@ -58,6 +58,11 @@ export const auth = (state = initialState, action) => {
 
 export const GetUserDataThunkAction = (token) => async (dispatch) => {
   try {
+
+    if (!token) {
+      return;
+    }
+
     const res = await axios.get(`${config.LOCAL_HOST}/users/me`, {
       method: 'GET',
       headers: {

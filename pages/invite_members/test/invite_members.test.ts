@@ -28,8 +28,9 @@ beforeAll(async () => {
 });
 
 describe('Pots Page', () => {
-  test('Test invite members page successfully', async () => {
+  test('Test invite members page successfully after login', async () => {
     await page.goto('http://localhost:5000/invite_members');
+    await page.waitForSelector('.invite-members-layout');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
