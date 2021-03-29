@@ -35,6 +35,8 @@ describe('Pots Page', () => {
   test('Test account page successfully after login', async () => {
     await page.goto('http://localhost:5000/account');
     await page.waitForSelector('.page-card');
+
+    await page.screenshot();
   });
 });
 

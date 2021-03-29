@@ -31,6 +31,8 @@ describe('Pots Page', () => {
   test('Test invite members page successfully after login', async () => {
     await page.goto('http://localhost:5000/invite_members');
     await page.waitForSelector('.invite-members-layout');
+
+    await page.screenshot();
   });
 
 });
