@@ -49,24 +49,23 @@ const LoginUi: FunctionComponent = () => {
   const FormLogin = () => {
     return (
       <Grid sm={12} md={7} lg={9} item className='form-login'>
-        <Box className='from-header' component='h5' display={{ xs: 'none', sm: 'block' }}>
-          Don't have an account?
-          <Link className='link-header' href='#'> Get started</Link>
-        </Box>
         <Grid item className='login-contain'>
-          <div className='context'>
-            <Typography className='title-contain' component='h3' variant='h4' align='left' color='textPrimary'>
-              Sign to Minimal
-            </Typography>
-            <Typography className='description-contain' align='left'>
-              Enter your details below
-            </Typography>
-          </div>
           <div className='btn'>
-            <Button className='btn-gg' color='inherit' size='medium' href={linkAPILogin}>
-              <Typography className='icon-gg'>G</Typography>
+            <Button
+              startIcon={
+                <img alt='signin icon' src='../signin-google.svg'/>
+              }
+              className='btn-gg'
+              size='medium'
+              href={linkAPILogin}
+            >
+                Sign in with Google
             </Button>
           </div>
+          <Box className='login-contain--signup' component='body' display={{ sm: 'block' }}>
+            Don't have an account?
+          <Link className='login-contain--link' href='#'> Get started</Link>
+        </Box>
         </Grid>
       </Grid>
     );
