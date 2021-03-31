@@ -10,16 +10,18 @@ import PeopleIcon from '@material-ui/icons/People';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
 import { RootState } from 'redux/reducers_registration';
+import { EqualizerOutlined } from '@material-ui/icons';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
   users: <PeopleIcon />,
+  statistics: <EqualizerOutlined />,
   home: <HomeIcon />,
-  invite_members: <img alt='logo' width='24px' src='../send_mail.svg'/>,
+  invite_members: <img alt='logo' width='24px' src='../send_mail.svg' />,
 };
 
 const drawerElements = {
-  general: ['home', 'users'],
+  general: ['home', 'users', 'statistics'],
   management: ['account', 'invite_members'],
 };
 
@@ -67,7 +69,7 @@ const DrawerUi: FunctionComponent = ({ }) => {
       <List component='nav' aria-label='main mailbox folders'>
         <ListItem>
           <ListItemIcon>
-            <img alt='logo' className='drawer-logo' src='../logo_single.svg'/>
+            <img alt='logo' className='drawer-logo' src='../logo_single.svg' />
           </ListItemIcon>
         </ListItem>
         {listItems()}
@@ -102,16 +104,16 @@ const DrawerUi: FunctionComponent = ({ }) => {
           {drawer}
         </Drawer>
       </Hidden>
-        <Drawer
-          className='permanent-drawer'
-          classes={{
-            paper: 'drawer-paper',
-          }}
-          variant='permanent'
-          open
-        >
-          {drawer}
-        </Drawer>
+      <Drawer
+        className='permanent-drawer'
+        classes={{
+          paper: 'drawer-paper',
+        }}
+        variant='permanent'
+        open
+      >
+        {drawer}
+      </Drawer>
     </nav>
   );
 };
