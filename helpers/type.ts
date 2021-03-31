@@ -75,3 +75,12 @@ export interface ParamGetUser {
   cursor?: string;
   fullName?: string;
 }
+
+export interface CheckInCheckOut {
+  checkInAt?: string;
+  checkOutAt?: string;
+  description?: string;
+  id: string;
+  userID?: User;
+  companyID?: string;
+}
