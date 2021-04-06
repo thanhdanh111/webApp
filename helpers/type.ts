@@ -84,3 +84,10 @@ export interface CheckInCheckOut {
   userID?: User;
   companyID?: string;
 }
+export interface Profile {
+  firstName: string;
+  lastName: string;
+  email: string;
+  profilePhoto: string;
+  status: string;
+}
