@@ -2,6 +2,7 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { LoginAction } from './login_type_actions';
 import { GetUserData } from './login_actions';
+import { GetUserAccess } from 'pages/access_denied/logic/access_action';
 
 interface Profile {
   firstName: string;
@@ -16,7 +17,6 @@ interface ExtendedUser {
   gender: string;
   userID: string;
 }
-
 interface LoginValue {
   value: string;
   userID: string;
@@ -44,7 +44,6 @@ export const auth = (state = initialState, action) => {
         value: '',
       };
     case LoginAction.GET_USER_DATA:
-
       return {
         ...state,
         userProfile: action.payload.userProfile,
@@ -72,6 +71,7 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
     });
 
     dispatch(GetUserData(res.data));
+    dispatch(GetUserAccess(res.data?.access ?? []));
   } catch (error) {
     throw error;
   }

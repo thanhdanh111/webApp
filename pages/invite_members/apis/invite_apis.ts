@@ -54,22 +54,15 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
 
 const rolesCouldInvite = ['COMPANY_MANAGER'];
 
-export const getUserCompaniesApi = () => async (dispatch) => {
+export const getUserCompaniesApi = () => async (dispatch, getState) => {
   try {
     let isAdmin = false;
     await dispatch(inviteLoading({ isLoading: true }));
 
     const token: Token = localStorage.getItem('access_token');
+    const userInfo = getState().access;
 
-    const userInfo = await axios.get(`${config.BASE_URL}/users/me`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!userInfo?.data?.access || !userInfo?.data?.access.length) {
+    if (!userInfo?.access || !userInfo?.access.length) {
       await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
 
       return;
@@ -80,7 +73,7 @@ export const getUserCompaniesApi = () => async (dispatch) => {
     if (!isAdmin) {
       const companies: string[] = [];
 
-      userInfo?.data?.access.forEach((access) => {
+      userInfo?.access.forEach((access) => {
         const hasInvalidRole = access?.role && !rolesCouldInvite?.includes(access.role);
 
         if (access?.role && access?.role === 'ADMIN') {
