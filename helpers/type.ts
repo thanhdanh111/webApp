@@ -76,6 +76,39 @@ export interface ParamGetUser {
   fullName?: string;
 }
 
+export interface MenuItem {
+  style: string;
+  handleClick: () => void;
+  element: JSX.Element | string;
+}
+
+export interface Task {
+  _id: string;
+  companyID: Company;
+  departmentID: Department;
+  taskStatus: TaskStatusType;
+  tagIDs: string[];
+  userIDs: User[];
+  title: string;
+  description: string;
+  attachments: string[];
+  dueDate: string;
+  estimateTime: string;
+  timeTracked: string;
+  priority: string;
+  logs: string[];
+}
+
+export interface TaskStatusType {
+  _id: string;
+  statusID: string;
+  companyID: Company;
+  departmentID: Department;
+  taskBoardID: string;
+  title?: string;
+  taskIDs: Task[];
+  description: string;
+}
 export interface CheckInCheckOut {
   checkInAt?: string;
   checkOutAt?: string;
