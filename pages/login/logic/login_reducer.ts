@@ -10,9 +10,20 @@ interface ExtendedUser {
   gender: string;
   userID: string;
 }
+
+interface Access {
+  _id: string;
+  companyID?: string;
+  departmentID?: string;
+  status: string;
+  userID: string;
+  role: string;
+}
+
 interface LoginValue {
   value: string;
   userID: string;
+  access: Access[] | [];
   userProfile: Profile | {};
   extendedUser: ExtendedUser | {};
 }
@@ -20,6 +31,7 @@ interface LoginValue {
 const initialState: LoginValue = {
   value: '',
   userID: '',
+  access: [],
   userProfile: {},
   extendedUser: {},
 };
@@ -40,6 +52,7 @@ export const auth = (state = initialState, action) => {
       return {
         ...state,
         userProfile: action.payload.userProfile,
+        access: action.payload.access,
         userID: action.payload.userID,
         extendedUser: action.payload.extendedUser,
       };
