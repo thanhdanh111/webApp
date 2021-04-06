@@ -25,7 +25,7 @@ const LoginUi: FunctionComponent = () => {
     const localAccess = localStorage.getItem('access_token');
 
     if (localAccess) {
-      await router.push('/home', '/home.html');
+      await router.replace('/home', '/home.html');
       setIsLogin(false);
     }
 
@@ -42,11 +42,12 @@ const LoginUi: FunctionComponent = () => {
       dispatch(Login(accessToken)),
     ]);
 
-    await router.push('/home', '/home.html');
+    await router.replace('/home', '/home.html');
     setIsLogin(false);
   }
 
   const FormLogin = () => {
+
     return (
       <Grid sm={12} md={7} lg={9} item className='form-login'>
         <Grid item className='login-contain'>
