@@ -1,4 +1,4 @@
-import { Avatar, Button, Menu, MenuItem, Typography } from '@material-ui/core';
+import { Button, Menu, MenuItem, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { Logout, Login } from 'pages/login/logic/login_actions';
 import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
@@ -9,6 +9,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { RootState } from 'redux/reducers_registration';
+import UserAvatar from '@components/user_avatar/info_user';
 
 type Token = string | null;
 
@@ -84,7 +85,7 @@ const DropDown = () => {
 
     return (
       <Button variant='contained' className='logout_btn' color='primary' onClick={() => onPushToPage('login')}>
-         Login
+        Login
       </Button>
     );
   };
@@ -94,13 +95,11 @@ const DropDown = () => {
     const userName = `${user?.firstName} ${user?.lastName}`;
 
     return (
-        <div className='drop-info'>
-          <div className='info-avatar'>
-            <Avatar alt={userName} src={user?.profilePhoto}  />
-          </div>
-          <Typography className='info-username' component='h5' variant='h6'>{userName}</Typography>
-          <Typography className='info-email' component='p'>{user?.email}</Typography>
-        </div>
+      <div className='drop-info'>
+        <UserAvatar style='info-avatar' user={user}/>
+        <Typography className='info-username' component='h5' variant='h6'>{userName}</Typography>
+        <Typography className='info-email' component='p'>{user?.email}</Typography>
+      </div>
     );
   };
 
@@ -110,7 +109,7 @@ const DropDown = () => {
         <React.Fragment>
 
           <Button variant='contained' color='primary' {...bindTrigger(popupState)} className='drop-avt'>
-            <Avatar alt='user icon' src='../test.png' />
+          <UserAvatar alt='user icon' style='info-avatar' user={user}/>
           </Button>
           <Menu {...bindMenu(popupState)} className='menu-drop'>
             <MenuItem className='item-drop info-drop'><InfoUser /></MenuItem>

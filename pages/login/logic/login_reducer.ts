@@ -2,15 +2,8 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { LoginAction } from './login_type_actions';
 import { GetUserData } from './login_actions';
+import { Profile } from 'helpers/type';
 import { GetUserAccess } from 'pages/access_denied/logic/access_action';
-
-interface Profile {
-  firstName: string;
-  lastName: string;
-  email: string;
-  profilePhoto: string;
-  status: string;
-}
 
 interface ExtendedUser {
   _id: string;

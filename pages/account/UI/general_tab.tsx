@@ -2,12 +2,13 @@ import React, { FunctionComponent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import {
-  Avatar, Box, Typography, FormControlLabel, Switch,
+Box, Typography, FormControlLabel, Switch,
   TextField,
 } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { publicProfile, saveAccountInfo } from '../logic/account_actions';
 import { RootState } from 'redux/reducers_registration';
+import UserAvatar from '@components/user_avatar/info_user';
 
 const labels = [
   {
@@ -50,6 +51,7 @@ const labels = [
 
 const GeneralTabUi: FunctionComponent = ({}) => {
   const accountState = useSelector((state: RootState) => state.account);
+  const user = useSelector((state: RootState) => state.auth.userProfile);
   const dispatch = useDispatch();
   const newState = { };
 
@@ -105,11 +107,7 @@ const GeneralTabUi: FunctionComponent = ({}) => {
     <Box className='general-tab'>
       <Box className='avatar-section'>
         <Box className='avatar-cricle-border'>
-          <Avatar
-                className='profile-picture'
-                alt='user icon'
-                src='../test.png'
-          />
+          <UserAvatar alt='user icon' style='profile-picture' user={user} />
           <Box className='update-image-overlay' onClick={() => uploadImage()}>
             <AddAPhotoIcon className='update-image-icon' />
             <Typography className='update-image-text'>Update Photo</Typography>
