@@ -5,11 +5,7 @@ import {
   renderData,
 } from '../../users/logic/users_reducer';
 import { Data } from '../../../helpers/type';
-import {
-  Card,
-  CardContent,
-  FormControl, InputLabel, MenuItem, Select,
-} from '@material-ui/core';
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { setUserID } from '../logic/statistics_actions';
 
 const UserSelection: FunctionComponent = () => {
@@ -47,7 +43,7 @@ const UserSelection: FunctionComponent = () => {
       return <div />;
     }
     const list: JSX.Element[] = [];
-    userList.forEach((element) => list.push(<option value={element.id}>{element.userName}</option>));
+    userList.forEach((element) => list.push(<MenuItem className='select-item' value={element.id}>{element.userName}</MenuItem>));
 
     return list;
   };
@@ -57,27 +53,22 @@ const UserSelection: FunctionComponent = () => {
       return <div />;
     }
 
-    return <MenuItem value='more_users'>...</MenuItem>;
+    return <MenuItem value='more_users' className='select-item'>...</MenuItem>;
   };
 
   return (
-    <div className='select-name-container' >
-      <Card className='select-name-card'>
-        <CardContent>
-          <FormControl className='select-name-formcontrol' variant='outlined' >
-            <InputLabel >Select User</InputLabel>
-            <Select
-              value={user}
-              onChange={handleChange}
-            >
-              {getOptions(usersList)}
-              {getMore(cursor)}
-              <option value=''>All</option>
-            </Select>
-          </FormControl>
-        </CardContent>
-      </Card>
-    </div>
+    <FormControl className='select-name-formcontrol' variant='outlined' color='secondary'>
+      <InputLabel className='label-select'>Select User</InputLabel>
+      <Select
+        value={user}
+        onChange={handleChange}
+        className='select-list-user'
+      >
+        {getOptions(usersList)}
+        {getMore(cursor)}
+        <MenuItem value='all users' className='select-item'>All</MenuItem>
+      </Select>
+    </FormControl>
   );
 };
 

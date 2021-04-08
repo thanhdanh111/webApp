@@ -3,7 +3,7 @@ import { TaskStatusType } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { getDataTaskStatuses, hideLoaderListUser, showLoaderListUser } from './dashboard_actions';
-import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
+// import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
 
 interface Data {
   loading: boolean;
@@ -52,8 +52,6 @@ export const getTaskStatusThunkAction = (companyID) => async (dispatch) => {
     if (!token || !companyID) {
       return;
     }
-
-    dispatch(GetUserDataThunkAction(token));
 
     const res = await axios.get(`${config.BASE_URL}/taskStatuses`,
       {
