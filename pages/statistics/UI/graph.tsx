@@ -7,6 +7,7 @@ import SwitchButton from './switch_button';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { getAllCheckInThunkAction } from '../logic/statistics_reducer';
 import { limitStatistics } from '../logic/statistics_actions';
+import UserSelection from './user_selection';
 
 const getTime = (str: string) => {
   const local = new Date(str);
@@ -86,7 +87,7 @@ const Graph: React.FunctionComponent = () => {
     chart: {
       type: 'area',
       height: 100,
-      foreColor: '#fff',
+      foreColor: '#424242',
       stacked: false,
       dropShadow: {
         enabled: true,
@@ -107,7 +108,7 @@ const Graph: React.FunctionComponent = () => {
     },
     markers: {
       size: 0,
-      strokeColor: '#fff',
+      strokeColor: '#424242',
       strokeWidth: 3,
       strokeOpacity: 1,
       fillOpacity: 1,
@@ -169,12 +170,15 @@ const Graph: React.FunctionComponent = () => {
         <CardContent>
           <Grid container alignContent='space-between'>
             <Grid item xs={8} className='header'>
-              <Typography style={{ color: 'white', fontSize: 11 }}>OVERVIEW</Typography>
-              <Typography style={{ color: 'white', fontSize: 24, fontWeight: 700 }}>Check in & Check out time</Typography>
+              <Typography style={{ color: '#000000', fontSize: 11 }}>OVERVIEW</Typography>
+              <Typography className='label-graph' style={{ color: '#000000', fontSize: 24, fontWeight: 700 }}>
+                Check in & Check out time
+              </Typography>
             </Grid>
             <Grid item xs={4} className='justify-content-end'>
               <SwitchButton handleClick={() => setLimit(7)} title='Week' isSelected={limit === 7} />
               <SwitchButton handleClick={() => setLimit(30)} title='Month' isSelected={limit !== 7} />
+              <UserSelection />
             </Grid>
           </Grid>
           <Chart options={data} series={data.series} />

@@ -6,7 +6,7 @@ const theme = createMuiTheme({
       main: '#637381',
     },
     secondary: {
-      main: 'rgb(0, 171, 85)',
+      main: '#00AB55',
     },
     error: {
       light: '#e57373',
@@ -21,7 +21,7 @@ const theme = createMuiTheme({
     action: {
       selected: 'rgb(33, 43, 54)',
       selectedOpacity: 1,
-      focus: 'rgb(0, 171, 85)',
+      focus: '#00AB55',
     },
   },
 });

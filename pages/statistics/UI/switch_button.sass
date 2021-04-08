@@ -1,5 +1,6 @@
 .btn-switch-container
   display: inline-block
+  margin-right: 20px
   
 .btn-switch-container > .btn-switch-selected
   font-weight: 700
@@ -9,9 +10,14 @@
   padding: 6px 16px
   transition: background-color 250ms 
   border-radius: 8px
-  margin-left: 20px
   color: #FFFFFF
-  background-color: #5E73E4
+  background-color: #00AB55;
+  box-shadow: rgba(0, 171, 85, 0.24) 0px 8px 16px 0px;
+  vertical-align: middle;
+
+.btn-switch-container > .btn-switch-selected:hover
+  background: #C8FACD
+  color: #00AB55
 
 .btn-switch-container > .btn-switch
   font-weight: 700
@@ -19,9 +25,15 @@
   line-height: 1.71429
   text-transform: capitalize
   padding: 6px 16px
-  margin-left: 20px
   transition: background-color 250ms 
-
+  vertical-align: middle;
   background-color: #FFFFFF
+  border: 0.1px solid #00AB55
   border-radius: 8px
-  color: #5E73E4
+  color: #00AB55
+
+.btn-switch-container > .btn-switch:hover
+  background: #C8FACD
+  color: #fff
+  border: none
+  

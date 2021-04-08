@@ -23,7 +23,7 @@ const StatisticsCard: React.FunctionComponent<BodyProps> = ({ title, numTitle, v
     <Card className='page-card' style={{ borderRadius: 10 }} >
       <CardContent className='page-card-content'>
         <Grid container>
-          <Grid item xs={8}>
+          <Grid item xs={6}>
             <Typography color='textSecondary' gutterBottom>
               {title.toUpperCase()}
             </Typography>
