@@ -4,6 +4,10 @@ import { DisappearedLoading } from 'react-loadingg';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { getUserAccessAction } from 'pages/access_denied/logic/access_reducer';
+import { getBrowserToken } from 'helpers/fcm';
+import firebase from 'firebase/app';
+import 'firebase/messaging';
+import { useSnackbar, WithSnackbarProps } from 'notistack';
 
 type Token = string | null;
 const Auth = ({ children, publicPages }) => {
@@ -13,6 +17,7 @@ const Auth = ({ children, publicPages }) => {
   const [loading, setLoading] = useState(true);
   const access = useSelector((state: RootState) => state.access);
   const dispatch = useDispatch();
+  const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
 
   useEffect(() => {
     void checkLogin();
@@ -30,13 +35,26 @@ const Auth = ({ children, publicPages }) => {
     checkAccessUser();
   }, [access?.access]);
 
+  const getFCMToken = async () => {
+    const fcmToken = await getBrowserToken();
+    if (!fcmToken) {
+      return;
+    }
+
+    const messaging = firebase.messaging();
+    messaging.onMessage((payload) => {
+      // tslint:disable-next-line:no-console
+      console.log(payload);
+      const noti = payload.notification;
+      enqueueSnackbar(`${noti.title}: ${noti.body.substring(0, 30)}...`, { variant: 'info' });
+    });
+  };
+
   const hasAccessPermission = () => {
     const filteredAccess = access?.access?.filter((item) => {
       const isAdmin = item?.role === 'ADMIN';
       const hasPermission = item?.companyID !== null && item?.status === 'ACCEPTED';
       if (hasPermission || isAdmin) {
-        // tslint:disable-next-line:no-console
-        console.log('hasPermission || isAdmin');
 
         return true;
       }
@@ -70,6 +88,7 @@ const Auth = ({ children, publicPages }) => {
     }
 
     setLoading(false);
+    await getFCMToken();
 
     return;
   };

@@ -4,7 +4,7 @@ import '../components/table/table.sass';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import * as Sentry from '@sentry/browser';
-import { ThemeProvider, NoSsr } from '@material-ui/core';
+import { ThemeProvider, NoSsr, Button } from '@material-ui/core';
 import '../styles/globals.css';
 import '../styles/sass/index.sass';
 import { config } from '../helpers/get_config';
@@ -50,26 +50,35 @@ const withoutLayoutPaths = getPaths([
   '/login',
   '/access_denied',
 ]);
-
+const notistackRef = React.createRef<SnackbarProvider>();
+const onClickDismiss = (key) => {
+  notistackRef?.current?.closeSnackbar(key);
+};
 function myApp({ Component, pageProps, store }) {
 
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <NoSsr>
-          <Auth publicPages={publicPages}>
-            <SnackbarProvider
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              maxSnack={100}
-            >
+          <SnackbarProvider
+            ref={notistackRef}
+            action={(key) => (
+                <Button onClick={() => onClickDismiss(key)}>
+                    X
+                </Button>
+            )}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            maxSnack={100}
+          >
+            <Auth publicPages={publicPages}>
               <Layout withoutPaths={withoutLayoutPaths}>
                 <Component {...pageProps} />
               </Layout>
-            </SnackbarProvider>
-          </Auth>
+            </Auth>
+          </SnackbarProvider>
         </NoSsr>
       </ThemeProvider>
     </Provider>
