@@ -52,6 +52,15 @@ module.exports = () => {
         STATE: 'http://localhost:5000',
         API_LOGIN: 'https://accounts.google.com/o/oauth2/v2/auth?scope=profile&access_type=offline&include_granted_scopes=true&response_type=code&client_id=',
         CLIENT_ID: '440910022326-ntth1t95ht7q6kvc8qj0bmeq81foj2ob.apps.googleusercontent.com',
+        FCM: {
+          apiKey: "AIzaSyCC9Fw-20uc_UVKhPcW_Phnac7kleGFqRo",
+          authDomain: "test-fcm-652ab.firebaseapp.com",
+          projectId: "test-fcm-652ab",
+          storageBucket: "test-fcm-652ab.appspot.com",
+          messagingSenderId: "961485436410",
+          appId: "1:961485436410:web:896e1ede44652c04e2e043",
+          measurementId: "G-S8E46696TF"
+        }
       };
       if (isDev) {
         return _publicConfig;

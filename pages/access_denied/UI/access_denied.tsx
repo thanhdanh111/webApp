@@ -1,4 +1,5 @@
 import { Button, Grid } from '@material-ui/core';
+import { deleteBrowserToken } from 'helpers/fcm';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent } from 'react';
 
@@ -6,6 +7,7 @@ const AccessDenied: FunctionComponent = () => {
   const router = useRouter();
   const onBackToLogin = async () => {
     await router.replace('/login', '/login.html');
+    await deleteBrowserToken();
   };
 
   return (

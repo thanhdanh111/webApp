@@ -9,4 +9,5 @@ export const config = {
   CLIENT_ID: publicRuntimeConfig['CLIENT_ID'],
   STATE: publicRuntimeConfig['STATE'],
   API_LOGIN: `${publicRuntimeConfig['API_LOGIN']}${publicRuntimeConfig['CLIENT_ID']}`,
+  FCM: publicRuntimeConfig['FCM'],
 };

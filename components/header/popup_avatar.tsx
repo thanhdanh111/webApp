@@ -10,6 +10,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { RootState } from 'redux/reducers_registration';
 import UserAvatar from '@components/user_avatar/info_user';
+import { deleteBrowserToken } from 'helpers/fcm';
 
 type Token = string | null;
 
@@ -45,8 +46,9 @@ const DropDown = () => {
     ]);
   }
 
-  function logUserOut() {
+  async function logUserOut() {
     dispatch(Logout());
+    await deleteBrowserToken();
     if (typeof localStorage === 'undefined') {
       return;
     }
