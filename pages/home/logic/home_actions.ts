@@ -1,4 +1,4 @@
-import { dashboardClickUp } from './dashboard_type';
+import { dashboardClickUp } from './home_type';
 
 export const getDataTaskStatuses = (res: object) => {
   return {

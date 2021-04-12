@@ -8,6 +8,7 @@ const puppeteer = require('puppeteer');
 const token = process.env.TEST_TOKEN;
 
 beforeAll(async () => {
+
   try {
     browser = await puppeteer.launch({
       headless: true,
@@ -17,8 +18,8 @@ beforeAll(async () => {
 
     page = await browser.newPage();
 
-    viewport = await page.setViewport({ width: 1366 , height: 913 });
-    
+    viewport = await page.setViewport({ width: 1853 , height: 951 });
+
     await page.goto('http://localhost:5000');
 
     await page.evaluate((token) => {
@@ -30,10 +31,10 @@ beforeAll(async () => {
   }
 });
 
-describe('Home Page', () => {
-  test('Test ui page home success after login', async () => {
+describe('Home page', () => {
+  test('Test home successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
-    await page.waitForSelector('.test-home');
+    await page.waitForSelector('.home-page');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();

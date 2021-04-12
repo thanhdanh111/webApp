@@ -1,4 +1,4 @@
-import { getTaskStatusThunkAction } from 'pages/dashboard/logic/dashboard_reducer';
+import { getTaskStatusThunkAction } from 'pages/home/logic/home_reducer';
 import React, { FunctionComponent, useEffect } from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
