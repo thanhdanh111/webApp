@@ -11,7 +11,7 @@ const UserLinkMenu = () => {
                     <ul className='link-list-ul'>
                         <li className='link-item item-first'>
                             <div className='item'>
-                                <a href='/dashboard' className='link'>Dashboard</a>
+                                <a href='/home' className='link'>Home</a>
                             </div>
                         </li>
                         <li className='link-item'>

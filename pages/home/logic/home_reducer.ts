@@ -1,9 +1,8 @@
-import { dashboardClickUp } from './dashboard_type';
+import { dashboardClickUp } from './home_type';
 import { TaskStatusType } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { getDataTaskStatuses, hideLoaderListUser, showLoaderListUser } from './dashboard_actions';
-// import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
+import { getDataTaskStatuses, hideLoaderListUser } from './home_actions';
 
 interface Data {
   loading: boolean;
@@ -50,6 +49,8 @@ export const getTaskStatusThunkAction = (companyID) => async (dispatch) => {
     const token = localStorage.getItem('access_token');
 
     if (!token || !companyID) {
+      await dispatch(hideLoaderListUser());
+
       return;
     }
 
@@ -65,7 +66,7 @@ export const getTaskStatusThunkAction = (companyID) => async (dispatch) => {
       });
 
     if (res.data.totalCount === 0){
-      await dispatch(showLoaderListUser());
+      await dispatch(hideLoaderListUser());
 
       return;
     }

@@ -10,19 +10,18 @@ import PeopleIcon from '@material-ui/icons/People';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
 import { RootState } from 'redux/reducers_registration';
-import { Dashboard, EqualizerOutlined } from '@material-ui/icons';
+import { EqualizerOutlined } from '@material-ui/icons';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
   users: <PeopleIcon />,
   statistics: <EqualizerOutlined />,
   home: <HomeIcon />,
-  dashboard: <Dashboard />,
   invite_members: <img alt='logo' width='24px' src='../send_mail.svg' />,
 };
 
 const drawerElements = {
-  general: ['home', 'dashboard', 'users', 'statistics'],
+  general: ['home', 'users', 'statistics'],
   management: ['account', 'invite_members'],
 };
 

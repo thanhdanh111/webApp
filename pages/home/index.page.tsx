@@ -1,13 +1,12 @@
-import React, { } from 'react';
-import HomeUi from './UI/home';
+import React from 'react';
+import DashBoard from './UI/home';
 
-const Home = () => {
-
+const Board = () => {
   return (
-    <React.Fragment>
-      <HomeUi title='test' />
-    </React.Fragment>
+        <div className='home-page'>
+          <DashBoard />
+        </div>
   );
 };
 
-export default Home;
+export default (Board);
