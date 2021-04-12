@@ -1,10 +1,10 @@
 import { storiesOf } from '@storybook/react';
-import DashBoard from './home';
+import HomeUI from './home';
 
 storiesOf('Body Scripts', module).add('Body Scripts', () => {
   return (
     <>
-      <DashBoard />
+      <HomeUI />
     </>
   );
 });

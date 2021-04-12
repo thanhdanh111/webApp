@@ -1,10 +1,10 @@
 import React from 'react';
-import DashBoard from './UI/home';
+import HomeUI from './UI/home';
 
 const Board = () => {
   return (
         <div className='home-page'>
-          <DashBoard />
+          <HomeUI />
         </div>
   );
 };
