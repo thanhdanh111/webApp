@@ -50,6 +50,7 @@ export interface Access {
   _id: string;
   role: string;
   status: string;
+  companyID?: string | undefined;
 }
 
 export interface UserAccess {
@@ -113,10 +114,11 @@ export interface CheckInCheckOut {
   checkInAt?: string;
   checkOutAt?: string;
   description?: string;
-  id: string;
+  _id: string;
   userID?: User;
-  companyID?: string;
+  companyID?: Company;
 }
+
 export interface Profile {
   firstName: string;
   lastName: string;
