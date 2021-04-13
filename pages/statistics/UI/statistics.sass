@@ -72,6 +72,8 @@
 
             .label-select
               font-size: 15px
+              color: #fff
+              z-index: 1
 
             .MuiOutlinedInput-root
               border-radius: 9px;
@@ -192,7 +194,7 @@
 
 
 
-@media screen and (min-width: 480px)
+@media screen and (max-width: 480px)
   .statistics-page
     height: 100vh;
     overflow-y: scroll;
@@ -209,6 +211,7 @@
         .card-item
           max-width: 50%;
           flex-basis: 55%;
+          min-width: 100%;
 
           .page-card
             .page-card-content
@@ -253,7 +256,7 @@
             .MuiOutlinedInput-root
               border-radius: 8px;
 
-@media screen and (max-width: 480px) and (min-width: 320px)
+@media screen and (max-width: 360px)
   .statistics-page
     height: 100vh;
     overflow-y: scroll;
@@ -268,7 +271,8 @@
         display: block;
 
         .card-item
-          max-width: 100%;
+          max-width: 25%;
+          min-width: 87%;
 
           .page-card
             .page-card-content
@@ -276,7 +280,7 @@
     .statistics-body
       position: relative
       top: 0px
-      width: 100%
+      width: 87%
       padding: 0 17px;
 
       .bg-gradient-default
@@ -308,9 +312,6 @@
           .select-name-formcontrol
             min-width: 4em;
             max-width: 4em;
-
-            .label-select
-              display: none
 
             .MuiOutlinedInput-root
               border-radius: 8px;
