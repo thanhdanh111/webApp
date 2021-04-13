@@ -1,124 +1,206 @@
 .list-user
-    .container
-        width: 100%;
-        margin-left: auto;
-        box-sizing: border-box;
-        margin-right: auto;
-        display: block;
+	.container
+		width: 100%;
+		margin-left: auto;
+		box-sizing: border-box;
+		margin-right: auto;
+		display: block;
 
-        .header-list
-            -webkit-box-flex: 1;
-            flex-grow: 1;
-            margin-bottom: 40px;
+		.header-list
+			flex-grow: 1;
+			margin-bottom: 40px;
 
-            .title-list
-                margin: 0px 0px 8px;
-                font-family: sans-serif;
-                font-weight: 600;
-                font-size: 2em;
-                line-height: 1.5;
+			.title-list
+				margin: 0px 0px 8px;
+				font-family: sans-serif;
+				font-weight: 600;
+				font-size: 2em;
+				line-height: 1.5;
 
-            .link-list
-                margin: 0px;
-                font-family: sans-serif;
-                font-weight: 500;
-                font-size: 1rem;
-                line-height: 1.5;
-                padding: 0
-                margin: 0
+			.link-list
+				margin: 0px;
+				font-family: sans-serif;
+				font-weight: 500;
+				font-size: 1rem;
+				line-height: 1.5;
+				padding: 0;
+				margin: 0;
 
-                .link-list-ul
-                    display: flex;
-                    flex-wrap: wrap;
-                    -webkit-box-align: center;
-                    align-items: center;
-                    padding: 0px;
-                    margin: 0px;
+				.link-list-ul
+					display: flex;
+					flex-wrap: wrap;
+					-webkit-box-align: center;
+					align-items: center;
+					padding: 0px;
+					margin: 0px;
 
-                    .link-item
-                        margin-left: 32px;
-                        font-size: 13px;
-                        font-weight: 600;
-                        
-                    .item-first
-                        margin: 0;
-                        list-style: none;
+					.link-item
+						margin-left: 32px;
+						font-size: 13px;
+						font-weight: 600;
 
-                        .item
-                            .link
-                                display: flex;
-                                align-items: center;
-                                line-height: 2;
+					.item-first
+						margin: 0;
+						list-style: none;
 
-        .table-container
-            background-color: rgb(255, 255, 255);
-            color: rgb(33, 43, 54);
-            transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-            overflow: hidden;
-            box-shadow: rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) 0px 16px 32px -4px;
-            border-radius: 16px;
-            position: relative;
-            z-index: 0;
+						.item
+							.link
+								display: flex;
+								align-items: center;
+								line-height: 2;
 
-            .head-table
-                height: 96px;
-                display: flex;
-                padding: 0px 8px 0px 24px;
-                justify-content: space-between;
+		.table-container
+			background-color: rgb(255, 255, 255);
+			color: rgb(33, 43, 54);
+			transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+			overflow: hidden;
+			box-shadow: rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) 0px 16px 32px -4px;
+			border-radius: 16px;
+			position: relative;
+			z-index: 0;
 
-                .header-search
-                    width: 240px;
-                    position: relative;
-                    border-radius: 8px;
-                    font-family: sans-serif;
-                    font-weight: 500;
-                    font-size: 1rem;
-                    line-height: 1.4375em;
-                    color: rgb(33, 43, 54);
-                    box-sizing: border-box;
-                    position: relative;
-                    cursor: text;
-                    display: inline-flex;
-                    -webkit-box-align: center;
-                    align-items: center;
-                    transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,width 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-                    border: 0.5px solid rgb(145, 158, 171);
-                    padding: 10px 15px;
+			.head-table
+				height: 96px;
+				display: flex;
+				padding: 0px 8px 0px 24px;
+				justify-content: space-between;
 
-                    .icon-search
-                        color: rgb(145, 158, 171);
-                        font-weight: 400;
-                        font-size: 1.5em;
-                        margin-right: 10px
+				.header-search
+					width: 240px;
+					position: relative;
+					border-radius: 8px;
+					font-family: sans-serif;
+					font-weight: 500;
+					font-size: 1rem;
+					line-height: 1.4375em;
+					color: rgb(33, 43, 54);
+					box-sizing: border-box;
+					position: relative;
+					cursor: text;
+					display: inline-flex;
+					-webkit-box-align: center;
+					align-items: center;
+					transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,width 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+					border: 0.5px solid rgb(145, 158, 171);
+					padding: 10px 15px;
 
-                    .input-search
-                        font: inherit;
-                        letter-spacing: inherit;
-                        color: currentcolor;
-                        padding: 4px 0px 5px;
-                        border: 0px;
-                        box-sizing: content-box;
-                        background: none;
-                        height: 1.4375em;
-                        margin: 0px;
-                        -webkit-tap-highlight-color: transparent;
-                        display: block;
-                        min-width: 0px;
-                        animation-name: mui-auto-fill-cancel;
-                        animation-duration: 10ms;
-                        outline: none;
+					.icon-search
+						color: rgb(145, 158, 171);
+						font-weight: 400;
+						font-size: 1.5em;
+						margin-right: 10px
 
-            .table-list
-                .table-content
-                    .table-users
-                        .table-head
-                            .cell-title
-                                border: none;
-                                font-weight: bold;
+					.input-search
+						font: inherit;
+						letter-spacing: inherit;
+						color: currentcolor;
+						padding: 4px 0px 5px;
+						border: 0px;
+						box-sizing: content-box;
+						background: none;
+						height: 1.4375em;
+						margin: 0px;
+						-webkit-tap-highlight-color: transparent;
+						display: block;
+						min-width: 0px;
+						animation-name: mui-auto-fill-cancel;
+						animation-duration: 10ms;
+						outline: none;
+			.table-list
+				.table-content
+					.table-users
+						.table-head
+							.cell-title
+								border: none;
+								font-weight: bold;
 
-                    .table-body
-                        .row-contain
-                            .cell-contain
-                                border: none;
-        
+					.table-body
+						.row-contain
+							.cell-contain
+								border: none;
 
+@media screen and (max-width: 768px) and (min-width: 480px)
+	.list-user
+		.container
+			.header-list
+				margin-bottom: 20px
+				.title-list
+					font-size: 1.5em
+
+			.table-container
+				overflow: auto
+				min-width: -webkit-fill-available
+				max-width: 480px
+				.head-table
+					height: 70px
+					padding: 0px 0px 0px 15px
+					.header-search
+						width: 180px
+						padding: 5px 15px
+						.input-search
+							font-size: 14px
+
+				.table-list
+					.table-content
+						.table-users
+							.table-head
+								.cell-title
+									padding: 10px 10px
+
+@media screen and (max-width: 1024px)
+	.list-user
+		.container
+			.header-list
+				margin-bottom: 20px
+				.title-list
+					font-size: 1.5em
+
+			.table-container
+				.head-table
+					height: 70px
+					padding: 0px 0px 0px 15px
+					.header-search
+						width: 180px
+						padding: 5px 15px
+						.input-search
+							font-size: 14px
+
+				.table-list
+					.table-content
+						.table-users
+							.table-head
+								.cell-title
+									padding: 10px 10px
+
+@media screen and (max-width: 480px) and (min-width: 320px)
+	.list-user
+		.container
+			.header-list
+				margin-bottom: 20px
+				.title-list
+					font-size: 1.2em
+
+				.link-list
+					.link-list-ul
+						.link-item
+							font-size: 12px
+
+			.table-container
+				overflow: auto
+				min-width: -webkit-fill-available
+				max-width: 320px
+				.head-table
+					height: 70px
+					padding: 0px 0px 0px 15px
+					.header-search
+						width: 180px
+						padding: 5px 15px
+						.input-search
+							font-size: 14px
+
+				.table-list
+					.table-content
+						.table-users
+							.table-head
+								.cell-title
+									padding: 10px 10px
