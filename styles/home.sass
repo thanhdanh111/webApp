@@ -122,12 +122,16 @@ body
 .logo
   height: 1em
 
-@media (max-width: 768px)
-    body 
-        position: fixed
+@media screen and (max-width: 768px)
+  body 
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    outline: 0;
+    margin: 0;
 
 
-@media (max-width: 600px)
+@media screen and (max-width: 600px)
   .grid
     width: 100%
     flex-direction: column
