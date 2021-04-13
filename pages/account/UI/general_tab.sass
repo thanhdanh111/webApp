@@ -116,16 +116,127 @@
   width: 76%
 
 
-@media screen and (max-width: 960px)
+@media screen and (max-width: 960px) and (min-width: 768px)
   .general-tab
     flex-wrap: wrap
     display: flex
     height: 100%
     margin: 10px
+    overflow: auto
+    max-height: 36rem
 
   .general-tab > .avatar-section
     width: 100%
-    height: 70vh
+    height: 20rem
+
+  .general-tab > .information-fillout
+    width: 100%
+    height: 100%
+    flex-grow: 1
+  
+  .text-field-container
+    width: 90%
+    padding-top: 2rem
+
+  .text-field-container > .text-field-form > .text-field
+    width: 100%
+
+  .large-container
+    width: 90%
+    padding-top: 2rem
+
+  .large-container > .text-field-form > .text-field
+    width: 100%
+  
+  .general-tab > .information-fillout > .btn-primary-container
+    justify-content: flex-end
+    display: flex
+    width: 88.5%
+    padding-top: 1.5rem
+    padding-bottom: 0.5rem
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .profile-picture
+    width: 100px
+    height: 100px
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay
+    width: 100px
+    height: 100px
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-text
+    top: 50%
+    left: 12.3%
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-icon
+    top: 23.8%
+    left: 38.74%
+
+@media screen and (max-width: 768px) and (min-width: 480px)
+  .general-tab
+    flex-wrap: wrap
+    display: flex
+    height: 100%
+    margin: 10px
+    overflow: auto
+    max-height: 60vh
+
+  .general-tab > .avatar-section
+    width: 100%
+    height: 20rem
+
+  .general-tab > .information-fillout
+    width: 100%
+    height: 100%
+    flex-grow: 1
+  
+  .text-field-container
+    width: 90%
+    padding-top: 2rem
+
+  .text-field-container > .text-field-form > .text-field
+    width: 100%
+
+  .large-container
+    width: 90%
+    padding-top: 2rem
+
+  .large-container > .text-field-form > .text-field
+    width: 100%
+  
+  .general-tab > .information-fillout > .btn-primary-container
+    justify-content: flex-end
+    display: flex
+    width: 88.5%
+    padding-top: 1.5rem
+    padding-bottom: 0.5rem
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .profile-picture
+    width: 100px
+    height: 100px
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay
+    width: 100px
+    height: 100px
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-text
+    top: 50%
+    left: 12.3%
+
+  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-icon
+    top: 23.8%
+    left: 38.74%
+@media screen and (max-width: 480px) and (min-width: 320px)
+  .general-tab
+    flex-wrap: wrap
+    display: flex
+    height: 100%
+    margin: 10px
+    overflow: auto
+    max-height: 50vh
+
+  .general-tab > .avatar-section
+    width: 100%
+    height: 20rem
 
   .general-tab > .information-fillout
     width: 100%
