@@ -7,8 +7,8 @@ import { checkArray } from 'helpers/check_array';
 
 const TaskItem = (props: Task) => {
 
-  const taskName = props.title.split('_').join(' ');
-  const taskID = props._id.slice(0, 6);
+  const taskName = props?.title?.split('_').join(' ');
+  const taskID = props?._id?.slice(0, 6);
 
   return (
         <div className='task-item'>
@@ -16,7 +16,7 @@ const TaskItem = (props: Task) => {
             <div className='task-title'>
                 <Typography component='span' className='task-name'>{taskName}</Typography>
                 <AvatarGroup max={2}>
-                    {checkArray(props.userIDs) ?
+                    {checkArray(props?.userIDs) ?
                     props.userIDs.map((user) => {
                       return (
                         <Avatar key={user.email} alt={user.firstName} src={user.profilePicture} />

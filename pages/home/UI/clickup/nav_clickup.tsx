@@ -8,7 +8,19 @@ import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 
-const NavClickUp = () => {
+interface InitProps {
+  handleClick: (e) => void;
+  show: string;
+}
+
+const NavClickUp = (props: InitProps) => {
+
+  const { handleClick, show }: InitProps = props;
+
+  const btnShowMe = show === 'me' ? 'btn-show' : '';
+
+  const btnShowEvery = show === 'everyone' ? 'btn-show' : '';
+
   return (
         <div className='nav-click_up'>
             <Container className='nav-search'>
@@ -43,13 +55,13 @@ const NavClickUp = () => {
                     </li>
                     <li className='item-action'>
                         <div className='action action-use'>
-                            <Button className='btn-me'>
+                            <Button className={`btn-me ${btnShowMe}`} onClick={() => handleClick('me')}>
                                 <div className='assign-me'>
                                     <PersonIcon className='icon-per' />
                                     <Typography className='text-per'>Me</Typography>
                                 </div>
                             </Button>
-                            <Button className='btn-other'>
+                            <Button className={`btn-other ${btnShowEvery}`} onClick={() => handleClick('everyone')}>
                                 <PeopleAltIcon className='icon-other' />
                             </Button>
                         </div>
