@@ -1,8 +1,8 @@
 import { dashboardClickUp } from './home_type';
-import { TaskStatusType } from '../../../helpers/type';
+import { Task, TaskStatusType } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { getDataTaskStatuses, hideLoaderListUser } from './home_actions';
+import { getDataTaskStatuses, hideLoaderListUser, getDataTasksByUserThunkAction } from './home_actions';
 
 interface Data {
   loading: boolean;
@@ -10,6 +10,9 @@ interface Data {
   cursor: string;
   list: TaskStatusType[];
   limit: number;
+  listTasks: Task[];
+  taskTotalCount: number;
+  taskCursor: string;
 }
 
 const initialState: Data = {
@@ -18,6 +21,9 @@ const initialState: Data = {
   cursor: '',
   list: [],
   limit: 5,
+  listTasks: [],
+  taskTotalCount: 0,
+  taskCursor: '',
 };
 
 export  const taskStatusesReducer = (state = initialState, action) => {
@@ -33,18 +39,43 @@ export  const taskStatusesReducer = (state = initialState, action) => {
         loading: false,
       };
     case dashboardClickUp.GET_TASK_STATUSES:
+      const listTaskStatus: TaskStatusType[] = [];
+
+      action.payload.list.map((status) => {
+        if (!status) {
+          return;
+        }
+        listTaskStatus.push(status);
+      });
+
       return {
         ...state,
         cursor: action.payload.cursor,
         totalCount: action.payload.totalCount,
-        list: action.payload.list,
+        list: listTaskStatus,
+      };
+    case dashboardClickUp.GET_TASK:
+      const listTask: Task[] = [];
+
+      action.payload.listTask?.map((status) => {
+        if (!status) {
+          return;
+        }
+        listTask.push(status);
+      });
+
+      return {
+        ...state,
+        taskCursor: action.payload.cursor,
+        taskTotalCount: listTask.length,
+        listTasks: listTask,
       };
     default:
       return state;
   }
 };
 
-export const getTaskStatusThunkAction = (companyID) => async (dispatch) => {
+export const getTaskStatusThunkAction = (companyID, departmentID) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
 
@@ -62,6 +93,7 @@ export const getTaskStatusThunkAction = (companyID) => async (dispatch) => {
         },
         params: {
           companyID,
+          departmentID,
         },
       });
 
@@ -72,6 +104,41 @@ export const getTaskStatusThunkAction = (companyID) => async (dispatch) => {
     }
 
     await dispatch(getDataTaskStatuses(res.data));
+    await dispatch(hideLoaderListUser());
+
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTasksByUserThunkAction = (companyID, departmentID, user) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    if (!token || !companyID || !user?.userID) {
+      return;
+    }
+
+    const res = await axios.get(`${config.BASE_URL}/tasks`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          companyID,
+          departmentID,
+          userID: user.userID,
+        },
+      });
+
+    if (res.data.totalCount === 0){
+      await dispatch(hideLoaderListUser());
+
+      return;
+    }
+
+    await dispatch(getDataTasksByUserThunkAction(res.data));
     await dispatch(hideLoaderListUser());
 
   } catch (error) {

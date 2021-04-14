@@ -7,6 +7,13 @@ export const getDataTaskStatuses = (res: object) => {
   };
 };
 
+export const getDataTasksByUserThunkAction = (res: object) => {
+  return {
+    type: dashboardClickUp.GET_TASK,
+    payload: res,
+  };
+};
+
 export const showLoaderListUser = () => {
   return {
     type: dashboardClickUp.SHOW_LOADER_LIST,

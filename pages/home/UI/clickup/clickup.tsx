@@ -1,5 +1,5 @@
-import { getTaskStatusThunkAction } from 'pages/home/logic/home_reducer';
-import React, { FunctionComponent, useEffect } from 'react';
+import { getTaskStatusThunkAction, getTasksByUserThunkAction } from 'pages/home/logic/home_reducer';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
 import { checkArray } from 'helpers/check_array';
@@ -13,14 +13,26 @@ const BoardTasks: FunctionComponent = () => {
   const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
   const userProfile = useSelector((state: RootStateOrAny) => state.auth);
   const loading = taskStatuses.loading;
-  const companyID = userProfile?.access[0]?.companyID;
+  const [companyID, setCompanyID] = useState('');
+  const [departmentID, setDepartmentID] =  useState('');
+  const [showTask, setShowTask] = useState('');
 
   useEffect(() => {
+    if (checkArray(userProfile.access)) {
+      setCompanyID(userProfile.access[0]?.companyID);
+      setDepartmentID(userProfile.access[0]?.departmentID);
+    }
+
     void fetchData();
-  }, [companyID]);
+  }, [companyID, departmentID]);
 
   const fetchData = () => {
-    dispatch(getTaskStatusThunkAction(companyID));
+    dispatch(getTaskStatusThunkAction(companyID, departmentID));
+    dispatch(getTasksByUserThunkAction(companyID, departmentID, userProfile));
+  };
+
+  const handleShowMe = (text) => {
+    setShowTask(text);
   };
 
   const GenerateTaskStatuses = () => {
@@ -29,7 +41,12 @@ const BoardTasks: FunctionComponent = () => {
         <>
           <TaskStatus
             key={taskStatus._id}
-            {...taskStatus}
+            taskStatus={taskStatus}
+            user={userProfile}
+            companyID={companyID}
+            departmentID={departmentID}
+            listTasks={taskStatuses.listTasks}
+            showTask={showTask}
           />
         </>
       );
@@ -38,7 +55,7 @@ const BoardTasks: FunctionComponent = () => {
 
   return (
     <div className='board'>
-      <NavClickUp />
+      <NavClickUp handleClick={handleShowMe} show={showTask}/>
       <div className='board-tasks'>
           {!loading &&
           <>

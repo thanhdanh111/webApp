@@ -51,6 +51,7 @@ export interface Access {
   role: string;
   status: string;
   companyID?: string | undefined;
+  departmentID?: string | undefined;
 }
 
 export interface UserAccess {
@@ -87,7 +88,7 @@ export interface Task {
   _id: string;
   companyID: Company;
   departmentID: Department;
-  taskStatus: TaskStatusType;
+  taskStatusID: TaskStatusType;
   tagIDs: string[];
   userIDs: User[];
   title: string;
@@ -125,4 +126,18 @@ export interface Profile {
   email: string;
   profilePhoto: string;
   status: string;
+}
+
+interface ExtendedUser {
+  _id: string;
+  gender: string;
+  userID: string;
+}
+
+export interface LoginValue {
+  value: string;
+  userID: string;
+  access: Access[] | [];
+  userProfile: Profile | {};
+  extendedUser: ExtendedUser | {};
 }
