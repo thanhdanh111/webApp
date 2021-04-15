@@ -7,6 +7,7 @@ import statisticsReducer from 'pages/statistics/logic/statistics_reducer';
 import inviteReducer from '../pages/invite_members/logic/invite_reducer';
 import { taskStatusesReducer } from 'pages/home/logic/home_reducer';
 import accessReducer from 'pages/access_denied/logic/access_reducer';
+import timeOffReducer from 'pages/time_off/logic/time_off_reducer';
 
 const rootReducer = combineReducers({
   auth,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   users: usersReducer,
   taskStatuses: taskStatusesReducer,
   statistics: statisticsReducer,
+  timeoff: timeOffReducer,
 });
 
 export default rootReducer;

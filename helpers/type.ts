@@ -1,10 +1,11 @@
+export type Token = string | null;
+
 export interface HeadCell {
   disablePadding?: boolean;
   id: string;
   label: string;
   numeric?: boolean;
 }
-
 export interface User {
   _id: string;
   firstName: string;
