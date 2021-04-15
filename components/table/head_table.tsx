@@ -10,20 +10,23 @@ import { HeadCell } from 'helpers/type';
 
 interface PropsInitial {
   headCells: HeadCell[];
+  needCheckBox: boolean;
 }
 
 const HeadTable = (props: PropsInitial) => {
-  const { headCells }: PropsInitial = props;
+  const { headCells, needCheckBox = true }: PropsInitial = props;
 
   return (
     <TableHead className='table-users'>
         <TableRow className='table-head'>
-          <TableCell padding='checkbox' className='cell-title box-head' align='right'>
+          {
+           needCheckBox && <TableCell padding='checkbox' className='cell-title box-head' align='right'>
             <Checkbox
               inputProps={{ 'aria-label': 'select all desserts' }}
               className='checkbox-header'
             />
           </TableCell>
+          }
           {(checkArray(headCells)) &&
           headCells.map((header) => (
                 <TableCell

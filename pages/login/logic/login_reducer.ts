@@ -53,8 +53,8 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       },
     });
 
-    dispatch(GetUserData(res.data));
-    dispatch(GetUserAccess(res.data?.access ?? []));
+    await dispatch(GetUserData(res.data));
+    await dispatch(GetUserAccess(res.data?.access ?? []));
   } catch (error) {
     throw error;
   }

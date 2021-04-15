@@ -70,28 +70,32 @@
                             display: flex;
                             text-align: left;
                             list-style: none;
-                            margin: auto;
-                            padding: 0;
+                            margin-left: 5px;
+                            margin-right: 5px;
                             border-radius: 10px;
 
                             .action-item
                                 border: none;
                                 margin: 0 10px;    
                                 transform: translateX(-10px);
+                                opacity: 0.9
 
                                 .action
-                                    color: #3c9928;
-                                    font-weight: 300;
-                                    font-size: 18px;
-                                    padding: 2px;
-                                    background: none;
+                                    font-weight: 600;
+                                    font-size: 12px;
+                                    margin: 1px;
                                     border-radius: 0.5rem;
-                                    border: 0.5px solid #92d390;
-                                    text-transform: lowercase;
+                                    text-transform: uppercase;
+                                    &:hover
+                                        background-color: #00AB55
+                                        opacity: 0.8
 
                                 .redButton
-                                    border: 0.5px solid #ca6161;
-                                    color: #df0d0d;                               
+                                    background: #FF4842
+                                    &:hover
+                                        background-color: #FF4842
+                                        opacity: 0.8
+                              
 
 @media screen and (max-width: 768px)
     .table-paper

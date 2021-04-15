@@ -7,6 +7,8 @@ import {
     TableCell,
     Checkbox,
     Button,
+    CircularProgress,
+    Typography,
 } from '@material-ui/core';
 import React from 'react';
 import HeadTable from './head_table';
@@ -15,6 +17,8 @@ import { checkArray } from 'helpers/check_array';
 import { DisappearedLoading } from 'react-loadingg';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { BodyTable } from './body_table';
+import { checkStringCondition } from 'helpers/check_string_condtion';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
 interface InitialProps {
   headCells: HeadCell[];
@@ -23,10 +27,30 @@ interface InitialProps {
   loading: boolean;
   actions: string[];
   fetchData: () => void;
+  needCheckBox?: boolean;
+  redButtonName?: string;
+  actionFunc?: object;
+  baseTableName?: string;
+  loadingIndex?: string;
+  loadingStateName?: string;
+  indexLoading?: boolean;
+  notFoundAnyData?: boolean;
+  notFoundWarning?: string;
+  individualActions?: string[];
+  individualActionsRender?: object;
 }
 
 const BaseTable = (props: InitialProps) => {
-  const { headCells, data, length, loading,  actions, fetchData }: InitialProps = props;
+  const {
+    headCells, data, length,
+    loading,  actions, fetchData,
+    needCheckBox = true, redButtonName,
+    actionFunc, baseTableName,
+    loadingIndex, loadingStateName, indexLoading,
+    notFoundAnyData = false,
+    notFoundWarning, individualActions,
+  }: InitialProps = props;
+  const emptyState = !loading && !data?.length && notFoundAnyData;
 
   const tableCellContent = (content) => {
     if (Array.isArray(content)) {
@@ -42,21 +66,66 @@ const BaseTable = (props: InitialProps) => {
     return content;
   };
 
-  const renderAction = (actionList) => {
+  function actionDefaultFunc({ itemIndex, action  }) {
+
+    return { itemIndex, action };
+  }
+
+  const renderAction = ({ actionList, itemIndex, itemStatus, isManager }) => {
 
     if (!checkArray(actionList)) {
       return;
     }
 
+    const notPendingStatus = checkStringCondition({
+      variable: itemStatus,
+      notEqualCondition: 'PENDING',
+    });
+
+    if (notPendingStatus || !isManager) {
+      return <div />;
+    }
+
+    const equalLoadingStateName = checkStringCondition({
+      variable: loadingStateName,
+      equalCondition: baseTableName,
+    });
+    const loadingActionAtIndex = checkOnlyTrueInArray({
+      conditionsArray: [
+        equalLoadingStateName,
+        indexLoading,
+        loadingIndex,
+        loadingStateName,
+        loadingIndex === itemIndex,
+      ],
+    });
+
+    if (loadingActionAtIndex) {
+      return <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress disableShrink  style={{ width: '30px', height: '30px' }} />
+      </div>;
+    }
+
     return (
       <ul className='list-action'>
         {actionList.map((action, index) => {
+          if (individualActions?.length && individualActions.includes(action)) {
+            return <div />;
+          }
 
-          const colorButton = (action.toUpperCase() === 'DELETE') ? 'redButton' : '';
+          const colorButton = (action.toUpperCase() === 'DELETE' || action.toUpperCase() === redButtonName) ? 'redButton' : '';
+          const func = actionFunc?.[action] ?? actionDefaultFunc;
 
           return (
             <li className='action-item' key={index}>
-              <Button className={`${colorButton} action`}>{action}</Button>
+              <Button
+                variant='contained'
+                color='secondary'
+                className={`${colorButton} action`}
+                onClick={() => func({  itemIndex, baseTableName, timeOffID: data?.[itemIndex]?.['id'] })}
+              >
+                {action}
+              </Button>
             </li>
           );
         })}
@@ -69,22 +138,24 @@ const BaseTable = (props: InitialProps) => {
       <TableContainer className='table-list'>
         <InfiniteScroll
           dataLength={data.length}
-          hasMore={data.length < length ? true : false}
+          hasMore={data.length < length}
           next={fetchData}
+          loader={<div />}
           scrollThreshold={0.7}
-          loader={<div/>}
-          height={500}
+          height={(emptyState || loading) ? 0 : 500}
         >
         <Table stickyHeader aria-label='sticky table' className='table-content' >
-          <HeadTable headCells={headCells}/>
+          <HeadTable needCheckBox={needCheckBox} headCells={headCells}/>
           { !loading &&  (checkArray(data) &&
           <TableBody className='table-body'>
                 {data.map((item, index) => {
                   return (
                     <TableRow hover role='checkbox' tabIndex={-1} className='row-contain' key={index}>
-                      <TableCell padding='checkbox' className='cell-contain checkbox-cell'>
-                        <Checkbox className='check'/>
-                      </TableCell>
+                      {
+                        needCheckBox && <TableCell padding='checkbox' className='cell-contain checkbox-cell'>
+                          <Checkbox className='check'/>
+                        </TableCell>
+                      }
                       {headCells.map((header) => {
                         const nameStyle = (header.id === 'userName') ?  'name-style' : '';
 
@@ -105,7 +176,14 @@ const BaseTable = (props: InitialProps) => {
                           return (
                             <BodyTable
                               key={header.id}
-                              content={renderAction(actions)}
+                              content={
+                                renderAction({
+                                  actionList: actions,
+                                  itemIndex: index,
+                                  itemStatus: item['status'],
+                                  isManager: item['isManager'],
+                                })
+                              }
                               align={align}
                               padding={padding}
                             />
@@ -129,10 +207,18 @@ const BaseTable = (props: InitialProps) => {
         )}
         </Table>
         </InfiniteScroll>
+          {
+            emptyState &&
+            <div className='empty-state'>
+              <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
+            </div>
+          }
+          {
+            loading && <div style={{ marginTop: '150px', marginBottom: '150px', display: 'flex', justifyContent: 'center' }}>
+              <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
+            </div>
+          }
       </TableContainer>
-      <div className='item__table'>
-        {loading && <DisappearedLoading color={'#67cb48'}/>}
-      </div>
     </Paper>
   );
 };
