@@ -24,7 +24,7 @@ export const headCells: HeadCell[] = [
 
 export const actionList: string[] = ['accept', 'reject', 'cancel'];
 
-const individualActions: string[] = ['cancel'];
+export const individualActions: string[] = ['cancel'];
 
 const TimeOffColumns = ({
   timeOffs,

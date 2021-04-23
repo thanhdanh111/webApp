@@ -31,9 +31,11 @@ interface GetTimeOffsByModel {
   managerCompanyIDs?: string[];
   managerDepartmentIDs?: string[];
   type: string;
+  isExceptMeInMembers?: boolean;
 }
 
-function getTimeOffsByModel(data, { type, userID = '', managerCompanyIDs, managerDepartmentIDs }: GetTimeOffsByModel) {
+function getTimeOffsByModel(data, { type, userID = '', managerCompanyIDs, managerDepartmentIDs, isExceptMeInMembers = true }
+: GetTimeOffsByModel) {
   const timeOffs: TimeOffModel[] = [];
   const dateTimeUiFormat = 'DD/MM/YYYY HH:mm';
 
@@ -48,7 +50,7 @@ function getTimeOffsByModel(data, { type, userID = '', managerCompanyIDs, manage
     const invalidApiData = isInvalidTimeOffApiData(timeOff);
     const exceptMeInMembers = isTypeMembers && userID === timeOff?.createdBy?._id;
 
-    if (invalidApiData || exceptMeInMembers) {
+    if (invalidApiData || (isExceptMeInMembers && exceptMeInMembers)) {
       return;
     }
 
@@ -141,6 +143,7 @@ export const getUserDaysOffApi = ({
         managerDepartmentIDs,
         userID: '',
         type: 'user',
+        isExceptMeInMembers: true,
       },
     );
 
@@ -171,6 +174,7 @@ interface GetMembersDaysOffApi {
   cursor?: string;
   infiniteScroll?: boolean;
   userID: string;
+  isExceptMeInMembers?: boolean;
 }
 
 export const getMembersDaysOffApi = ({
@@ -178,6 +182,7 @@ export const getMembersDaysOffApi = ({
   cursor,
   infiniteScroll = false,
   userID,
+  isExceptMeInMembers = true,
 }: GetMembersDaysOffApi) => async (dispatch, getState) =>  {
   try {
     const token: Token =  localStorage.getItem('access_token');
@@ -245,6 +250,7 @@ export const getMembersDaysOffApi = ({
       getDaysoff?.data?.list,
       {
         userID,
+        isExceptMeInMembers,
         type: 'members',
       },
     );
@@ -301,7 +307,7 @@ export const changeStatusOfTimeOff = () => async (dispatch, getState) => {
       loadingOptionName: fieldName,
     }));
 
-    const token: Token =  localStorage.getItem('access_token');
+    const token: Token = localStorage.getItem('access_token');
 
     const changeStatus = await axios({
       url: `${config.BASE_URL}/daysoff/${timeOffID}`,
