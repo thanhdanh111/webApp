@@ -15,7 +15,7 @@ const BoardTasks: FunctionComponent = () => {
   const loading = taskStatuses.loading;
   const [companyID, setCompanyID] = useState('');
   const [departmentID, setDepartmentID] =  useState('');
-  const [showTask, setShowTask] = useState('');
+  const [showTask, setShowTask] = useState('me');
 
   useEffect(() => {
     if (checkArray(userProfile.access)) {
