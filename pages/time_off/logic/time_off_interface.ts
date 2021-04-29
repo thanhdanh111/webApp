@@ -1,3 +1,6 @@
+import { Company, Department } from 'helpers/type';
+import { VariantType } from 'notistack';
+
 export interface TimeOffValue {
   ownTimeOffs: TimeOffModel[];
   ownTimeOffsOffset: number;
@@ -17,6 +20,25 @@ export interface TimeOffValue {
   notFoundAnyMembersTimeOffs: boolean;
   onConfirm: boolean;
   onSelectTimeOffData: SelectedTimeOffData;
+}
+
+export interface TimeOffRequestValue {
+  onRequest: boolean;
+  onSendingRequest: boolean;
+  companies: Company[];
+  timeOffRequestNotifications: TimeOffNotification[];
+  selectedCompany?: Company;
+  selectedDepartment?: Department;
+  reason: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+}
+
+interface TimeOffNotification {
+  message: string;
+  variant: VariantType;
 }
 
 interface SelectedTimeOffData {
@@ -51,3 +73,5 @@ export interface UpdateOnConfirmDialog {
   onConfirm?: boolean;
   onSelectTimeOffData?: SelectedTimeOffData;
 }
+
+export type TimeOffRequestProps = TimeOffRequestValue;

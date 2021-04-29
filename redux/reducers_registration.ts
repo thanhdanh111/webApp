@@ -8,10 +8,13 @@ import inviteReducer from '../pages/invite_members/logic/invite_reducer';
 import { taskStatusesReducer } from 'pages/home/logic/home_reducer';
 import accessReducer from 'pages/access_denied/logic/access_reducer';
 import timeOffReducer from 'pages/time_off/logic/time_off_reducer';
+import timeOffRequestReducer from 'pages/time_off/logic/time_off_request_reducer';
 import { eventLogsReducer } from 'pages/event_logs/logic/event_log_reducer';
 
 const rootReducer = combineReducers({
   auth,
+  accountReducer,
+  headerReducer,
   access: accessReducer,
   account: accountReducer,
   headers: headerReducer,
@@ -20,6 +23,7 @@ const rootReducer = combineReducers({
   taskStatuses: taskStatusesReducer,
   statistics: statisticsReducer,
   timeoff: timeOffReducer,
+  timeOffRequest: timeOffRequestReducer,
   eventLogs: eventLogsReducer,
 });
 

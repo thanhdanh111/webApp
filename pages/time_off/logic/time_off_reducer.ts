@@ -21,7 +21,7 @@ const initialState: TimeOffValue = {
 };
 
 function updateStatusTimeOffReducer({ action, state }) {
-  if (!action.fieldName || !action.timeOffIndex || !action.status) {
+  if (!action.fieldName || typeof action.timeOffIndex !== 'number' || !action.status) {
     return {
       ...state,
       statusLoading: false,

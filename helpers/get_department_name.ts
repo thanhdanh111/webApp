@@ -10,7 +10,7 @@ export const getDepartmentsName = (departments) => {
   const newArray: string[] = [] ;
 
   departments.map((item: Department) => {
-    newArray.push(item.name);
+    newArray.push(item?.name ?? '');
   });
 
   return newArray;

@@ -20,23 +20,15 @@ export interface User {
   status?: string;
 }
 
-interface Company {
-  name: string;
-  photos?: string [];
-  description?: string;
-  emails?: string [];
-  phoneNumbers?: string [];
-  address?: string;
+export interface Company {
+  companyID?: string;
+  name?: string;
+  departments?: Department[];
 }
 
 export interface Department {
-  companyID: Company;
-  name: string;
-  photos?: string[];
-  description?: string;
-  emails?: string[];
-  phoneNumbers?: string[];
-  address?: string;
+  departmentID?: string;
+  name?: string;
 }
 
 export interface Data {

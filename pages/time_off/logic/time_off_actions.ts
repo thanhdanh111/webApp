@@ -10,6 +10,13 @@ export enum TimeOffActionTypes {
   UpdateOnSelectTimeOff = 'UpdateOnSelectTimeOff',
 }
 
+export enum TimeOffRequestActionTypes {
+  UpdateTimeOffCompaniesToRequest = 'UpdateTimeOffCompaniesToRequest',
+  UpdateContentLetter = 'UpdateContentLetter',
+  UpdateOnSendingTimeOffRequest = 'UpdateOnSendingTimeOffRequest',
+  UpdateTimeOffRequestNotifications = 'UpdateTimeOffRequestNotifications',
+}
+
 export const updatePaginationTimeOff = ({ pagination, loadingStatus }) => {
   return {
     pagination,
@@ -62,5 +69,34 @@ export const updateOnSelectTimeOff = ({ onConfirm, onSelectTimeOffData }: Update
     onConfirm,
     onSelectTimeOffData,
     type: TimeOffActionTypes.UpdateOnSelectTimeOff,
+  };
+};
+
+export const updateTimeOffCompaniesToRequest = ({ companies }) => {
+  return {
+    companies,
+    type: TimeOffRequestActionTypes.UpdateTimeOffCompaniesToRequest,
+  };
+};
+
+export const updateContentLetter = ({ selectedContent }) => {
+  return {
+    data: selectedContent,
+    type: TimeOffRequestActionTypes.UpdateContentLetter,
+  };
+};
+
+export const updateOnSendingTimeOffRequest = ({ onSendingRequest }) => {
+  return {
+    onSendingRequest,
+    type: TimeOffRequestActionTypes.UpdateOnSendingTimeOffRequest,
+  };
+};
+
+export const updateTimeOffRequestNotifications = ({ notifications, onSendingRequest }) => {
+  return {
+    notifications,
+    onSendingRequest,
+    type: TimeOffRequestActionTypes.UpdateTimeOffRequestNotifications,
   };
 };
