@@ -1,0 +1,425 @@
+.detail-content
+    max-width: 0;
+    width: 100%;
+    min-width: 100%;
+
+    .detail-top
+        border-bottom: 3px solid #dbdbdb;
+
+        .name-event-log
+            text-align: left;
+            margin: 15px 20px 50px;
+            padding: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            line-height: 3;
+
+            .name-event-log-detail
+                font-size: 22px;
+                font-weight: bold;
+
+            .status-event
+        .description-event
+            margin: 0 25px 10px;
+            padding: 0;
+            line-height: 1.1;
+            font-size: 22px;
+
+            .id-event
+                font-size: 20px;
+                font-weight: 700;
+
+                .id-event-exception
+                    color: #00ab55;
+                    font-weight: 100;
+
+            .time-event
+                font-size: 20px;
+                color: #848484;
+
+    .exception
+        margin: 13px 25px 10px;
+
+        .exception-title
+            font-size: 22px;
+            color: #919191;
+            font-weight: 700;
+
+            .description-title
+                font-weight: 100
+
+        .type-exception
+            line-height: 3;
+            font-size: 22px;
+            font-weight: 700;
+
+.exception-container
+    display: block;
+    width: 100%;
+    height: 100%;
+    list-style-type: none;
+    padding-left: 0;
+    border: 1px solid #d8d2de;
+    border-radius: 0 3px 3px 3px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+
+    .exception-detail
+        padding: 0
+        margin: 0
+
+        .frame
+            display: block;
+            list-style-type: none;
+            position: relative;
+            margin: 0;
+            padding: 0;
+
+            .frame-content
+                opacity: .7;
+                font-size: 12px;
+                display: flex;
+                padding: 6px;
+                border-top: 1px solid #e2dee6;
+                border-bottom: 1px solid #e2dee6;
+                background: #e7e7e7
+
+                .frame-file
+                    .file-name
+                        font-weight: 600;
+                        color: #242121
+
+                    .func
+                        font-weight: 600;
+                        color: #242121
+
+                    .lineno
+                        font-weight: 600;
+                        color: #242121
+
+                .btn-detail-context
+                    position: absolute;
+                    right: 9px;
+
+                    .btn-detail-exception
+                        margin: 0;
+                        display: block;
+                        float: right;
+                        width: 16px;
+                        height: 16px;
+                        padding: 0;
+                        line-height: 16px;
+                        font-size: 9px;
+                        text-align: center;
+                        flex-shrink: 0;
+                        position: relative;
+
+                        .icon-show-context
+                            position: absolute;
+                            top: -5px;
+                            right: 1px;
+                            left: -6px;
+
+            .frame-detail
+                display: block;
+                background: #fff;
+
+                .ol-context
+
+                    .item-context
+                        padding: 5px 30px;
+
+                    .line-context
+                        background: #00AB55
+                        color: #fff
+
+                    .line-context::marker
+                        color: #00AB55
+
+@media screen and (max-width: 1024px)
+    .event-log-detail
+        height: 100%;
+        margin: auto;
+        border: 1px solid #d1d1d1;
+        min-height: 88vh;
+        overflow: auto;
+        min-width: 450px;
+        width: 100%;
+
+        .detail-content
+            max-width: 0;
+            width: 100%;
+            min-width: 100%;
+
+            .detail-top
+                border-bottom: 3px solid #dbdbdb;
+
+                .name-event-log
+                    text-align: left;
+                    margin: 15px 20px 50px;
+                    padding: 0;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    line-height: 3;
+
+                    .name-event-log-detail
+                        font-size: 22px;
+                        font-weight: bold;
+
+                    .status-event
+                .description-event
+                    margin: 0 25px 10px;
+                    padding: 0;
+                    line-height: 1.1;
+                    font-size: 22px;
+
+                    .id-event
+                        font-size: 20px;
+                        font-weight: 700;
+
+                        .id-event-exception
+                            color: #00ab55;
+                            font-weight: 100;
+
+                    .time-event
+                        font-size: 20px;
+                        color: #848484;
+
+        .exception
+            margin: 13px 25px 10px;
+
+            .exception-title
+                font-size: 22px;
+                color: #919191;
+                font-weight: 700;
+
+                .description-title
+                    font-weight: 100
+
+            .type-exception
+                line-height: 3;
+                font-size: 22px;
+                font-weight: 700;
+
+    .exception-container
+        display: block;
+        width: 100%;
+        height: 100%;
+        list-style-type: none;
+        padding-left: 0;
+        border: 1px solid #d8d2de;
+        border-radius: 0 3px 3px 3px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.04);
+
+        .exception-detail
+            padding: 0
+            margin: 0
+
+            .frame
+                display: block;
+                list-style-type: none;
+                position: relative;
+                margin: 0;
+                padding: 0;
+
+                .frame-content
+                    opacity: .7;
+                    font-size: 12px;
+                    display: flex;
+                    padding: 6px;
+                    border-top: 1px solid #e2dee6;
+                    border-bottom: 1px solid #e2dee6;
+                    background: #e7e7e7
+
+                    .frame-file
+                        .file-name
+                            font-weight: 600;
+                            color: #242121
+
+                        .func
+                            font-weight: 600;
+                            color: #242121
+
+                        .lineno
+                            font-weight: 600;
+                            color: #242121
+
+                    .btn-detail-context
+                        position: absolute;
+                        right: 9px;
+
+                        .btn-detail-exception
+                            margin: 0;
+                            display: block;
+                            float: right;
+                            width: 16px;
+                            height: 16px;
+                            padding: 0;
+                            line-height: 16px;
+                            font-size: 9px;
+                            text-align: center;
+                            flex-shrink: 0;
+                            position: relative;
+
+                            .icon-show-context
+                                position: absolute;
+                                top: -5px;
+                                right: 1px;
+                                left: -6px;
+
+                .frame-detail
+                    display: block;
+                    background: #fff;
+
+                    .ol-context
+
+                        .item-context
+                            padding: 5px 30px;
+
+                        .line-context
+                            background: #00AB55
+                            color: #fff
+
+                        .line-context::marker
+                            color: #00AB55
+
+@media screen and (max-width: 600px)
+    .detail-content
+        max-width: 0;
+        width: 100%;
+        min-width: 100%;
+
+        .detail-top
+            border-bottom: 3px solid #dbdbdb;
+
+            .name-event-log
+                text-align: left;
+                margin: 15px 20px 50px;
+                padding: 0;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                line-height: 3;
+
+                .name-event-log-detail
+                    font-size: 22px;
+                    font-weight: bold;
+
+                .status-event
+            .description-event
+                margin: 0 25px 10px;
+                padding: 0;
+                line-height: 1.1;
+                font-size: 22px;
+
+                .id-event
+                    font-size: 20px;
+                    font-weight: 700;
+
+                    .id-event-exception
+                        color: #00ab55;
+                        font-weight: 100;
+
+                .time-event
+                    font-size: 20px;
+                    color: #848484;
+
+        .exception
+            margin: 13px 25px 10px;
+
+            .exception-title
+                font-size: 22px;
+                color: #919191;
+                font-weight: 700;
+
+                .description-title
+                    font-weight: 100
+
+            .type-exception
+                line-height: 3;
+                font-size: 22px;
+                font-weight: 700;
+
+    .exception-container
+        display: block;
+        width: 100%;
+        height: 100%;
+        list-style-type: none;
+        padding-left: 0;
+        border: 1px solid #d8d2de;
+        border-radius: 0 3px 3px 3px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.04);
+
+        .exception-detail
+            padding: 0
+            margin: 0
+
+            .frame
+                display: block;
+                list-style-type: none;
+                position: relative;
+                margin: 0;
+                padding: 0;
+
+                .frame-content
+                    opacity: .7;
+                    font-size: 12px;
+                    display: flex;
+                    padding: 6px;
+                    border-top: 1px solid #e2dee6;
+                    border-bottom: 1px solid #e2dee6;
+                    background: #e7e7e7
+
+                    .frame-file
+                        .file-name
+                            font-weight: 600;
+                            color: #242121
+
+                        .func
+                            font-weight: 600;
+                            color: #242121
+
+                        .lineno
+                            font-weight: 600;
+                            color: #242121
+
+                    .btn-detail-context
+                        position: absolute;
+                        right: 9px;
+
+                        .btn-detail-exception
+                            margin: 0;
+                            display: block;
+                            float: right;
+                            width: 16px;
+                            height: 16px;
+                            padding: 0;
+                            line-height: 16px;
+                            font-size: 9px;
+                            text-align: center;
+                            flex-shrink: 0;
+                            position: relative;
+
+                            .icon-show-context
+                                position: absolute;
+                                top: -5px;
+                                right: 1px;
+                                left: -6px;
+
+                .frame-detail
+                    display: block;
+                    background: #fff;
+
+                    .ol-context
+
+                        .item-context
+                            padding: 5px 30px;
+
+                        .line-context
+                            background: #00AB55
+                            color: #fff
+
+                        .line-context::marker
+                            color: #00AB55
+

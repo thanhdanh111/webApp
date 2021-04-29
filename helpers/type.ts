@@ -8,12 +8,12 @@ export interface HeadCell {
 }
 export interface User {
   _id: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   profilePicture?: string;
   gender?: string;
-  address: string;
-  phoneNumber: string;
+  address?: string;
+  phoneNumber?: string;
   email: string;
   facebookID?: string;
   googleID?: string;
