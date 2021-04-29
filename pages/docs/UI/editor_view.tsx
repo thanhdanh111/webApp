@@ -31,7 +31,12 @@ const SimpleExample = () => {
   const [value, setValue] = useState<Value | null>(null);
 
   return (
-    <Editor cellPlugins={cellPlugins} value={value} onChange={setValue} hideEditorSidebar={true} />
+    <Editor
+      cellPlugins={cellPlugins}
+      value={value}
+      onChange={setValue}
+      hideEditorSidebar={true}
+    />
   );
 };
 
