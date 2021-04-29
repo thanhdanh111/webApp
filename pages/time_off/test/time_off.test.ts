@@ -33,8 +33,16 @@ describe('Users Page', () => {
   test('Test UI list users page successfully after login', async () => {
     await page.goto('http://localhost:5000/time_off');
 
-    const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
+    const timeOffPage = await page.screenshot();
+
+    await page.waitForSelector('.request-time-off-btn')
+    await page.click('.request-time-off-btn');
+    await page.waitForSelector('.request-dialog-content')
+    await page.waitFor(5000)
+    const requestDialogContent = await page.screenshot();
+
+    expect(timeOffPage).toMatchImageSnapshot();
+    expect(requestDialogContent).toMatchImageSnapshot();
   });
 
 });

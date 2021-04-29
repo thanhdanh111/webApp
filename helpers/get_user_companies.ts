@@ -1,4 +1,4 @@
-import { Access } from '../pages/login/logic/login_reducer';
+import { Access } from './type';
 
 interface GetUserCompanies {
   access: Access[];
