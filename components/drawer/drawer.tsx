@@ -12,6 +12,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import { RootState } from 'redux/reducers_registration';
 import { EqualizerOutlined } from '@material-ui/icons';
 import EventNoteIcon from '@material-ui/icons/EventNote';
+import EditIcon from '@material-ui/icons/Edit';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -20,10 +21,11 @@ const elementIcons = {
   home: <HomeIcon />,
   invite_members: <img alt='logo' width='24px' src='../send_mail.svg' />,
   time_off: <EventNoteIcon />,
+  docs: <EditIcon />,
 };
 
 const drawerElements = {
-  general: ['home', 'users', 'statistics'],
+  general: ['home', 'users', 'statistics', 'docs'],
   management: ['account', 'invite_members', 'time_off'],
 };
 
