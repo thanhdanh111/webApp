@@ -10,6 +10,7 @@ import { ConfirmDialog } from './confirm_dialog';
 import { RootState } from 'redux/reducers_registration';
 import { TimeOffValueType } from '../logic/time_off_interface';
 import { changeStatusOfTimeOff } from '../logic/time_off_apis';
+import TimeOffRequetDialog from './time_off_request_dialog';
 
 export const headCells: HeadCell[] = [
   { id: 'companyName', numeric: false, disablePadding: true, label: 'Company Name' },
@@ -64,6 +65,8 @@ const TimeOffColumns = ({
 
   return <div className='time-off-columns--container'>
     <div className='time-off-colummns--options'>
+      <TimeOffRequetDialog />
+
       <IconButton
         onClick={() => handleNavigateOptionsState('me')}
         name='me'

@@ -22,11 +22,12 @@ const elementIcons = {
   invite_members: <img alt='logo' width='24px' src='../send_mail.svg' />,
   time_off: <EventNoteIcon />,
   docs: <EditIcon />,
+  event_logs: <EventNoteIcon />,
 };
 
 const drawerElements = {
   general: ['home', 'users', 'statistics', 'docs'],
-  management: ['account', 'invite_members', 'time_off'],
+  management: ['account', 'invite_members', 'time_off', 'event_logs'],
 };
 
 const DrawerUi: FunctionComponent = ({ }) => {

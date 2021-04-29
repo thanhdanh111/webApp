@@ -1,10 +1,7 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
+import { AppBar, Toolbar,  Badge, Hidden, IconButton }from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import {  Badge, Hidden } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 import { useDispatch } from 'react-redux';
@@ -36,9 +33,6 @@ const Header: React.FunctionComponent = () => {
             <div className='grow' />
 
             <div className='user-section'>
-              <IconButton aria-label='language' color='inherit'>
-                <img alt='language' className='language-img' src='../united-kingdom.svg'/>
-              </IconButton>
 
               <IconButton aria-label='notification'>
                 <Badge badgeContent={notifications} color='error'>

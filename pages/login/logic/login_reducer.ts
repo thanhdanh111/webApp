@@ -28,10 +28,10 @@ export const auth = (state = initialState, action) => {
     case LoginAction.GET_USER_DATA:
       return {
         ...state,
-        userProfile: action.payload.userProfile,
-        access: action.payload.access,
-        userID: action.payload.userID,
-        extendedUser: action.payload.extendedUser,
+        userProfile: action?.payload?.userProfile,
+        userID: action?.payload?.userID,
+        extendedUser: action?.payload?.extendedUser,
+        access: action?.payload?.access,
       };
     default:
       return state;
@@ -40,7 +40,6 @@ export const auth = (state = initialState, action) => {
 
 export const GetUserDataThunkAction = (token) => async (dispatch) => {
   try {
-
     if (!token) {
       return;
     }

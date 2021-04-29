@@ -4,11 +4,17 @@ import { Token } from 'helpers/type';
 import {
   updatePaginationTimeOff, updateTimeOffIndexLoading,
   updateStatusTimeOff, updateTimeOffLoadingStatus,
+  updateOnSendingTimeOffRequest, updateTimeOffCompaniesToRequest,
+  updateTimeOffRequestNotifications,
 } from './time_off_actions';
-import { SelectedTimeOffDataType, TimeOffModel, TimeOffValue } from './time_off_interface';
+import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValue } from './time_off_interface';
 import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 import { checkManager } from './time_off_check_manager';
 import moment from 'moment';
+import { getUserCompanies } from 'helpers/get_user_companies';
+import { getDepartmentsIntoCompanies } from 'helpers/get_the_departments_into_companies';
+import { handleTimeOffRequestErrors } from './time_off_errors';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
 function isInvalidTimeOffApiData(timeOff) {
   if (!timeOff) {
@@ -107,6 +113,8 @@ export const getUserDaysOffApi = ({
       limit,
       cursor,
       createdBy: userID,
+      sortBy: 'createdAt',
+      sortDirection: 'DESC',
     };
 
     const getDaysoff = await axios.get(
@@ -204,6 +212,8 @@ export const getMembersDaysOffApi = ({
     const params = {
       limit,
       cursor,
+      sortBy: 'createdAt',
+      sortDirection: 'DESC',
     };
 
     let queryArrayParams = '';
@@ -285,7 +295,14 @@ function shouldHaveChangeStatusTimeOffData({ onSelectTimeOffData }) {
     return false;
   }
 
-  canContinue = !!timeOffID && !!status && !!timeOffIndex && !!fieldName;
+  canContinue = checkOnlyTrueInArray({
+    conditionsArray: [
+      !!timeOffID,
+      !!status,
+      !!fieldName,
+      typeof timeOffIndex === 'number',
+    ],
+  });
 
   return canContinue;
 }
@@ -343,5 +360,147 @@ export const changeStatusOfTimeOff = () => async (dispatch, getState) => {
       loadingIndex: undefined,
       loadingOptionName: undefined,
     }));
+  }
+};
+
+export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
+  try {
+    const authState = getState().auth;
+    if (!authState?.access || !authState?.access?.length) {
+      return;
+    }
+
+    const companiesAndIsAdmin = getUserCompanies({ access: authState.access });
+
+    if (!companiesAndIsAdmin?.companies || !companiesAndIsAdmin?.companies?.length) {
+      return;
+    }
+
+    const companiesParams = companiesAndIsAdmin.companies.map((companyID, index) => `companyID[${index}]=${companyID}`).join('&');
+
+    const token: Token =  localStorage.getItem('access_token');
+
+    const getDepartments = await axios.get(
+      `${config.BASE_URL}/departments?${companiesParams}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const noData = !getDepartments?.data?.list || !getDepartments?.data?.list?.length;
+
+    if (noData) {
+
+      await dispatch(updateTimeOffCompaniesToRequest({
+        companies: [
+          { name: 'None' },
+        ],
+      }));
+
+      return;
+    }
+
+    const companies = getDepartmentsIntoCompanies({ departments: getDepartments?.data?.list });
+
+    await dispatch(updateTimeOffCompaniesToRequest({
+      companies: [
+        { name: 'None' },
+        ...companies,
+      ],
+    }));
+
+  } catch (error) {
+    const notifications = handleTimeOffRequestErrors({
+      error: error?.response?.data?.statusCode,
+      messageData: error?.response?.data?.message,
+    });
+
+    await dispatch(updateTimeOffRequestNotifications({ notifications, onSendingRequest: false }));
+    await dispatch(updateTimeOffCompaniesToRequest({
+      companies: [
+        { name: 'None' },
+      ],
+    }));
+  }
+};
+
+export const submitTimeOffRequest = () => async (dispatch, getState) => {
+  try {
+    const token: Token =  localStorage.getItem('access_token');
+    const timeOffRequestState: TimeOffRequestProps = getState().timeOffRequest;
+
+    if (timeOffRequestState.onSendingRequest) {
+
+      return;
+    }
+
+    const haveNeededData = checkOnlyTrueInArray({
+      conditionsArray: [
+        !!timeOffRequestState.startDate,
+        !!timeOffRequestState.startTime,
+        !!timeOffRequestState.endDate,
+        !!timeOffRequestState.endTime,
+        !!timeOffRequestState.selectedCompany?.companyID,
+        !!timeOffRequestState?.reason,
+      ],
+    });
+
+    if (!haveNeededData) {
+      const missingNotifications = handleTimeOffRequestErrors({
+        error: 400,
+        messageData: [
+          {
+            property: 'missingData',
+          },
+        ],
+      });
+
+      await dispatch(updateTimeOffRequestNotifications({
+        notifications: missingNotifications,
+        onSendingRequest: false,
+      }));
+
+      return;
+    }
+
+    await dispatch(updateOnSendingTimeOffRequest({ onSendingRequest: true }));
+
+    const startTime = moment(`${timeOffRequestState.startDate}T${timeOffRequestState.startTime}`).toISOString();
+    const endTime =  moment(`${timeOffRequestState.endDate}T${timeOffRequestState.endTime}`).toISOString();
+    const payload = {
+      startTime,
+      endTime,
+      reason: timeOffRequestState?.reason ?? null,
+      departmentID: timeOffRequestState?.selectedDepartment?.departmentID ?? null,
+      companyID: timeOffRequestState?.selectedCompany?.companyID ?? null,
+    };
+
+    const res = await axios.post(
+      `${config.BASE_URL}/daysoff`,
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    const notifications = handleTimeOffRequestErrors({
+      error: res?.status,
+      messageData: [],
+    });
+
+    await dispatch(updateTimeOffRequestNotifications({ notifications, onSendingRequest: false }));
+  } catch (error) {
+    const notifications = handleTimeOffRequestErrors({
+      error: error?.response?.data?.statusCode,
+      messageData: error?.response?.data?.message,
+    });
+
+    await dispatch(updateTimeOffRequestNotifications({ notifications, onSendingRequest: false }));
   }
 };

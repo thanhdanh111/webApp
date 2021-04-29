@@ -94,8 +94,8 @@ const BaseTable = (props: InitialProps) => {
       conditionsArray: [
         equalLoadingStateName,
         indexLoading,
-        loadingIndex,
         loadingStateName,
+        typeof loadingIndex === 'number',
         loadingIndex === itemIndex,
       ],
     });

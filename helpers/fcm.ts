@@ -4,7 +4,6 @@ import 'firebase/messaging';
 import 'firebase/analytics';
 
 export const getBrowserToken = async () => {
-
   firebase.initializeApp(config.FCM);
   firebase.analytics();
   try {
