@@ -1,43 +1,49 @@
-import React, { useState } from 'react';
+import React, { FunctionComponent } from 'react';
+import MyEditor from '@components/my_editor/my_editor';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateSingleEditorState } from '../logic/docs_actions';
+import { DocsValueType } from '../logic/docs_reducer';
+import { RootState } from 'redux/reducers_registration';
+import { EditorState } from 'draft-js';
 
-// The editor core
-import type { Value, CellPlugin } from '@react-page/editor';
-import Editor from '@react-page/editor';
+interface EditorView {
+  numbers: number;
+  currentIndex?: number;
+  selectionRect?: DOMRect;
+  action?: string;
+}
 
-import '@react-page/editor/lib/index.css';
+const EditorView: FunctionComponent<EditorView> = ({ action }) => {
+  const dispatch = useDispatch();
+  const { editorStates, currentEditorIndex }: DocsValueType = useSelector((state: RootState) => state?.docs);
 
-// The rich text area plugin
-import slate from '@react-page/plugins-slate';
+  function handleChangeEditorState(newEditorState, index) {
 
-const customTextFieldSlate = slate((def) => ({
-  ...def,
-  id: 'custom-text-editor',
-  Renderer: (props) => (
-    <div style={{ display: 'flex', backgroundColor: 'red' }}>
-      {props.children}
-    </div>
-  ),
-  plugins: {
-    headings: def.plugins.headings,
-    emphasize: def.plugins.emphasize,
-    paragraphs: def.plugins.paragraphs,
-    code: def.plugins.code,
-  },
-}));
+    dispatch(updateSingleEditorState({
+      editorState: newEditorState,
+      currentIndex: index,
+    }));
+  }
 
-const cellPlugins: CellPlugin[] = [customTextFieldSlate as CellPlugin];
+  return <>
+    {editorStates.map((editorState, editorIndex) => {
 
-const SimpleExample = () => {
-  const [value, setValue] = useState<Value | null>(null);
-
-  return (
-    <Editor
-      cellPlugins={cellPlugins}
-      value={value}
-      onChange={setValue}
-      hideEditorSidebar={true}
-    />
-  );
+      return <MyEditor
+        action={action}
+        key={`editor-${editorIndex}`}
+        index={editorIndex}
+        handleChangeEditorState={handleChangeEditorState}
+        editorState={editorState ?? EditorState.createEmpty()}
+        currentIndex={currentEditorIndex}
+      />;
+    })}
+  </>;
 };
 
-export default SimpleExample;
+function areEqual(prevProps, nextProps) {
+  const equalNumbers = prevProps.numbers !== nextProps.numbers;
+
+  return !equalNumbers;
+}
+
+export default React.memo(EditorView, areEqual);

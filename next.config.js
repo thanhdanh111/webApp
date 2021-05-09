@@ -50,7 +50,7 @@ module.exports = () => {
         // BASE_URL: 'https://d71b1d31f5b8.ngrok.io/local',
         BASE_URL: 'https://7val2au24i.execute-api.ap-southeast-1.amazonaws.com/dev',
         STATE: 'http://localhost:5000',
-        API_LOGIN: 'https://accounts.google.com/o/oauth2/v2/auth?scope=profile&access_type=offline&include_granted_scopes=true&response_type=code&client_id=',
+        API_LOGIN: 'https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=offline&include_granted_scopes=true&response_type=code&client_id=',
         CLIENT_ID: '366694991453-5c36ct1eoqchah7rqpf4pnqr96t0qjvo.apps.googleusercontent.com',
         FCM: {
           apiKey: "AIzaSyCC9Fw-20uc_UVKhPcW_Phnac7kleGFqRo",

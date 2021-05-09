@@ -1,0 +1,31 @@
+$--font-size-large: 16px
+$--font-weight-regular: 400
+$--font-padding-vertical-code: 16px
+$--font-padding-horizontal-code: 24px
+
+.block-wrapper
+  flex-direction: row
+  align-items: center
+  margin-left: 45px
+  display: flex
+  position: relative
+
+.block-wrapper > .block-wrapper--btns
+  display: flex
+  position: absolute
+  left: -40px
+  user-select: none
+  caret-color: rgba(0, 0, 0, 0)
+
+.block-wrapper > .block-wrapper--btns > .MuiButton-root
+  height: 20px
+  border-radius: 50%
+  color: rgb(102, 102, 102)
+  min-width: 10px
+  user-select: none
+  opacity: 0
+  padding: 0
+
+.block-wrapper:hover
+  .block-wrapper--btn
+    opacity: 1
