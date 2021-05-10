@@ -15,8 +15,8 @@ export const customStyleMapDraftjs = {
     fontWeight: 600,
   },
   NORMAL: {
-    fontSize: '16px',
-    lineHeight: '24px',
+    fontSize: '0.875rem',
+    lineHeight: '1.43',
     fontWeight: 400,
   },
 };

@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import MyEditor from '@components/my_editor/my_editor';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSingleEditorState } from '../logic/docs_actions';
+import { displayToolbar, updateSingleEditorState } from '../logic/docs_actions';
 import { DocsValueType } from '../logic/docs_reducer';
 import { RootState } from 'redux/reducers_registration';
 import { EditorState } from 'draft-js';
@@ -15,9 +15,34 @@ interface EditorView {
 
 const EditorView: FunctionComponent<EditorView> = ({ action }) => {
   const dispatch = useDispatch();
-  const { editorStates, currentEditorIndex }: DocsValueType = useSelector((state: RootState) => state?.docs);
+  const { editorStates, currentEditorIndex, needDisplay }: DocsValueType = useSelector((state: RootState) => state?.docs);
+
+  function showUpToolbar(newEditorState) {
+    const selection = window.getSelection();
+    const selectedText = selection?.toString();
+    const invalidSelection = !selectedText?.length ||
+      typeof selectedText !== 'string' ||
+      selection?.type === 'Caret' ||
+      !newEditorState.getCurrentContent().hasText();
+
+    if (invalidSelection && !needDisplay) {
+
+      return;
+    }
+
+    if (invalidSelection) {
+      dispatch(displayToolbar({ needDisplay: false }));
+
+      return;
+    }
+    const getRange  = selection?.getRangeAt(0);
+    const newSelectionRect = getRange?.getBoundingClientRect();
+
+    dispatch(displayToolbar({ selectionRect: newSelectionRect, needDisplay: true }));
+  }
 
   function handleChangeEditorState(newEditorState, index) {
+    showUpToolbar(newEditorState);
 
     dispatch(updateSingleEditorState({
       editorState: newEditorState,

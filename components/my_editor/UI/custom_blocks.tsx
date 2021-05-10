@@ -40,14 +40,14 @@ export const UnorderedListItemCustom = (props) => React.createElement(
   <EditorBlock {...props} />,
 );
 
-const EditorBlockCustom = (props) => {
-  const editorRef = useRef();
+// const EditorBlockCustom = (props) => {
+//   const inputRef = useRef(null);
 
-  const focus =  () => editorRef?.current?.focus();
+//   const focus =  () => editorRef?.current?.focus();
 
-  useEffect(() => editorRef?.current?.focus());
+//   useEffect(() => editorRef?.focus());
 
-  return <div onClick={focus}>
-    <EditorBlock {...props} ref={editorRef} />
-  </div>;
-};
+//   return <div onClick={focus}>
+//     <EditorBlock {...props} ref={inputRef} />
+//   </div>;
+// };

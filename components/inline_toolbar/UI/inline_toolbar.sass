@@ -1,17 +1,18 @@
+.inline-toolbar-wrapper
+  z-index: 100
+  padding: 4px 8px
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15)
+  margin: 8px 0
+  background: rgb(255,255,255)
+  display: block
+  border-radius: 8px
+  position: absolute
+  transform: translate(-300px, -130px)
+  border: 1px solid rgb(244,244,244)
+
 .inline-toolbar
   display: flex
   flex-direction: row
-  background: rgb(255,255,255)
-  border: 1px solid rgb(255,255,255)
-  border-radius: 8px
-  box-shadow: 0 0 8px rgba(0,0,0,0.8)
-  margin: 8px 0
-  padding: 4px 8px
-  position: absolute
-  transform: translate(-300px, -130px)
-  max-width: 906px
-  font-size: 14px
-  z-index: 100
 
   .text-headings > .MuiButton-label
     margin-top: 10px
@@ -34,3 +35,5 @@
     user-select: none
     white-space: nowrap
 
+.inline-toolbar-btn--active
+  color: #00AB55 !important

@@ -1,4 +1,5 @@
-import { RichUtils, EditorState } from 'draft-js';
+import { RichUtils, EditorState, Modifier } from 'draft-js';
+import { headingsStandOnlyStyle } from '../../../constants/stand_only_inline_styles';
 
 const handleToolbarActions = (editorState, action) => {
   if (!editorState) {
@@ -8,7 +9,32 @@ const handleToolbarActions = (editorState, action) => {
   const oldSelection = editorState.getSelection();
   let newEditorState;
 
+  const reducer =
+    (contentState, style) => {
+
+      return Modifier.removeInlineStyle(contentState, oldSelection, style);
+    };
+
   switch (action) {
+    case 'H1':
+    case 'H2':
+    case 'H3':
+    case 'NORMAL':
+      const nextContentState = headingsStandOnlyStyle.reduce(
+        reducer,
+        editorState.getCurrentContent(),
+      );
+
+      const nextEditorState = EditorState.push(
+        editorState,
+        nextContentState,
+      );
+
+      newEditorState = RichUtils.toggleInlineStyle(
+        nextEditorState,
+        action,
+      );
+      break;
     case 'CODE':
       newEditorState = RichUtils.toggleBlockType(
         editorState,

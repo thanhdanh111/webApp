@@ -6,19 +6,16 @@ export default function editorBlockRenderer(contentState) {
   if (type === 'unordered-list-item') {
     return {
       component: UnorderedListItemCustom,
-      editable: true,
     };
   }
 
   if (type === 'code-block') {
     return {
       component: CodeBlockCustom,
-      editable: true,
     };
   }
 
   return {
     component: UnstyledBlockCustom,
-    editable: true,
   };
 }
