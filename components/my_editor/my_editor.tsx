@@ -19,22 +19,19 @@ const MyEditor: FunctionComponent<MyEditor> = ({
   editorState,
   handleChangeEditorState,
 }) => {
-  let editorRef = null;
+  let editorRef;
 
   function handleOnChange(newEditorState) {
 
     handleChangeEditorState(newEditorState, index);
   }
 
-  useEffect(handleFocus);
+  const setDomEditorRef = (ref) => editorRef = ref;
 
-  function handleFocus() {
-
-    editorRef?.focus();
-  }
+  useEffect(() => editorRef?.focus());
 
   return <Editor
-    ref={(ref) => console.log(ref, 'ref')}
+    ref={setDomEditorRef}
     customStyleMap={customStyleMapDraftjs}
     tabIndex={index}
     editorState={editorState}

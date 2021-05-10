@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import SideToolBarButton from './side_toolbar';
 import { EditorBlock, DefaultDraftBlockRenderMap } from 'draft-js';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
@@ -39,3 +39,15 @@ export const UnorderedListItemCustom = (props) => React.createElement(
   <FiberManualRecordIcon style={{ width: '10px', height: '10px', marginRight: '10px' }} />,
   <EditorBlock {...props} />,
 );
+
+const EditorBlockCustom = (props) => {
+  const editorRef = useRef();
+
+  const focus =  () => editorRef?.current?.focus();
+
+  useEffect(() => editorRef?.current?.focus());
+
+  return <div onClick={focus}>
+    <EditorBlock {...props} ref={editorRef} />
+  </div>;
+};
