@@ -4,13 +4,14 @@ import SearchIcon from '@material-ui/icons/Search';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MenuIcon from '@material-ui/icons/Menu';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
-import { useDispatch } from 'react-redux';
-import { openDrawer } from './logic/header_actions';
 import DropDown from './popup_avatar';
 
-const Header: React.FunctionComponent = () => {
+interface Header {
+  changeDrawerOpen: () => void;
+}
+
+const Header: React.FunctionComponent<Header> = ({ changeDrawerOpen }) => {
   const notifications = 10;
-  const dispatch = useDispatch();
 
   return (
       <AppBar position='fixed' elevation={0} className='app-bar'>
@@ -20,7 +21,7 @@ const Header: React.FunctionComponent = () => {
               edge='start'
               aria-label='menu'
               color='inherit'
-              onClick={() => dispatch(openDrawer())}
+              onClick={() => changeDrawerOpen()}
             >
               <MenuIcon className='btn-appbar menu' />
             </IconButton>
