@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import { auth }  from '../pages/login/logic/login_reducer';
 import { usersReducer } from '../pages/users/logic/users_reducer';
 import accountReducer from '../pages/account/logic/account_reducer';
-import headerReducer from '../components/header/logic/header_reducer';
 import statisticsReducer from 'pages/statistics/logic/statistics_reducer';
 import inviteReducer from '../pages/invite_members/logic/invite_reducer';
 import { taskStatusesReducer } from 'pages/home/logic/home_reducer';
@@ -14,10 +13,8 @@ import { eventLogsReducer } from 'pages/event_logs/logic/event_log_reducer';
 const rootReducer = combineReducers({
   auth,
   accountReducer,
-  headerReducer,
   access: accessReducer,
   account: accountReducer,
-  headers: headerReducer,
   inviteMembers: inviteReducer,
   users: usersReducer,
   taskStatuses: taskStatusesReducer,
