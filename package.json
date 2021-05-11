@@ -12,7 +12,7 @@
     "test": "NODE_ENV=test jest",
     "tslint": "tslint -p . -c tslint.json",
     "sasslint": "sass-lint -c .sass-lint.yml -v -q",
-    "linter-folder": "ts-node --project tsconfig.server.json linter_folder.ts",
+    "linter-folder": "ts-node --project tsconfig.server.json linter/linter_folder.ts",
     "storybook": "start-storybook -p 6006 -c .storybook"
   },
   "dependencies": {

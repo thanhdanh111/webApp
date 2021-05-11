@@ -32,7 +32,7 @@ export interface ExceptionState {
   stacktrace?: StacktraceState;
   type: string;
   value: string;
-  mechanism: MechanismState;
+  mechanism?: MechanismState;
 }
 ​
 export interface MechanismState {
