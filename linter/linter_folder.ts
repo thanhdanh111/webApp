@@ -1,17 +1,17 @@
-// import linterComponents from './linter/components.linter';
-import linterPages from './linter/pages.linter';
+import linterComponents from './components.linter';
+import linterPages from './pages.linter';
 
 // tslint:disable:no-console
 const dirTree = require('directory-tree');
-// const componentsTree = dirTree('./components');
+const componentsTree = dirTree('./components');
 const pagesTree = dirTree('./pages');
 let errorComponent = 0;
 let errorPage = 0;
 
 // Check folder Components uncomment when create component
-// const resultComponent = linterComponents(componentsTree);
-// errorComponent = errorComponent + resultComponent;
-// console.log(`Error Components: ${errorComponent}`);
+const resultComponent = linterComponents(componentsTree);
+errorComponent = resultComponent ? errorComponent + resultComponent : errorComponent;
+console.log(`Error Components: ${errorComponent}`);
 
 // Check folder Pages
 const resultPage = linterPages(pagesTree);

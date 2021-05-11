@@ -12,7 +12,7 @@ import { makeStore } from '../redux/store';
 import theme from '../styles/theme/theme';
 import { SnackbarProvider } from 'notistack';
 import React from 'react';
-import Auth from '../components/auth';
+import Auth from '../components/auth/auth';
 import Layout from '@components/pages_layout/pages_layout';
 
 if (['production'].includes(config.ENV)) {
