@@ -9,6 +9,7 @@ import accessReducer from 'pages/access_denied/logic/access_reducer';
 import timeOffReducer from 'pages/time_off/logic/time_off_reducer';
 import timeOffRequestReducer from 'pages/time_off/logic/time_off_request_reducer';
 import { eventLogsReducer } from 'pages/event_logs/logic/event_log_reducer';
+import companyReducer from 'pages/company/logic/company_reducer';
 
 const rootReducer = combineReducers({
   auth,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   timeoff: timeOffReducer,
   timeOffRequest: timeOffRequestReducer,
   eventLogs: eventLogsReducer,
+  company: companyReducer,
 });
 
 export default rootReducer;

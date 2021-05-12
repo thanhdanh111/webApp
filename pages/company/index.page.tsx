@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import PageCardUi from '@components/page_card/page_card';
-import { AccountStateType } from './logic/account_reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useSnackbar, WithSnackbarProps } from 'notistack';
-import { updateAccountNotifications } from './logic/account_actions';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import VpnKeyIcon from '@material-ui/icons/VpnKey';
-import PasswordTabUi from './UI/password_tab';
-import GeneralTabUi from './UI/general_tab';
+import { updateCompanyNotifications } from './logic/company_actions';
+import { CompanyStateType } from './logic/company_reducer';
+import ConnectSlackTabUi from './UI/connect_slack_tab';
 import TabsUi from '@components/tabs/tabs';
+import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
 
-const references = ['Management', 'Account', 'Account Settings'];
-const tabs = ['general', 'change password'];
-const tabIcons = [AccountBoxIcon, VpnKeyIcon];
-const tabUIs = [GeneralTabUi, PasswordTabUi];
+const references = ['General', 'Company', 'Company Settings'];
+const tabs = ['slack team'];
+const tabIcons = [SettingsInputAntennaIcon];
+const tabUIs = [ConnectSlackTabUi];
 
-const AccountPage = () => {
-  const { accountNotifications }: AccountStateType = useSelector((state: RootState) => state.account);
+const CompanyPage = () => {
+  const { companyNotifications  }: CompanyStateType  = useSelector((state: RootState) => state.company);
   const dispatch = useDispatch();
   const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
   const [currentTabIndex, setCurrentTab] = useState(0);
 
-  useEffect(pushNotification, [accountNotifications]);
+  useEffect(pushNotification, [companyNotifications]);
 
   function pushNotification() {
 
-    if (accountNotifications && accountNotifications.length) {
-      for (const notification of accountNotifications) {
+    if (companyNotifications && companyNotifications.length) {
+      for (const notification of companyNotifications) {
         if (!notification) {
           continue;
         }
@@ -35,7 +33,7 @@ const AccountPage = () => {
         enqueueSnackbar(notification.message, { variant: notification['variant'] });
       }
 
-      dispatch(updateAccountNotifications({ notifications: [] }));
+      dispatch(updateCompanyNotifications({ notifications: [] }));
     }
 
     return;
@@ -47,7 +45,7 @@ const AccountPage = () => {
 
   return (
     <>
-      <PageCardUi references={references} heading='Account' />
+      <PageCardUi references={references} heading='Company' />
       <TabsUi
         tabs={tabs}
         currentTabIndex={currentTabIndex}
@@ -59,4 +57,4 @@ const AccountPage = () => {
   );
 };
 
-export default AccountPage;
+export default CompanyPage;
