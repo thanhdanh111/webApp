@@ -44,7 +44,7 @@ const buttons = [
     styleName: 'NORMAL',
   },
   {
-    functionality: 'CODE',
+    functionality: 'code-block',
     name: '< >',
     styleName: 'code-block',
   },

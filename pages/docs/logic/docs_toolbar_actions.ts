@@ -35,7 +35,9 @@ const handleToolbarActions = (editorState, action) => {
         action,
       );
       break;
-    case 'CODE':
+    case 'code-block':
+    case 'ordered-list-item':
+    case 'unordered-list-item':
       const removedInlineHeadingStyles = headingsStandOnlyStyle.reduce(
         reducer,
         editorState.getCurrentContent(),
@@ -48,23 +50,8 @@ const handleToolbarActions = (editorState, action) => {
 
       newEditorState = RichUtils.toggleBlockType(
         newEditorState,
-        'code-block',
+        action,
       );
-
-      break;
-    case 'unordered-list-item':
-      newEditorState = RichUtils.toggleBlockType(
-        editorState,
-        'unordered-list-item',
-      );
-
-      break;
-    case 'ordered-list-item':
-      newEditorState = RichUtils.toggleBlockType(
-        editorState,
-        'ordered-list-item',
-      );
-
       break;
     default:
       newEditorState = RichUtils.toggleInlineStyle(
