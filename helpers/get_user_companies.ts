@@ -6,6 +6,13 @@ interface GetUserCompanies {
 }
 
 export const getUserCompanies = ({ access, filterRoles }: GetUserCompanies) => {
+  if (!access || !access?.length) {
+    return {
+      isAdmin: false,
+      companies: [],
+    };
+  }
+
   const companies: string[] = [];
   let isAdmin = false;
 

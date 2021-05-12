@@ -1,3 +1,5 @@
+import { VariantType } from 'notistack';
+
 export type Token = string | null;
 
 export interface HeadCell {
@@ -22,6 +24,11 @@ export interface User {
 
 export interface Company {
   companyID?: string;
+  photos?: string [];
+  description?: string;
+  emails?: string [];
+  phoneNumbers?: string [];
+  address?: string;
   name?: string;
   departments?: Department[];
 }
@@ -133,4 +140,10 @@ export interface LoginValue {
   access: Access[] | [];
   userProfile: Profile | {};
   extendedUser: ExtendedUser | {};
+  company: Company | {};
+}
+
+export interface Notification {
+  variant: VariantType;
+  message: string;
 }
