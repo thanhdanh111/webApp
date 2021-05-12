@@ -36,8 +36,18 @@ const handleToolbarActions = (editorState, action) => {
       );
       break;
     case 'CODE':
-      newEditorState = RichUtils.toggleBlockType(
+      const removedInlineHeadingStyles = headingsStandOnlyStyle.reduce(
+        reducer,
+        editorState.getCurrentContent(),
+      );
+
+      newEditorState = EditorState.push(
         editorState,
+        removedInlineHeadingStyles,
+      );
+
+      newEditorState = RichUtils.toggleBlockType(
+        newEditorState,
         'code-block',
       );
 

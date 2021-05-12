@@ -2,6 +2,7 @@ import React from 'react';
 import { Fade } from '@material-ui/core';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import InlineToolbarButton from './UI/inline_toolbar_buttons';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 
 const buttons = [
   {
@@ -51,6 +52,11 @@ const buttons = [
     functionality: 'unordered-list-item',
     name: <FormatListBulletedIcon />,
     styleName: 'unordered-list-item',
+  },
+  {
+    functionality: 'ordered-list-item',
+    name: <FormatListNumberedIcon />,
+    styleName: 'ordered-list-item',
   },
 ];
 
