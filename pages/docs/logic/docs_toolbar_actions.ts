@@ -59,6 +59,13 @@ const handleToolbarActions = (editorState, action) => {
       );
 
       break;
+    case 'ordered-list-item':
+      newEditorState = RichUtils.toggleBlockType(
+        editorState,
+        'ordered-list-item',
+      );
+
+      break;
     default:
       newEditorState = RichUtils.toggleInlineStyle(
         editorState,

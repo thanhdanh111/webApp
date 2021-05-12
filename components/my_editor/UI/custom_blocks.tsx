@@ -14,6 +14,9 @@ const blockRenderMap = Immutable.Map({
   unstyled: {
     element: 'div',
   },
+  'ordered-list-item': {
+    element: 'div',
+  },
 });
 
 export const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
@@ -39,3 +42,44 @@ export const UnorderedListItemCustom = (props) => React.createElement(
   <FiberManualRecordIcon style={{ width: '10px', height: '10px', marginRight: '10px' }} />,
   <EditorBlock {...props} />,
 );
+
+export const OrderedListItemCustom = (props) => React.createElement(
+  React.Fragment,
+  { key: 'ordered-list-item' },
+  <SideToolBarButton />,
+  <IndexElement {...props}  />,
+  <EditorBlock {...props} />,
+);
+
+const IndexElement = (props) => {
+  const currentContentBlock = props.block;
+  const currentKey = currentContentBlock.getKey();
+  const blocks = props.contentState.getBlockMap()._list._tail.array;
+  let orderNumber = 1;
+
+  if (!currentContentBlock || !blocks?.length) {
+    return <div>{orderNumber}. </div>;
+  }
+
+  for (const block of blocks) {
+    const contentBlock = block[1];
+    const blockKey = block[0];
+
+    const blockType = contentBlock.getType();
+
+    if (blockKey !== currentKey && blockType === 'ordered-list-item') {
+      orderNumber = orderNumber + 1;
+
+      continue;
+    }
+
+    if (blockKey === currentKey) {
+
+      break;
+    }
+
+    orderNumber = 1;
+  }
+
+  return <div>{orderNumber}. </div>;
+};

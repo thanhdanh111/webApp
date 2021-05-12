@@ -1,4 +1,9 @@
-import { CodeBlockCustom, UnorderedListItemCustom, UnstyledBlockCustom } from '../UI/custom_blocks';
+import {
+  CodeBlockCustom,
+  OrderedListItemCustom,
+  UnorderedListItemCustom,
+  UnstyledBlockCustom,
+} from '../UI/custom_blocks';
 
 export default function editorBlockRenderer(contentState) {
   const type = contentState.getType();
@@ -12,6 +17,12 @@ export default function editorBlockRenderer(contentState) {
   if (type === 'code-block') {
     return {
       component: CodeBlockCustom,
+    };
+  }
+
+  if (type === 'ordered-list-item') {
+    return {
+      component: OrderedListItemCustom,
     };
   }
 
