@@ -36,7 +36,7 @@ export default function linterFolderUI(folder) {
   if (!isValidFolder) {
     error += 1;
     console.log(`Error: ${folder.path}`);
-    console.log('Folder here should have these three types of file extensions only: .stories.tsx, .tsx, .sass');
+    console.log('Folder here should only have these three types of file extensions only: .stories.tsx, .tsx, .sass');
   }
 
   return error;

@@ -12,7 +12,7 @@ export function checkType(item) {
 
     if (!isValidFile) {
       console.log(`Error: ${item.path}`);
-      console.log('Each folder here should have these three types of file extensions only: .stories.tsx, .tsx, .sass');
+      console.log('Each folder here should only have these three types of file extensions only: .stories.tsx, .tsx, .sass');
     }
 
     return isValidFile;
