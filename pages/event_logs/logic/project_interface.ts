@@ -11,4 +11,5 @@ export interface ProjectState {
   description?: string;
   departmentID?: string;
   channelID?: string;
+  totalEventLogs?: number;
 }

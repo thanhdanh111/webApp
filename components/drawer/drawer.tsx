@@ -19,12 +19,13 @@ const elementIcons = {
   invite_members: <img alt='logo' width='24px' src='../send_mail.svg' />,
   time_off: <EventNoteIcon />,
   event_logs: <EventNoteIcon />,
+  projects: <EventNoteIcon />,
   company: <BusinessIcon />,
 };
 
 const drawerElements = {
   general: ['home', 'users', 'statistics'],
-  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs'],
+  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects'],
 };
 
 interface DrawerUi {
