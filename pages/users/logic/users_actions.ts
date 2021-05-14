@@ -1,26 +1,12 @@
 import { usersAction } from './users_type_action';
 
-export const getListUsers = (res: object) => {
-  return {
-    type: usersAction.GET_LIST_USERS,
-    payload: res,
-  };
-};
-
-export const userCursor = (res: string) => {
-  return {
-    type: usersAction.USER_CURSOR,
-    payload: res,
-  };
-};
-
-export const showLoaderListUser = () => {
+export const showLoader = () => {
   return {
     type: usersAction.SHOW_LOADER_LIST,
   };
 };
 
-export const hideLoaderListUser = () => {
+export const hideLoader = () => {
   return {
     type: usersAction.HIDE_LOADER_LIST,
   };
@@ -36,6 +22,19 @@ export const pagination = (res: object) => {
 export const search = (res: object) => {
   return{
     type: usersAction.SEARCH,
+    payload: res,
+  };
+};
+
+export const hasNoNotification = () => {
+  return {
+    type: usersAction.HAS_NO_NOTIFICATION,
+  };
+};
+
+export const getNotificationsAction = (res: object) => {
+  return {
+    type: usersAction.GET_NOTIFICATIONS,
     payload: res,
   };
 };
