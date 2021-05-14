@@ -30,15 +30,16 @@ export default function linterPages(pagesTree) {
 function checkEachFolder(path) {
   const dirTree = require('directory-tree');
   const tree = dirTree(path);
+  const directoryTree = tree.children.filter((item) => item.type === 'directory');
   const arr = ['UI', 'logic', 'test'];
   const name = { ui: 'UI', logic: 'logic', test: 'test' };
   let error = 0;
 
-  const isValid = arr.every((each) => tree.children.some((child) => child.name === each));
+  const isValid = directoryTree.every((child) => arr.includes(child.name));
 
   if (!isValid) {
     console.log(`Error folder in pages: ${tree.name}`);
-    console.log('Each folder in the pages should have three folders: UI, logic, test');
+    console.log('Each folder in the pages should only have three folders: UI, logic, test');
     process.exit(1);
   }
 

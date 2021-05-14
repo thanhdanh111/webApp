@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { inviteLoading, updateInviteCompanies, updateInviteResultInfo } from '../logic/invite_actions';
-import { AvailInviteCompanies } from '../logic/invite_interface';
+import { inviteLoading, updateInviteCompanies, updateInviteResultInfo } from './invite_actions';
+import { AvailInviteCompanies } from './invite_interface';
 import { config } from 'helpers/get_config';
 
 type Token = string | null;
