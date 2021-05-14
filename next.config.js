@@ -47,7 +47,6 @@ module.exports = () => {
       const _publicConfig = {
         CLIENT_ENV: process.env.NODE_ENV,
         DNS: 'https://292b38933d2a4e8e9a523348e618adbe@o374091.ingest.sentry.io/5622776',
-        // BASE_URL: 'https://d71b1d31f5b8.ngrok.io/local',
         BASE_URL: 'https://7val2au24i.execute-api.ap-southeast-1.amazonaws.com/dev',
         STATE: 'http://localhost:5000',
         API_LOGIN: 'https://accounts.google.com/o/oauth2/v2/auth?scope=profile&access_type=offline&include_granted_scopes=true&response_type=code&client_id=',

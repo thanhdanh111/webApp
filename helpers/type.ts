@@ -54,6 +54,21 @@ export interface Access {
   departmentID?: string | undefined;
 }
 
+export interface NotificationTypeState {
+  _id: string;
+  body: string;
+  clickAction: string;
+  isRead: boolean;
+  targetEntityName: string;
+  event: string;
+  title: string;
+  createdAt: string;
+  createdBy?: Profile;
+  receiverUID: string;
+  companyID: string;
+  targetID: string;
+}
+
 export interface UserAccess {
   _id: string;
   userID: User;
@@ -61,14 +76,24 @@ export interface UserAccess {
   departmentID: Department[] ;
 }
 
+export interface NotificationsData {
+  cursor: string;
+  list: NotificationTypeState[];
+  totalCount: number;
+  totalUnread: number;
+}
+
 export interface UsersData {
   cursor: string;
   list: UserAccess[];
   listSearch: UserAccess[];
+  notifications: NotificationsData;
+  hasNoData: boolean;
   totalCount: number;
   loadingList: boolean;
   status: string;
   limit: number;
+  limitShowNotification: number;
 }
 
 export interface ParamGetUser {
@@ -103,13 +128,13 @@ export interface Task {
 
 export interface TaskStatusType {
   _id: string;
-  statusID: string;
-  companyID: Company;
-  departmentID: Department;
-  taskBoardID: string;
+  statusID?: string;
+  companyID?: Company;
+  departmentID?: Department;
+  taskBoardID?: string;
   title?: string;
   taskIDs: Task[];
-  description: string;
+  description?: string;
 }
 export interface CheckInCheckOut {
   checkInAt?: string;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { hideLoaderListUser,  search, showLoaderListUser, pagination } from './users_actions';
+import { hideLoader,  search, showLoader, pagination, hasNoNotification, getNotificationsAction } from './users_actions';
 import { UsersData, HeadCell, ParamGetUser, Data, UserAccess } from '../../../helpers/type';
 import { config } from 'helpers/get_config';
 import { useEffect, useState } from 'react';
@@ -21,25 +21,22 @@ const initialState: UsersData = {
   cursor: '',
   list: [],
   listSearch: [],
+  notifications: {
+    cursor: '',
+    list: [],
+    totalCount: 0,
+    totalUnread: 0,
+  },
+  hasNoData: false,
   loadingList: true,
   totalCount: 0,
   status: 'string',
   limit: 5,
+  limitShowNotification: 10,
 };
 
 export const usersReducer = (state = initialState, action) => {
   switch (action.type){
-    case usersAction.GET_LIST_USERS:
-      return {
-        ...state,
-        list: action.payload.list,
-        cursor: action.payload.cursor,
-      };
-    case usersAction.USER_CURSOR:
-      return {
-        ...state,
-        cursor: action.payload.cursor,
-      };
     case usersAction.SHOW_LOADER_LIST:
       return {
         ...state,
@@ -76,6 +73,29 @@ export const usersReducer = (state = initialState, action) => {
         totalCount: action.payload.totalCount,
         listSearch: action.payload.list,
       };
+    case usersAction.HAS_NO_NOTIFICATION:
+      return {
+        ...state,
+        hasNoData: true,
+      };
+    case usersAction.GET_NOTIFICATIONS:
+      const listNotification = [...state.notifications.list, ...action.payload.list];
+      let cursorNotification = action.payload.cursor;
+
+      if (listNotification >= action.payload.totalCount) {
+        cursorNotification = 'END';
+      }
+
+      return {
+        ...state,
+        notifications: {
+          cursor: cursorNotification,
+          list: listNotification,
+          totalCount: action.payload.totalCount,
+          totalUnread: action.payload.totalUnread,
+        },
+        hasNoData: true,
+      };
     default:
       return state;
   }
@@ -102,13 +122,13 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
        });
 
     if (res.data.totalCount === 0){
-      await dispatch(showLoaderListUser());
+      await dispatch(showLoader());
 
       return;
     }
 
     await dispatch(pagination(res.data));
-    await dispatch(hideLoaderListUser());
+    await dispatch(hideLoader());
   } catch (error) {
     throw error;
   }
@@ -141,7 +161,7 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
      });
 
     await dispatch(search(res.data));
-    await dispatch(hideLoaderListUser());
+    await dispatch(hideLoader());
   } catch (error) {
     throw error;
   }
@@ -193,4 +213,36 @@ export const renderData = (users: UserAccess[]) => {
       roles?.pendingRoles || [],
     );
   });
+};
+
+export const getNotificationMiddleware = () => async (dispatch, getState) => {
+  try {
+    await dispatch(showLoader());
+
+    const state = getState();
+    const token = localStorage.getItem('access_token');
+    const cursor = state.users?.notifications?.cursor;
+    const limit = state.users?.limitShowNotification;
+
+    const res = await axios.get(`${config.BASE_URL}/notifications`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        cursor,
+        limit,
+      },
+    });
+
+    if (!res.data.totalCount || !res.data.list || !res.data.list.length) {
+      await dispatch(hasNoNotification());
+      await dispatch(hideLoader());
+    }
+
+    await dispatch(getNotificationsAction(res.data));
+    await dispatch(hideLoader());
+  } catch (error) {
+    throw error;
+  }
 };
