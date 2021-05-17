@@ -33,7 +33,7 @@ const EditorView: FunctionComponent<EditorView> = () => {
       return;
     }
 
-    if (invalidSelection || haveOtherToolbar) {
+    if (invalidSelection) {
       dispatch(displayToolbar({ needDisplay: false }));
 
       return;
