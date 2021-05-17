@@ -10,10 +10,10 @@ import _immutable from 'immutable';
 interface MyEditor {
   index: number;
   currentIndex: number;
-  action?: string;
   editorState?: EditorState;
   handleChangeEditorState: (newEditorState, index) => void;
-  handleOnChangeStyleLine?: (action) => void;
+  handleOnChangeStyleLine?: (action, contentState) => void;
+  onClickSideToolbar?: (contentBlock) => void;
 }
 
 const MyEditor: FunctionComponent<MyEditor> = ({
@@ -21,6 +21,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
   editorState,
   handleChangeEditorState,
   handleOnChangeStyleLine,
+  onClickSideToolbar,
 }) => {
   let editorRef;
 
@@ -39,7 +40,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     customStyleMap={customStyleMapDraftjs}
     tabIndex={index}
     editorState={editorState}
-    blockRendererFn={(contentState) => editorBlockRenderer(contentState, handleOnChangeStyleLine)}
+    blockRendererFn={(contentState) => editorBlockRenderer(contentState, handleOnChangeStyleLine, onClickSideToolbar)}
     blockStyleFn={(contentBlock) => myBlockStyleFn(contentBlock, editorState)}
     blockRenderMap={extendedBlockRenderMap}
     preserveSelectionOnBlur={true}

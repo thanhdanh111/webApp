@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSingleEditorState } from './logic/docs_actions';
 import { RootState } from 'redux/reducers_registration';
 import { DocsValueType } from './logic/docs_reducer';
-import handleToolbarActions from './logic/docs_toolbar_actions';
+import handleToolbarActions from './logic/docs_inline_toolbar_actions';
 
 const DocsPage = () => {
   const dispatch = useDispatch();
@@ -31,7 +31,6 @@ const DocsPage = () => {
 
   return <div className='docs-page' >
     <EditorView
-      handleOnChangeStyleLine={onClickOptionInToolbar}
       selectionRect={selectionRect}
       numbers={editorStates.length}
       currentIndex={currentEditorIndex}

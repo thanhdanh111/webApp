@@ -7,5 +7,17 @@ export default function myBlockStyleFn(contentBlock, editorState) {
     return handleStyleForCodeBlock(contentBlock, editorState);
   }
 
+  if (type === 'header-one') {
+    return 'block-wrapper header-one';
+  }
+
+  if (type === 'header-two') {
+    return 'block-wrapper header-two';
+  }
+
+  if (type === 'header-three') {
+    return 'block-wrapper header-three';
+  }
+
   return 'block-wrapper';
 }

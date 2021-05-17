@@ -21,24 +21,39 @@ const blockRenderMap = Immutable.Map({
 
 export const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
 
-export const UnstyledBlockCustom = (props) => React.createElement(
-  React.Fragment,
-  { key: 'unstyled-block-custom' },
-  <SideToolBarButton  handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle} />,
-  <EditorBlock {...props} />,
-);
+export const UnstyledBlockCustom = (props) => {
+
+  return React.createElement(
+    React.Fragment,
+    { key: 'unstyled-block-custom' },
+    <SideToolBarButton
+      contentBlock={props.block}
+      handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
+      onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+    />,
+    <EditorBlock {...props} />,
+  );
+};
 
 export const CodeBlockCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'code-block-custom' },
-  <SideToolBarButton handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle} />,
+  <SideToolBarButton
+    contentBlock={props.block}
+    handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
+    onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+  />,
   <EditorBlock {...props} />,
 );
 
 export const UnorderedListItemCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'unordered-list-item' },
-  <SideToolBarButton handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle} />,
+  <SideToolBarButton
+    contentBlock={props.block}
+    handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
+    onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+  />,
   <FiberManualRecordIcon style={{ width: '10px', height: '10px', marginRight: '10px' }} />,
   <EditorBlock {...props} />,
 );
@@ -46,7 +61,11 @@ export const UnorderedListItemCustom = (props) => React.createElement(
 export const OrderedListItemCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'ordered-list-item' },
-  <SideToolBarButton handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle} />,
+  <SideToolBarButton
+    contentBlock={props.block}
+    handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
+    onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+  />,
   <IndexElement {...props}  />,
   <EditorBlock {...props} />,
 );

@@ -5,10 +5,12 @@ import { Button, ClickAwayListener, Paper,
 } from '@material-ui/core';
 import ParagraphStyleSideToolbarBtn from './paragraph_style_toolbar_btn';
 
-const SideToolBarButton = ({ handleOnChangeLineStyle }) => {
+const SideToolBarButton = ({ handleOnChangeLineStyle, contentBlock, onClickSideToolbar }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handlePopperOpen = (event: React.MouseEvent<HTMLElement>) => {
+    onClickSideToolbar(contentBlock);
+
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
@@ -41,7 +43,9 @@ const SideToolBarButton = ({ handleOnChangeLineStyle }) => {
         <Paper>
             <ClickAwayListener onClickAway={handleClose}>
               <MenuList>
-                <ParagraphStyleSideToolbarBtn handleOnChangeLineStyle={handleOnChangeLineStyle} />
+                <ParagraphStyleSideToolbarBtn
+                  handleOnChangeLineStyle={handleOnChangeLineStyle}
+                />
               </MenuList>
             </ClickAwayListener>
           </Paper>

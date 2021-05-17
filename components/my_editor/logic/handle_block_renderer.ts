@@ -5,7 +5,7 @@ import {
   UnstyledBlockCustom,
 } from '../UI/custom_blocks';
 
-export default function editorBlockRenderer(contentState, handleOnChangeLineStyle) {
+export default function editorBlockRenderer(contentState, handleOnChangeLineStyle, onClickSideToolbar) {
   const type = contentState.getType();
 
   if (type === 'unordered-list-item') {
@@ -13,6 +13,7 @@ export default function editorBlockRenderer(contentState, handleOnChangeLineStyl
       component: UnorderedListItemCustom,
       props: {
         handleOnChangeLineStyle,
+        onClickSideToolbar,
       },
     };
   }
@@ -22,6 +23,7 @@ export default function editorBlockRenderer(contentState, handleOnChangeLineStyl
       component: CodeBlockCustom,
       props: {
         handleOnChangeLineStyle,
+        onClickSideToolbar,
       },
     };
   }
@@ -31,6 +33,7 @@ export default function editorBlockRenderer(contentState, handleOnChangeLineStyl
       component: OrderedListItemCustom,
       props: {
         handleOnChangeLineStyle,
+        onClickSideToolbar,
       },
     };
   }
@@ -39,6 +42,7 @@ export default function editorBlockRenderer(contentState, handleOnChangeLineStyl
     component: UnstyledBlockCustom,
     props: {
       handleOnChangeLineStyle,
+      onClickSideToolbar,
     },
   };
 }

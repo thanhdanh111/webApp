@@ -23,9 +23,13 @@ const initialState: DocsValue = {
 
 export type DocsValueType = DocsValue;
 
-const updateSingleEditorState = ({ currentEditorIndex, state, editorState }) => {
+const updateSingleEditorState = ({ needDisplay, currentEditorIndex, state, editorState }) => {
   if (typeof currentEditorIndex !== 'number' || !state || !editorState) {
     return state;
+  }
+
+  if (typeof needDisplay === 'boolean') {
+    state.needDisplay = needDisplay;
   }
 
   const editorStates = state.editorStates;

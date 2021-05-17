@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListItemIcon, MenuItem, Popper, Typography } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { changeStyleButons } from 'constants/toolbar_docs';
+import { changeLineStyleButons } from 'constants/toolbar_docs';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 
 const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle }) => {
@@ -11,7 +11,7 @@ const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle }) => {
   };
 
   const lists = () => {
-    return changeStyleButons.map((button, index) =>
+    return changeLineStyleButons.map((button, index) =>
       <div
         key={`paragraph-style-toolbar--list-item-${index}`}
         className='paragraph-style-toolbar--list-item'

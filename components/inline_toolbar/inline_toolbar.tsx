@@ -1,7 +1,7 @@
 import React from 'react';
 import { Fade } from '@material-ui/core';
 import InlineToolbarButton from './UI/inline_toolbar_buttons';
-import { changeStyleButons } from 'constants/toolbar_docs';
+import { inlineToolbarButons } from 'constants/toolbar_docs';
 
 const InlineToolbar = ({
   selectionRect,
@@ -51,7 +51,7 @@ const InlineToolbar = ({
       style={getPositionToDisplay({ position: selectionRect })}
     >
       <div className='inline-toolbar'>
-        {changeStyleButons.map((button) => {
+        {inlineToolbarButons.map((button) => {
           const styles = styleControls();
           const isActive = styles?.inlineStyles?.has(button.styleName) ||
             styles?.blockType === button.styleName;

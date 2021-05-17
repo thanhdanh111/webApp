@@ -1,3 +1,5 @@
+import { EditorState } from 'draft-js';
+
 export enum DocsActionTypes {
   DisplayToolbar = 'DisplayToolbar',
   OnFocusElement = 'OnFocusElement',
@@ -42,10 +44,17 @@ export const updateEditorView = ({ numbers }) => {
   };
 };
 
-export const updateSingleEditorState = ({ editorState, currentIndex }) => {
+interface UpdateSingleEditorState {
+  needDisplay?: boolean;
+  editorState: EditorState;
+  currentIndex: number;
+}
+
+export const updateSingleEditorState = ({ needDisplay, editorState, currentIndex }: UpdateSingleEditorState) => {
   return {
     data: {
       editorState,
+      needDisplay,
       currentEditorIndex: currentIndex,
     },
     type: DocsActionTypes.UpdateSingleEditorState,
