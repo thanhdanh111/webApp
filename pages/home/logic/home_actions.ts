@@ -14,6 +14,13 @@ export const getDataTasksByUserThunkAction = (res: object) => {
   };
 };
 
+export const getTasksStatusByID = (res: object) => {
+  return {
+    type: dashboardClickUp.GET_TASK_STATUS_BY_ID,
+    payload: res,
+  };
+};
+
 export const showLoaderListUser = () => {
   return {
     type: dashboardClickUp.SHOW_LOADER_LIST,

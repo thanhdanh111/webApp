@@ -33,6 +33,16 @@
     box-shadow: none;
   
     .drop-avt:active
+      background: none;
+      box-shadow: none;
+
+  .drop-notification
+    overflow: hidden;
+    background: none;
+    border: none;
+    box-shadow: none;
+
+  .drop-notification:hover
     background: none;
     box-shadow: none;
 
@@ -109,6 +119,31 @@
     .text-item
       font-size: 1rem;
 
+    .text-item-notification
+      width: 95%
+
+.menu-drop-notification
+  .item-switch
+    font-size: 14px
+
+  .read
+    color: #8b8484;
+
+  .unread
+    color: black
+
+  .label-notification
+    .div-label-notification
+      font-size: 20px;
+      font-weight: 600
+
+.menu-drop-notification
+  transform: translateY(44px);
+  
+  .MuiMenu-paper
+    width: 400px
+    min-height: 500px
+          
 .sublist-item
   padding: 15px 0px 12px 10px
   overflow-x: hidden !important
@@ -120,6 +155,24 @@
 
   .MuiListItem-button:active
     background-color:  #fff !important
+
+.notification-info
+  display: flex
+
+  .notification-info-img
+    padding: 0
+    position: absolute;
+
+  .notification-content
+    padding: 0 0 0 46px
+
+    .text-notification
+      height: auto;
+      text-overflow: ellipsis;
+      white-space: pre-wrap;
+
+      .user-create-notification 
+        font-weight: 700
 
 
 @media screen and (min-width: 960px)
