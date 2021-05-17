@@ -31,6 +31,7 @@ const DocsPage = () => {
 
   return <div className='docs-page' >
     <EditorView
+      handleOnChangeStyleLine={onClickOptionInToolbar}
       selectionRect={selectionRect}
       numbers={editorStates.length}
       currentIndex={currentEditorIndex}

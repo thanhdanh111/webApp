@@ -11,9 +11,10 @@ interface EditorView {
   currentIndex?: number;
   selectionRect?: DOMRect;
   action?: string;
+  handleOnChangeStyleLine?: (action) => void;
 }
 
-const EditorView: FunctionComponent<EditorView> = ({ action }) => {
+const EditorView: FunctionComponent<EditorView> = ({ action, handleOnChangeStyleLine }) => {
   const dispatch = useDispatch();
   const { editorStates, currentEditorIndex, needDisplay }: DocsValueType = useSelector((state: RootState) => state?.docs);
 
@@ -54,6 +55,7 @@ const EditorView: FunctionComponent<EditorView> = ({ action }) => {
     {editorStates.map((editorState, editorIndex) => {
 
       return <MyEditor
+        handleOnChangeStyleLine={handleOnChangeStyleLine}
         action={action}
         key={`editor-${editorIndex}`}
         index={editorIndex}

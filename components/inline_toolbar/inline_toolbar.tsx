@@ -1,64 +1,7 @@
 import React from 'react';
 import { Fade } from '@material-ui/core';
-import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import InlineToolbarButton from './UI/inline_toolbar_buttons';
-import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
-
-const buttons = [
-  {
-    functionality: 'BOLD',
-    name: 'B',
-    styleName: 'BOLD',
-  },
-  {
-    functionality: 'ITALIC',
-    name: 'I',
-    styleName: 'ITALIC',
-  },
-  {
-    functionality: 'UNDERLINE',
-    name: 'U',
-    styleName: 'UNDERLINE',
-  },
-  {
-    functionality: 'H1',
-    name: <p>H<sub>1</sub></p>,
-    overrideClass: 'text-headings',
-    styleName: 'H1',
-  },
-  {
-    functionality: 'H2',
-    name: <p>H<sub>2</sub></p>,
-    overrideClass: 'text-headings',
-    styleName: 'H2',
-  },
-  {
-    functionality: 'H3',
-    name: <p>H<sub>3</sub></p>,
-    overrideClass: 'text-headings',
-    styleName: 'H3',
-  },
-  {
-    functionality: 'NORMAL',
-    name: 'T',
-    styleName: 'NORMAL',
-  },
-  {
-    functionality: 'code-block',
-    name: '< >',
-    styleName: 'code-block',
-  },
-  {
-    functionality: 'unordered-list-item',
-    name: <FormatListBulletedIcon />,
-    styleName: 'unordered-list-item',
-  },
-  {
-    functionality: 'ordered-list-item',
-    name: <FormatListNumberedIcon />,
-    styleName: 'ordered-list-item',
-  },
-];
+import { changeStyleButons } from 'constants/toolbar_docs';
 
 const InlineToolbar = ({
   selectionRect,
@@ -108,7 +51,7 @@ const InlineToolbar = ({
       style={getPositionToDisplay({ position: selectionRect })}
     >
       <div className='inline-toolbar'>
-        {buttons.map((button) => {
+        {changeStyleButons.map((button) => {
           const styles = styleControls();
           const isActive = styles?.inlineStyles?.has(button.styleName) ||
             styles?.blockType === button.styleName;
@@ -116,7 +59,7 @@ const InlineToolbar = ({
           return <InlineToolbarButton
             key={button.functionality}
             functionality={button.functionality}
-            name={button.name}
+            icon={button.icon}
             overrideClass={button.overrideClass}
             active={isActive}
             onClick={(functionality) => onClickOption(functionality)}

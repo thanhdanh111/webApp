@@ -2,7 +2,7 @@ import { Button } from '@material-ui/core';
 
 const InlineToolbarButton = ({
   functionality,
-  name,
+  icon,
   onClick,
   overrideClass = '',
   active,
@@ -19,7 +19,7 @@ const InlineToolbarButton = ({
     className={className}
     onClick={() => onClick(functionality)}
   >
-    {name}
+    {icon}
   </Button>;
 };
 

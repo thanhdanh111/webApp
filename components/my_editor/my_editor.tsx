@@ -5,6 +5,7 @@ import myBlockStyleFn from './logic/handle_return_styles';
 import editorBlockRenderer from './logic/handle_block_renderer';
 import handleKeyCommand from './logic/handle_key_command';
 import { extendedBlockRenderMap } from './UI/custom_blocks';
+import _immutable from 'immutable';
 
 interface MyEditor {
   index: number;
@@ -12,12 +13,14 @@ interface MyEditor {
   action?: string;
   editorState?: EditorState;
   handleChangeEditorState: (newEditorState, index) => void;
+  handleOnChangeStyleLine?: (action) => void;
 }
 
 const MyEditor: FunctionComponent<MyEditor> = ({
   index,
   editorState,
   handleChangeEditorState,
+  handleOnChangeStyleLine,
 }) => {
   let editorRef;
 
@@ -31,11 +34,12 @@ const MyEditor: FunctionComponent<MyEditor> = ({
   useEffect(() => editorRef?.focus());
 
   return <Editor
+    stripPastedStyles={true}
     ref={setDomEditorRef}
     customStyleMap={customStyleMapDraftjs}
     tabIndex={index}
     editorState={editorState}
-    blockRendererFn={editorBlockRenderer}
+    blockRendererFn={(contentState) => editorBlockRenderer(contentState, handleOnChangeStyleLine)}
     blockStyleFn={(contentBlock) => myBlockStyleFn(contentBlock, editorState)}
     blockRenderMap={extendedBlockRenderMap}
     preserveSelectionOnBlur={true}

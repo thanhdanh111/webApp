@@ -24,6 +24,7 @@ a {
 
 .main-layout {
   display: flex;
+  position: fixed;
 }
 
 .main-page {

@@ -24,21 +24,21 @@ export const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRend
 export const UnstyledBlockCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'unstyled-block-custom' },
-  <SideToolBarButton />,
+  <SideToolBarButton  handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle} />,
   <EditorBlock {...props} />,
 );
 
 export const CodeBlockCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'code-block-custom' },
-  <SideToolBarButton />,
+  <SideToolBarButton handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle} />,
   <EditorBlock {...props} />,
 );
 
 export const UnorderedListItemCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'unordered-list-item' },
-  <SideToolBarButton />,
+  <SideToolBarButton handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle} />,
   <FiberManualRecordIcon style={{ width: '10px', height: '10px', marginRight: '10px' }} />,
   <EditorBlock {...props} />,
 );
@@ -46,7 +46,7 @@ export const UnorderedListItemCustom = (props) => React.createElement(
 export const OrderedListItemCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'ordered-list-item' },
-  <SideToolBarButton />,
+  <SideToolBarButton handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle} />,
   <IndexElement {...props}  />,
   <EditorBlock {...props} />,
 );
