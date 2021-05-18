@@ -51,7 +51,6 @@ const BaseTable = (props: InitialProps) => {
     notFoundWarning, individualActions,
   }: InitialProps = props;
   const emptyState = !loading && !data?.length && notFoundAnyData;
-
   const tableCellContent = (content) => {
     if (Array.isArray(content)) {
       return (
@@ -200,6 +199,7 @@ const BaseTable = (props: InitialProps) => {
                             />
                         );
                       })}
+
                     </TableRow>
                   );
                 })}

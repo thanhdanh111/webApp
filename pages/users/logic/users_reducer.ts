@@ -215,14 +215,18 @@ export const renderData = (users: UserAccess[]) => {
   });
 };
 
-export const getNotificationMiddleware = () => async (dispatch, getState) => {
+export const getNotificationMiddleware = (receiverID) => async (dispatch, getState) => {
   try {
     await dispatch(showLoader());
 
     const state = getState();
     const token = localStorage.getItem('access_token');
-    const cursor = state.users?.notifications?.cursor;
-    const limit = state.users?.limitShowNotification;
+    const cursor = state?.users?.notifications?.cursor;
+    const limit = state?.users?.limitShowNotification;
+
+    if (!token || !receiverID) {
+      return;
+    }
 
     const res = await axios.get(`${config.BASE_URL}/notifications`, {
       headers: {
@@ -232,6 +236,7 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
       params: {
         cursor,
         limit,
+        receiverID,
       },
     });
 
