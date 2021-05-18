@@ -7,7 +7,7 @@
     justify-content: space-between;
     .text-projects
         color: rgb(43, 29, 56);
-        font-size: 22px;
+        font-size: 1.6rem;
         line-height: 22px;
         font-weight: normal;
         margin: 0px;
@@ -95,7 +95,8 @@
         display: inline-block;
         border: 1px solid rgb(198, 190, 207);
         width: 100%;
-        margin: 19px;
+        margin: 11px;
+        max-width: 31%;
 
         .page-project-card
             box-shadow: none;
@@ -161,3 +162,15 @@
         width: 100%;
         max-width: 240px;
         padding: 2px 0px;
+
+@media screen and (max-width: 1024px)
+   .team-section-wrapper
+        .project-card
+            max-width: 46%;
+            margin: 10px;
+
+@media screen and (max-width: 600px)
+    .team-section-wrapper
+        .project-card
+            max-width: 96%;
+            margin: 10px;

@@ -1,12 +1,13 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+// import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import UserAvatar from '@components/user_avatar/info_user';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
-import { Link, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import ProjectsPageUI from 'pages/projects/UI/project';
 import { getProjectDataMiddleWare } from '../logic/projects_reducer';
 import { useRouter } from 'next/router';
+import PrimaryButtonUI from '@components/primary_button/primary_button';
 
 const Projects: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -35,18 +36,16 @@ const Projects: FunctionComponent = () => {
     );
   };
 
+  const onPushToPage = (url: string) => {
+
+    void router.push(`${pathname}/${url}`);
+  };
+
   return (
     <div>
       <div className='projects'>
       <h1 className='text-projects'>Project</h1>
-      <Link className='btn-project' href={`${pathname}/create`}>
-        <span className='btn-label'>
-          <AddCircleOutlineIcon className='icon-add'/>
-          <span className='text-create'>
-            Create Project
-          </span>
-        </span>
-      </Link>
+      <PrimaryButtonUI title='Create Project' handleClick={() => onPushToPage('create')}/>
       </div>
       <div className='team-section-wrapper'>
         <div className='team-title-bar'>
