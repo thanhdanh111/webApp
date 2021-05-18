@@ -13,19 +13,20 @@ import { DisappearedLoading } from 'react-loadingg';
 const NotificationsUI = () => {
   const dispatch = useDispatch();
   const { notifications, loadingList, hasNoData  }: UsersData = useSelector((state: RootState) => state.users);
-  const emptyState = !loadingList && !notifications?.list.length && hasNoData;
+  const userID = useSelector((state: RootState) => state?.auth?.userID);
+  const emptyState = !loadingList && !notifications?.list?.length && hasNoData;
 
   useEffect(() => {
     return void fetchData();
-  }, []);
+  }, [userID]);
 
   const fetchData = () => {
-    dispatch(getNotificationMiddleware());
+    dispatch(getNotificationMiddleware(userID));
   };
 
   const generatedData = () => {
 
-    if (!notifications.list.length && hasNoData) {
+    if (!notifications?.list?.length && hasNoData) {
       return (
         <div className='empty-state'>
             <img alt='logo' width='100px' src='../document.svg'/>
