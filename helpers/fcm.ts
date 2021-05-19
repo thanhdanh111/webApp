@@ -13,7 +13,7 @@ export const getBrowserToken = async () => {
       return;
     }
 
-    const browserToken = await messaging.getToken({ vapidKey: 'BA5XCu8TY4LsfCv6ksXL9lrVhTWAu3si3S-1hnLzrdsYBI50hNT_A8GLjhGP7u1Uhc_Zb1ulEWpywekCWdzSQC8' });
+    const browserToken = await messaging.getToken({ vapidKey: 'BCkDYAAOFU48utzOWpWnq7Twn5rS5v-bfMbyBInggmxVVQUWOIA4k1ltY4r5hJGnBAraQYFj-WsN06BZpYnD-f0' });
     // tslint:disable-next-line:no-console
     console.log(browserToken);
     if (!browserToken) {

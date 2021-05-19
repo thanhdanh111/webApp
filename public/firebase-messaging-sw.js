@@ -3,13 +3,14 @@ importScripts('https://www.gstatic.com/firebasejs/8.3.3/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.3.3/firebase-messaging.js');
 
 var config = {
-    apiKey: "AIzaSyCC9Fw-20uc_UVKhPcW_Phnac7kleGFqRo",
-    authDomain: "test-fcm-652ab.firebaseapp.com",
-    projectId: "test-fcm-652ab",
-    storageBucket: "test-fcm-652ab.appspot.com",
-    messagingSenderId: "961485436410",
-    appId: "1:961485436410:web:896e1ede44652c04e2e043",
-    measurementId: "G-S8E46696TF"
+    apiKey: "AIzaSyA8UoV0yy076JsQRMSWGinbcqI2iNz7Plw",
+    authDomain: "snt-solutions-test2.firebaseapp.com",
+    databaseURL: "https://snt-solutions-test2-default-rtdb.firebaseio.com",
+    projectId: "snt-solutions-test2",
+    storageBucket: "snt-solutions-test2.appspot.com",
+    messagingSenderId: "702847935000",
+    appId: "1:702847935000:web:002ff21a21d1f3c64b596d",
+    measurementId: "G-LY4NXXV8NV"
 }
 firebase.initializeApp(config);
 

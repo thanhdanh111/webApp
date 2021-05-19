@@ -70,7 +70,7 @@ staging:
     - npm install
     - npm run linter-folder
     - npm i serve
-    - npm run build
+    - npm run build:staging
     - . ops/install_aws_cli.sh
     - aws s3 cp ./out/ s3://$S3_BUCKET_NAME_STAGING/ --recursive
   only:
