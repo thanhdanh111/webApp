@@ -159,13 +159,29 @@ interface ExtendedUser {
   userID: string;
 }
 
+interface ApiKey {
+  description: string;
+  createdAt: string;
+  key: string;
+  companyID: string;
+}
+
+interface ExtendedCompany {
+  companyID: Company;
+  slackToken: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  apiKey: ApiKey;
+}
+
 export interface LoginValue {
   value: string;
   userID: string;
   access: Access[] | [];
   userProfile: Profile | {};
   extendedUser: ExtendedUser | {};
-  company: Company | {};
+  extendedCompany: ExtendedCompany | {};
 }
 
 export interface Notification {

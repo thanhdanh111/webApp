@@ -45,17 +45,6 @@ const accountReducer = (state = initialState, action) => {
         ...state,
         isPublicProfile: !state?.isPublicProfile,
       };
-    case AccountActionTypes.FillingToken:
-      return {
-        ...state,
-        ...action.data,
-      };
-    case AccountActionTypes.UpdateOnSendingToken:
-      return {
-        ...state,
-        onSendingToken: action.loading,
-        accountNotifications: action.notifications ?? [],
-      };
     case AccountActionTypes.ChangeCurrentIndexAccountTabs:
       return {
         ...state,
