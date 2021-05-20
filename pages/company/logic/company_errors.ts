@@ -1,11 +1,37 @@
 import { VariantType } from 'notistack';
 
-interface AccountError {
+interface CompanyNotification {
   variant: VariantType;
   message: string;
 }
 
-export const handleCompanyErrors = ({ statusCode }): AccountError => {
+export const handleEmptyField = ({ contentFields }): CompanyNotification => {
+  for (const field in contentFields) {
+    if (contentFields[field]) {
+      continue;
+    }
+
+    switch (field) {
+      case 'companyID':
+        return {
+          variant: 'error',
+          message: 'You have not registered any companies for workspace',
+        };
+      case 'slackToken':
+        return {
+          variant: 'error',
+          message: 'You should fill your token',
+        };
+    }
+  }
+
+  return {
+    variant: 'error',
+    message: 'Something went wrong',
+  };
+};
+
+export const handleCompanyErrors = ({ statusCode }): CompanyNotification => {
   if (!statusCode) {
     return {
       variant: 'error',
@@ -18,6 +44,11 @@ export const handleCompanyErrors = ({ statusCode }): AccountError => {
       return {
         variant: 'success',
         message: 'Connect your slack token successfully',
+      };
+    case 400:
+      return {
+        variant: 'error',
+        message: 'You have no company right now!',
       };
     default:
       return {

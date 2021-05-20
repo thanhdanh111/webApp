@@ -18,11 +18,16 @@ export type CompanyStateType = CompanyValue;
 const companyReducer = (state = initialState, action) => {
   switch (action.type) {
     case CompanyActionTypes.FillingToken:
+
       return {
         ...state,
         ...action.data,
       };
     case CompanyActionTypes.UpdateOnSendingToken:
+      if (!action.loading) {
+        state.slackToken = '';
+      }
+
       return {
         ...state,
         onSendingToken: action.loading,

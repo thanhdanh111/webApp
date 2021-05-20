@@ -13,7 +13,7 @@ const initialState: LoginValue = {
   access: [],
   userProfile: {},
   extendedUser: {},
-  company: {},
+  extendedCompany: {},
 };
 
 export const auth = (state = initialState, action) => {
@@ -35,7 +35,7 @@ export const auth = (state = initialState, action) => {
         access: action.payload.access,
         userID: action.payload.userID,
         extendedUser: action.payload.extendedUser,
-        company: action?.payload?.company ?? {},
+        extendedCompany: action?.payload?.extendedCompany ?? {},
       };
     default:
       return state;
@@ -43,12 +43,15 @@ export const auth = (state = initialState, action) => {
 };
 
 export const GetUserDataThunkAction = (token) => async (dispatch) => {
+  let data;
+  let res;
+
   try {
     if (!token) {
       return;
     }
 
-    const res = await axios.get(`${config.BASE_URL}/users/me`, {
+    res = await axios.get(`${config.BASE_URL}/users/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -58,10 +61,10 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
 
     const userCompanies = getUserCompanies({ access: res.data?.access });
 
-    const data = res.data;
+    data = res.data;
 
     if (userCompanies?.companies && userCompanies?.companies?.length) {
-      const company = await axios.get(`${config.BASE_URL}/companies/${userCompanies?.companies[0]}`, {
+      const extendedCompany = await axios.get(`${config.BASE_URL}/extendedCompanies/${userCompanies?.companies?.[0]}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -71,17 +74,18 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
 
       const validCompany = checkOnlyTrueInArray({
         conditionsArray: [
-          !!company?.data?.name,
-          !!company?.data?._id,
+          !!extendedCompany?.data?.companyID?.name,
+          !!extendedCompany?.data?.companyID?._id,
         ],
       });
 
-      data.company = validCompany ? company.data : {};
+      data.extendedCompany = validCompany ? extendedCompany.data : {};
     }
 
     await dispatch(GetUserData(data));
     await dispatch(GetUserAccess(res.data?.access ?? []));
   } catch (error) {
-    throw error;
+    await dispatch(GetUserData(data));
+    await dispatch(GetUserAccess(res.data?.access ?? []));
   }
 };

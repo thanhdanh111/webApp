@@ -112,20 +112,20 @@ const DropDown = () => {
   };
 
   const InfoCompany = () => {
-    if (!auth?.company?.name || !auth?.company?.emails?.length) {
+    if (!auth?.extendedCompany?.companyID?.name || !auth?.extendedCompany?.companyID?.emails?.length) {
       return <div />;
     }
 
     return (
       <Grid className='sublist-item' container wrap='nowrap' spacing={2}>
         <Grid item>
-          <Avatar variant='rounded' src={auth?.company.photos?.[0]} style={{ backgroundColor: '#00AB55' }}>
+          <Avatar variant='rounded' src={auth?.extendedCompany?.companyID?.photos?.[0]} style={{ backgroundColor: '#00AB55' }}>
             <BusinessIcon />
           </Avatar>
         </Grid>
         <Grid item xs justify='center'>
-          <Typography >{auth?.company?.name}</Typography>
-          <Typography >{auth?.company?.emails?.[0]}</Typography>
+          <Typography >{auth.extendedCompany?.companyID?.name}</Typography>
+          <Typography >{auth?.extendedCompany?.companyID?.emails?.[0]}</Typography>
         </Grid>
       </Grid>
     );
