@@ -40,6 +40,7 @@ export interface Department {
 
 export interface Data {
   id: string;
+  user: UserAccess;
   userName: string;
   departments: string[];
   activeRoles: string[];
