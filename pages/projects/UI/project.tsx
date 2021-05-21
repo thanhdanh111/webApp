@@ -1,9 +1,8 @@
-import { Avatar, Button, Card, CardContent, Grid, Tooltip } from '@material-ui/core';
+import { Avatar, Card, CardContent, Grid, Tooltip, Button } from '@material-ui/core';
+import React from 'react';
+import { useRouter } from 'next/router';
 import { ProjectState } from 'helpers/type';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
-
 interface InitProps {
   project: ProjectState;
 }

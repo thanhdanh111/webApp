@@ -190,17 +190,41 @@ export interface Notification {
   message: string;
 }
 
+export interface Channel {
+  _id: string;
+  name: string;
+}
+
 export interface ProjectsPage {
   projects: ProjectState[];
   selectedProject: ProjectState;
+  selectedChannelID: string;
+  channels: Channel[];
+  channelIDResultInfo: ChannelIDResultInfo;
+  shouldShowDescription: boolean;
 }
 export interface ProjectState {
   _id: string;
   name: string;
-  companyID: string;
-  eventExpirationTime: string;
+  companyID?: string;
+  eventExpirationTime?: string;
   description?: string;
   departmentID?: string;
   channelID?: string;
   totalEventLogs: number;
+}
+
+export interface ChannelIDData {
+  _id: string;
+  channelID: string;
+}
+
+export interface ChannelIDResultInfo {
+  status?: string;
+  message?: string;
+  channelID?: string;
+  name?: string;
+  description?: string;
+  eventExpirationTime?: string;
+  type?: string;
 }
