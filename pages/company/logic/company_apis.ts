@@ -2,16 +2,20 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { Token } from 'helpers/type';
 import { updateCompanyOnSending } from './company_actions';
-import { handleCompanyErrors } from './company_errors';
+import { handleCompanyErrors, handleEmptyField } from './company_errors';
 
 export const sendSlackCompanyToken = () => async (dispatch, getState) => {
   try {
     const authState = getState().auth;
-    const companyID = authState?.company?._id;
-    const slackToken = getState().account?.slackToken;
+    const companyID = authState?.extendedCompany?.companyID?._id;
+    const slackToken = getState().company?.slackToken;
     const token: Token =  localStorage.getItem('access_token');
 
-    if (!token || !companyID || !slackToken) {
+    if (!token || !companyID || !slackToken?.length) {
+      const emptyNotification = handleEmptyField({ contentFields: { companyID, slackToken } });
+
+      await dispatch(updateCompanyOnSending({ loading: false, notifications: [emptyNotification] }));
+
       return;
     }
 

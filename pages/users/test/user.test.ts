@@ -21,7 +21,7 @@ beforeAll(async () => {
 
     await page.evaluate((token) => {
       localStorage.setItem('access_token', token);
-    });
+    }, token);
 
   } catch (error) {
     console.log(error);
@@ -36,6 +36,13 @@ describe('Users Page', () => {
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
+
+    await page.waitForSelector('.btn-expanded');
+    await page.click('.btn-expanded');
+    await page.waitFor(5000);
+
+    const expanded = await page.screenshot();
+    expect(expanded).toMatchImageSnapshot();
   });
 
 });

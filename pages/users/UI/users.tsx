@@ -14,6 +14,7 @@ import BaseTable from '@components/table/table';
 import { Data } from '../../../helpers/type';
 import SearchIcon from '@material-ui/icons/Search';
 import { RootState } from 'redux/reducers_registration';
+import UserDetail from './user_detail/user_detail';
 
 const ListUsers: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -78,6 +79,9 @@ const ListUsers: FunctionComponent = () => {
                       loading={loading}
                       actions={actionList}
                       fetchData={fetchDataUsers}
+                      needCheckBox={false}
+                      hadExpandableRows={true}
+                      ComponentDetail={UserDetail}
                     />
                   </div>
                 </div>

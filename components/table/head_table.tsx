@@ -11,10 +11,11 @@ import { HeadCell } from 'helpers/type';
 interface PropsInitial {
   headCells: HeadCell[];
   needCheckBox: boolean;
+  hadExpandableRows: boolean;
 }
 
 const HeadTable = (props: PropsInitial) => {
-  const { headCells, needCheckBox = true }: PropsInitial = props;
+  const { headCells, needCheckBox = true, hadExpandableRows = false }: PropsInitial = props;
 
   return (
     <TableHead className='table-users'>
@@ -27,6 +28,7 @@ const HeadTable = (props: PropsInitial) => {
             />
           </TableCell>
           }
+          {hadExpandableRows && <TableCell />}
           {(checkArray(headCells)) &&
           headCells.map((header) => (
                 <TableCell

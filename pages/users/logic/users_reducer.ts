@@ -187,27 +187,26 @@ export const useDebounce = (value, delay) => {
 function createData(
   id: string,
   userName: string,
+  user: UserAccess,
   departments: string[],
   activeRoles: string[],
   pendingRoles: string[],
 ): Data {
-  return { id, userName, departments, activeRoles, pendingRoles };
+  return { id, userName, user, departments, activeRoles, pendingRoles };
 }
 
 export const renderData = (users: UserAccess[]) => {
   return users.map((each: UserAccess) => {
-
     const departments = getDepartmentsName(each.departmentID);
-
     const roles = getRole(each.accesses);
-
     const fullName = `${each.userID.firstName} ${each.userID.lastName}`;
-
     const id = each.userID._id;
+    const user = each;
 
     return createData(
       id,
       fullName,
+      user,
       departments || [],
       roles?.activeRoles || [],
       roles?.pendingRoles || [],
