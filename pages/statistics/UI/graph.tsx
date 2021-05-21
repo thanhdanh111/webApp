@@ -10,17 +10,23 @@ import { limitStatistics } from '../logic/statistics_actions';
 import { getGraphOptions } from '../../../helpers/get_statistics_data';
 import UserSelection from './user_selection';
 
-const Graph: React.FunctionComponent = () => {
+interface GraphProps {
+  getMe: boolean;
+  isAdmin: boolean;
+}
+
+const Graph: React.FunctionComponent<GraphProps> = (props) => {
   const dispatch = useDispatch();
   const statistics = useSelector((state: RootStateOrAny) => state.statistics);
   const limit = statistics.limit;
   const userID = statistics.selectedUserID;
+  const { getMe, isAdmin }: GraphProps = props;
   useEffect(() => {
     void fetchCheckinData();
-  }, [limit, userID]);
+  }, [limit, userID, getMe]);
 
   const fetchCheckinData = () => {
-    dispatch(getAllCheckInThunkAction());
+    dispatch(getAllCheckInThunkAction(getMe));
   };
 
   const setLimit = (num: number) => {
@@ -43,7 +49,7 @@ const Graph: React.FunctionComponent = () => {
             <Grid item xs={4} className='justify-content-end'>
               <SwitchButton handleClick={() => setLimit(7)} title='Week' isSelected={limit === 7} />
               <SwitchButton handleClick={() => setLimit(30)} title='Month' isSelected={limit !== 7} />
-              <UserSelection />
+              {!getMe && isAdmin && <UserSelection />}
             </Grid>
           </Grid>
           <Chart options={data} series={data.series} />
