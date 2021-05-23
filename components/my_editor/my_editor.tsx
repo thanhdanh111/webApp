@@ -6,6 +6,7 @@ import editorBlockRenderer from './logic/handle_block_renderer';
 import handleKeyCommand from './logic/handle_key_command';
 import { extendedBlockRenderMap } from './UI/custom_blocks';
 import _immutable from 'immutable';
+import handlePastedText from './logic/handle_pasted_text';
 
 interface MyEditor {
   index: number;
@@ -39,6 +40,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     ref={setDomEditorRef}
     customStyleMap={customStyleMapDraftjs}
     tabIndex={index}
+    handlePastedText={(_, styles, state) => handlePastedText({ styles, state, handleOnChange })}
     editorState={editorState}
     blockRendererFn={(contentState) => editorBlockRenderer(contentState, handleOnChangeStyleLine, onClickSideToolbar)}
     blockStyleFn={(contentBlock) => myBlockStyleFn(contentBlock, editorState)}
