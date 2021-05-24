@@ -12,13 +12,13 @@ export function handleKeyBinding({ state, event }) {
   const blockOnSelect = oldContentState?.getBlockForKey(onSelectBlockKey);
   const onSelectBlockType = blockOnSelect?.getType();
 
-  if (onSelectBlockType !== 'code-block') {
+  if (onSelectBlockType !== 'code-block' || !blockBeforeOnSelectBlock) {
     return getDefaultKeyBinding(event);
   }
 
   const beforeOnSelectHaveText =
-    blockBeforeOnSelectBlock?.getLength() ||
-    blockOnSelect.getLength();
+    blockBeforeOnSelectBlock.getLength() ||
+    blockOnSelect?.getLength();
   const bothHaveSameType =
     blockBeforeOnSelectBlock.getType() === 'code-block' &&
     onSelectBlockType === 'code-block';
