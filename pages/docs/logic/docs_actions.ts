@@ -47,15 +47,13 @@ export const updateEditorView = ({ numbers }) => {
 interface UpdateSingleEditorState {
   needDisplay?: boolean;
   editorState: EditorState;
-  currentIndex: number;
 }
 
-export const updateSingleEditorState = ({ needDisplay, editorState, currentIndex }: UpdateSingleEditorState) => {
+export const updateSingleEditorState = ({ needDisplay, editorState }: UpdateSingleEditorState) => {
   return {
     data: {
       editorState,
       needDisplay,
-      currentEditorIndex: currentIndex,
     },
     type: DocsActionTypes.UpdateSingleEditorState,
   };

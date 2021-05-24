@@ -5,7 +5,12 @@ import {
   UnstyledBlockCustom,
 } from '../UI/custom_blocks';
 
-export default function editorBlockRenderer(contentBlock, handleOnChangeLineStyle, onClickSideToolbar, onMoveBlockAction) {
+export default function editorBlockRenderer(
+  contentBlock,
+  handleOnChangeLineStyle,
+  onClickSideToolbar,
+  onMoveBlockAction,
+) {
   const type = contentBlock.getType();
 
   if (type === 'unordered-list-item') {

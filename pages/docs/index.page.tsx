@@ -11,9 +11,8 @@ const DocsPage = () => {
   const dispatch = useDispatch();
   const {
     needDisplay,
-    currentEditorIndex,
     selectionRect,
-    editorStates,
+    editorState,
   }: DocsValueType = useSelector((state: RootState) => state?.docs);
 
   function onClickOptionInToolbar(action) {
@@ -21,10 +20,7 @@ const DocsPage = () => {
       return;
     }
 
-    const editorState = editorStates[currentEditorIndex];
-
     dispatch(updateSingleEditorState({
-      currentIndex: currentEditorIndex,
       editorState: handleToolbarActions(editorState, action),
     }));
   }
@@ -32,11 +28,9 @@ const DocsPage = () => {
   return <div className='docs-page' >
     <EditorView
       selectionRect={selectionRect}
-      numbers={editorStates.length}
-      currentIndex={currentEditorIndex}
     />
     <InlineToolbar
-      editorState={editorStates[currentEditorIndex]}
+      editorState={editorState}
       onClickOption={onClickOptionInToolbar}
       needDisplay={needDisplay}
       selectionRect={selectionRect}

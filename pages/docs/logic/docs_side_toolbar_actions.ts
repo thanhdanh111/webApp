@@ -68,7 +68,7 @@ function afterMovePosition(shifttingIndex, onSelectBlockKey , blocks) {
   return ContentState.createFromBlockArray(newBlocks);
 }
 
-export function onMoveBlockAction({ action, editorState, currentEditorIndex, dispatch }) {
+export function onMoveBlockAction({ action, editorState, dispatch }) {
   const oldSelection = editorState?.getSelection();
   const oldContentState = editorState?.getCurrentContent();
   const onSelectBlockKey = oldSelection?.getAnchorKey();
@@ -111,7 +111,6 @@ export function onMoveBlockAction({ action, editorState, currentEditorIndex, dis
   });
 
   dispatch(updateSingleEditorState({
-    currentIndex: currentEditorIndex,
     editorState: EditorState.forceSelection(newEditorState, updatedSelection),
   }));
 }

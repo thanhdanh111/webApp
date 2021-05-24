@@ -9,22 +9,19 @@ import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_
 import { showUpToolbar } from '../logic/docs_inline_toolbar_actions';
 
 interface EditorView {
-  numbers: number;
-  currentIndex?: number;
   selectionRect?: DOMRect;
   handleOnChangeStyleLine?: (action, contentState) => void;
 }
 
 const EditorView: FunctionComponent<EditorView> = () => {
   const dispatch = useDispatch();
-  const { editorStates, currentEditorIndex, needDisplay }: DocsValueType = useSelector((state: RootState) => state?.docs);
+  const { editorState, needDisplay }: DocsValueType = useSelector((state: RootState) => state?.docs);
 
   function onClickSideToolbar(contentBlock) {
     if (!contentBlock) {
       return;
     }
 
-    const editorState = editorStates[0];
     const blockKey = contentBlock.getKey();
     const newSelection = SelectionState.createEmpty(blockKey);
     const updatedSelection = newSelection.merge({
@@ -34,18 +31,16 @@ const EditorView: FunctionComponent<EditorView> = () => {
     });
 
     dispatch(updateSingleEditorState({
-      currentIndex: currentEditorIndex,
       needDisplay: false,
       editorState: EditorState.forceSelection(editorState, updatedSelection),
     }));
   }
 
-  function handleChangeEditorState(newEditorState, index) {
+  function handleChangeEditorState(newEditorState) {
     showUpToolbar(newEditorState, needDisplay, dispatch);
 
     dispatch(updateSingleEditorState({
       editorState: newEditorState,
-      currentIndex: index,
     }));
   }
 
@@ -53,40 +48,24 @@ const EditorView: FunctionComponent<EditorView> = () => {
     if (!action) {
       return;
     }
-    const editorState = editorStates[currentEditorIndex];
 
     dispatch(updateSingleEditorState({
-      currentIndex: currentEditorIndex,
       editorState: handleSideToolbarActions(editorState, action),
     }));
   }
 
-  return <>
-    {editorStates.map((editorState, editorIndex) => {
-
-      return <MyEditor
-        handleOnChangeStyleLine={onClickOptionInSideToolbar}
-        onMoveBlockAction={(action) => onMoveBlockAction({
-          action,
-          dispatch,
-          currentEditorIndex,
-          editorState: editorStates[currentEditorIndex],
-        })}
-        key={`editor-${editorIndex}`}
-        index={editorIndex}
-        handleChangeEditorState={handleChangeEditorState}
-        editorState={editorState ?? EditorState.createEmpty()}
-        currentIndex={currentEditorIndex}
-        onClickSideToolbar={onClickSideToolbar}
-      />;
+  return <MyEditor
+    handleOnChangeStyleLine={onClickOptionInSideToolbar}
+    onMoveBlockAction={(action) => onMoveBlockAction({
+      action,
+      dispatch,
+      editorState,
     })}
-  </>;
+    key='editor-view'
+    handleChangeEditorState={handleChangeEditorState}
+    editorState={editorState ?? EditorState.createEmpty()}
+    onClickSideToolbar={onClickSideToolbar}
+  />;
 };
 
-function areEqual(prevProps, nextProps) {
-  const equalNumbers = prevProps.numbers !== nextProps.numbers;
-
-  return !equalNumbers;
-}
-
-export default React.memo(EditorView, areEqual);
+export default EditorView;

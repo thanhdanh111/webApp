@@ -4,27 +4,23 @@ import { EditorState } from 'draft-js';
 interface DocsValue {
   needDisplay: boolean;
   selectionRect: DOMRect | undefined;
-  currentEditorIndex: number;
   actionOnCurrent?: string;
   editorKeys: string[];
   currentEditorKey?: string;
-  editorStates: EditorState[];
+  editorState: EditorState;
 }
 
 const initialState: DocsValue = {
   needDisplay: false,
   selectionRect: undefined,
-  currentEditorIndex: -1,
   editorKeys: [],
-  editorStates: [
-    null,
-  ],
+  editorState: null,
 };
 
 export type DocsValueType = DocsValue;
 
-const updateSingleEditorState = ({ needDisplay, currentEditorIndex, state, editorState }) => {
-  if (typeof currentEditorIndex !== 'number' || !state || !editorState) {
+const updateSingleEditorState = ({ needDisplay, state, editorState }) => {
+  if (!state || !editorState) {
     return state;
   }
 
@@ -32,14 +28,9 @@ const updateSingleEditorState = ({ needDisplay, currentEditorIndex, state, edito
     state.needDisplay = needDisplay;
   }
 
-  const editorStates = state.editorStates;
-
-  editorStates[currentEditorIndex] = editorState;
-
   return {
     ...state,
-    editorStates,
-    currentEditorIndex,
+    editorState,
   };
 };
 

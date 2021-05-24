@@ -8,10 +8,8 @@ storiesOf('My Editor', module).add('Header', () => {
     handleOnChangeStyleLine={() => 'handled'}
     onMoveBlockAction={() => 'handled'}
     key='my-editor'
-    index={0}
     handleChangeEditorState={() => 'handled'}
     editorState={EditorState.createEmpty()}
-    currentIndex={0}
     onClickSideToolbar={() => 'handled'}
   />;
 });
