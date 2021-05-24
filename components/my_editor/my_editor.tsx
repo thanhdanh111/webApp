@@ -15,6 +15,7 @@ interface MyEditor {
   handleChangeEditorState: (newEditorState, index) => void;
   handleOnChangeStyleLine?: (action, contentState) => void;
   onClickSideToolbar?: (contentBlock) => void;
+  onMoveBlockAction?: (action) => void;
 }
 
 const MyEditor: FunctionComponent<MyEditor> = ({
@@ -23,6 +24,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
   handleChangeEditorState,
   handleOnChangeStyleLine,
   onClickSideToolbar,
+  onMoveBlockAction,
 }) => {
   let editorRef;
 
@@ -42,7 +44,13 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     tabIndex={index}
     handlePastedText={(_, styles, state) => handlePastedText({ styles, state, handleOnChange })}
     editorState={editorState}
-    blockRendererFn={(contentState) => editorBlockRenderer(contentState, handleOnChangeStyleLine, onClickSideToolbar)}
+    blockRendererFn={(contentState) =>
+      editorBlockRenderer(
+        contentState,
+        handleOnChangeStyleLine,
+        onClickSideToolbar,
+        onMoveBlockAction,
+      )}
     blockStyleFn={(contentBlock) => myBlockStyleFn(contentBlock, editorState)}
     blockRenderMap={extendedBlockRenderMap}
     preserveSelectionOnBlur={true}

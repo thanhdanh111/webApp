@@ -1,6 +1,7 @@
 import { RichUtils, EditorState } from 'draft-js';
+import { displayToolbar } from './docs_actions';
 
-const handleToolbarActions = (editorState, action) => {
+export function handleToolbarActions(editorState, action) {
   if (!editorState) {
     return;
   }
@@ -35,6 +36,30 @@ const handleToolbarActions = (editorState, action) => {
     newEditorState,
     oldSelection,
   );
-};
+}
 
-export default handleToolbarActions;
+export function showUpToolbar(newEditorState, needDisplay, dispatch) {
+  const selection = window.getSelection();
+  const selectedText = selection?.toString();
+  const haveOtherToolbar =  !!document.getElementById('sideToolbar');
+  const invalidSelection = !selectedText?.length ||
+    typeof selectedText !== 'string' ||
+    selection?.type === 'Caret' ||
+    !newEditorState.getCurrentContent().hasText() ||
+    haveOtherToolbar;
+
+  if (invalidSelection && !needDisplay) {
+
+    return;
+  }
+
+  if (invalidSelection) {
+    dispatch(displayToolbar({ needDisplay: false }));
+
+    return;
+  }
+  const getRange  = selection?.getRangeAt(0);
+  const newSelectionRect = getRange?.getBoundingClientRect();
+
+  dispatch(displayToolbar({ selectionRect: newSelectionRect, needDisplay: true }));
+}

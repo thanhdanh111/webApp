@@ -27,9 +27,10 @@ export const UnstyledBlockCustom = (props) => {
     React.Fragment,
     { key: 'unstyled-block-custom' },
     <SideToolBarButton
-      contentBlock={props.block}
+      contentBlock={props?.block}
       handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
       onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+      onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
     />,
     <EditorBlock {...props} />,
   );
@@ -39,9 +40,10 @@ export const CodeBlockCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'code-block-custom' },
   <SideToolBarButton
-    contentBlock={props.block}
+    contentBlock={props?.block}
     handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+    onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
   />,
   <EditorBlock {...props} />,
 );
@@ -50,9 +52,10 @@ export const UnorderedListItemCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'unordered-list-item' },
   <SideToolBarButton
-    contentBlock={props.block}
+    contentBlock={props?.block}
     handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+    onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
   />,
   <FiberManualRecordIcon style={{ width: '10px', height: '10px', marginRight: '10px' }} />,
   <EditorBlock {...props} />,
@@ -62,9 +65,10 @@ export const OrderedListItemCustom = (props) => React.createElement(
   React.Fragment,
   { key: 'ordered-list-item' },
   <SideToolBarButton
-    contentBlock={props.block}
+    contentBlock={props?.block}
     handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+    onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
   />,
   <IndexElement {...props}  />,
   <EditorBlock {...props} />,

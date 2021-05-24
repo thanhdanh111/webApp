@@ -1,11 +1,13 @@
 import React from 'react';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Button, ClickAwayListener, Paper,
-  Popper, MenuList,
+  Popper, MenuList, MenuItem, ListItemIcon, Typography,
 } from '@material-ui/core';
 import ParagraphStyleSideToolbarBtn from './paragraph_style_toolbar_btn';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
-const SideToolBarButton = ({ handleOnChangeLineStyle, contentBlock, onClickSideToolbar }) => {
+const SideToolBarButton = ({ handleOnChangeLineStyle, contentBlock, onClickSideToolbar, onMoveBlockAction }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handlePopperOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -46,6 +48,32 @@ const SideToolBarButton = ({ handleOnChangeLineStyle, contentBlock, onClickSideT
                 <ParagraphStyleSideToolbarBtn
                   handleOnChangeLineStyle={handleOnChangeLineStyle}
                 />
+              <MenuItem
+                className='side-toolbar--menu-item'
+                component='div'
+                onClick={() => onMoveBlockAction('UP')}
+              >
+                <ListItemIcon className='side-toolbar--menu-icon'>
+                  <ArrowUpwardIcon />
+                </ListItemIcon>
+                <Typography variant='inherit'>
+                  Move Up
+                </Typography>
+              </MenuItem>
+
+              <MenuItem
+                className='side-toolbar--menu-item'
+                component='div'
+                onClick={() => onMoveBlockAction('DOWN')}
+              >
+                <ListItemIcon className='side-toolbar--menu-icon'>
+                  <ArrowDownwardIcon />
+                </ListItemIcon>
+                <Typography variant='inherit'>
+                  Move Down
+                </Typography>
+              </MenuItem>
+
               </MenuList>
             </ClickAwayListener>
           </Paper>

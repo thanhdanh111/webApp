@@ -1,6 +1,8 @@
-import { RichUtils, EditorState } from 'draft-js';
+import { RichUtils, EditorState, ContentState, SelectionState } from 'draft-js';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { updateSingleEditorState } from './docs_actions';
 
-const handleSideToolbarActions = (editorState, action) => {
+export function handleSideToolbarActions(editorState, action) {
   if (!editorState) {
     return;
   }
@@ -35,6 +37,81 @@ const handleSideToolbarActions = (editorState, action) => {
     newEditorState,
     oldSelection,
   );
-};
+}
 
-export default handleSideToolbarActions;
+function afterMovePosition(shifttingIndex, onSelectBlockKey , blocks) {
+  const newBlocks = [];
+  let shiftedIndex;
+
+  for (const [index, block] of blocks.entries()) {
+    const blockKey = block[0];
+    const contentBlock = block[1];
+    let switchBlock;
+
+    if (typeof shiftedIndex === 'number' && shiftedIndex === index) continue;
+
+    newBlocks.push(contentBlock as never);
+
+    if (blockKey !== onSelectBlockKey) continue;
+
+    switchBlock = blocks?.[index + shifttingIndex]?.[1];
+
+    if (!switchBlock) break;
+
+    shiftedIndex = index + shifttingIndex;
+    newBlocks[shiftedIndex] = contentBlock as never;
+    newBlocks[index] = switchBlock as never;
+  }
+
+  if (!newBlocks?.length || newBlocks.length !== blocks.length) return;
+
+  return ContentState.createFromBlockArray(newBlocks);
+}
+
+export function onMoveBlockAction({ action, editorState, currentEditorIndex, dispatch }) {
+  const oldSelection = editorState?.getSelection();
+  const oldContentState = editorState?.getCurrentContent();
+  const onSelectBlockKey = oldSelection?.getAnchorKey();
+  const blockList = oldContentState?.getBlockMap()?._list;
+
+  if (blockList?.size < 2 || !editorState) {
+
+    return;
+  }
+
+  const blocks = blockList?._tail?.array;
+  let newContentState;
+
+  switch (action) {
+    case 'UP':
+      newContentState = afterMovePosition(-1, onSelectBlockKey, blocks);
+
+      break;
+    case 'DOWN':
+      newContentState = afterMovePosition(+1, onSelectBlockKey, blocks);
+
+      break;
+  }
+
+  const canContinue = checkOnlyTrueInArray({
+    conditionsArray: [
+      !!newContentState,
+      !!onSelectBlockKey,
+    ],
+  });
+
+  if (!canContinue) return;
+
+  const newEditorState = EditorState.push(editorState, newContentState);
+  const newSelection = SelectionState.createEmpty(onSelectBlockKey);
+  const updatedSelection = newSelection.merge({
+    focusKey: onSelectBlockKey,
+    focusOffset: oldContentState.getBlockForKey(onSelectBlockKey).getLength(),
+    hasFocus: true,
+  });
+
+  dispatch(updateSingleEditorState({
+    currentIndex: currentEditorIndex,
+    editorState: EditorState.forceSelection(newEditorState, updatedSelection),
+  }));
+}

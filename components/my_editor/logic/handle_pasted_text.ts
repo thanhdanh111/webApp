@@ -1,7 +1,6 @@
 import { EditorState, convertFromHTML, ContentState, Modifier } from 'draft-js';
 
 export default function handlePastedText({ styles, state, handleOnChange }) {
-
   const converted = convertFromHTML(styles);
   const convertedContentState = ContentState.createFromBlockArray(
     converted.contentBlocks,

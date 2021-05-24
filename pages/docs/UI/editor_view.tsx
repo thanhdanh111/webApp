@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from 'react';
 import MyEditor from '@components/my_editor/my_editor';
 import { useDispatch, useSelector } from 'react-redux';
-import { displayToolbar, updateSingleEditorState } from '../logic/docs_actions';
+import { updateSingleEditorState } from '../logic/docs_actions';
 import { DocsValueType } from '../logic/docs_reducer';
 import { RootState } from 'redux/reducers_registration';
 import { SelectionState, EditorState } from 'draft-js';
-import handleSideToolbarActions from '../logic/docs_side_toolbar_actions';
+import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions';
+import { showUpToolbar } from '../logic/docs_inline_toolbar_actions';
 
 interface EditorView {
   numbers: number;
@@ -17,32 +18,6 @@ interface EditorView {
 const EditorView: FunctionComponent<EditorView> = () => {
   const dispatch = useDispatch();
   const { editorStates, currentEditorIndex, needDisplay }: DocsValueType = useSelector((state: RootState) => state?.docs);
-
-  function showUpToolbar(newEditorState) {
-    const selection = window.getSelection();
-    const selectedText = selection?.toString();
-    const haveOtherToolbar =  !!document.getElementById('sideToolbar');
-    const invalidSelection = !selectedText?.length ||
-      typeof selectedText !== 'string' ||
-      selection?.type === 'Caret' ||
-      !newEditorState.getCurrentContent().hasText() ||
-      haveOtherToolbar;
-
-    if (invalidSelection && !needDisplay) {
-
-      return;
-    }
-
-    if (invalidSelection) {
-      dispatch(displayToolbar({ needDisplay: false }));
-
-      return;
-    }
-    const getRange  = selection?.getRangeAt(0);
-    const newSelectionRect = getRange?.getBoundingClientRect();
-
-    dispatch(displayToolbar({ selectionRect: newSelectionRect, needDisplay: true }));
-  }
 
   function onClickSideToolbar(contentBlock) {
     if (!contentBlock) {
@@ -66,7 +41,7 @@ const EditorView: FunctionComponent<EditorView> = () => {
   }
 
   function handleChangeEditorState(newEditorState, index) {
-    showUpToolbar(newEditorState);
+    showUpToolbar(newEditorState, needDisplay, dispatch);
 
     dispatch(updateSingleEditorState({
       editorState: newEditorState,
@@ -91,6 +66,12 @@ const EditorView: FunctionComponent<EditorView> = () => {
 
       return <MyEditor
         handleOnChangeStyleLine={onClickOptionInSideToolbar}
+        onMoveBlockAction={(action) => onMoveBlockAction({
+          action,
+          dispatch,
+          currentEditorIndex,
+          editorState: editorState[currentEditorIndex],
+        })}
         key={`editor-${editorIndex}`}
         index={editorIndex}
         handleChangeEditorState={handleChangeEditorState}
