@@ -130,7 +130,6 @@ export const getTasksByUserThunkAction = (companyID, departmentID, user) => asyn
     if (!token || !companyID || !user?.userID) {
       return;
     }
-
     const res = await axios.get(`${config.BASE_URL}/tasks`,
       {
         headers: {
@@ -158,22 +157,21 @@ export const getTasksByUserThunkAction = (companyID, departmentID, user) => asyn
   }
 };
 
-export const getTaskStatusByIDThunkAction = (taskStatusID) => async (dispatch) => {
+export const getTaskStatusByIDThunkAction = (tittle, taskStatusID) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
 
     if (!token || !taskStatusID) {
       return;
     }
-
-    const res = await axios.get(`${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+    // title is targetEntityName
+    const res = await axios.get(`${config.BASE_URL}/${tittle}/${taskStatusID}`,
       {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
-
     dispatch(getTasksStatusByID(res.data));
   } catch (error) {
     throw error;
