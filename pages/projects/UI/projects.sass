@@ -1,176 +1,142 @@
 .projects
-    padding: 16px 30px 0px;
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
-    .text-projects
-        color: rgb(43, 29, 56);
-        font-size: 1.6rem;
-        line-height: 22px;
-        font-weight: normal;
-        margin: 0px;
-    .btn-project
-        display: inline-block;
-        line-height: 1;
-        border-radius: 3px;
-        padding: 0px;
-        text-transform: none;
-        font-weight: 600;
-        font-size: 12px;
-        color: rgb(43, 29, 56);
-        background-color: rgb(255, 255, 255);
-        border: 1px solid rgb(198, 190, 207);
-        box-shadow: rgba(0, 0, 0, 0.05) 0px 2px;
-        cursor: pointer;
+  padding: 16px 30px 0
+  -webkit-box-align: center
+  align-items: center
+  -webkit-box-pack: justify
+  justify-content: space-between
 
-        .btn-label
-            display: grid;
-            grid-auto-flow: column;
-            -webkit-box-align: center;
-            align-items: center;
-            -webkit-box-pack: center;
-            justify-content: center;
-            padding: 1px 1px;
-            .icon-add
-                display: flex;
-                -webkit-box-align: center;
-                align-items: center;
-                height: 12px;
-                
-            .text-create
-                display: grid;
-                grid-auto-flow: column;
-                -webkit-box-align: center;
-                align-items: center;
-                -webkit-box-pack: center;
-                justify-content: center;
-                padding: 7px 5px;
-.team-section-wrapper
-    border-bottom: 1px solid rgb(198, 190, 207);
-    padding: 0px 30px 30px;
+  .text-projects
+    color: rgb(43, 29, 56)
+    font-size: 1.6rem
+    line-height: 22px
+    font-weight: normal
+    margin: 0
+
+  .btn-create-project
+    text-align: end
+
+  .team-section-wrapper
+    border-bottom: 1px solid rgb(198, 190, 207)
+    padding: 0 30px 30px
 
     .team-title-bar
-        display: flex;
-        -webkit-box-align: center;
-        align-items: center;
-        -webkit-box-pack: justify;
-        justify-content: space-between;
-        padding: 20px 0px 16px;
+      display: flex
+      -webkit-box-align: center
+      align-items: center
+      -webkit-box-pack: justify
+      justify-content: space-between
+      padding: 20px 0 16px
 
-        .page-heading-team-name
-            color: rgb(43, 29, 56);
-            font-weight: normal;
-            margin: 0px;
-            font-size: 20px;
-            line-height: 24px;
+      .page-heading-team-name
+        color: rgb(43, 29, 56)
+        font-weight: normal
+        margin: 0
+        font-size: 20px
+        line-height: 24px
 
-            .team-link
-                display: flex;
-                -webkit-box-align: center;
-                align-items: center;
-                color: rgb(61, 116, 219);
+        .team-link
+          display: flex
+          -webkit-box-align: center
+          align-items: center
+          color: rgb(61, 116, 219)
 
-                .wrapper
-                    display: flex;
-                    -webkit-box-align: center;
-                    align-items: center;
-                    flex-shrink: 0;
+          .wrapper
+            display: flex
+            -webkit-box-align: center
+            align-items: center
+            flex-shrink: 0
 
-                    .style-avatar
-                        width: 25px;
-                        height: 25px;
-                        border-radius: 3px;
-                        border: none;
-                        background-color: rgb(255, 255, 255);
-                        margin-right: 8px;
-                        flex-shrink: 0;
+            .display-name
+              display: flex
+              flex-direction: column
+              line-height: 1
+              overflow: hidden
+              text-overflow: ellipsis
+              color: rgb(61, 116, 219)
+
+              .name-username
+                display: block
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
+                width: 100%
+                max-width: 240px
+                padding: 2px 0
 
     .project-card-all
-            display: block;
-            width: 100%;
+      display: block
+      width: 100%
 
-    .project-card
-        display: inline-block;
-        border: 1px solid rgb(198, 190, 207);
-        width: 100%;
-        margin: 11px;
-        max-width: 31%;
+      .project-card
+        display: inline-block
+        border: 1px solid rgb(198, 190, 207)
+        width: 100%
+        margin: 11px
+        max-width: 31%
 
         .page-project-card
-            box-shadow: none;
-            margin: 0rem;
-            padding-top: 0rem;
-            line-height: 2rem;
+          box-shadow: none
+          margin: 0
+          padding-top: 0
+          line-height: 2rem
 
-            .card-header
-                .link-name-project
-                    display: flex;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    
-                    .icon-sentry
-                        height: 30px;
-                        width: 30px;
-                        border-radius: 18px;
-                        background: #00AB55;
+          .card-header
+            .link-name-project
+              display: flex
+              white-space: nowrap
+              overflow: hidden
+              text-overflow: ellipsis
+              
+              .icon-sentry
+                height: 30px
+                width: 30px
+                border-radius: 18px
+                background: #00ab55
 
-                    .text-nodejs
-                        color: rgb(61, 116, 219);
-                        font-size: 18px;
-                        padding-left: 6px;
-                        line-height: 32px;
-                        text-decoration: none;
+              .text-nodejs
+                color: rgb(61, 116, 219)
+                font-size: 18px
+                padding-left: 6px
+                line-height: 32px
+                text-decoration: none
 
-                .summary-links
-                    display: flex;
-                    -webkit-box-align: center;
-                    align-items: center;
-                    color: rgb(119, 101, 137);
-                    margin-left: 27px;
+            .summary-links
+              display: flex
+              -webkit-box-align: center
+              align-items: center
+              color: rgb(119, 101, 137)
+              margin-left: 34px
 
-                    .link-project-des
-                        padding: 2px;
-                        display: block;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        cursor: default;
-                        text-decoration: none;
-                        .text-des
-                            color: black;
-                            font-size: 15px;
-                            text-transform: none;
-                            &:hover
-                                color:  rgb(43, 29, 56);
-                                opacity: 0.8
+              .link-project-des
+                padding: 2px
+                display: block
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
+                cursor: default
+                text-decoration: none
 
-.display-name
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
+                .text-des
+                  color: #000
+                  font-size: 15px
+                  text-transform: none
 
-    .name-username
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 100%;
-        max-width: 240px;
-        padding: 2px 0px;
+                  &:hover
+                    color:  rgb(43, 29, 56)
+                    opacity: 0.8
 
 @media screen and (max-width: 1024px)
-   .team-section-wrapper
+  .projects
+    .team-section-wrapper
+      .project-card-all
         .project-card
-            max-width: 46%;
-            margin: 10px;
+          max-width: 46%
+          margin: 10px
 
 @media screen and (max-width: 600px)
+  .projects
     .team-section-wrapper
+      .project-card-all
         .project-card
-            max-width: 96%;
-            margin: 10px;
+          max-width: 96%
+          margin: 10px

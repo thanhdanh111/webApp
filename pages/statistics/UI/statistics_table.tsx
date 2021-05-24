@@ -6,7 +6,6 @@ import {
 import { RootStateOrAny, useSelector } from 'react-redux';
 
 const StatisticsTable: FunctionComponent = () => {
-
   const statistics = useSelector((state: RootStateOrAny) => state.statistics);
   const statisticsList = statistics.checkInCheckOuts;
 

@@ -2,7 +2,7 @@
   "name": "stn-app",
   "version": "0.1.0",
   "private": true,
-  "sasslintConfig": "/.sass-lint.yml",
+  "sasslintConfig": ".sasslintrc.json",
   "scripts": {
     "local": "nodemon -e ts,tsx,sass,js",
     "start:prod": "export NODE_ENV=production && next build && next export && serve out",
@@ -14,7 +14,7 @@
     "build:staging": "NODE_ENV=staging next build && next export",
     "test": "NODE_ENV=test jest",
     "tslint": "tslint -p . -c tslint.json",
-    "sasslint": "sass-lint -c .sass-lint.yml -v -q",
+    "sasslint": "sass-lint -v -q",
     "linter-folder": "ts-node --project tsconfig.server.json linter/linter_folder.ts",
     "storybook": "start-storybook -p 6006 -c .storybook"
   },
@@ -63,7 +63,7 @@
     "nodemon": "^2.0.7",
     "puppeteer": "^3.0.3",
     "redux-devtools-extension": "^2.13.8",
-    "sass-lint": "^1.12.1",
+    "sass-lint": "^1.13.1",
     "serve": "^11.3.2",
     "ts-node": "^8.10.2",
     "tslint": "^6.1.2",
@@ -73,7 +73,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run linter-folder && npm run tslint"
+      "pre-commit": "npm run linter-folder && npm run tslint && npm run sasslint"
     }
   }
 }
