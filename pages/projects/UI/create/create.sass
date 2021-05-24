@@ -1,96 +1,98 @@
 .create-project
-    padding: 16px 30px;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
-    
-    .text-create-projects
-        color: rgb(43, 29, 56);
-        font-size: 22px;
-        line-height: 3rem;
-        font-weight: normal;
-        margin: 0px;
+  padding: 16px 30px
+  -webkit-box-align: center
+  align-items: center
+  -webkit-box-pack: justify
+  justify-content: space-between
+  
+  .text-create-projects
+    color: rgb(43, 29, 56)
+    font-size: 22px
+    line-height: 3rem
+    font-weight: normal
+    margin: 0
 
-    .create-project-form
-        display: grid;
-        grid-template-columns: 300px 250px max-content;
-        gap: 16px;
-        -webkit-box-align: end;
-        align-items: end;
-        padding: 20px 0px;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px -1px 0px;
-        background: rgb(255, 255, 255);
+  .create-project-form
+    display: grid
+    grid-template-columns: 300px 250px max-content
+    grid-gap: 16px
+    -webkit-box-align: end
+    align-items: end
+    padding: 20px 0
+    box-shadow: rgba(0, 0, 0, 0.1) 0 -1px 0
+    background: rgb(255, 255, 255)
 
-        .create-project-form-grid
-            background-color: rgb(255, 255, 255);
-            display: flex;
+    .create-project-form-grid
+      background-color: rgb(255, 255, 255)
+      display: flex
 
-            .create-project-form-card-item
-                max-width: 100%;
-                flex-basis: 55%;  
+      .create-project-form-card-item
+        max-width: 100%
+        flex-basis: 55%  
 
-                .form-all
-                    width: 15rem;
+        .form-all
+          width: 15rem
 
-                    .form-label
-                        font-size: 18px;
-                        margin-bottom: 8px;
+          .form-label
+            font-size: 18px
+            margin-bottom: 8px
 
-                    .project-name-input
-                        color: rgb(43, 29, 56);
-                        width: 100%;
-                        background: rgb(255, 255, 255);
-                        border: 1px solid rgb(198, 190, 207);
-                        border-radius: 4px;
-                        box-shadow: rgba(37, 11, 54, 0.04) 0px 2px 0px inset;
-                        transition: border 0.1s linear 0s;
-                        resize: vertical;
-                        height: 50px;
-                        padding: 5px 10px;
-                        display: flex;
-                        -webkit-box-align: center;
-                        align-items: center;
+          .project-name-input
+            color: rgb(43, 29, 56)
+            width: 100%
+            background: rgb(255, 255, 255)
+            border: 1px solid rgb(198, 190, 207)
+            border-radius: 4px
+            box-shadow: rgba(37, 11, 54, 0.04) 0 2px 0 inset
+            transition: border 0.1s linear 0s
+            resize: vertical
+            height: 50px
+            padding: 5px 10px
+            display: flex
+            -webkit-box-align: center
+            align-items: center
 
-                        .img
-                            margin-right: 8px;
-                            border-radius: 3px;
-                            width: 1.5rem;
-                            height: 1.5rem;
+            .img
+              margin-right: 8px
+              border-radius: 3px
+              width: 1.5rem
+              height: 1.5rem
 
-                        .input-label-text
-                            background: rgb(255, 255, 255);
-                            border: 0px;
-                            outline: 0px;
-                            flex: 1 1 0%;
-                            margin: 0;
+            .input-label-text
+              background: rgb(255, 255, 255)
+              border: none
+              outline: 0
+              flex: 1 1 0%
+              margin: 0
 
-                            &::before
-                                border-bottom: none;
-                        .form-select
-                            width: 100%;
+              &::before
+                border-bottom: none
 
-                            .form-control
-                                min-width: 120px;
-                                width: 100%;
-                                .select-empty
+            .form-select
+              width: 100%
 
-                                    &::before
-                                        border: none;
-                            
-                    .btn-create
-                        margin: 10px 30px auto;
-                        padding: 10px;
-                        font-size: 16px;
-                        color: #fff;
-                        background: #00AB55;
-                        border: none;
-                        border-radius: 5px;
+              .form-control
+                min-width: 120px
+                width: 100%
 
-                        &:hover
-                            background: #137946
+                .select-empty
+
+                  &::before
+                    border: none
+              
+          .btn-create
+            margin: 10px 30px auto
+            padding: 10px
+            font-size: 16px
+            color: #fff
+            background: #00ab55
+            border: none
+            border-radius: 5px
+
+            &:hover
+              background: #137946
 
 @media screen and (max-width: 600px)
-    .create-project
-        .create-project-form
-            display: block;
+  .create-project
+    .create-project-form
+      display: block
