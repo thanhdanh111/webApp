@@ -1,7 +1,7 @@
 .app-bar
   background-color: rgba(255, 255, 255, 0.2) !important
   --btn-app-bar: rgb(99, 115, 129)
-  --btn-app-bar-menu: #212B36
+  --btn-app-bar-menu: #212b36
 
 .toolbar
   min-height: 128
@@ -21,30 +21,29 @@
   width: 80%
   max-width: 380px
 
-
   .drop-avt
-    overflow: hidden;
-    background: none;
-    border: none;
-    box-shadow: none;
+    overflow: hidden
+    background: none
+    border: none
+    box-shadow: none
 
-  .drop-avt:hover
-    background: none;
-    box-shadow: none;
-  
-    .drop-avt:active
-      background: none;
-      box-shadow: none;
+    &:hover
+      background: none
+      box-shadow: none
+
+    &:active
+      background: none
+      box-shadow: none
 
   .drop-notification
-    overflow: hidden;
-    background: none;
-    border: none;
-    box-shadow: none;
+    overflow: hidden
+    background: none
+    border: none
+    box-shadow: none
 
-  .drop-notification:hover
-    background: none;
-    box-shadow: none;
+    &:hover
+      background: none
+      box-shadow: none
 
 .btn-appbar
   color: var(--btn-app-bar)
@@ -53,10 +52,10 @@
   color: var(--btn-app-bar-menu)
 
 .menu-drop
-  transform: translate(-10px, 45px);
+  transform: translate(-10px, 45px)
 
   .item-drop
-    display: block;
+    display: block
     width: 250px
     text-align: center
 
@@ -64,60 +63,56 @@
       width: 100%
       background: none
       margin: auto
-      border: 0.1px solid #b0bec5;
-      box-shadow: inherit;
-      text-transform: revert;
+      border: 0.1px solid #b0bec5
+      box-shadow: inherit
+      text-transform: revert
 
     .drop-info
       display: block
 
       .info-avatar
-        text-align: center;
-        width: 40px;
-        height: 40px;
-        margin: auto;
-
-      .info-username
-
-      .info-email
+        text-align: center
+        width: 40px
+        height: 40px
+        margin: auto
 
   .item-switch
-    height: 40px;
-    background-color: transparent;
-    outline: 0px;
-    border: 0px;
-    margin: 0px;
-    border-radius: 0px;
-    cursor: pointer;
-    user-select: none;
-    vertical-align: middle;
-    appearance: none;
-    color: inherit;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    position: relative;
-    text-decoration: none;
-    text-align: left;
-    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    min-height: 48px;
-    box-sizing: border-box;
-    width: auto;
-    white-space: nowrap;
-    font-family: sans-serif;
-    font-weight: 500;
-    font-size: 0.875rem;
-    line-height: 1.57143;
-    padding: 8px 20px;
+    height: 40px
+    background-color: transparent
+    outline: 0
+    border: none
+    margin: 0
+    border-radius: 0
+    cursor: pointer
+    user-select: none
+    vertical-align: middle
+    appearance: none
+    color: inherit
+    display: flex
+    justify-content: flex-start
+    align-items: center
+    position: relative
+    text-decoration: none
+    text-align: left
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms
+    min-height: 48px
+    box-sizing: border-box
+    width: auto
+    white-space: nowrap
+    font-family: sans-serif
+    font-weight: 500
+    font-size: 0.875rem
+    line-height: 1.57143
+    padding: 8px 20px
 
     .icon-item
-      font-size: 1rem;
-      margin-right: 16px;
-      width: 24px;
-      height: 24px;
+      font-size: 1rem
+      margin-right: 16px
+      width: 24px
+      height: 24px
 
     .text-item
-      font-size: 1rem;
+      font-size: 1rem
 
     .text-item-notification
       width: 95%
@@ -127,54 +122,54 @@
     font-size: 14px
 
   .read
-    color: #8b8484;
+    color: #8b8484
 
   .unread
-    color: black
+    color: #000
 
   .label-notification
     .div-label-notification
-      font-size: 20px;
+      font-size: 20px
       font-weight: 600
 
 .menu-drop-notification
-  transform: translateY(44px);
-  
+  transform: translateY(44px)
+
   .MuiMenu-paper
     width: 400px
     min-height: 500px
-    overflow: hidden;
-          
+    overflow: hidden
+
 .sublist-item
-  padding: 15px 0px 12px 10px
+  padding: 15px 0 12px 10px
   overflow-x: hidden !important
   max-width: 250px
 
 .menu-drop
-  .MuiListItem-button:hover
-    background-color:  #fff !important
+  .MuiListItem-button
+    &:hover
+      background-color: #fff !important
 
-  .MuiListItem-button:active
-    background-color:  #fff !important
+    &:active
+      background-color: #fff !important
 
 .notification-info
   display: flex
 
   .notification-info-img
     padding: 0
-    position: absolute;
+    position: absolute
 
   .notification-content
     padding: 0 0 0 46px
 
     .text-notification
-      height: auto;
-      text-overflow: ellipsis;
-      white-space: pre-wrap;
+      height: auto
+      text-overflow: ellipsis
+      white-space: pre-wrap
 
-      .user-create-notification 
+      .user-create-notification
         font-weight: 700
-
 
 @media screen and (min-width: 960px)
   .app-bar
