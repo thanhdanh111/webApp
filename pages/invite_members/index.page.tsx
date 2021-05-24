@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import InviteMembersUI from './UI/invite_members';
 import ChooseCompaniesUI from './UI/choose_companies';
-import { getUserCompaniesApi } from './apis/invite_apis';
+import { getUserCompaniesApi } from './logic/invite_apis';
 import { useSnackbar, WithSnackbarProps } from 'notistack';
 import { InviteStateProps } from './logic/invite_interface';
 import { updateInviteResultInfo } from './logic/invite_actions';

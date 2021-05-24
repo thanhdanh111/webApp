@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fade } from '@material-ui/core';
-import InlineToolbarButton from './UI/inline_toolbar_buttons';
+import InlineToolbarButton from './inline_toolbar_buttons';
 import { inlineToolbarButons } from 'constants/toolbar_docs';
 
 const InlineToolbar = ({

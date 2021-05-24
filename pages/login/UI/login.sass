@@ -1,212 +1,217 @@
 .login-page 
+  display: block
+  width: 100%
+
+  .login
     display: block
+    margin: auto
+    height: 100%
     width: 100%
 
-    .login
-        display: block
-        margin:auto
-        height: 100%
-        width: 100%
-
-        .login-container
-            display: flex
-            height: 100%
-            width: 100%
+    .login-container
+      display: flex
+      height: 100%
+      width: 100%
 
 .login-page
-    .login
-        .login-container
-            .img-login
-                background-color: rgb(255, 255, 255) 
-                color: rgb(33, 43, 54) 
-                transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms 
-                overflow: hidden 
-                box-shadow: rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) 0px 16px 32px -4px 
-                border-radius: 16px 
-                position: relative 
-                z-index: 0 
-                top: 20px
-                min-height: 96vh
+  .login
+    .login-container
+      .img-login
+        background-color: rgb(255, 255, 255) 
+        color: rgb(33, 43, 54) 
+        transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms 
+        overflow: hidden 
+        box-shadow: rgba(145, 158, 171, 0.24) 0 0 2px 0, rgba(145, 158, 171, 0.24) 0 16px 32px -4px 
+        border-radius: 16px 
+        position: relative 
+        z-index: 0 
+        top: 20px
+        min-height: 96vh
 
-                .logo
-                    display: block 
-                    float: left 
-                    margin: auto 
-                    padding: 0 
-                    margin: 45px 0 0 20px 
+        .logo
+          display: block 
+          float: left 
+          padding: 0 
+          margin: 45px 0 0 20px 
 
-                    .link-logo
-                        display: block 
-                        width: 40px
+          .link-logo
+            display: block 
+            width: 40px
 
-                        .logo-img
-                            width: 100%
+            .logo-img
+              width: 100%
 
-            .text-img
-                line-height: 2 
-                padding-left: 40px 
-                padding-right: 40px 
-                margin-top: 200px 
-                margin-bottom: 7.5rem
+      .text-img
+        line-height: 2 
+        padding-left: 40px 
+        padding-right: 40px 
+        margin-top: 200px 
+        margin-bottom: 7.5rem
 
-                .content-text
-                    font-size: 2rem  
-                    font-weight: 700 
+        .content-text
+          font-size: 2rem  
+          font-weight: 700 
 
-            .image
-                display: block
-                padding-bottom: 0
+      .image
+        display: block
+        padding-bottom: 0
 
-                .image-login
-                    .image-illustration
-                        width: 100%
+        .image-login
+          .image-illustration
+            width: 100%
 
 
 .login
-    .login-container
-        .form-login
-            display: block 
+  .login-container
+    .form-login
+      display: block 
+      margin-top: 2.5em
+
+      .login-contain--signup 
+        font-size: 14px
+        margin-top: 1.5em
+        text-align: center
+
+        .login-contain--link
+          margin: 0
+          font-weight: 600
+          line-height: 1.57143
+          color: #00ab55
+          text-decoration: none
+          cursor: pointer
+
+      .login-contain
+        position: relative
+        width: 450px
+        left: 50%
+        top: 50%
+        transform: translate(-50%, -50%)
+
+        .btn
+          align-items: center
+          justify-content: center 
+          position: relative 
+          box-sizing: border-box 
+          background-color: transparent 
+          outline: 0 
+          margin: 0
+
+          .btn-gg
             margin-top: 2.5em
+            align-items: center
+            justify-content: center
+            user-select: none 
+            vertical-align: middle 
+            appearance: none 
+            text-decoration: none 
+            font-family: sans-serif 
+            font-weight: 600  
+            font-size: 1rem 
+            line-height: 1.71429 
+            text-transform: capitalize 
+            min-width: 64px 
+            padding: 7px 21px 
+            transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms 
+            width: 100%  
+            height: 48px 
+            border: 1px solid rgba(145, 158, 171, 0.32) 
+            cursor: pointer 
+            border-radius: 8px
 
-            .login-contain--signup 
-                font-size: 14px
-                margin-top: 1.5em
-                text-align: center
+            .icon-gg
+              font-size: 30px
 
-                .login-contain--link
-                    margin: 0px
-                    font-weight: 600
-                    line-height: 1.57143
-                    color: #00AB55
-                    text-decoration: none
-                    cursor: pointer
+              color: #f00
 
-            .login-contain
-                position: relative
-                width: 450px
-                left: 50%
-                top: 50%
-                transform: translate(-50%, -50%)
+              font-weight: 900
 
-                .btn
-                    align-items: center
-                    justify-content: center 
-                    position: relative 
-                    box-sizing: border-box 
-                    background-color: transparent 
-                    outline: 0px 
-                    margin: 0px
-
-                    .btn-gg
-                        margin-top: 2.5em
-                        align-items: center
-                        justify-content: center
-                        user-select: none 
-                        vertical-align: middle 
-                        appearance: none 
-                        text-decoration: none 
-                        font-family: sans-serif 
-                        font-weight: 600  
-                        font-size: 1rem 
-                        line-height: 1.71429 
-                        text-transform: capitalize 
-                        min-width: 64px 
-                        padding: 7px 21px 
-                        transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms 
-                        width: 100%  
-                        height: 48px 
-                        border: 1px solid rgba(145, 158, 171, 0.32) 
-                        cursor: pointer 
-                        border-radius: 8px
-
-                        .icon-gg
-                            font-size: 30px;
-                            color: red;
-                            font-weight: 900;
 
 @media screen and (max-width: 1024px)
-    .login
-        .login-container 
-            .img-login 
-                .text-img
-                    line-height: 2 
-                    padding-left: 40px 
-                    padding-right: 40px 
-                    margin-top: 35rem 
-                    margin-bottom: 8em 
+  .login
+    .login-container 
+      .img-login 
+        .text-img
+          line-height: 2 
+          padding-left: 40px 
+          padding-right: 40px 
+          margin-top: 35rem 
+          margin-bottom: 8em 
 
-                    .content-text
-                        font-size: 2rem  
-                        font-weight: 700  
+          .content-text
+            font-size: 2rem  
+            font-weight: 700  
 
-            .form-login
-                display: block 
-                margin-top: 2.5em
-                
-                .login-contain--signup
-                    font-size: 14px
-                    margin-top: 2em
-                    text-align: center
+      .form-login
+        display: block 
+        margin-top: 2.5em
+        
+        .login-contain--signup
+          font-size: 14px
+          margin-top: 2em
+          text-align: center
 
-                .login-contain 
-                    margin: 0 20px 
-                  
+        .login-contain 
+          margin: 0 20px 
+          
 @media screen and (max-width: 768px) and (min-width: 480px)
-    .login-page
-        .login
-            .login-container   
-                .img-login
-                    overflow: visible  
-                    .logo   
-                        .link-logo   
-                            display: block  
-                            width: 40px  
-                            position: fixed        
+  .login-page
+    .login
+      .login-container   
+        .img-login
+          overflow: visible  
 
-                    .text-img   
-                        display: none      
+          .logo   
+            .link-logo   
+              display: block  
+              width: 40px  
+              position: fixed        
 
-                    .image   
-                        display: none      
+          .text-img   
+            display: none      
 
-                .form-login   
-                    margin: 0 
-                    width: 100%  
-                    max-width: 100%
+          .image   
+            display: none      
 
-                    .login-contain
-                        top: 15em 
-                        min-width: -webkit-fill-available;
-                        max-width: 300px;
-                        text-align: -webkit-center;  
+        .form-login   
+          margin: 0 
+          width: 100%  
+          max-width: 100%
 
-                        .btn
-                            margin: 0px    
-                            width: 355px 
+          .login-contain
+            top: 15em 
+            min-width: -webkit-fill-available
+            max-width: 300px
+            text-align: -webkit-center
 
-                            .btn-gg   
-                                margin-top: 1.5em
-                                font-weight: 700 
-                                min-width: 64px  
-                                padding: 7px 21px
-                                width: 100%  
-                                height: 48px
+            .btn
+              margin: 0    
+              width: 355px 
+
+              .btn-gg   
+                margin-top: 1.5em
+                font-weight: 700 
+                min-width: 64px  
+                padding: 7px 21px
+                width: 100%  
+                height: 48px
 
 
 @media screen and (max-width: 480px) and (min-width: 320px)
-    .login-page
-        .login
-            .login-container   
-                .img-login
-                    overflow: visible   
-                    .logo   
-                        .link-logo   
-                            position: fixed            
+  .login-page
+    .login
+      .login-container   
+        .img-login
+          overflow: visible  
 
-                .form-login
-                    .login-contain   
-                        min-width: -webkit-fill-available;
-                        max-width: 300px;
-                        text-align: -webkit-center;  
-                        .btn
-                            width: 270px 
+          .logo   
+            .link-logo   
+              position: fixed            
+
+        .form-login
+          .login-contain   
+            min-width: -webkit-fill-available
+            max-width: 300px
+            text-align: -webkit-center
+
+            .btn
+              width: 270px 

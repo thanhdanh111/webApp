@@ -1,3 +1,5 @@
+import { VariantType } from 'notistack';
+
 export type Token = string | null;
 
 export interface HeadCell {
@@ -22,6 +24,11 @@ export interface User {
 
 export interface Company {
   companyID?: string;
+  photos?: string [];
+  description?: string;
+  emails?: string [];
+  phoneNumbers?: string [];
+  address?: string;
   name?: string;
   departments?: Department[];
 }
@@ -33,6 +40,7 @@ export interface Department {
 
 export interface Data {
   id: string;
+  user: UserAccess;
   userName: string;
   departments: string[];
   activeRoles: string[];
@@ -47,6 +55,21 @@ export interface Access {
   departmentID?: string | undefined;
 }
 
+export interface NotificationTypeState {
+  _id: string;
+  body: string;
+  clickAction: string;
+  isRead: boolean;
+  targetEntityName: string;
+  event: string;
+  title: string;
+  createdAt: string;
+  createdBy?: Profile;
+  receiverUID: string;
+  companyID: string;
+  targetID: string;
+}
+
 export interface UserAccess {
   _id: string;
   userID: User;
@@ -54,14 +77,24 @@ export interface UserAccess {
   departmentID: Department[] ;
 }
 
+export interface NotificationsData {
+  cursor: string;
+  list: NotificationTypeState[];
+  totalCount: number;
+  totalUnread: number;
+}
+
 export interface UsersData {
   cursor: string;
   list: UserAccess[];
   listSearch: UserAccess[];
+  notifications: NotificationsData;
+  hasNoData: boolean;
   totalCount: number;
   loadingList: boolean;
   status: string;
   limit: number;
+  limitShowNotification: number;
 }
 
 export interface ParamGetUser {
@@ -96,13 +129,13 @@ export interface Task {
 
 export interface TaskStatusType {
   _id: string;
-  statusID: string;
-  companyID: Company;
-  departmentID: Department;
-  taskBoardID: string;
+  statusID?: string;
+  companyID?: Company;
+  departmentID?: Department;
+  taskBoardID?: string;
   title?: string;
   taskIDs: Task[];
-  description: string;
+  description?: string;
 }
 export interface CheckInCheckOut {
   checkInAt?: string;
@@ -127,10 +160,71 @@ interface ExtendedUser {
   userID: string;
 }
 
+interface ApiKey {
+  description: string;
+  createdAt: string;
+  key: string;
+  companyID: string;
+}
+
+interface ExtendedCompany {
+  companyID: Company;
+  slackToken: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  apiKey: ApiKey;
+}
+
 export interface LoginValue {
   value: string;
   userID: string;
   access: Access[] | [];
   userProfile: Profile | {};
   extendedUser: ExtendedUser | {};
+  extendedCompany: ExtendedCompany | {};
+}
+
+export interface Notification {
+  variant: VariantType;
+  message: string;
+}
+
+export interface Channel {
+  _id: string;
+  name: string;
+}
+
+export interface ProjectsPage {
+  projects: ProjectState[];
+  selectedProject: ProjectState;
+  selectedChannelID: string;
+  channels: Channel[];
+  channelIDResultInfo: ChannelIDResultInfo;
+  shouldShowDescription: boolean;
+}
+export interface ProjectState {
+  _id: string;
+  name: string;
+  companyID?: string;
+  eventExpirationTime?: string;
+  description?: string;
+  departmentID?: string;
+  channelID?: string;
+  totalEventLogs: number;
+}
+
+export interface ChannelIDData {
+  _id: string;
+  channelID: string;
+}
+
+export interface ChannelIDResultInfo {
+  status?: string;
+  message?: string;
+  channelID?: string;
+  name?: string;
+  description?: string;
+  eventExpirationTime?: string;
+  type?: string;
 }

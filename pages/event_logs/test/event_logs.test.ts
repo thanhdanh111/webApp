@@ -21,7 +21,7 @@ beforeAll(async () => {
 
     await page.evaluate((token) => {
       localStorage.setItem('access_token', token);
-    });
+    }, token);
 
   } catch (error) {
     console.log(error);

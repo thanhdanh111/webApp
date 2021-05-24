@@ -70,7 +70,7 @@ const EditorView: FunctionComponent<EditorView> = () => {
           action,
           dispatch,
           currentEditorIndex,
-          editorState: editorState[currentEditorIndex],
+          editorState: editorStates[currentEditorIndex],
         })}
         key={`editor-${editorIndex}`}
         index={editorIndex}

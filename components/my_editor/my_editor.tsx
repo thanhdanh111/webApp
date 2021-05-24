@@ -1,12 +1,12 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { Editor, EditorState } from 'draft-js';
-import { customStyleMapDraftjs } from '@components/inline_toolbar/UI/custom_style_map';
-import myBlockStyleFn from './logic/handle_return_styles';
-import editorBlockRenderer from './logic/handle_block_renderer';
-import handleKeyCommand from './logic/handle_key_command';
-import { extendedBlockRenderMap } from './UI/custom_blocks';
+import { customStyleMapDraftjs } from 'constants/custom_style_map';
+import editorBlockRenderer from '../../pages/docs/logic/handle_block_renderer';
+import { extendedBlockRenderMap } from '../../pages/docs/UI/custom_blocks';
 import _immutable from 'immutable';
-import handlePastedText from './logic/handle_pasted_text';
+import handlePastedText from 'pages/docs/logic/handle_pasted_text';
+import myBlockStyleFn from 'pages/docs/logic/handle_return_styles';
+import handleKeyCommand from 'pages/docs/logic/handle_key_command';
 
 interface MyEditor {
   index: number;

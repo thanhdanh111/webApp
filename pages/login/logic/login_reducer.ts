@@ -3,7 +3,9 @@ import { config } from 'helpers/get_config';
 import { LoginAction } from './login_type_actions';
 import { GetUserData } from './login_actions';
 import { LoginValue } from 'helpers/type';
+import { getUserCompanies } from 'helpers/get_user_companies';
 import { GetUserAccess } from 'pages/access_denied/logic/access_action';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
 const initialState: LoginValue = {
   value: '',
@@ -11,6 +13,7 @@ const initialState: LoginValue = {
   access: [],
   userProfile: {},
   extendedUser: {},
+  extendedCompany: {},
 };
 
 export const auth = (state = initialState, action) => {
@@ -28,10 +31,11 @@ export const auth = (state = initialState, action) => {
     case LoginAction.GET_USER_DATA:
       return {
         ...state,
-        userProfile: action?.payload?.userProfile,
-        userID: action?.payload?.userID,
-        extendedUser: action?.payload?.extendedUser,
-        access: action?.payload?.access,
+        userProfile: action.payload.userProfile,
+        access: action.payload.access,
+        userID: action.payload.userID,
+        extendedUser: action.payload.extendedUser,
+        extendedCompany: action?.payload?.extendedCompany ?? {},
       };
     default:
       return state;
@@ -39,12 +43,15 @@ export const auth = (state = initialState, action) => {
 };
 
 export const GetUserDataThunkAction = (token) => async (dispatch) => {
+  let data;
+  let res;
+
   try {
     if (!token) {
       return;
     }
 
-    const res = await axios.get(`${config.BASE_URL}/users/me`, {
+    res = await axios.get(`${config.BASE_URL}/users/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -52,9 +59,33 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       },
     });
 
-    await dispatch(GetUserData(res.data));
+    const userCompanies = getUserCompanies({ access: res.data?.access });
+
+    data = res.data;
+
+    if (userCompanies?.companies && userCompanies?.companies?.length) {
+      const extendedCompany = await axios.get(`${config.BASE_URL}/extendedCompanies/${userCompanies?.companies?.[0]}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const validCompany = checkOnlyTrueInArray({
+        conditionsArray: [
+          !!extendedCompany?.data?.companyID?.name,
+          !!extendedCompany?.data?.companyID?._id,
+        ],
+      });
+
+      data.extendedCompany = validCompany ? extendedCompany.data : {};
+    }
+
+    await dispatch(GetUserData(data));
     await dispatch(GetUserAccess(res.data?.access ?? []));
   } catch (error) {
-    throw error;
+    await dispatch(GetUserData(data));
+    await dispatch(GetUserAccess(res.data?.access ?? []));
   }
 };

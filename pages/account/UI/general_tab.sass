@@ -1,5 +1,5 @@
 .check
-  height: -webkit-fill-available;
+  height: -webkit-fill-available
 
 .general-tab
   margin: 20px
@@ -15,7 +15,7 @@
   align-items: center
   flex-direction: column
   border-radius: 16px
-  box-shadow: rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) 0px 16px 32px -4px
+  box-shadow: rgba(145, 158, 171, 0.24) 0 0 2px 0, rgba(145, 158, 171, 0.24) 0 16px 32px -4px
 
 .general-tab > .avatar-section > .avatar-cricle-border
   border-color: rgba(145, 158, 171, 0.32)
@@ -30,44 +30,47 @@
   margin: 10px
   display: block
   text-align: center
-  transform: translateY(0px);
+  transform: translateY(0)
 
 .profile-picture>.MuiAvatar-fallback
-  width: 85%;
-  height: 100%;
+  width: 85%
+  height: 100%
+
+.general-tab > .avatar-section > .avatar-cricle-border
+  & > .update-image-overlay 
+    background-color: rgb(10, 10, 10)
+    border-radius: 50%
+    margin: 10px
+    opacity: 0
+    transition: .3s ease
+    width: 120px
+    height: 120px
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+    position: absolute
+
+  &:hover
+    .update-image-overlay 
+      opacity: 0.8
 
 .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay 
-  background-color: rgb(10,10,10)
-  border-radius: 50%
-  margin: 10px
-  opacity: 0
-  transition: .3s ease
-  width: 120px
-  height: 120px
-  top: 0
-  bottom: 0
-  left: 0
-  right: 0
-  position: absolute
+  & > .update-image-text
+    color: rgb(255, 255, 255)
+    font-size: 0.8rem
+    line-height: 1.5
+    position: absolute
+    top: 50%
+    left: 18%
+    font-weight: 500
+    text-align: center
 
-.general-tab > .avatar-section > .avatar-cricle-border:hover .update-image-overlay 
-  opacity: 0.8
-
-.general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-text
-  color: rgb(255, 255, 255)
-  font-size: 0.8rem
-  line-height: 1.5
-  position: absolute
-  top: 50%
-  left: 18%
-  font-weight: 500
-  text-align: center
-
-.general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay  > .update-image-icon
-  position: absolute
-  top: 30%
-  left: 40%
-  color: rgb(255,255,255)
+  & > .update-image-icon
+    position: absolute
+    top: 30%
+    left: 40%
+    color: rgb(255, 255, 255)
 
 .general-tab > .avatar-section > .upload-avatar-text
   font-weight: 500
@@ -96,7 +99,7 @@
   flex-direction: row
   flex-grow: 3
   border-radius: 16px
-  box-shadow: rgba(145, 158, 171, 0.24) 0px 0px 2px 0px, rgba(145, 158, 171, 0.24) 0px 16px 32px -4px
+  box-shadow: rgba(145, 158, 171, 0.24) 0 0 2px 0, rgba(145, 158, 171, 0.24) 0 16px 32px -4px
 
 .text-field-container
   width: 40%
@@ -155,21 +158,22 @@
     padding-top: 1.5rem
     padding-bottom: 0.5rem
 
-  .general-tab > .avatar-section > .avatar-cricle-border > .profile-picture
-    width: 100px
-    height: 100px
+  .general-tab > .avatar-section > .avatar-cricle-border 
+    & > .profile-picture
+      width: 100px
+      height: 100px
 
-  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay
-    width: 100px
-    height: 100px
+    & > .update-image-overlay
+      width: 100px
+      height: 100px
 
-  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-text
-    top: 50%
-    left: 12.3%
+      & > .update-image-text
+        top: 50%
+        left: 12.3%
 
-  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-icon
-    top: 23.8%
-    left: 38.74%
+      & > .update-image-icon
+        top: 23.8%
+        left: 38.74%
 
 @media screen and (max-width: 768px) and (min-width: 480px)
   .general-tab
@@ -218,13 +222,13 @@
     width: 100px
     height: 100px
 
-  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-text
-    top: 50%
-    left: 12.3%
+    & > .update-image-text
+      top: 50%
+      left: 12.3%
 
-  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-icon
-    top: 23.8%
-    left: 38.74%
+    & > .update-image-icon
+      top: 23.8%
+      left: 38.74%
 @media screen and (max-width: 480px) and (min-width: 320px)
   .general-tab
     flex-wrap: wrap
@@ -272,10 +276,10 @@
     width: 100px
     height: 100px
 
-  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-text
-    top: 50%
-    left: 12.3%
+    & > .update-image-text
+      top: 50%
+      left: 12.3%
 
-  .general-tab > .avatar-section > .avatar-cricle-border > .update-image-overlay > .update-image-icon
-    top: 23.8%
-    left: 38.74%
+    & > .update-image-icon
+      top: 23.8%
+      left: 38.74%

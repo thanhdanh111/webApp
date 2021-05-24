@@ -3,9 +3,6 @@ import {
     TableBody,
     TableContainer,
     Paper,
-    TableRow,
-    TableCell,
-    Checkbox,
     Button,
     CircularProgress,
     Typography,
@@ -16,9 +13,9 @@ import { HeadCell } from '../../helpers/type';
 import { checkArray } from 'helpers/check_array';
 import { DisappearedLoading } from 'react-loadingg';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { BodyTable } from './body_table';
 import { checkStringCondition } from 'helpers/check_string_condtion';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import TableRowBase from './table_row';
 
 interface InitialProps {
   headCells: HeadCell[];
@@ -38,6 +35,8 @@ interface InitialProps {
   notFoundWarning?: string;
   individualActions?: string[];
   individualActionsRender?: object;
+  hadExpandableRows?: boolean;
+  ComponentDetail?: React.FunctionComponent;
 }
 
 const BaseTable = (props: InitialProps) => {
@@ -49,23 +48,10 @@ const BaseTable = (props: InitialProps) => {
     loadingIndex, loadingStateName, indexLoading,
     notFoundAnyData = false,
     notFoundWarning, individualActions,
+    hadExpandableRows = false,
+    ComponentDetail,
   }: InitialProps = props;
   const emptyState = !loading && !data?.length && notFoundAnyData;
-
-  const tableCellContent = (content) => {
-    if (Array.isArray(content)) {
-      return (
-        <ul className='cell-list'>
-          {
-            content.map((element, index) => <li className={`cell-item cell-item_${index}`} key={index} >{element}</li>)
-          }
-        </ul>
-      );
-    }
-
-    return content;
-  };
-
   function actionDefaultFunc({ itemIndex, action  }) {
 
     return { itemIndex, action };
@@ -145,62 +131,22 @@ const BaseTable = (props: InitialProps) => {
           height={(emptyState || loading) ? 0 : 500}
         >
         <Table stickyHeader aria-label='sticky table' className='table-content' >
-          <HeadTable needCheckBox={needCheckBox} headCells={headCells}/>
+          <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
           { !loading &&  (checkArray(data) &&
           <TableBody className='table-body'>
                 {data.map((item, index) => {
                   return (
-                    <TableRow hover role='checkbox' tabIndex={-1} className='row-contain' key={index}>
-                      {
-                        needCheckBox && <TableCell padding='checkbox' className='cell-contain checkbox-cell'>
-                          <Checkbox className='check'/>
-                        </TableCell>
-                      }
-                      {headCells.map((header) => {
-                        const nameStyle = (header.id === 'userName') ?  'name-style' : '';
-
-                        const align = (header.numeric) ? 'right' : 'left';
-                        const padding = (header.disablePadding) ? 'none' : 'default';
-
-                        if (!item[header.id] && header.id !== 'action') {
-                          return (
-                            <BodyTable
-                              key={header.id}
-                              align={align}
-                              padding={padding}
-                            />
-                          );
-                        }
-
-                        if (header.id === 'action') {
-                          return (
-                            <BodyTable
-                              key={header.id}
-                              content={
-                                renderAction({
-                                  actionList: actions,
-                                  itemIndex: index,
-                                  itemStatus: item['status'],
-                                  isManager: item['isManager'],
-                                })
-                              }
-                              align={align}
-                              padding={padding}
-                            />
-                          );
-                        }
-
-                        return (
-                            <BodyTable
-                              key={header.id}
-                              style={nameStyle}
-                              content={tableCellContent(item[header.id])}
-                              align={align}
-                              padding={padding}
-                            />
-                        );
-                      })}
-                    </TableRow>
+                    <TableRowBase
+                      key={index}
+                      hadExpandableRows={hadExpandableRows}
+                      headCells={headCells}
+                      needCheckBox={needCheckBox}
+                      renderAction={renderAction}
+                      item={item}
+                      actions={actions}
+                      index={index}
+                      ComponentDetail={ComponentDetail}
+                    />
                   );
                 })}
           </TableBody>

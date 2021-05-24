@@ -1,0 +1,92 @@
+.detail-project
+  padding: 16px 30px
+  -webkit-box-align: center
+  align-items: center
+  -webkit-box-pack: justify
+  justify-content: space-between
+  width: 100%
+
+  .detail-project-form
+    display: grid
+    grid-template-columns: 300px 250px max-content
+    grid-gap: 16px
+    -webkit-box-align: end
+    align-items: end
+    padding: 20px 0
+    box-shadow: rgba(0, 0, 0, 0.1) 0 -1px 0
+    background: rgb(255, 255, 255)
+
+    .form-label
+      font-size: 20px
+
+    .project-name-input
+      color: rgb(43, 29, 56)
+      width: 100%
+      background: rgb(255, 255, 255)
+      border: 1px solid rgb(198, 190, 207)
+      border-radius: 4px
+      box-shadow: rgba(37, 11, 54, 0.04) 0 2px 0 inset
+      transition: border 0.1s linear 0s
+      resize: vertical
+      padding: 10px 10px
+      -webkit-box-align: center
+      align-items: center
+
+      .form-select
+        width: 100%
+        display: grid
+        
+    .btn-update
+      margin: 10px 30px 0
+      padding: 10px
+      font-size: 18px
+      color: #fff
+      background: #00ab55
+      border: none
+      border-radius: 5px
+
+      &:hover
+        background: #137946
+
+  .name-team
+    padding: 15px 0 20px
+
+    .title-project
+      display: flex
+      white-space: nowrap
+      text-overflow: ellipsis
+      padding: 0 0 25px
+
+      .avt-title
+        height: 35px
+        width: 35px
+        border-radius: 21px
+        background: #00ab55
+
+      .name-project
+        color: rgb(61, 116, 219)
+        font-size: 24px
+        padding-left: 4px
+        line-height: 35px
+
+  .description
+    box-shadow: rgba(0, 0, 0, 0.1) 0 -1px 0
+    padding: 20px 0
+    text-align: start
+
+    .title-des
+      font-size: 20px
+
+    .detail-des
+      font-size: 16px
+
+  .hide-description
+    display: none
+
+  .show-description
+    display: grid
+
+@media screen and (max-width: 600px)
+  .detail-project
+    .detail-project-form
+      display: inherit

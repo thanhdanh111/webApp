@@ -1,165 +1,172 @@
 .table-paper
-    .table-list
-        .table-content
-            .table-users
-                .table-head
-                    background: rgb(244, 246, 248);
-                    
-                    .box-head
-                        text-align: center;
+  .table-list
+    .table-content
+      .table-users
+        .table-head
+          background: rgb(244, 246, 248)
+          
+          .box-head
+            text-align: center
 
-                    .cell-title
-                        font-weight: bold;
-                        color: rgb(99, 115, 129);
-                        font-size: 0.875rem;    
-                        padding: 1rem;
+          .cell-title
+            font-weight: bold
+            color: rgb(99, 115, 129)
+            font-size: 0.875rem    
+            padding: 1rem
 
-                        .checkbox-header
-                            padding: 0;
+            .checkbox-header
+              padding: 0
 
-                        .check-head
-                            color: #00AB55;
+            .check-head
+              color: #00ab55
 
-                        .title-content
+      .table-body
+        .row-contain
+          .name-style
+            font-weight: 900
+            overflow: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
 
-            .table-body
-                .row-contain
-                    .name-style
-                        font-weight: 900;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
+          .cell-contain
+            font-family: sans-serif
+            font-size: 0.875rem
+            line-height: 1.57143
+            display: table-cell
+            vertical-align: inherit
+            color: rgb(33, 43, 73)
+            border-bottom: none
+            padding: 1rem
 
+            .cell-list 
+              margin: auto
+              padding: 0
+              list-style: none
+              line-height: 2rem
+              font-size: 15px
+              text-transform: uppercase
+              display: block
 
-                    .cell-contain
-                        font-family: sans-serif;
-                        font-size: 0.875rem;
-                        line-height: 1.57143;
-                        display: table-cell;
-                        vertical-align: inherit;
-                        color: rgb(33, 43, 73);
-                        border-bottom: none;
-                        padding: 1rem;
+              .cell-item
+                display: block
+                padding: 0
+                color: #322e2e
+                margin: 10px 0
 
-                        .cell-list 
-                            margin: auto;
-                            padding: 0;
-                            list-style: none;
-                            line-height: 2rem;
-                            font-size: 15px;
-                            text-transform: uppercase;
-                            display: block;
+        .checkbox-cell
+          text-align: center
 
-                            .cell-item
-                                display: block;
-                                padding: 0;
-                                color: #322e2e;
-                                margin: 10px 0;
+          .check 
+            padding: 5px
 
-                .checkbox-cell
-                    text-align: center;
+      .table-body
+        .row-contain
+          height: 84px
 
-                    .check 
-                        padding: 5px;
+          .cell-contain
+            .list-action 
+              display: flex
+              text-align: left
+              list-style: none
+              margin-left: 5px
+              margin-right: 5px
+              border-radius: 10px
 
+              .action-item
+                border: none
+                margin: 0 8px    
+                transform: translateX(-10px)
+                opacity: 0.9
 
-            .table-body
-                .row-contain
-                    height: 84px
-                    .cell-contain
-                        .list-action 
-                            display: flex;
-                            text-align: left;
-                            list-style: none;
-                            margin-left: 5px;
-                            margin-right: 5px;
-                            border-radius: 10px;
+                .action
+                  font-weight: 600
+                  font-size: 12px
+                  margin: 1px
+                  border-radius: 0.5rem
+                  text-transform: uppercase
 
-                            .action-item
-                                border: none;
-                                margin: 0 8px;    
-                                transform: translateX(-10px);
-                                opacity: 0.9
+                  &:hover
+                    background-color: #00ab55
+                    opacity: 0.8
 
-                                .action
-                                    font-weight: 600;
-                                    font-size: 12px;
-                                    margin: 1px;
-                                    border-radius: 0.5rem;
-                                    text-transform: uppercase;
-                                    &:hover
-                                        background-color: #00AB55
-                                        opacity: 0.8
+                .redButton
+                  background: #ff4842
 
-                                .redButton
-                                    background: #FF4842
-                                    &:hover
-                                        background-color: #FF4842
-                                        opacity: 0.8
-                              
+                  &:hover
+                    background-color: #ff4842
+                    opacity: 0.8
+
+  .row-info
+    font-weight: 600
 
 @media screen and (max-width: 768px)
-    .table-paper
-            .table-list
-                .table-content
-                    .table-body
-                        .row-contain
-                            .cell-contain
-                                padding: 5px 0;
-                                .cell-list 
-                                    font-size: 12px;
-                                    .cell-item
-                                        margin: 0px 0;
+  .table-paper
+    .table-list
+      .table-content
+        .table-body
+          .row-contain
+            .cell-contain
+              padding: 5px 0
 
-                    .table-body
-                        .row-contain
-                            .cell-contain
-                                .list-action 
-                                    .action-item
-                                        .action
-                                            font-size: 10px;
-                                            padding: 0px;
-                        
+              .cell-list 
+                font-size: 12px
+
+                .cell-item
+                  margin: 0 0
+
+        .table-body
+          .row-contain
+            .cell-contain
+              .list-action 
+                .action-item
+                  .action
+                    font-size: 10px
+                    padding: 0
+            
 @media screen and (max-width: 1024px)
-    .table-paper
-        .table-list
-            .table-content
-                .table-body
-                    .row-contain
-                        .cell-contain
-                            padding: 5px 0;
-                            .cell-list 
-                                font-size: 12px;
-                                .cell-item
-                                    margin: 0px 0;
+  .table-paper
+    .table-list
+      .table-content
+        .table-body
+          .row-contain
+            .cell-contain
+              padding: 5px 0
 
-                .table-body
-                    .row-contain
-                        .cell-contain
-                            .list-action 
-                                .action-item
-                                    .action
-                                        font-size: 10px;
-                                        padding: 0px;
-                       
-@media screen and (max-width: 480px) and (min-width: 320px)
-    .table-paper
-        .table-list
-            .table-content
-                .table-body
-                    .row-contain
-                        .cell-contain
-                            padding: 5px 0;
-                            .cell-list 
-                                font-size: 10px;
-                                .cell-item
-                                    margin: 0px 0;
+              .cell-list 
+                font-size: 12px
 
-                .table-body
-                    .row-contain
-                        .cell-contain
-                            .list-action 
-                                .action-item
-                                    .action
-                                        font-size: 10px;
-                                        padding: 0px;
+                .cell-item
+                  margin: 0 0
+
+        .table-body
+          .row-contain
+            .cell-contain
+              .list-action 
+                .action-item
+                  .action
+                    font-size: 10px
+                    padding: 0
+             
+@media screen and (max-width: 480px)
+  .table-paper
+    .table-list
+      .table-content
+        .table-body
+          .row-contain
+            .cell-contain
+              padding: 5px 15px
+
+              .cell-list 
+                font-size: 10px
+
+                .cell-item
+                  margin: 0 0
+
+        .table-body
+          .row-contain
+            .cell-contain
+              .list-action 
+                .action-item
+                  .action
+                    font-size: 10px
+                    padding: 0

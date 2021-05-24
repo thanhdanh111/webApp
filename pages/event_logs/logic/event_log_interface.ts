@@ -32,12 +32,12 @@ export interface ExceptionState {
   stacktrace?: StacktraceState;
   type: string;
   value: string;
-  mechanism: MechanismState;
+  mechanism?: MechanismState;
 }
 ​
 export interface MechanismState {
-  handled: boolean;
-  type: string;
+  handled?: boolean;
+  type?: string;
 }
 ​
 export interface StacktraceState {

@@ -1,0 +1,67 @@
+.block-wrapper
+  flex-direction: row
+  align-items: center
+  margin-left: 45px
+  display: flex
+  position: relative
+
+  &:hover
+    .block-wrapper--btn
+      opacity: 1
+
+.block-wrapper > .block-wrapper--btns
+  display: flex
+  position: absolute
+  left: -40px
+  user-select: none
+  caret-color: rgba(0, 0, 0, 0)
+
+.block-wrapper > .block-wrapper--btns > .MuiButton-root
+  height: 20px
+  border-radius: 50%
+  color: rgb(102, 102, 102)
+  min-width: 10px
+  user-select: none
+  opacity: 0
+  padding: 0
+
+.custom-code-block
+  width: 800px
+  background-color: rgb(250, 250, 250)
+  border: 1px solid rgb(198, 198, 198)
+  border-top: none
+  border-bottom: none
+  box-sizing: border-box
+  display: flex
+  text-align: left
+  user-select: text
+  font-size: var(--font-size-large)
+  font-weight: var(--font-weight-regular)
+  line-height: var(--font-line-height-large)
+  padding: 0 var(--font-padding-horizontal-code)
+  font-family: monospace
+
+.initial-code-block
+  border-top: 1px solid rgb(198, 198, 198)
+  border-bottom: 1px solid rgb(198, 198, 198)
+  padding: var(--font-padding-vertical-code) var(--font-padding-horizontal-code)
+
+.last-code-block
+  padding-bottom: var(--font-padding-vertical-code)
+  border-bottom: 1px solid rgb(198, 198, 198)
+
+.first-code-block
+  padding-top: var(--font-padding-vertical-code)
+  border-top: 1px solid rgb(198, 198, 198)
+
+.header-one
+  font-size: 32px
+  font-weight: 600
+
+.header-two
+  font-size: 24px
+  font-weight: 600
+
+.header-three
+  font-size: 20px
+  font-weight: 600

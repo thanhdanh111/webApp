@@ -2,17 +2,15 @@ import React, { FunctionComponent } from 'react';
 import {
   Drawer, ListItemIcon, List, ListItem, Hidden, ListItemText, ListSubheader, Typography,
 } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { openDrawer } from '@components/header/logic/header_actions';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import PeopleIcon from '@material-ui/icons/People';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
-import { RootState } from 'redux/reducers_registration';
 import { EqualizerOutlined } from '@material-ui/icons';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import EditIcon from '@material-ui/icons/Edit';
+import BusinessIcon from '@material-ui/icons/Business';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -23,16 +21,21 @@ const elementIcons = {
   time_off: <EventNoteIcon />,
   docs: <EditIcon />,
   event_logs: <EventNoteIcon />,
+  projects: <EventNoteIcon />,
+  company: <BusinessIcon />,
 };
 
 const drawerElements = {
   general: ['home', 'users', 'statistics', 'docs'],
-  management: ['account', 'invite_members', 'time_off', 'event_logs'],
+  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects'],
 };
 
-const DrawerUi: FunctionComponent = ({ }) => {
-  const headerState = useSelector((state: RootState) => state.headers);
-  const dispatch = useDispatch();
+interface DrawerUi {
+  isDrawerOpen: boolean;
+  onChangeDrawerOpen: () => void;
+}
+
+const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpen }) => {
   const router = useRouter();
 
   function listItems() {
@@ -95,10 +98,10 @@ const DrawerUi: FunctionComponent = ({ }) => {
       <Hidden mdUp implementation='css'>
         <Drawer
           className='temporary-drawer'
-          onClose={() => dispatch(openDrawer())}
+          onClose={() => onChangeDrawerOpen()}
           variant='temporary'
           anchor='left'
-          open={headerState.isOpenDrawer}
+          open={isDrawerOpen}
           classes={{
             paper: 'drawer-paper',
           }}

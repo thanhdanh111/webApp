@@ -1,0 +1,22 @@
+.main-layout--children
+  flex-grow: 1
+  padding-top: var(--app-bar-height)
+  background-color: rgb(255, 255, 255)
+  max-width: 100%
+
+.main-layout-loading
+  display: flex
+  justify-content: center
+  align-items: center
+  height: calc(100vh - var(--app-bar-height))
+
+.main-layout--children > .main-layout--children-toolbar
+  min-height: 56px !important
+
+@media screen and (min-width: 0) and (orientation: landscape)
+  .main-layout--children > .main-layout--children-toolbar
+    min-height: 48px !important
+
+@media screen and (min-width: 600px)
+  .main-layout--children > .main-layout--children-toolbar
+    min-height: 64px !important

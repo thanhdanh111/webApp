@@ -43,6 +43,6 @@
     "components/**/*.tsx",
     "components/**/*.ts",
     "static/**/*.tsx",
-    "static/**/*.ts"
+    "static/**/*.ts", "constants/custom_style_map.ts"
   ]
 }

@@ -1,4 +1,5 @@
 import { AccountActionTypes } from './account_actions';
+import { Notification } from 'helpers/type';
 
 interface AccountValue {
   name: string;
@@ -11,6 +12,8 @@ interface AccountValue {
   zipCode: string;
   about: string;
   isPublicProfile: boolean;
+  currentTabIndex: number;
+  accountNotifications: Notification[];
 }
 
 const initialState: AccountValue = {
@@ -24,7 +27,11 @@ const initialState: AccountValue = {
   city: 'Ho Chi Minh',
   zipCode: '70000',
   isPublicProfile: false,
+  currentTabIndex: 0,
+  accountNotifications: [],
 };
+
+export type AccountStateType = AccountValue;
 
 const accountReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -37,6 +44,16 @@ const accountReducer = (state = initialState, action) => {
       return {
         ...state,
         isPublicProfile: !state?.isPublicProfile,
+      };
+    case AccountActionTypes.ChangeCurrentIndexAccountTabs:
+      return {
+        ...state,
+        currentTabIndex: action.currentIndex,
+      };
+    case AccountActionTypes.UpdateAccountNotifications:
+      return {
+        ...state,
+        accountNotifications: action.notifactions,
       };
     default:
       return state;

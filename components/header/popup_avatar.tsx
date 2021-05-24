@@ -1,4 +1,4 @@
-import { Button, Menu, MenuItem, Typography } from '@material-ui/core';
+import { Button, Menu, MenuItem, Typography, Avatar, Grid, Divider } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { Logout, Login } from 'pages/login/logic/login_actions';
 import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
@@ -11,11 +11,12 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { RootState } from 'redux/reducers_registration';
 import UserAvatar from '@components/user_avatar/info_user';
 import { deleteBrowserToken } from 'helpers/fcm';
+import BusinessIcon from '@material-ui/icons/Business';
 
 type Token = string | null;
 
 const DropDown = () => {
-  const user = useSelector((state: RootState) => state.auth.userProfile);
+  const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -57,6 +58,7 @@ const DropDown = () => {
   }
 
   const onPushToPage = (url: string) => {
+
     void router.push(`/${url}`, `/${url}.html`);
   };
 
@@ -94,14 +96,38 @@ const DropDown = () => {
 
   const InfoUser = () => {
 
-    const userName = `${user?.firstName} ${user?.lastName}`;
+    const userName = ` ${auth?.userProfile?.lastName} ${auth?.userProfile?.firstName}`;
 
     return (
-      <div className='drop-info'>
-        <UserAvatar style='info-avatar' user={user}/>
-        <Typography className='info-username' component='h5' variant='h6'>{userName}</Typography>
-        <Typography className='info-email' component='p'>{user?.email}</Typography>
-      </div>
+      <Grid className='sublist-item' container wrap='nowrap' spacing={2}>
+        <Grid item>
+          <UserAvatar style='info-avatar' user={auth?.userProfile}/>
+        </Grid>
+        <Grid item xs justify='center'>
+          <Typography >{userName}</Typography>
+          <Typography >{auth?.userProfile?.email}</Typography>
+        </Grid>
+      </Grid>
+    );
+  };
+
+  const InfoCompany = () => {
+    if (!auth?.extendedCompany?.companyID?.name || !auth?.extendedCompany?.companyID?.emails?.length) {
+      return <div />;
+    }
+
+    return (
+      <Grid className='sublist-item' container wrap='nowrap' spacing={2}>
+        <Grid item>
+          <Avatar variant='rounded' src={auth?.extendedCompany?.companyID?.photos?.[0]} style={{ backgroundColor: '#00AB55' }}>
+            <BusinessIcon />
+          </Avatar>
+        </Grid>
+        <Grid item xs justify='center'>
+          <Typography >{auth.extendedCompany?.companyID?.name}</Typography>
+          <Typography >{auth?.extendedCompany?.companyID?.emails?.[0]}</Typography>
+        </Grid>
+      </Grid>
     );
   };
 
@@ -111,10 +137,14 @@ const DropDown = () => {
         <React.Fragment>
 
           <Button variant='contained' color='primary' {...bindTrigger(popupState)} className='drop-avt'>
-          <UserAvatar alt='user icon' style='info-avatar' user={user}/>
+          <UserAvatar alt='user icon' style='info-avatar' user={auth?.userProfile}/>
           </Button>
           <Menu {...bindMenu(popupState)} className='menu-drop'>
-            <MenuItem className='item-drop info-drop'><InfoUser /></MenuItem>
+            <InfoUser />
+            <Divider />
+            <MenuItem disableGutters className='info-company' onClick={() => onPushToPage('company')}>
+              <InfoCompany />
+            </MenuItem>
             <MenuItem className='item-drop action-drop item-switch' onClick={() => onPushToPage('home')}>
               <HomeIcon color='primary' className='icon-item' />
               <Typography className='text-item'>Home</Typography>

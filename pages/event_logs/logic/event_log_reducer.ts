@@ -143,7 +143,7 @@ export const getEventLogData = (eventLogsId) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
 
-    if (!eventLogsId) {
+    if (!token || !eventLogsId) {
       return;
     }
 
@@ -156,27 +156,29 @@ export const getEventLogData = (eventLogsId) => async (dispatch) => {
       },
     });
 
-    if (!res.data && !!res.data.length) {
+    if (!res?.data && !!res?.data?.length) {
       await dispatch(hasNoEventLogs());
 
       return;
     }
 
-    const breadcrumbs = checkArray(res.data.breadcrumbs) ?
-    res.data.breadcrumbs.map((element) => {
+    const breadcrumbs = checkArray(res?.data?.breadcrumbs) ?
+    res?.data?.breadcrumbs?.map((element) => {
+      const description = element.message ? element.message : `${element?.data?.method} ${element.data.url} [${element.data.status_code}]`;
+
       return {
-        time:  moment(element.timestamp).format(dateTimeUiFormat),
-        category: element.category,
-        description: element.message,
-        level: element.level,
+        description,
+        time:  moment(element?.timestamp).format(dateTimeUiFormat),
+        category: element?.category,
+        level: element?.level,
       };
     }) : [];
 
     const selectedEventLog = {
       breadcrumbs,
-      _id: res.data._id,
-      exception: res.data.exception.values[0],
-      createdAt: res.data.createdAt,
+      _id: res?.data?._id,
+      exception: res?.data?.exception?.values[0],
+      createdAt: res?.data?.createdAt,
     };
 
     await dispatch(getEventLog(selectedEventLog));

@@ -24,7 +24,7 @@ beforeAll(async () => {
 
     await page.evaluate((token) => {
       localStorage.setItem('access_token', token);
-    });
+    }, token);
 
   } catch (error) {
     console.log(error);
@@ -34,9 +34,18 @@ beforeAll(async () => {
 describe('Pots Page', () => {
   test('Test account page successfully after login', async () => {
     await page.goto('http://localhost:5000/account');
-    await page.waitForSelector('.page-card');
+    await page.waitForSelector('.tabs-container');
 
     const image = await page.screenshot();
+
+    await page.click('.drop-avt');
+    await page.click('.info-company');
+    await page.click('.drop-avt');
+    await page.waitFor(5000);
+
+    const accountLinksTab = await page.screenshot();
+
+    expect(accountLinksTab).toMatchImageSnapshot();
     expect(image).toMatchImageSnapshot();
   });
 });

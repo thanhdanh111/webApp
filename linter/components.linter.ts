@@ -3,41 +3,39 @@ import checkRequiredFiles from './required_files';
 
 // tslint:disable:no-console
 export default function linterComponents(componentsTree) {
-  // let error = 0;
+  let error = 0;
 
-  // const filterComponents = componentsTree?.children.filter(
-  //   (folder) => folder.name !== 'handle_errors' && folder.name !== '.DS_Store');
+  const filterComponents = componentsTree?.children.filter(
+    (folder) => folder.name !== 'handle_errors');
 
-  // for (const item of filterComponents) {
-  //   if (item.type !== 'directory') {
-  //     console.log(`Error: ${item.name}`);
-  //     console.log('Please contains only folders in Components');
-  //     process.exit(1);
-  //   }
+  for (const item of filterComponents) {
+    if (item.type !== 'directory') {
+      console.log(`Error: ${item.name}`);
+      console.log('Please contains only folders in Components');
+      process.exit(1);
+    }
 
-  //   const isValidType = checkType(item);
+    const isValidType = checkType(item);
 
-  //   const isValidName = checkName(item);
+    const isValidName = checkName(item);
 
-  //   if (!isValidType) {
-  //     error += 1;
-  //   }
+    if (!isValidType) {
+      error += 1;
+    }
 
-  //   if (isValidName) {
-  //     item.children.forEach((element) => {
-  //       const firstName = element.name.substring(0, element.name.indexOf('.'));
-  //       const extensions = ['.stories.tsx', '.tsx'];
+    if (isValidName) {
+      item.children.forEach((element) => {
+        const firstName = element.name.substring(0, element.name.indexOf('.'));
+        const extensions = ['.stories.tsx', '.tsx'];
 
-  //       error = error + checkRequiredFiles(firstName, extensions, item.children, item.path);
-  //     });
+        error = error + checkRequiredFiles(firstName, extensions, item.children, item.path);
+      });
 
-  //     continue;
-  //   }
+      continue;
+    }
 
-  //   error += 1;
-  // }
+    error += 1;
+  }
 
-  // return error;
-
-  return;
+  return error;
 }

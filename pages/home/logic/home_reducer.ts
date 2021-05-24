@@ -2,7 +2,7 @@ import { dashboardClickUp } from './home_type';
 import { Task, TaskStatusType } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { getDataTaskStatuses, hideLoaderListUser, getDataTasksByUserThunkAction } from './home_actions';
+import { getDataTaskStatuses, hideLoaderListUser, getDataTasksByUserThunkAction, getTasksStatusByID } from './home_actions';
 
 interface Data {
   loading: boolean;
@@ -13,6 +13,7 @@ interface Data {
   listTasks: Task[];
   taskTotalCount: number;
   taskCursor: string;
+  taskStatusNotification: TaskStatusType;
 }
 
 const initialState: Data = {
@@ -24,6 +25,12 @@ const initialState: Data = {
   listTasks: [],
   taskTotalCount: 0,
   taskCursor: '',
+  taskStatusNotification: {
+    _id: '',
+    title: '',
+    taskIDs: [],
+    description: '',
+  },
 };
 
 export  const taskStatusesReducer = (state = initialState, action) => {
@@ -69,6 +76,11 @@ export  const taskStatusesReducer = (state = initialState, action) => {
         taskCursor: action.payload.cursor,
         taskTotalCount: listTask.length,
         listTasks: listTask,
+      };
+    case dashboardClickUp.GET_TASK_STATUS_BY_ID:
+      return {
+        ...state,
+        taskStatusNotification: action.payload,
       };
     default:
       return state;
@@ -141,6 +153,28 @@ export const getTasksByUserThunkAction = (companyID, departmentID, user) => asyn
     await dispatch(getDataTasksByUserThunkAction(res.data));
     await dispatch(hideLoaderListUser());
 
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTaskStatusByIDThunkAction = (taskStatusID) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    if (!token || !taskStatusID) {
+      return;
+    }
+
+    const res = await axios.get(`${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    dispatch(getTasksStatusByID(res.data));
   } catch (error) {
     throw error;
   }
