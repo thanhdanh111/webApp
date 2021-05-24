@@ -6,6 +6,7 @@ import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { getTaskStatusByIDThunkAction } from 'pages/home/logic/home_reducer';
 
 interface InitialProps {
+  title: string;
   taskStatusID: string;
 }
 
@@ -14,11 +15,9 @@ const TaskStatusNotificationUI: FunctionComponent<InitialProps> = (props: Initia
   const router = useRouter();
   const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
   const taskStatus = taskStatuses.taskStatusNotification;
-
   useEffect(() => {
-    dispatch(getTaskStatusByIDThunkAction(props.taskStatusID));
+    dispatch(getTaskStatusByIDThunkAction(props.title, props.taskStatusID));
   }, []);
-
   const onPushToPage = (path: string) => {
     return router.push(`/${path}`, `/${path}.html`);
   };

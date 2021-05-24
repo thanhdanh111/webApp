@@ -16,8 +16,8 @@ export const isAdminOrManagerUser = (accesses, companyID, departmentID) => {
 
     const isDepartmentManager =
       access?.role === 'DEPARTMENT_MANAGER' && access?.companyID === companyID && access?.departmentID === departmentID;
-
     if (isAdmin || isCompanyManager || isDepartmentManager) {
+
       return true;
     }
 

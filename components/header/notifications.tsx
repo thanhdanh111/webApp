@@ -23,7 +23,6 @@ const NotificationsUI = () => {
   const fetchData = () => {
     dispatch(getNotificationMiddleware(userID));
   };
-
   const generatedData = () => {
 
     if (!notifications?.list?.length && hasNoData) {
