@@ -25,6 +25,7 @@ a {
 .main-layout {
   display: flex;
   position: fixed;
+  width: 100%
 }
 
 .main-page {
