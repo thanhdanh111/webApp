@@ -4,7 +4,7 @@ export enum DocsActionTypes {
   DisplayToolbar = 'DisplayToolbar',
   OnFocusElement = 'OnFocusElement',
   UpdateSingleEditorState = 'UpdateSingleState',
-  UpdateEditorView = 'UpdateEditorView',
+  UpdateDocs = 'UpdateDocs',
 }
 
 interface DisplayToolbar {
@@ -35,12 +35,10 @@ export const updateOnFocusing = ({ currentIndex }: UpdateOnFocusing) => {
   };
 };
 
-export const updateEditorView = ({ numbers }) => {
+export const updateDocs = ({ data }) => {
   return {
-    data: {
-      editorNumbers: numbers,
-    },
-    type: DocsActionTypes.UpdateEditorView,
+    data,
+    type: DocsActionTypes.UpdateDocs,
   };
 };
 

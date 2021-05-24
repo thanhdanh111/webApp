@@ -11,6 +11,7 @@ import { EqualizerOutlined } from '@material-ui/icons';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import EditIcon from '@material-ui/icons/Edit';
 import BusinessIcon from '@material-ui/icons/Business';
+import DocsTreeView from 'pages/docs/UI/docs_drawer';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -72,8 +73,22 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
     return items;
   }
 
-  const drawer = (
-    <div>
+  async function handleChangeRoute(pathName) {
+    if (typeof pathName !== 'string' || !pathName.length) {
+      return;
+    }
+
+    await router.push(`/${pathName}`);
+  }
+
+  function handleDrawer() {
+    const currentPath = window?.location?.pathname;
+
+    if (currentPath === '/docs') {
+      return <DocsTreeView />;
+    }
+
+    return <div>
       <List component='nav' aria-label='main mailbox folders'>
         <ListItem>
           <ListItemIcon>
@@ -82,15 +97,7 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
         </ListItem>
         {listItems()}
       </List>
-    </div>
-  );
-
-  async function handleChangeRoute(pathName) {
-    if (typeof pathName !== 'string' || !pathName.length) {
-      return;
-    }
-
-    await router.push(`/${pathName}`);
+    </div>;
   }
 
   return (
@@ -109,7 +116,7 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          {drawer}
+          {handleDrawer()}
         </Drawer>
       </Hidden>
       <Drawer
@@ -120,7 +127,7 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
         variant='permanent'
         open
       >
-        {drawer}
+        {handleDrawer()}
       </Drawer>
     </nav>
   );

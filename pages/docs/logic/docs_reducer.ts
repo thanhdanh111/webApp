@@ -6,8 +6,34 @@ interface DocsValue {
   selectionRect: DOMRect | undefined;
   actionOnCurrent?: string;
   editorKeys: string[];
-  currentEditorKey?: string;
   editorState: EditorState;
+  title: string;
+  selectedDocProject: DocProject;
+  docProjects: DocProject[];
+  loading: boolean;
+}
+
+interface CreatedBy {
+  status?: string;
+  lastAccessAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  _id?: string;
+  email?: string;
+  googleID?: string;
+  firstName?: string;
+  lastName?: string;
+  profilePhoto?: string;
+}
+
+interface DocProject {
+  _id?: string;
+  title?: string;
+  createdBy?: CreatedBy;
+  companyID?: string;
+  departmentID?: string;
+  userIDs?: string[];
+  documentPicture?: string;
 }
 
 const initialState: DocsValue = {
@@ -15,6 +41,10 @@ const initialState: DocsValue = {
   selectionRect: undefined,
   editorKeys: [],
   editorState: null,
+  title: '',
+  selectedDocProject: {},
+  docProjects: [],
+  loading: false,
 };
 
 export type DocsValueType = DocsValue;
@@ -46,7 +76,7 @@ const docsReducer = (state = initialState, action) => {
         ...state,
         ...action.data,
       };
-    case DocsActionTypes.UpdateEditorView:
+    case DocsActionTypes.UpdateDocs:
       return {
         ...state,
         ...action.data,

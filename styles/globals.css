@@ -16,6 +16,7 @@ body {
   --font-weight-regular: 400;
   --font-padding-vertical-code: 16px;
   --font-padding-horizontal-code: 24px;
+  --font-size-h0: 40px
 }
 
 a {

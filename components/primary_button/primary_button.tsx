@@ -6,15 +6,22 @@ import {
 interface DataType {
   title: string;
   handleClick: () => void;
+  disabled?: boolean;
 }
 
 type BodyProps = DataType;
 
-const PrimaryButtonUI: FunctionComponent<BodyProps> = ({ title, handleClick }) => {
+const PrimaryButtonUI: FunctionComponent<BodyProps> = ({ title, handleClick, disabled }) => {
 
   return (
     <div className='btn-primary-container'>
-      <Button color='secondary' variant='contained' onClick={handleClick} className='btn-primary' >
+      <Button
+        color='secondary'
+        variant='contained'
+        disabled={disabled}
+        onClick={handleClick}
+        className='btn-primary'
+      >
         {title}
       </Button>
     </div>

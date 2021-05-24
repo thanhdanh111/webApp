@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useEffect } from 'react';
-import { Editor, EditorState, getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+import React, { FunctionComponent } from 'react';
+import { Editor, EditorState } from 'draft-js';
 import { customStyleMapDraftjs } from 'constants/custom_style_map';
 import editorBlockRenderer from '../../pages/docs/logic/handle_block_renderer';
 import { extendedBlockRenderMap } from '../../pages/docs/UI/custom_blocks';
@@ -24,20 +24,14 @@ const MyEditor: FunctionComponent<MyEditor> = ({
   onClickSideToolbar,
   onMoveBlockAction,
 }) => {
-  let editorRef;
 
   function handleOnChange(newEditorState) {
 
     handleChangeEditorState(newEditorState);
   }
 
-  const setDomEditorRef = (ref) => editorRef = ref;
-
-  useEffect(() => editorRef?.focus());
-
   return <Editor
     stripPastedStyles={true}
-    ref={setDomEditorRef}
     customStyleMap={customStyleMapDraftjs}
     handlePastedText={(_, styles, state) => handlePastedText({ styles, state, handleOnChange })}
     editorState={editorState}
@@ -54,7 +48,6 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     keyBindingFn={(event) => handleKeyBinding({
       event,
       state: editorState,
-      handleOnChangeEditorState: handleChangeEditorState,
     })}
     onChange={(newEditorState) => handleOnChange(newEditorState)}
     handleKeyCommand={(command, state) => handleKeyCommand(command, state, handleOnChange)}

@@ -23,6 +23,7 @@ export interface User {
 }
 
 export interface Company {
+  _id?: string;
   companyID?: string;
   photos?: string [];
   description?: string;
@@ -182,8 +183,10 @@ export interface LoginValue {
   access: Access[] | [];
   userProfile: Profile | {};
   extendedUser: ExtendedUser | {};
-  extendedCompany: ExtendedCompany | {};
+  extendedCompany: ExtendedCompany;
 }
+
+export type LoginValueType = LoginValue;
 
 export interface Notification {
   variant: VariantType;
