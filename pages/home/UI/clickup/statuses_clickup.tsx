@@ -20,7 +20,6 @@ interface InitProps {
 const TaskStatus = (props: InitProps) => {
 
   const { taskStatus, listTasks, user, companyID, departmentID, showTask }: InitProps = props;
-
   const style = taskStatus?.title?.split(' ').join('-').toLowerCase();
 
   const GenerateTasks = () => {

@@ -13,22 +13,17 @@ const BoardTasks: FunctionComponent = () => {
   const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
   const userProfile = useSelector((state: RootStateOrAny) => state.auth);
   const loading = taskStatuses.loading;
-  const [companyID, setCompanyID] = useState('');
-  const [departmentID, setDepartmentID] =  useState('');
+  const companyID = userProfile?.company?._id;
+  const departmentID = userProfile?.department?._id;
   const [showTask, setShowTask] = useState('me');
 
   useEffect(() => {
-    if (checkArray(userProfile.access)) {
-      setCompanyID(userProfile.access[0]?.companyID);
-      setDepartmentID(userProfile.access[0]?.departmentID);
-    }
-
     void fetchData();
-  }, [companyID, departmentID]);
+  }, []);
 
   const fetchData = () => {
-    dispatch(getTaskStatusThunkAction(companyID, departmentID));
-    dispatch(getTasksByUserThunkAction(companyID, departmentID, userProfile));
+    dispatch(getTaskStatusThunkAction());
+    dispatch(getTasksByUserThunkAction());
   };
 
   const handleShowMe = (text) => {

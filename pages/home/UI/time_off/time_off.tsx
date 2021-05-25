@@ -1,4 +1,3 @@
-
 import { Box, Typography } from '@material-ui/core';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,7 +22,6 @@ const TimeOffTab: FunctionComponent = () => {
   const dispatch = useDispatch();
   const authState = useSelector((state: RootState) => state?.auth);
   const userID = authState?.extendedUser?.userID;
-
   const {
     isAdmin,
     managerCompanyIDs,
