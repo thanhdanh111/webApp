@@ -183,6 +183,7 @@ export interface LoginValue {
   userProfile: Profile | {};
   extendedUser: ExtendedUser | {};
   extendedCompany: ExtendedCompany | {};
+  department: Department | {};
 }
 
 export interface Notification {
