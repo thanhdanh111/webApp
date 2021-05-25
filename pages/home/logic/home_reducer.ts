@@ -87,9 +87,12 @@ export  const taskStatusesReducer = (state = initialState, action) => {
   }
 };
 
-export const getTaskStatusThunkAction = (companyID, departmentID) => async (dispatch) => {
+export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
+    const authState = getState().auth;
+    const companyID = authState?.extendedCompany?.companyID?._id;
+    const departmentID = authState?.department?._id;
 
     if (!token || !companyID) {
       await dispatch(hideLoaderListUser());
@@ -123,11 +126,15 @@ export const getTaskStatusThunkAction = (companyID, departmentID) => async (disp
   }
 };
 
-export const getTasksByUserThunkAction = (companyID, departmentID, user) => async (dispatch) => {
+export const getTasksByUserThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
+    const authState = getState().auth;
+    const companyID = authState?.extendedCompany?.companyID?._id;
+    const departmentID = authState?.department?._id;
+    const userID = authState?.userID;
 
-    if (!token || !companyID || !user?.userID) {
+    if (!token || !companyID || !userID) {
       return;
     }
     const res = await axios.get(`${config.BASE_URL}/tasks`,
@@ -139,7 +146,7 @@ export const getTasksByUserThunkAction = (companyID, departmentID, user) => asyn
         params: {
           companyID,
           departmentID,
-          userID: user.userID,
+          userID,
         },
       });
 
