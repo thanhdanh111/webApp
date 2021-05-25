@@ -1,4 +1,5 @@
 import { EditorState } from 'draft-js';
+import { DocProject, PageContent } from './docs_reducer';
 
 export enum DocsActionTypes {
   DisplayToolbar = 'DisplayToolbar',
@@ -35,7 +36,16 @@ export const updateOnFocusing = ({ currentIndex }: UpdateOnFocusing) => {
   };
 };
 
-export const updateDocs = ({ data }) => {
+interface UpdateDocs {
+  docProjects?: object[];
+  loading?: boolean;
+  selectedDocProject?: DocProject;
+  selectedPage?: PageContent;
+  title?: string;
+  editorState?: EditorState;
+}
+
+export const updateDocs = (data: UpdateDocs) => {
   return {
     data,
     type: DocsActionTypes.UpdateDocs,

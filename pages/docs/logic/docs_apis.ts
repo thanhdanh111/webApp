@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { LoginValueType, Token } from 'helpers/type';
+import { Token } from 'helpers/type';
 import { DocsValueType } from './docs_reducer';
 import { convertToRaw } from 'draft-js';
 import { updateDocs } from './docs_actions';
+import { getDesiredChildrenIntoDesiredParents } from '../../../helpers/get_desired_children_into_desired_parents';
 
 const blockApiModel = (props) => {
   return {
     ...props,
-    key: '',
     data: '',
   };
 };
@@ -17,45 +17,20 @@ export const saveDocument = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
     const { title, editorState, selectedDocProject }: DocsValueType = getState()?.docs;
-    const { extendedCompany }: LoginValueType = getState()?.auth;
-    const companyID = extendedCompany?.companyID?._id;
+    const companyID = selectedDocProject?.companyID?._id;
+    const docProjectID = selectedDocProject?._id;
 
-    if (!title || !companyID) {
-
-      return;
-    }
-
-    dispatch(updateDocs({ data: { loading: true } }));
-
-    let newDocProject;
-
-    if (!selectedDocProject || !selectedDocProject?._id) {
-      newDocProject = await axios.post(
-        `${config.BASE_URL}/docProjects`,
-        {
-          title,
-          companyID,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-    }
-
-    const newDocProjectID = newDocProject?.data?._id;
-
-    if (newDocProject && !newDocProjectID) {
-      dispatch(updateDocs({ data: { loading: false } }));
+    if (!title || !companyID || !docProjectID) {
 
       return;
     }
+
+    dispatch(updateDocs({ loading: true }));
 
     const rawBlocks = convertToRaw(editorState?.getCurrentContent());
 
     await axios.post(
-      `${config.BASE_URL}/docProjects/${newDocProjectID ?? selectedDocProject?._id}/docPages`,
+      `${config.BASE_URL}/docProjects/${docProjectID}/docPages`,
       {
         title,
         companyID,
@@ -68,9 +43,9 @@ export const saveDocument = () => async (dispatch, getState) => {
         },
       });
 
-    dispatch(updateDocs({ data: { loading: false } }));
+    dispatch(updateDocs({ loading: false }));
   } catch (error) {
-    dispatch(updateDocs({ data: { loading: false } }));
+    dispatch(updateDocs({ loading: false }));
   }
 };
 
@@ -78,7 +53,22 @@ export const getDocProjects = () => async (dispatch) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
 
-    dispatch(updateDocs({ data: { loading: true } }));
+    dispatch(updateDocs({ loading: true }));
+
+    const docPages = await axios.get(`${config.BASE_URL}/docPages`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (!docPages?.data?.list?.length) {
+      dispatch(updateDocs({ loading: false }));
+
+      return;
+    }
 
     const docProjects = await axios.get(`${config.BASE_URL}/docProjects`,
       {
@@ -86,16 +76,44 @@ export const getDocProjects = () => async (dispatch) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
+      },
+    );
 
-    if (!docProjects?.data?.list?.length) {
-      dispatch(updateDocs({ data: { loading: false } }));
+    const projectsWithoutPages: object[] = [];
 
-      return;
+    const docPagesIntoDocProjects = getDesiredChildrenIntoDesiredParents({
+      children: docPages?.data?.list,
+      fieldsOfParent: ['_id', 'title', 'companyID'],
+      fieldsOfChild: ['_id', 'title', 'pageContent'],
+      parentFieldID: '_id',
+      parentFieldInChild: 'docProjectID',
+      childName: 'pages',
+    });
+
+    if (docProjects?.data?.list?.length) {
+      const filteredProjectsHavePages = docPagesIntoDocProjects.desiredParentsIndice;
+
+      for (const docProject of docProjects?.data?.list) {
+        const projectID = docProject?._id;
+        const invalidProject = !projectID || !docProject?.title || !docProject?.companyID;
+        const cannotContinue = invalidProject || typeof filteredProjectsHavePages[projectID] === 'number';
+
+        if (cannotContinue) {
+
+          continue;
+        }
+
+        projectsWithoutPages.push({
+          title: docProject.title,
+          _id: projectID,
+          companyID: docProject.companyID,
+          pages: [],
+        });
+      }
     }
 
-    dispatch(updateDocs({ data: { loading: false, docProjects: docProjects.data.list } }));
+    dispatch(updateDocs({ loading: false, docProjects: [...docPagesIntoDocProjects?.desiredParents, ...projectsWithoutPages] }));
   } catch (error) {
-    dispatch(updateDocs({ data: { loading: false } }));
+    dispatch(updateDocs({ loading: false }));
   }
 };

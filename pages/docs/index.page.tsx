@@ -35,7 +35,7 @@ const DocsPage = () => {
       return;
     }
 
-    dispatch(updateDocs({ data: { title: event.target.value } }));
+    dispatch(updateDocs({ title: event.target.value }));
   }
 
   function handleSave() {
@@ -45,7 +45,7 @@ const DocsPage = () => {
   return <div className='docs-page' >
     <PrimaryButtonUI disabled={loading} title='Save' handleClick={handleSave}/>
     <Input
-      defaultValue={title}
+      value={title}
       className='docs-page--title'
       disableUnderline
       autoFocus

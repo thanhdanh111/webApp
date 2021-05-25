@@ -1,5 +1,6 @@
 import { DocsActionTypes } from './docs_actions';
 import { EditorState } from 'draft-js';
+import { Company } from 'helpers/type';
 
 interface DocsValue {
   needDisplay: boolean;
@@ -11,6 +12,7 @@ interface DocsValue {
   selectedDocProject: DocProject;
   docProjects: DocProject[];
   loading: boolean;
+  selectedPage?: PageContent;
 }
 
 interface CreatedBy {
@@ -26,14 +28,21 @@ interface CreatedBy {
   profilePhoto?: string;
 }
 
-interface DocProject {
+export interface PageContent {
+  pageContent?: string;
+  title?: string;
+  _id?: string;
+}
+
+export interface DocProject {
   _id?: string;
   title?: string;
   createdBy?: CreatedBy;
-  companyID?: string;
+  companyID?: Company;
   departmentID?: string;
   userIDs?: string[];
   documentPicture?: string;
+  pages?: PageContent[];
 }
 
 const initialState: DocsValue = {
@@ -42,6 +51,7 @@ const initialState: DocsValue = {
   editorKeys: [],
   editorState: null,
   title: '',
+  selectedPage: {},
   selectedDocProject: {},
   docProjects: [],
   loading: false,
