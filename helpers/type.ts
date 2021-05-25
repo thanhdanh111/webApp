@@ -169,12 +169,12 @@ interface ApiKey {
 }
 
 interface ExtendedCompany {
-  companyID: Company;
-  slackToken: string;
-  createdBy: string;
-  createdAt: string;
-  updatedAt: string;
-  apiKey: ApiKey;
+  companyID?: Company;
+  slackToken?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  apiKey?: ApiKey;
 }
 
 export interface LoginValue {
