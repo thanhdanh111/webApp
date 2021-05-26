@@ -4,17 +4,24 @@ import {  Button, Container, MenuItem, Typography } from '@material-ui/core';
 import moment from 'moment';
 import { NotificationTypeState } from 'helpers/type';
 import UserAvatar from '@components/user_avatar/info_user';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { updateUnreadNotificationMiddleware } from 'pages/users/logic/users_reducer';
+
 import { isAdminOrManagerUser } from 'helpers/check_role_user';
-import { RootStateOrAny, useSelector } from 'react-redux';
 import { getEntityName } from 'helpers/check_type_entity_name';
+
 const NotificationItemUI: FunctionComponent<NotificationTypeState> = (props: NotificationTypeState) => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   const name = props.createdBy && `${props?.createdBy.firstName} ${props?.createdBy.lastName}`;
   const time = moment(props.createdAt).format('DD/MM/YYYY HH:mm');
+  const notificationID = props._id;
+
   const read = props.isRead ? 'read' : 'unread';
   const userProfile = useSelector((state: RootStateOrAny) => state.auth);
   const checkRole = isAdminOrManagerUser(userProfile.access, userProfile.access[0]?.companyID, userProfile[0]?.departentID);
   const handleClickOpen = () => {
+    dispatch(updateUnreadNotificationMiddleware(notificationID, true));
     setOpen(true);
   };
   const handleClose = () => {
@@ -23,7 +30,11 @@ const NotificationItemUI: FunctionComponent<NotificationTypeState> = (props: Not
 
   return(
     <div>
-      <MenuItem className={`${read} item-drop action-drop item-switch`} color='primary' onClick={handleClickOpen}>
+      <MenuItem
+        className={`${read} item-drop action-drop item-switch`}
+        color='primary'
+        onClick={handleClickOpen}
+      >
         <div className='notification-info'>
           <Container className='notification-info-img'>
             {props.createdBy ? <UserAvatar style='notification-img' alt='notification user' user={props.createdBy} /> : ''}
