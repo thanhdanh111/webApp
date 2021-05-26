@@ -94,8 +94,9 @@ export interface UsersData {
   totalCount: number;
   loadingList: boolean;
   status: string;
-  limit: number;
-  limitShowNotification: number;
+  userLimit: number;
+  notificationLimit: number;
+  selectNotification: NotificationTypeState;
 }
 
 export interface ParamGetUser {
