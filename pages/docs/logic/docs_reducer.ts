@@ -13,6 +13,8 @@ interface DocsValue {
   docProjects: DocProject[];
   loading: boolean;
   selectedPage?: PageContent;
+  shouldCallApi: boolean;
+  storeProjectsIndice: object;
 }
 
 interface CreatedBy {
@@ -55,6 +57,8 @@ const initialState: DocsValue = {
   selectedDocProject: {},
   docProjects: [],
   loading: false,
+  shouldCallApi: true,
+  storeProjectsIndice: {},
 };
 
 export type DocsValueType = DocsValue;

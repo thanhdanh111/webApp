@@ -7,20 +7,27 @@ import HomeIcon from '@material-ui/icons/Home';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDocProjects } from '../logic/docs_apis';
+import { createNewDocProject, getDocProjects } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
 import { DocsValueType } from '../logic/docs_reducer';
 import { updateDocs } from '../logic/docs_actions';
 import { convertFromRaw, EditorState } from 'draft-js';
+import CreateNewProjectDialog from './docs_new_project';
 
 const DocsTreeView = () => {
   const dispatch = useDispatch();
-  const { docProjects }: DocsValueType = useSelector((state: RootState) => state.docs);
+  const { docProjects, shouldCallApi }: DocsValueType = useSelector((state: RootState) => state.docs);
   const router = useRouter();
 
   useEffect(() => {
+    if (!shouldCallApi) {
+
+      return;
+    }
+
     dispatch(getDocProjects());
-  }, []);
+    dispatch(updateDocs({ shouldCallApi: false }));
+  }, [shouldCallApi]);
 
   async function backToHome() {
 
@@ -28,11 +35,17 @@ const DocsTreeView = () => {
   }
 
   function onClickProject(project) {
-    dispatch(updateDocs({ selectedDocProject: project }));
+    dispatch(updateDocs({
+      selectedDocProject: project,
+      selectedPage: {},
+      editorState: EditorState.createEmpty(),
+      title: '',
+    }));
   }
 
   function onClickPage(page) {
     const convertedBlocks = JSON.parse(page?.pageContent)?.map((block) => {
+
       return { ...block, data: {} };
     });
 
@@ -43,8 +56,18 @@ const DocsTreeView = () => {
         EditorState.createEmpty(),
         newContentState,
       ),
+      selectedPage: page,
       title: page?.title,
     }));
+  }
+
+  function handleCreate(name, handleClose) {
+    if (!name || !name?.length) {
+      return;
+    }
+
+    dispatch(createNewDocProject({ projectName: name }));
+    handleClose();
   }
 
   function showListTreeOfDocProjects(project, index) {
@@ -86,6 +109,7 @@ const DocsTreeView = () => {
       >
         {docProjects.map(showListTreeOfDocProjects)}
       </TreeView>
+      <CreateNewProjectDialog handleCreate={handleCreate}/>
     </>
   );
 };

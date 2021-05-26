@@ -36,7 +36,7 @@ const NotificationsUI = () => {
 
     const generateNotification = notifications.list.map((item) => {
       return (
-        <NotificationItemUI key={item._id} {...item}/>
+        <NotificationItemUI key={item?._id} {...item}/>
       );
     });
 

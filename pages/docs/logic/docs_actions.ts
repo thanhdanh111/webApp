@@ -43,6 +43,8 @@ interface UpdateDocs {
   selectedPage?: PageContent;
   title?: string;
   editorState?: EditorState;
+  shouldCallApi?: boolean;
+  storeProjectsIndice?: object;
 }
 
 export const updateDocs = (data: UpdateDocs) => {

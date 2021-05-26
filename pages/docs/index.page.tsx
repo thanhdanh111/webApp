@@ -8,7 +8,7 @@ import { DocsValueType } from './logic/docs_reducer';
 import { handleToolbarActions } from './logic/docs_inline_toolbar_actions';
 import { Input } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { saveDocument } from './logic/docs_apis';
+import { createNewPage, savePage } from './logic/docs_apis';
 
 const DocsPage = () => {
   const dispatch = useDispatch();
@@ -18,7 +18,9 @@ const DocsPage = () => {
     editorState,
     title,
     loading,
+    selectedPage,
   }: DocsValueType = useSelector((state: RootState) => state?.docs);
+  const onEditPage = selectedPage?._id || selectedPage?.title;
 
   function onClickOptionInToolbar(action) {
     if (!action) {
@@ -38,12 +40,18 @@ const DocsPage = () => {
     dispatch(updateDocs({ title: event.target.value }));
   }
 
-  function handleSave() {
-    dispatch(saveDocument());
+  function handleClickHeadingButton() {
+    if (onEditPage) {
+      dispatch(savePage());
+
+      return;
+    }
+
+    dispatch(createNewPage());
   }
 
   return <div className='docs-page' >
-    <PrimaryButtonUI disabled={loading} title='Save' handleClick={handleSave}/>
+    <PrimaryButtonUI disabled={loading} title={onEditPage ? 'Save' : 'Create'} handleClick={handleClickHeadingButton}/>
     <Input
       value={title}
       className='docs-page--title'
