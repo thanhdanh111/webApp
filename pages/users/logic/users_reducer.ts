@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { hideLoader,  search, showLoader, pagination, hasNoNotification, getNotificationsAction } from './users_actions';
+import { search, setLoading, pagination, hasNoNotification, getNotificationsAction, updateUnreadNotifications } from './users_actions';
 import { UsersData, HeadCell, ParamGetUser, Data, UserAccess } from '../../../helpers/type';
 import { config } from 'helpers/get_config';
 import { useEffect, useState } from 'react';
@@ -31,21 +31,29 @@ const initialState: UsersData = {
   loadingList: true,
   totalCount: 0,
   status: 'string',
-  limit: 5,
-  limitShowNotification: 10,
+  userLimit: 5,
+  notificationLimit: 10,
+  selectNotification: {
+    _id: '',
+    isRead: false,
+    body: '',
+    clickAction: '',
+    targetEntityName: '',
+    event: '',
+    title: '',
+    createdAt: '',
+    receiverUID: '',
+    companyID: '',
+    targetID: '',
+  },
 };
 
 export const usersReducer = (state = initialState, action) => {
   switch (action.type){
-    case usersAction.SHOW_LOADER_LIST:
+    case usersAction.SET_LOADING:
       return {
         ...state,
-        loadingList: true,
-      };
-    case usersAction.HIDE_LOADER_LIST:
-      return {
-        ...state,
-        loadingList: false,
+        loadingList: action.payload,
       };
     case usersAction.PAGINATION:
       const listUser = [...state.list, ...action.payload.list];
@@ -63,7 +71,7 @@ export const usersReducer = (state = initialState, action) => {
       };
     case usersAction.SEARCH:
       let newCursor = action.payload.cursor;
-      if (action.payload.totalCount <= state.limit) {
+      if (action.payload.totalCount <= state.userLimit) {
         newCursor = 'END';
       }
 
@@ -90,11 +98,20 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         notifications: {
           cursor: cursorNotification,
-          list: listNotification,
+          list: [...state.notifications.list, ...action.payload.list],
           totalCount: action.payload.totalCount,
           totalUnread: action.payload.totalUnread,
         },
         hasNoData: true,
+      };
+    case usersAction.UPDATE_NOTIFICATION:
+      return {
+        ...state,
+        selectNotification: action.payload.selectNotification,
+        notifications: {
+          ...state.notifications,
+          totalUnread: action.payload.totalUnread,
+        },
       };
     default:
       return state;
@@ -103,18 +120,18 @@ export const usersReducer = (state = initialState, action) => {
 
 export const getPaginationThunkAction = () => async (dispatch, getState) => {
   try {
-    const state = getState();
-    const companyID = '6048780998f1360008f5f883';
+    const authState = getState().auth;
     const token = localStorage.getItem('access_token');
-    const cursor = state.users.cursor;
-    const limit = state.users.limit;
+    const cursor = getState().users?.cursor;
+    const userLimit = getState().users?.userLimit;
+    const companyID = authState?.extendedCompany?.companyID?._id;
 
     if (cursor === 'END' || !token || !companyID) {
       return;
     }
 
     const res =
-       await axios.get(`${config.BASE_URL}/userAccesses?companyID=${companyID}&limit=${limit}&cursor=${cursor}`, {
+       await axios.get(`${config.BASE_URL}/userAccesses?companyID=${companyID}&limit=${userLimit}&cursor=${cursor}`, {
          headers: {
            'Content-Type': 'application/json',
            Authorization: `Bearer ${token}`,
@@ -122,13 +139,13 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
        });
 
     if (res.data.totalCount === 0){
-      await dispatch(showLoader());
+      await dispatch(setLoading(true));
 
       return;
     }
 
     await dispatch(pagination(res.data));
-    await dispatch(hideLoader());
+    await dispatch(setLoading(false));
   } catch (error) {
     throw error;
   }
@@ -136,18 +153,16 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
 
 export const getSearchAction = (fullName) => async (dispatch, getState) => {
   try {
-    const state = getState();
+    const authState = getState().auth;
     const token = localStorage.getItem('access_token');
-    const companyID = '6048780998f1360008f5f883';
-    const limit = state.users.limit;
+    const companyID = authState?.extendedCompany?.companyID?._id;
 
-    if (!token || !token.length || !companyID) {
+    if (!token || !companyID) {
       return;
     }
 
     const params: ParamGetUser = {
       companyID,
-      limit,
       fullName,
     };
 
@@ -161,7 +176,7 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
      });
 
     await dispatch(search(res.data));
-    await dispatch(hideLoader());
+    await dispatch(setLoading(false));
   } catch (error) {
     throw error;
   }
@@ -214,16 +229,17 @@ export const renderData = (users: UserAccess[]) => {
   });
 };
 
-export const getNotificationMiddleware = (receiverID) => async (dispatch, getState) => {
+export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
-    await dispatch(showLoader());
+    await dispatch(setLoading(true));
 
-    const state = getState();
+    const authState = getState().auth;
+    const receiverID = authState?.userID;
     const token = localStorage.getItem('access_token');
-    const cursor = state?.users?.notifications?.cursor;
-    const limit = state?.users?.limitShowNotification;
+    const cursor = getState()?.users?.notifications?.cursor;
+    const notificationLimit = getState()?.users?.notificationLimit;
 
-    if (!token || !receiverID) {
+    if (!token || !receiverID || cursor === 'END') {
       return;
     }
 
@@ -234,18 +250,50 @@ export const getNotificationMiddleware = (receiverID) => async (dispatch, getSta
       },
       params: {
         cursor,
-        limit,
         receiverID,
+        limit: notificationLimit,
       },
     });
 
     if (!res.data.totalCount || !res.data.list || !res.data.list.length) {
       await dispatch(hasNoNotification());
-      await dispatch(hideLoader());
+      await dispatch(setLoading(false));
     }
 
     await dispatch(getNotificationsAction(res.data));
-    await dispatch(hideLoader());
+    await dispatch(setLoading(true));
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateUnreadNotificationMiddleware = (notificationID: string, isRead: boolean) => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    const token = localStorage.getItem('access_token');
+
+    if (!token || !notificationID) {
+      return;
+    }
+
+    const res = await axios.put(`${config.BASE_URL}/notifications/${notificationID}`,
+      {
+        isRead,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const resultUpdateUnreadNotification = {
+      selectNotification: res.data,
+      totalUnread: state?.notifications?.totalUnread - 1,
+    };
+
+    dispatch(updateUnreadNotifications(resultUpdateUnreadNotification));
   } catch (error) {
     throw error;
   }

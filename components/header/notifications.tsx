@@ -12,18 +12,16 @@ import { DisappearedLoading } from 'react-loadingg';
 
 const NotificationsUI = () => {
   const dispatch = useDispatch();
-  const { notifications, loadingList, hasNoData  }: UsersData = useSelector((state: RootState) => state.users);
-  const userID = useSelector((state: RootState) => state?.auth?.userID);
-  const emptyState = !loadingList && !notifications?.list?.length && hasNoData;
+  const { notifications, hasNoData  }: UsersData = useSelector((state: RootState) => state.users);
+  const badgeContent = (notifications.totalUnread) ? notifications.totalUnread : 0;
 
   useEffect(() => {
     return void fetchData();
-  }, [userID]);
+  }, []);
 
   const fetchData = () => {
-    dispatch(getNotificationMiddleware(userID));
+    dispatch(getNotificationMiddleware());
   };
-
   const generatedData = () => {
 
     if (!notifications?.list?.length && hasNoData) {
@@ -37,7 +35,7 @@ const NotificationsUI = () => {
 
     const generateNotification = notifications.list.map((item) => {
       return (
-        <NotificationItemUI key={item._id} {...item}/>
+        <NotificationItemUI key={item?._id} {...item}/>
       );
     });
 
@@ -50,27 +48,27 @@ const NotificationsUI = () => {
         <React.Fragment>
         <Button variant='contained' color='primary' {...bindTrigger(popupState)} className='drop-notification'>
             <IconButton aria-label='notification'>
-                <Badge badgeContent={notifications.totalUnread ? notifications.totalUnread : 0} color='error'>
+                <Badge badgeContent={badgeContent} color='error'>
                     <NotificationsIcon className='btn-appbar'/>
                 </Badge>
             </IconButton>
         </Button>
         <Menu {...bindMenu(popupState)} className='menu-drop-notification'>
-            <MenuItem className='label-notification'>
-                <Typography className='div-label-notification'>
-                    Notifications
-                </Typography>
-            </MenuItem>
-            <InfiniteScroll
-              dataLength={notifications.list.length}
-              hasMore={notifications.list.length < notifications.totalCount}
-              next={fetchData}
-              loader={<DisappearedLoading color={'#67cb48'}/>}
-              scrollThreshold={0.7}
-              height={(emptyState || loadingList) ? 0 : 500}
-            >
+          <MenuItem className='label-notification'>
+              <Typography className='div-label-notification'>
+                  Notifications
+              </Typography>
+          </MenuItem>
+          <InfiniteScroll
+            dataLength={notifications.list.length}
+            hasMore={notifications.list.length < notifications.totalCount}
+            next={fetchData}
+            loader={<DisappearedLoading color={'#67cb48'}/>}
+            scrollThreshold={0.5}
+            height={500}
+          >
             {generatedData()}
-            </InfiniteScroll>
+          </InfiniteScroll>
         </Menu>
         </React.Fragment>
     )}

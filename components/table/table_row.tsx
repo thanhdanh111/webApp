@@ -69,7 +69,7 @@ const TableRowBase = (props: InitialProps) => {
         {
           hadExpandableRows &&
           <TableCell padding='checkbox' className='cell-contain checkbox-cell'>
-            <IconButton className='btn-expanded'size='small' onClick={() => setOpen(!open)}>
+            <IconButton className='btn-expanded' size='small' onClick={() => setOpen(!open)}>
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
