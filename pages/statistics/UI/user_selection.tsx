@@ -11,12 +11,11 @@ import { setUserID } from '../logic/statistics_actions';
 const UserSelection: FunctionComponent = () => {
   const dispatch = useDispatch();
   const users = useSelector((state: RootStateOrAny) => state.users);
-  const cursor = users.cursor;
+  const cursor = users?.cursor;
   const [user, setUser] = useState('');
 
   useEffect(() => {
-
-    void fetchDataUsers();
+    fetchDataUsers();
   }, []);
 
   const usersList = users && users.list && Array.isArray(users.list)

@@ -29,8 +29,12 @@ const ListUsers: FunctionComponent = () => {
       dispatch(getSearchAction(debouncedSearchTerm));
     }
 
-    return void fetchDataUsers();
+    return;
   }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    fetchDataUsers();
+  }, []);
 
   const usersList = users && users.list && Array.isArray(users.list)
     ? renderData(users.list) : [];
@@ -75,7 +79,7 @@ const ListUsers: FunctionComponent = () => {
                     <BaseTable
                       headCells={headCells}
                       data={getData()}
-                      length={users.totalCount}
+                      length={users?.totalCount}
                       loading={loading}
                       actions={actionList}
                       fetchData={fetchDataUsers}

@@ -1,14 +1,9 @@
 import { usersAction } from './users_type_action';
 
-export const showLoader = () => {
+export const setLoading = (loading: boolean) => {
   return {
-    type: usersAction.SHOW_LOADER_LIST,
-  };
-};
-
-export const hideLoader = () => {
-  return {
-    type: usersAction.HIDE_LOADER_LIST,
+    type: usersAction.SET_LOADING,
+    payload: loading,
   };
 };
 
@@ -35,6 +30,13 @@ export const hasNoNotification = () => {
 export const getNotificationsAction = (res: object) => {
   return {
     type: usersAction.GET_NOTIFICATIONS,
+    payload: res,
+  };
+};
+
+export const updateUnreadNotifications = (res: object) => {
+  return {
+    type: usersAction.UPDATE_NOTIFICATION,
     payload: res,
   };
 };
