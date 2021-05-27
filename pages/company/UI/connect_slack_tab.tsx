@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import {
-  Avatar,
-  Box, TextField, Typography,
+  Box, TextField,
 } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,15 +8,21 @@ import { RootState } from 'redux/reducers_registration';
 import { sendSlackCompanyToken } from '../logic/company_apis';
 import { CompanyStateType } from '../logic/company_reducer';
 import { fillingToken } from '../logic/company_actions';
-import BusinessIcon from '@material-ui/icons/Business';
+import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 
 const ConnectSlackTabUi: FunctionComponent = ({}) => {
   const dispatch = useDispatch();
   const { onSendingToken, slackToken }: CompanyStateType = useSelector((state: RootState) => state.company);
-  const auth = useSelector((state: RootState) => state.auth);
+  const authState =  useSelector((state: RootState) => state.auth);
+  const {
+    isAdmin,
+    managerCompanyIDs,
+    managerDepartmentIDs,
+  }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
+  const loadMemberData = isAdmin || managerCompanyIDs?.length > 0 || managerDepartmentIDs?.length > 0;
 
   function handleSavingChanges() {
-    if (onSendingToken || !slackToken) {
+    if (!loadMemberData || onSendingToken || !slackToken) {
       return;
     }
 
@@ -40,32 +45,15 @@ const ConnectSlackTabUi: FunctionComponent = ({}) => {
       return 'Sending...';
     }
 
-    if (auth?.extendedCompany?.slackToken) {
+    if (authState?.extendedCompany?.slackToken) {
       return 'Update';
     }
 
     return 'Send';
   }
 
-  return <Box className='password-tab'>
-    <Typography
-      variant='h4'
-      className='slack-tab--company-title'
-    >
-      {auth?.extendedCompany?.companyID?.name ?? 'My Company'}
-    </Typography>
+  return (
     <Box className='connect-slack-tab'>
-      <Avatar
-        variant='rounded'
-        src={auth?.extendedCompany?.companyID?.photos?.[0]}
-        style={{
-          height: '55px',
-          width: '55px',
-          backgroundColor: '#00AB55',
-        }}
-      >
-        <BusinessIcon />
-      </Avatar>
       <form noValidate autoComplete='off' className='text-field-form' >
         <TextField
           value={slackToken}
@@ -75,14 +63,16 @@ const ConnectSlackTabUi: FunctionComponent = ({}) => {
           onChange={(event) => handleFillingToken(event)}
           variant='outlined'
           label='Please enter your SLACK token here'
+          disabled={(!loadMemberData) ? true : false}
         />
       </form>
       <PrimaryButtonUI
         handleClick={() => handleSavingChanges()}
         title={handleButtonContent()}
+        extendClass={(!loadMemberData) ? 'hide-btn-send' : ''}
       />
     </Box>
-  </Box>;
+  );
 };
 
 export default ConnectSlackTabUi;
