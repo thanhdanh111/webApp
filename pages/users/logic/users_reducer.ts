@@ -48,6 +48,7 @@ const initialState: UsersData = {
   },
 };
 
+// tslint:disable-next-line: cyclomatic-complexity
 export const usersReducer = (state = initialState, action) => {
   switch (action.type){
     case usersAction.SET_LOADING:
@@ -87,7 +88,7 @@ export const usersReducer = (state = initialState, action) => {
         hasNoData: true,
       };
     case usersAction.GET_NOTIFICATIONS:
-      const listNotification = [...state.notifications.list, ...action.payload.list];
+      const listNotification = [...action.payload.list, ...state.notifications.list];
       let cursorNotification = action.payload.cursor;
 
       if (listNotification >= action.payload.totalCount) {
@@ -98,7 +99,7 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         notifications: {
           cursor: cursorNotification,
-          list: [...state.notifications.list, ...action.payload.list],
+          list: [...action.payload.list, ...state.notifications.list],
           totalCount: action.payload.totalCount,
           totalUnread: action.payload.totalUnread,
         },
@@ -111,6 +112,15 @@ export const usersReducer = (state = initialState, action) => {
         notifications: {
           ...state.notifications,
           totalUnread: action.payload.totalUnread,
+        },
+      };
+    case usersAction.GET_NOTIFICATIONS_FCM:
+      return {
+        ...state,
+        notifications: {
+          ...state.notifications,
+          list: [action.payload, ...state.notifications.list],
+          totalCount: state.notifications.totalCount + 1,
         },
       };
     default:

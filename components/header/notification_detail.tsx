@@ -18,8 +18,10 @@ const NotificationItemUI: FunctionComponent<NotificationTypeState> = (props: Not
   const notificationID = props._id;
 
   const read = props.isRead ? 'read' : 'unread';
-  const userProfile = useSelector((state: RootStateOrAny) => state.auth);
-  const checkRole = isAdminOrManagerUser(userProfile.access, userProfile.access[0]?.companyID, userProfile[0]?.departentID);
+  const authState = useSelector((state: RootStateOrAny) => state.auth);
+  const companyID = authState.extendedCompany?.companyID?._id;
+  const departmentID = authState.department?._id;
+  const checkRole = isAdminOrManagerUser(authState.access, companyID, departmentID);
   const handleClickOpen = () => {
     dispatch(updateUnreadNotificationMiddleware(notificationID, true));
     setOpen(true);

@@ -61,7 +61,6 @@ const DocsPage = () => {
       value={title}
       className='docs-page--title'
       disableUnderline
-      autoFocus
       onChange={(event) => onChangeTitle(event)}
       placeholder='UNTITLED'
       multiline={false}

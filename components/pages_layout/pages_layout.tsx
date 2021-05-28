@@ -31,7 +31,6 @@ const Layout = ({ children, withoutPaths }) => {
           </div>
         ) : (
           <>
-            <div className='main-layout--children-toolbar' />
             {children}
           </>
         )}

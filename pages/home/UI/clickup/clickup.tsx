@@ -11,10 +11,10 @@ import { Typography } from '@material-ui/core';
 const BoardTasks: FunctionComponent = () => {
   const dispatch = useDispatch();
   const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
-  const userProfile = useSelector((state: RootStateOrAny) => state.auth);
+  const authState = useSelector((state: RootStateOrAny) => state.auth);
   const loading = taskStatuses.loading;
-  const companyID = userProfile?.company?._id;
-  const departmentID = userProfile?.department?._id;
+  const companyID = authState?.extendedCompany?.companyID?._id;
+  const departmentID = authState?.department?._id;
   const [showTask, setShowTask] = useState('me');
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const BoardTasks: FunctionComponent = () => {
           <TaskStatus
             key={taskStatus._id}
             taskStatus={taskStatus}
-            user={userProfile}
+            user={authState}
             companyID={companyID}
             departmentID={departmentID}
             listTasks={taskStatuses.listTasks}
