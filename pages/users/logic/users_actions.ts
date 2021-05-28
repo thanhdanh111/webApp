@@ -34,6 +34,13 @@ export const getNotificationsAction = (res: object) => {
   };
 };
 
+export const getNotificationFCM = (res: object) => {
+  return {
+    type: usersAction.GET_NOTIFICATIONS_FCM,
+    payload: res,
+  };
+};
+
 export const updateUnreadNotifications = (res: object) => {
   return {
     type: usersAction.UPDATE_NOTIFICATION,

@@ -1,6 +1,6 @@
 import { Badge, Button, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { getNotificationMiddleware } from 'pages/users/logic/users_reducer';
@@ -14,10 +14,11 @@ const NotificationsUI = () => {
   const dispatch = useDispatch();
   const { notifications, hasNoData  }: UsersData = useSelector((state: RootState) => state.users);
   const badgeContent = (notifications.totalUnread) ? notifications.totalUnread : 0;
+  const [loadData, setLoadData] = useState(false);
 
   useEffect(() => {
-    return void fetchData();
-  }, []);
+    void fetchData();
+  }, [loadData]);
 
   const fetchData = () => {
     dispatch(getNotificationMiddleware());
@@ -42,12 +43,16 @@ const NotificationsUI = () => {
     return generateNotification;
   };
 
+  const handleClickBtn = () => {
+    setLoadData(true);
+  };
+
   return (
     <PopupState variant='popover' popupId='demo-popup-menu'>
     {(popupState) => (
         <React.Fragment>
         <Button variant='contained' color='primary' {...bindTrigger(popupState)} className='drop-notification'>
-            <IconButton aria-label='notification'>
+            <IconButton aria-label='notification' onClick={handleClickBtn}>
                 <Badge badgeContent={badgeContent} color='error'>
                     <NotificationsIcon className='btn-appbar'/>
                 </Badge>

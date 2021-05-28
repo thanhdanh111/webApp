@@ -34,7 +34,7 @@ export const auth = (state = initialState, action) => {
     case LoginAction.GET_USER_DATA:
       return {
         ...state,
-        userProfile: action.payload.userProfile,
+        userProfile: action.payload?.userProfile,
         access: action.payload.access,
         userID: action.payload.userID,
         extendedUser: action.payload.extendedUser,
