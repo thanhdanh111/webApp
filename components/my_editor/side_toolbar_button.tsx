@@ -32,7 +32,10 @@ const SideToolbarButton = ({ handleOnChangeLineStyle, contentBlock, onClickSideT
         aria-describedby={open ? 'sideToolbar' : undefined}
         onClick={handlePopperOpen}
       >
-        <MoreVertIcon className='block-wrapper--icon' />
+        <MoreVertIcon
+          style={{ marginLeft: '3px', marginTop: '6px' }}
+          className='block-wrapper--icon'
+        />
       </Button>
 
       <Popper

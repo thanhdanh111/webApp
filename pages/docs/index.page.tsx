@@ -21,6 +21,7 @@ const DocsPage = () => {
     selectedPage,
   }: DocsValueType = useSelector((state: RootState) => state?.docs);
   const onEditPage = selectedPage?._id || selectedPage?.title;
+  const cannotClickButton = loading || !title?.length;
 
   function onClickOptionInToolbar(action) {
     if (!action) {
@@ -33,7 +34,7 @@ const DocsPage = () => {
   }
 
   function onChangeTitle(event) {
-    if (!event?.target?.value) {
+    if (typeof event?.target?.value !== 'string') {
       return;
     }
 
@@ -51,7 +52,11 @@ const DocsPage = () => {
   }
 
   return <div className='docs-page' >
-    <PrimaryButtonUI disabled={loading} title={onEditPage ? 'Save' : 'Create'} handleClick={handleClickHeadingButton}/>
+    <PrimaryButtonUI
+      disabled={cannotClickButton}
+      title={onEditPage ? 'Save' : 'Create'}
+      handleClick={handleClickHeadingButton}
+    />
     <Input
       value={title}
       className='docs-page--title'

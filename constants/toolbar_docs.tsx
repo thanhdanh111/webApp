@@ -42,7 +42,7 @@ export const inlineToolbarButons = [
   {
     functionality: 'unstyled',
     icon: <TextFieldsIcon />,
-    styleName: 'text',
+    styleName: 'Text',
     name: 'Text',
   },
   {
@@ -90,7 +90,7 @@ export const changeLineStyleButons = [
   {
     functionality: 'unstyled',
     icon: <TextFieldsIcon />,
-    styleName: 'NORMAL',
+    styleName: 'Text',
     name: 'Text',
   },
   {

@@ -13,10 +13,11 @@ import { DocsValueType } from '../logic/docs_reducer';
 import { updateDocs } from '../logic/docs_actions';
 import { convertFromRaw, EditorState } from 'draft-js';
 import CreateNewProjectDialog from './docs_new_project';
+import { Tooltip, IconButton } from '@material-ui/core';
 
 const DocsTreeView = () => {
   const dispatch = useDispatch();
-  const { docProjects, shouldCallApi }: DocsValueType = useSelector((state: RootState) => state.docs);
+  const { docProjects, shouldCallApi, loading }: DocsValueType = useSelector((state: RootState) => state.docs);
   const router = useRouter();
 
   useEffect(() => {
@@ -99,8 +100,27 @@ const DocsTreeView = () => {
   return (
     <>
       <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px', marginBottom: '50px' }}>
-        <ArrowBackIosIcon onClick={backToHome} style={{ width: '15px', height: '15px' }}  />
-        <HomeIcon style={{ width: '25px', height: '25px' }} color='secondary'/>
+        <Tooltip title='Back to home'>
+          <IconButton
+            style={{
+              width: '15px',
+              height: '15px',
+              marginTop: '15px',
+            }}
+            onClick={() => backToHome()}
+          >
+            <ArrowBackIosIcon
+              style={{
+                width: '15px',
+                height: '15px',
+                marginLeft: '5px',
+              }}
+            />
+          </IconButton>
+        </Tooltip>
+        <div className='docs-drawer--icon-layout'>
+          <HomeIcon color='secondary'/>
+        </div>
       </div>
       <TreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
@@ -109,7 +129,7 @@ const DocsTreeView = () => {
       >
         {docProjects.map(showListTreeOfDocProjects)}
       </TreeView>
-      <CreateNewProjectDialog handleCreate={handleCreate}/>
+      <CreateNewProjectDialog loading={loading} handleCreate={handleCreate}/>
     </>
   );
 };

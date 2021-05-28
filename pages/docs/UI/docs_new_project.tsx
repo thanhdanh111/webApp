@@ -9,7 +9,7 @@ import { Grid, IconButton, Typography, Input } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
-const CreateNewProjectDialog = ({ handleCreate })  => {
+const CreateNewProjectDialog = ({ handleCreate, loading })  => {
   const [state, setState] = React.useState({
     openDialog: false,
     name: '',
@@ -31,6 +31,7 @@ const CreateNewProjectDialog = ({ handleCreate })  => {
         component='div'
         className='docs-drawer--add-new-project'
         startIcon={<AddBoxIcon />}
+        disabled={loading}
       >
         <Typography>New Project</Typography>
       </Button>

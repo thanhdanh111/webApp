@@ -6,7 +6,6 @@ interface DocsValue {
   needDisplay: boolean;
   selectionRect: DOMRect | undefined;
   actionOnCurrent?: string;
-  editorKeys: string[];
   editorState: EditorState;
   title: string;
   selectedDocProject: DocProject;
@@ -50,7 +49,6 @@ export interface DocProject {
 const initialState: DocsValue = {
   needDisplay: false,
   selectionRect: undefined,
-  editorKeys: [],
   editorState: null,
   title: '',
   selectedPage: {},

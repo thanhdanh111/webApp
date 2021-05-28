@@ -6,13 +6,6 @@ import { convertToRaw } from 'draft-js';
 import { updateDocs } from './docs_actions';
 import { getDesiredChildrenIntoDesiredParents } from '../../../helpers/get_desired_children_into_desired_parents';
 
-const blockApiModel = (props) => {
-  return {
-    ...props,
-    data: '',
-  };
-};
-
 export const createNewPage = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
@@ -41,7 +34,7 @@ export const createNewPage = () => async (dispatch, getState) => {
       {
         title,
         companyID,
-        pageContent: rawBlocks?.blocks?.map((block) => blockApiModel(block)),
+        pageContent: rawBlocks?.blocks,
       },
       {
         headers: {
@@ -98,7 +91,7 @@ export const savePage = () => async (dispatch, getState) => {
       `${config.BASE_URL}/docProjects/${docProjectID}/docPages/${selectedPageID}`,
       {
         title,
-        pageContent: rawBlocks?.blocks?.map((block) => blockApiModel(block)),
+        pageContent: rawBlocks?.blocks,
       },
       {
         headers: {
