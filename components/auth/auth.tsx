@@ -11,11 +11,14 @@ import { useSnackbar, WithSnackbarProps } from 'notistack';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { getNotificationFCM } from 'pages/users/logic/users_actions';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { Roles } from 'constants/roles';
 
 type Token = string | null;
-const Auth = ({ children, publicPages }) => {
+const Auth = ({ children, publicPages, managerPages }) => {
   const path = window.location.pathname;
-
+  const auth = useSelector((state: RootState) => state.auth);
+  let isManager = false;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const access = useSelector((state: RootState) => state.access);
@@ -36,6 +39,7 @@ const Auth = ({ children, publicPages }) => {
       return;
     }
     checkAccessUser();
+    checkManagerAccess();
   }, [access?.access]);
 
   const getFCMToken = async () => {
@@ -76,12 +80,20 @@ const Auth = ({ children, publicPages }) => {
     const filteredAccess = access?.access?.filter((item) => {
       const isAdmin = item?.role === 'ADMIN';
       const hasPermission = item?.companyID !== null && item?.status === 'ACCEPTED';
-      if (hasPermission || isAdmin) {
+      if (!hasPermission && !isAdmin) {
 
-        return true;
+        return false;
       }
 
-      return false;
+      isManager = checkOnlyTrueInArray({
+        conditionsArray: [
+          item?.companyID === auth?.extendedCompany?.companyID?._id,
+          item?.role ===  Roles.COMPANY_MANAGER ||
+          item?.role === Roles.DEPARTMENT_MANAGER,
+        ],
+      });
+
+      return true;
     });
 
     if (filteredAccess.length <= 0) {
@@ -93,6 +105,14 @@ const Auth = ({ children, publicPages }) => {
 
   const checkAccessUser = () => {
     if (publicPages.includes(path)) {
+      return;
+    }
+
+    void router.replace('/access_denied', '/access_denied.html');
+  };
+
+  const checkManagerAccess = () => {
+    if (!managerPages.includes(path) || isManager) {
       return;
     }
 

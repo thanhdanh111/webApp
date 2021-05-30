@@ -23,6 +23,7 @@ export interface User {
 }
 
 export interface Company {
+  _id?: string;
   companyID?: string;
   photos?: string [];
   description?: string;
@@ -42,7 +43,6 @@ export interface Data {
   id: string;
   user: UserAccess;
   userName: string;
-  departments: string[];
   activeRoles: string[];
   pendingRoles: string[];
 }
@@ -51,8 +51,15 @@ export interface Access {
   _id: string;
   role: string;
   status: string;
-  companyID?: string | undefined;
-  departmentID?: string | undefined;
+  companyID?: Company;
+  departmentID?: Department;
+}
+
+export interface EditingUserInfo {
+  companyEmail?: string;
+  role?: string;
+  id?: string;
+  userName?: string;
 }
 
 export interface NotificationTypeState {
@@ -96,6 +103,8 @@ export interface UsersData {
   userLimit: number;
   notificationLimit: number;
   selectNotification: NotificationTypeState;
+  editingUserInfo: EditingUserInfo;
+  onRemovingUser: boolean;
 }
 
 export interface ParamGetUser {

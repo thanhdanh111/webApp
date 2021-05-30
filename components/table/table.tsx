@@ -68,7 +68,7 @@ const BaseTable = (props: InitialProps) => {
       notEqualCondition: 'PENDING',
     });
 
-    if (notPendingStatus || !isManager) {
+    if (itemStatus && (notPendingStatus || !isManager)) {
       return <div />;
     }
 

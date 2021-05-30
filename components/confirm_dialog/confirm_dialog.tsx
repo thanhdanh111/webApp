@@ -10,8 +10,10 @@ interface ConfirmDialog {
   handleClose: () => void;
   handleYes?: () => void;
   handleNo?: () => void;
-  status: string;
+  status?: string;
   onOpen: boolean;
+  title?: string;
+  warning?: string;
 }
 
 enum Action {
@@ -19,11 +21,19 @@ enum Action {
   REJECTED = 'REJECT',
   CONTINUE = 'CONTINUE',
   CANCEL = 'CANCEL',
+  REMOVE = 'REMOVE',
 }
 
 type ConfirmDialogType = ConfirmDialog;
 
-export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({ onOpen, status, handleClose, handleYes }) => {
+export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({
+  onOpen,
+  status = 'CONTINUE',
+  handleClose,
+  handleYes,
+  title,
+  warning,
+}) => {
 
   return (
       <Dialog
@@ -35,7 +45,7 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({ onOpen, st
         <DialogTitle>
           <div>
             <Typography style={{ fontWeight: 600 }} variant='subtitle1' color='primary' >
-              Confirm
+              {title ?? 'Confirm'}
             </Typography>
             <IconButton
               onClick={handleClose}
@@ -48,7 +58,7 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({ onOpen, st
         </DialogTitle>
         <DialogContent>
           <Typography variant='h6' gutterBottom>
-              {`Are you sure you want to ${Action[status]}?`}
+              {warning ?? `Are you sure you want to ${Action[status]}?`}
           </Typography>
         </DialogContent>
         <DialogActions className='confirm-dialog-actions'>

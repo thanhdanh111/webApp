@@ -29,11 +29,7 @@ const Layout = ({ children, withoutPaths }) => {
           <div className='main-layout-loading'>
             <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
           </div>
-        ) : (
-          <div className='main-layout--children-toolbar'>
-            {children}
-          </div>
-        )}
+        ) : children}
       </div>
     </div>
   );

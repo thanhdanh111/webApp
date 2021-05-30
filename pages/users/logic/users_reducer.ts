@@ -1,21 +1,19 @@
 import axios from 'axios';
 import { search, setLoading, pagination, hasNoNotification, getNotificationsAction, updateUnreadNotifications } from './users_actions';
-import { UsersData, HeadCell, ParamGetUser, Data, UserAccess } from '../../../helpers/type';
+import { UsersData, HeadCell, ParamGetUser, Data, UserAccess, Access } from '../../../helpers/type';
 import { config } from 'helpers/get_config';
 import { useEffect, useState } from 'react';
-import { getDepartmentsName } from '../../../helpers/get_department_name';
 import { getRole } from '../../../helpers/get_role';
 import { usersAction } from './users_type_action';
 
 export const headCells: HeadCell[] = [
   { id: 'userName', numeric: false, disablePadding: true, label: 'UserName' },
-  { id: 'departments', numeric: false, disablePadding: true, label: 'Departments' },
   { id: 'activeRoles', numeric: false, disablePadding: true, label: 'ActiveRoles' },
   { id: 'pendingRoles', numeric: false, disablePadding: true, label: 'PendingRoles' },
   { id: 'action', numeric: false, disablePadding: true, label: 'Action' },
 ];
 
-export const actionList: string[] = ['Edit', 'Delete'];
+export const actionList: string[] = ['departments', 'delete'];
 
 const initialState: UsersData = {
   cursor: '',
@@ -46,6 +44,8 @@ const initialState: UsersData = {
     companyID: '',
     targetID: '',
   },
+  editingUserInfo: {},
+  onRemovingUser: false,
 };
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -122,6 +122,11 @@ export const usersReducer = (state = initialState, action) => {
           list: [action.payload, ...state.notifications.list],
           totalCount: state.notifications.totalCount + 1,
         },
+      };
+    case usersAction.UPDATE_USERS_REDUCER:
+      return {
+        ...state,
+        ...action.data,
       };
     default:
       return state;
@@ -213,16 +218,14 @@ function createData(
   id: string,
   userName: string,
   user: UserAccess,
-  departments: string[],
   activeRoles: string[],
   pendingRoles: string[],
 ): Data {
-  return { id, userName, user, departments, activeRoles, pendingRoles };
+  return { id, userName, user, activeRoles, pendingRoles };
 }
 
 export const renderData = (users: UserAccess[]) => {
   return users.map((each: UserAccess) => {
-    const departments = getDepartmentsName(each.departmentID);
     const roles = getRole(each.accesses);
     const fullName = `${each.userID.firstName} ${each.userID.lastName}`;
     const id = each.userID._id;
@@ -232,7 +235,6 @@ export const renderData = (users: UserAccess[]) => {
       id,
       fullName,
       user,
-      departments || [],
       roles?.activeRoles || [],
       roles?.pendingRoles || [],
     );

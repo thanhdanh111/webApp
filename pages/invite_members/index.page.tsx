@@ -49,13 +49,14 @@ const InviteMembersPage: FunctionComponent = () => {
     inviteCompany,
     inviteResultInfo,
   }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
+  const accessState = useSelector((state: RootState) => state.access);
 
   const dispatch = useDispatch();
   const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
 
   useEffect(()  =>  {
     dispatch(getUserCompaniesApi());
-  }, []);
+  }, [accessState?.access]);
 
   useEffect(pushNotification, [inviteResultInfo]);
 
