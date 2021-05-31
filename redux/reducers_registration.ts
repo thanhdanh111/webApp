@@ -11,6 +11,7 @@ import { projectsReducer } from 'pages/projects/logic/projects_reducer';
 import timeOffRequestReducer from 'pages/time_off/logic/time_off_request_reducer';
 import { eventLogsReducer } from 'pages/event_logs/logic/event_log_reducer';
 import companyReducer from 'pages/company/logic/company_reducer';
+import { notificationReducer } from './common/notifications/reducer';
 
 const rootReducer = combineReducers({
   auth,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   timeOffRequest: timeOffRequestReducer,
   eventLogs: eventLogsReducer,
   company: companyReducer,
+  newNotifications: notificationReducer,
 });
 
 export default rootReducer;
