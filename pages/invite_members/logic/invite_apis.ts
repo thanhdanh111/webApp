@@ -69,11 +69,12 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
     }
 
     let companiesParams = '';
+    const usedCompanies = {};
 
     if (!isAdmin) {
       const companies: string[] = [];
 
-      userInfo?.access.forEach((access) => {
+      userInfo?.access.forEach((access, index) => {
         const hasInvalidRole = access?.role && !rolesCouldInvite?.includes(access.role);
 
         if (access?.role && access?.role === 'ADMIN') {
@@ -82,11 +83,18 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
           return;
         }
 
-        if (!access.companyID || hasInvalidRole) {
+        const companyID = access?.companyID;
+
+        if (typeof usedCompanies[companyID] === 'number') {
           return;
         }
 
-        companies.push(access.companyID);
+        if (!companyID || hasInvalidRole) {
+          return;
+        }
+
+        usedCompanies[companyID] = index;
+        companies.push(companyID);
       });
 
       companiesParams = companies.map((companyID, index) => `companyID[${index}]=${companyID}`).join('&');
