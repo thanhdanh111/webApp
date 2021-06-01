@@ -21,14 +21,14 @@ const HeadTable = (props: PropsInitial) => {
     <TableHead className='table-users'>
         <TableRow className='table-head'>
           {
-           needCheckBox && <TableCell padding='checkbox' className='cell-title box-head' align='right'>
+           needCheckBox && (<TableCell padding='checkbox' className='cell-title box-head' align='right'>
             <Checkbox
               inputProps={{ 'aria-label': 'select all desserts' }}
               className='checkbox-header'
             />
-          </TableCell>
+          </TableCell>)
           }
-          {hadExpandableRows && <TableCell />}
+          {hadExpandableRows && <TableCell style={{ border: 'none' }} />}
           {(checkArray(headCells)) &&
           headCells.map((header) => (
                 <TableCell

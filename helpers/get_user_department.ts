@@ -36,7 +36,7 @@ export const getUserDepartments = ({ access, filterRoles }: GetUserDepartments) 
       return;
     }
 
-    departments.push(each?.departmentID);
+    departments.push(each?.departmentID as string);
   });
 
   return {

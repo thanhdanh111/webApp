@@ -35,7 +35,7 @@ export const getUserCompanies = ({ access, filterRoles }: GetUserCompanies) => {
       return;
     }
 
-    companies.push(each?.companyID);
+    companies.push(each?.companyID as string);
   });
 
   return {

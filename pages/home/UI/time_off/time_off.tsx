@@ -70,7 +70,6 @@ const TimeOffTab: FunctionComponent = () => {
           fetchData={fetchDaysOffData}
           redButtonName='REJECT'
           baseTableName={'daysoff-table'}
-          individualActions={[]}
           loadingStateName={loadingOptionStateName}
           notFoundAnyData={notFoundAnyOwnTimeOffs}
           notFoundWarning='Not found any time offs today'
@@ -87,7 +86,6 @@ const TimeOffTab: FunctionComponent = () => {
           fetchData={fetchDaysOffData}
           redButtonName='REJECT'
           baseTableName={'daysoff-table'}
-          individualActions={[]}
           loadingStateName={loadingOptionStateName}
           notFoundAnyData={notFoundAnyMembersTimeOffs}
           notFoundWarning='Not found any time offs today'
