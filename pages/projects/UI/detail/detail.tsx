@@ -1,6 +1,7 @@
 import SelectOption from '@components/option_select/option_select';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { Avatar } from '@material-ui/core';
+import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 import { ProjectsPage } from 'helpers/type';
 import { useRouter } from 'next/router';
 import { setSelectedChannelID } from 'pages/projects/logic/projects_actions';
@@ -22,6 +23,13 @@ const ProjectDetail: FunctionComponent = () => {
   const showDescription = shouldShowDescription ? 'show-description' : 'hide-description';
 
   const query = router.query;
+  const authState = useSelector((state: RootState) => state.auth);
+  const {
+    isAdmin,
+    managerCompanyIDs,
+    managerDepartmentIDs,
+  }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
+  const loadMemberData = isAdmin || managerCompanyIDs?.length > 0 || managerDepartmentIDs?.length > 0;
 
   useEffect(() => {
     void fetchData();
@@ -45,7 +53,9 @@ const ProjectDetail: FunctionComponent = () => {
   };
 
   function updateBtn(dataUpdate) {
-
+    if (!loadMemberData) {
+      return;
+    }
     dispatch(updateChannelIDMiddeleWare(selectedProject._id, dataUpdate));
 
   }
@@ -74,12 +84,14 @@ const ProjectDetail: FunctionComponent = () => {
               list={channels}
               value={selectedChannelID}
               handleChange={changeChannelID}
+              disabled={(!loadMemberData) ? true : false}
             />
           </div>
         </div>
         <PrimaryButtonUI
           handleClick={() => updateBtn(selectedChannelID)}
           title='Update'
+          extendClass={(!loadMemberData) ? 'hide-btn-send' : ''}
         />
       </div>
     </div>

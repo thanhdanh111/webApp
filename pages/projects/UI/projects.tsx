@@ -6,6 +6,7 @@ import { getProjectDataMiddleWare } from '../logic/projects_reducer';
 import { useRouter } from 'next/router';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import ProjectPageUI from 'pages/projects/UI/project';
+import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 
 const Projects: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,13 @@ const Projects: FunctionComponent = () => {
   const authState = useSelector((state: RootState) => state.auth);
   const companyName = authState?.extendedCompany?.companyID?.name;
 
+  const {
+    isAdmin,
+    managerCompanyIDs,
+    managerDepartmentIDs,
+  }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
+  const loadMemberData = isAdmin || managerCompanyIDs?.length > 0 || managerDepartmentIDs?.length > 0;
+
   useEffect(() => {
     return void fetchDataProject();
   }, []);
@@ -25,7 +33,9 @@ const Projects: FunctionComponent = () => {
   };
 
   const onPushToPage = (url: string) => {
-
+    if (!loadMemberData) {
+      return;
+    }
     void router.push(`${pathname}/${url}`);
   };
 
@@ -33,7 +43,11 @@ const Projects: FunctionComponent = () => {
       <div className='projects'>
         <h1 className='text-projects'>Project</h1>
         <div className='btn-create-project'>
-          <PrimaryButtonUI title='Create Project' handleClick={() => onPushToPage('create')}/>
+          <PrimaryButtonUI
+            title='Create Project'
+            handleClick={() => onPushToPage('create')}
+            extendClass={(!loadMemberData) ? 'hide-btn-send' : ''}
+          />
         </div>
         <div className='team-section-wrapper'>
           <div className='team-title-bar'>
