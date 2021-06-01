@@ -32,7 +32,7 @@ export const getManagerIDs = ({ access }: GetUserCompanies) => {
     }
 
     if (each.role === 'COMPANY_MANAGER') {
-      managerCompanyIDs.push(each?.companyID);
+      managerCompanyIDs.push(each?.companyID as string);
 
       return;
     }
@@ -42,8 +42,8 @@ export const getManagerIDs = ({ access }: GetUserCompanies) => {
       return;
     }
 
-    managerDepartmentIDs.push(each.departmentID);
-    companyIDsOfDepartmentManagers.push(each.companyID);
+    managerDepartmentIDs.push(each.departmentID as string);
+    companyIDsOfDepartmentManagers.push(each.companyID as string);
   });
 
   return {

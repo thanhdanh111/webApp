@@ -52,7 +52,7 @@ export interface Access {
   _id: string;
   role: string;
   status: string;
-  companyID?: Company;
+  companyID?: Company | string;
   departmentID?: Department | string;
   departmentName?: string;
 }
