@@ -43,8 +43,9 @@ export interface Data {
   id: string;
   user: UserAccess;
   userName: string;
-  activeRoles: string[];
-  pendingRoles: string[];
+  companyRole: string;
+  departmentRoles: Access[];
+  stringPendingRoles: string[];
 }
 
 export interface Access {
@@ -52,7 +53,8 @@ export interface Access {
   role: string;
   status: string;
   companyID?: Company;
-  departmentID?: Department;
+  departmentID?: Department | string;
+  departmentName?: string;
 }
 
 export interface EditingUserInfo {
@@ -60,6 +62,10 @@ export interface EditingUserInfo {
   role?: string;
   id?: string;
   userName?: string;
+  departmentName?: string;
+  departmentID?: string;
+  userIndex?: number;
+  accessID?: string;
 }
 
 export interface NotificationTypeState {
@@ -81,7 +87,7 @@ export interface UserAccess {
   _id: string;
   userID: User;
   accesses: Access[];
-  departmentID: Department[] ;
+  departmentID: Department[];
 }
 
 export interface NotificationsData {
@@ -93,8 +99,8 @@ export interface NotificationsData {
 
 export interface UsersData {
   cursor: string;
-  list: UserAccess[];
-  listSearch: UserAccess[];
+  list: Data[];
+  listSearch: Data[];
   notifications: NotificationsData;
   hasNoData: boolean;
   totalCount: number;
@@ -105,6 +111,7 @@ export interface UsersData {
   selectNotification: NotificationTypeState;
   editingUserInfo: EditingUserInfo;
   onRemovingUser: boolean;
+  shouldCallDataUsersApi: boolean;
 }
 
 export interface ParamGetUser {

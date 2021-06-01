@@ -23,7 +23,7 @@ export const headCells: HeadCell[] = [
   { id: 'action', numeric: false, disablePadding: true, label: 'Action' },
 ];
 
-export const actionList: string[] = ['accept', 'reject', 'cancel'];
+export const actionList: string[] = ['accept', 'reject'];
 
 export const individualActions: string[] = ['cancel'];
 
@@ -106,7 +106,6 @@ const TimeOffColumns = ({
           redButtonName='REJECT'
           actionFunc={actionFunc}
           baseTableName={name}
-          individualActions={individualActions}
           loadingIndex={loadingIndex}
           loadingStateName={loadingOptionStateName}
           indexLoading={indexLoading}

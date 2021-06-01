@@ -5,15 +5,15 @@ import { config } from 'helpers/get_config';
 import { useEffect, useState } from 'react';
 import { getRole } from '../../../helpers/get_role';
 import { usersAction } from './users_type_action';
+import { rolesRender } from 'constants/roles';
 
 export const headCells: HeadCell[] = [
-  { id: 'userName', numeric: false, disablePadding: true, label: 'UserName' },
-  { id: 'activeRoles', numeric: false, disablePadding: true, label: 'ActiveRoles' },
-  { id: 'pendingRoles', numeric: false, disablePadding: true, label: 'PendingRoles' },
-  { id: 'action', numeric: false, disablePadding: true, label: 'Action' },
+  { id: 'userName', numeric: false, disablePadding: true, label: 'User Name' },
+  { id: 'companyRole', numeric: false, disablePadding: true, label: 'Company Role' },
+  { id: 'stringPendingRoles', numeric: false, disablePadding: true, label: 'Pending Roles' },
 ];
 
-export const actionList: string[] = ['departments', 'delete'];
+export const actionList: string[] = [];
 
 const initialState: UsersData = {
   cursor: '',
@@ -46,6 +46,7 @@ const initialState: UsersData = {
   },
   editingUserInfo: {},
   onRemovingUser: false,
+  shouldCallDataUsersApi: true,
 };
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -57,10 +58,10 @@ export const usersReducer = (state = initialState, action) => {
         loadingList: action.payload,
       };
     case usersAction.PAGINATION:
-      const listUser = [...state.list, ...action.payload.list];
+      const listNewUser = renderData(action.payload.list, action.companyID);
       let cursor = action.payload.cursor;
 
-      if (listUser >= action.payload.totalCount) {
+      if (listNewUser?.length >= action.payload.totalCount) {
         cursor = 'END';
       }
 
@@ -68,7 +69,7 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         cursor,
         totalCount: action.payload.totalCount,
-        list: [...state.list, ...action.payload.list],
+        list: [...state.list, ...listNewUser],
       };
     case usersAction.SEARCH:
       let newCursor = action.payload.cursor;
@@ -80,7 +81,7 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         cursor: newCursor,
         totalCount: action.payload.totalCount,
-        listSearch: action.payload.list,
+        listSearch: renderData(action.payload.list, action.companyID),
       };
     case usersAction.HAS_NO_NOTIFICATION:
       return {
@@ -159,10 +160,10 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
       return;
     }
 
-    await dispatch(pagination(res.data));
-    await dispatch(setLoading(false));
+    dispatch(pagination(res.data, companyID));
+    dispatch(setLoading(false));
   } catch (error) {
-    throw error;
+    dispatch(setLoading(false));
   }
 };
 
@@ -175,6 +176,8 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
     if (!token || !companyID) {
       return;
     }
+
+    await dispatch(setLoading(true));
 
     const params: ParamGetUser = {
       companyID,
@@ -190,10 +193,10 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
        },
      });
 
-    await dispatch(search(res.data));
+    await dispatch(search(res.data, companyID));
     await dispatch(setLoading(false));
   } catch (error) {
-    throw error;
+    await dispatch(setLoading(false));
   }
 };
 
@@ -218,33 +221,32 @@ function createData(
   id: string,
   userName: string,
   user: UserAccess,
-  activeRoles: string[],
-  pendingRoles: string[],
+  companyRole: string,
+  departmentRoles: Access[],
+  stringPendingRoles: string[],
 ): Data {
-  return { id, userName, user, activeRoles, pendingRoles };
+  return { id, userName, user, departmentRoles, companyRole, stringPendingRoles };
 }
 
-export const renderData = (users: UserAccess[]) => {
-  return users.map((each: UserAccess) => {
-    const roles = getRole(each.accesses);
-    const fullName = `${each.userID.firstName} ${each.userID.lastName}`;
-    const id = each.userID._id;
-    const user = each;
+export const renderData = (users: UserAccess[], companyID) => {
+  return users.map((user: UserAccess) => {
+    const roles = getRole(user.accesses, companyID);
+    const fullName = `${user.userID.firstName} ${user.userID.lastName}`;
+    const id = user.userID._id;
 
     return createData(
       id,
       fullName,
       user,
-      roles?.activeRoles || [],
-      roles?.pendingRoles || [],
+      rolesRender[roles?.companyRole?.role],
+      roles?.departmentRoles || [],
+      roles?.stringPendingRoles || [],
     );
   });
 };
 
 export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
-    await dispatch(setLoading(true));
-
     const authState = getState().auth;
     const receiverID = authState?.userID;
     const token = localStorage.getItem('access_token');
@@ -270,12 +272,14 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
     if (!res.data.totalCount || !res.data.list || !res.data.list.length) {
       await dispatch(hasNoNotification());
       await dispatch(setLoading(false));
+
+      return;
     }
 
     await dispatch(getNotificationsAction(res.data));
-    await dispatch(setLoading(true));
+    await dispatch(setLoading(false));
   } catch (error) {
-    throw error;
+    await dispatch(setLoading(false));
   }
 };
 

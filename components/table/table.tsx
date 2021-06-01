@@ -2,7 +2,6 @@ import {
     Table,
     TableBody,
     TableContainer,
-    Paper,
     Button,
     CircularProgress,
     Typography,
@@ -16,6 +15,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { checkStringCondition } from 'helpers/check_string_condtion';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import TableRowBase from './table_row';
+
+interface UseOutsideReturnAction {
+  status?: string;
+  itemIndex?: number;
+}
 
 interface InitialProps {
   headCells: HeadCell[];
@@ -33,10 +37,9 @@ interface InitialProps {
   indexLoading?: boolean;
   notFoundAnyData?: boolean;
   notFoundWarning?: string;
-  individualActions?: string[];
-  individualActionsRender?: object;
   hadExpandableRows?: boolean;
   ComponentDetail?: React.FunctionComponent;
+  UseOutsideReturnAction?: React.FunctionComponent<UseOutsideReturnAction>;
 }
 
 const BaseTable = (props: InitialProps) => {
@@ -47,8 +50,7 @@ const BaseTable = (props: InitialProps) => {
     actionFunc, baseTableName,
     loadingIndex, loadingStateName, indexLoading,
     notFoundAnyData = false,
-    notFoundWarning, individualActions,
-    hadExpandableRows = false,
+    notFoundWarning, hadExpandableRows = false,
     ComponentDetail,
   }: InitialProps = props;
   const emptyState = !loading && !data?.length && notFoundAnyData;
@@ -57,10 +59,20 @@ const BaseTable = (props: InitialProps) => {
     return { itemIndex, action };
   }
 
-  const renderAction = ({ actionList, itemIndex, itemStatus, isManager }) => {
-
-    if (!checkArray(actionList)) {
+  const renderAction = ({
+    actionList,
+    itemIndex,
+    itemStatus,
+    isManager,
+  }) => {
+    if (!actionList?.length) {
       return;
+    }
+
+    if (props?.UseOutsideReturnAction) {
+      const Element = props?.UseOutsideReturnAction;
+
+      return  <Element status={itemStatus} itemIndex={itemIndex}/>;
     }
 
     const notPendingStatus = checkStringCondition({
@@ -95,10 +107,6 @@ const BaseTable = (props: InitialProps) => {
     return (
       <ul className='list-action'>
         {actionList.map((action, index) => {
-          if (individualActions?.length && individualActions.includes(action)) {
-            return <div />;
-          }
-
           const colorButton = (action.toUpperCase() === 'DELETE' || action.toUpperCase() === redButtonName) ? 'redButton' : '';
           const func = actionFunc?.[action] ?? actionDefaultFunc;
 
@@ -120,7 +128,7 @@ const BaseTable = (props: InitialProps) => {
   };
 
   return (
-    <Paper className='table-paper'>
+    <div className='table-paper'>
       <TableContainer className='table-list'>
         <InfiniteScroll
           dataLength={data.length}
@@ -128,13 +136,13 @@ const BaseTable = (props: InitialProps) => {
           next={fetchData}
           loader={<div />}
           scrollThreshold={0.7}
-          height={(emptyState || loading) ? 0 : 500}
         >
         <Table stickyHeader aria-label='sticky table' className='table-content' >
           <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
           { !loading &&  (checkArray(data) &&
           <TableBody className='table-body'>
                 {data.map((item, index) => {
+
                   return (
                     <TableRowBase
                       key={index}
@@ -165,7 +173,7 @@ const BaseTable = (props: InitialProps) => {
             </div>
           }
       </TableContainer>
-    </Paper>
+    </div>
   );
 };
 

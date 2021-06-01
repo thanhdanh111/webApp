@@ -7,15 +7,17 @@ export const setLoading = (loading: boolean) => {
   };
 };
 
-export const pagination = (res: object) => {
+export const pagination = (res: object, companyID) => {
   return{
+    companyID,
     type: usersAction.PAGINATION,
     payload: res,
   };
 };
 
-export const search = (res: object) => {
+export const search = (res: object, companyID) => {
   return{
+    companyID,
     type: usersAction.SEARCH,
     payload: res,
   };

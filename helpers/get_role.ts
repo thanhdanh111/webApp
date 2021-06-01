@@ -1,26 +1,48 @@
 import { Access } from './type';
 import { checkArray } from './check_array';
+import { rolesRender } from 'constants/roles';
 
-export const getRole = (accesses) => {
+const companyRoles = ['COMPANY_STAFF', 'COMPANY_MANAGER'];
 
+export const getRole = (accesses, companyID) => {
   if (!checkArray(accesses)) {
     return;
   }
 
-  const activeRoles: string[] = [];
-  const pendingRoles: string[] = [];
+  const stringPendingRoles: string[] = [];
+  let companyRole;
+  const departmentRoles: Access[] = [];
 
-  accesses.map((access: Access) => {
-    if (access.status === 'ACCEPTED') {
-      return activeRoles.push(access.role);
+  for (const access of accesses) {
+    const isPendingRole = access?.status !== 'ACCEPTED';
+    const isCompanyRole =  access?.companyID?._id === companyID &&
+      companyRoles.includes(access?.role);
+
+    if (isCompanyRole) {
+      companyRole = access;
+
+      continue;
     }
 
-    if (access.status.toUpperCase() !== 'ACCEPTED') {
-      return pendingRoles.push(access.role);
+    const notMatchCurrentCompany = access?.companyID?._id !== companyID &&
+    companyRoles.includes(access?.role);
+
+    if (notMatchCurrentCompany) {
+
+      continue;
     }
 
-    return;
-  });
+    if (isPendingRole) {
+      stringPendingRoles.push(rolesRender[access?.role]);
+    }
 
-  return { activeRoles, pendingRoles };
+    departmentRoles.push({
+      ...access,
+      departmentID: access?.departmentID?._id,
+      departmentName: access?.departmentID?.name,
+      departmentRole: rolesRender[access?.role],
+    });
+  }
+
+  return { departmentRoles, companyRole, stringPendingRoles };
 };
