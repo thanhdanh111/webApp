@@ -3,9 +3,7 @@ import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { Avatar } from '@material-ui/core';
 import { ProjectsPage } from 'helpers/type';
 import { useRouter } from 'next/router';
-import { useSnackbar, WithSnackbarProps } from 'notistack';
-import { returnNotification } from 'pages/projects/logic/error_notifications';
-import { setSelectedChannelID, updateChannelIDProject } from 'pages/projects/logic/projects_actions';
+import { setSelectedChannelID } from 'pages/projects/logic/projects_actions';
 import { getExtendedCompaniesMiddelWare, getProjectDetailData, updateChannelIDMiddeleWare } from 'pages/projects/logic/projects_reducer';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,38 +17,25 @@ const ProjectDetail: FunctionComponent = () => {
     selectedProject,
     selectedChannelID,
     channels,
-    channelIDResultInfo,
     shouldShowDescription,
   }: ProjectsPage = useSelector((state: RootState) => state.projects);
   const showDescription = shouldShowDescription ? 'show-description' : 'hide-description';
 
-  const companyID = selectedProject?.companyID;
-
   const query = router.query;
-
-  const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
 
   useEffect(() => {
     void fetchData();
-  }, [companyID]);
+  }, []);
 
   const fetchData = async() => {
     await Promise.all([
       dispatch(getProjectDetailData(query.id)),
       dispatch(setSelectedChannelID(selectedProject?.channelID)),
-      dispatch(getExtendedCompaniesMiddelWare(selectedProject?.companyID)),
+      dispatch(getExtendedCompaniesMiddelWare()),
     ]);
   };
 
   const char = selectedProject?.name?.charAt(0);
-
-  useEffect(() => {
-    if (channelIDResultInfo?.type) {
-      pushNotification();
-    }
-
-    return;
-  }, [channelIDResultInfo]);
 
   const changeChannelID = (event) => {
     if (event.target.value === selectedChannelID) {
@@ -63,17 +48,6 @@ const ProjectDetail: FunctionComponent = () => {
 
     dispatch(updateChannelIDMiddeleWare(selectedProject._id, dataUpdate));
 
-  }
-
-  function pushNotification() {
-    const newResultInfo = returnNotification({ resultInfo: channelIDResultInfo });
-    if (newResultInfo) {
-      enqueueSnackbar(newResultInfo['message'], { variant: newResultInfo['status'] });
-    }
-
-    dispatch(updateChannelIDProject({ channelIDResultInfo: {} }));
-
-    return;
   }
 
   return (

@@ -1,19 +1,20 @@
 .create-project
-  padding: 16px 30px
   -webkit-box-align: center
   align-items: center
   -webkit-box-pack: justify
   justify-content: space-between
+  transform: translateY(50%)
+  border-radius: 16px
+  box-shadow: rgba(145, 158, 171, 0.24) 0 0 2px 0, rgba(145, 158, 171, 0.24) 0 16px 32px -4px
   
   .text-create-projects
     color: rgb(43, 29, 56)
     font-size: 22px
     line-height: 3rem
-    font-weight: normal
-    margin: 0
+    font-weight: 600
+    padding: 10px 0
 
   .create-project-form
-    display: grid
     grid-template-columns: 300px 250px max-content
     grid-gap: 16px
     -webkit-box-align: end
@@ -25,13 +26,14 @@
     .create-project-form-grid
       background-color: rgb(255, 255, 255)
       display: flex
+      width: 100%
 
       .create-project-form-card-item
-        max-width: 100%
-        flex-basis: 55%  
+        display: contents
 
         .form-all
-          width: 15rem
+          width: 100%
+          margin: 10px
 
           .form-label
             font-size: 18px
@@ -42,21 +44,18 @@
             width: 100%
             background: rgb(255, 255, 255)
             border: 1px solid rgb(198, 190, 207)
-            border-radius: 4px
-            box-shadow: rgba(37, 11, 54, 0.04) 0 2px 0 inset
-            transition: border 0.1s linear 0s
-            resize: vertical
-            height: 50px
+            -webkit-border-radius: 4px
             padding: 5px 10px
             display: flex
-            -webkit-box-align: center
-            align-items: center
+            align-items: flex-end
+            height: 3.5rem
 
             .img
               margin-right: 8px
               border-radius: 3px
               width: 1.5rem
               height: 1.5rem
+              align-self: center
 
             .input-label-text
               background: rgb(255, 255, 255)
@@ -70,29 +69,45 @@
 
             .form-select
               width: 100%
+              display: grid
 
-              .form-control
-                min-width: 120px
-                width: 100%
+    .des
+      max-width: 100%
+      padding: 10px
 
-                .select-empty
+      .project-des-input
+        width: 100%
+        padding: 5px 0
+        display: flex
 
-                  &::before
-                    border: none
-              
-          .btn-create
-            margin: 10px 30px auto
-            padding: 10px
-            font-size: 16px
-            color: #fff
-            background: #00ab55
-            border: none
-            border-radius: 5px
+        .input-text
+          width: 100%
+          border: 1px solid rgb(198, 190, 207)
+          -webkit-border-radius: 4px
+          padding: 10px
+          font: caption
+          height: 65px
+          outline: none
 
-            &:hover
-              background: #137946
+    .btn
+      padding: 10px
+      text-align: end
+
+@media screen and (max-width: 1366px)
+  .create-project
+    transform: translateY(10px)
 
 @media screen and (max-width: 600px)
   .create-project
     .create-project-form
       display: block
+
+@media screen and (max-width: 360px)
+  .create-project
+    .create-project-form
+      .create-project-form-grid
+        display: contents
+
+        .create-project-form-card-item
+          .form-all
+            width: 93%

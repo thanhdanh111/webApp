@@ -5,7 +5,6 @@ import { Typography } from '@material-ui/core';
 import { getProjectDataMiddleWare } from '../logic/projects_reducer';
 import { useRouter } from 'next/router';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { checkArray } from 'helpers/check_array';
 import ProjectPageUI from 'pages/projects/UI/project';
 
 const Projects: FunctionComponent = () => {
@@ -14,12 +13,12 @@ const Projects: FunctionComponent = () => {
   const listProjects = project.projects;
   const router = useRouter();
   const pathname = router.pathname;
-  const companyName = checkArray(listProjects) ? listProjects[0]?.companyID.name : null;
+  const authState = useSelector((state: RootState) => state.auth);
+  const companyName = authState?.extendedCompany?.companyID?.name;
 
   useEffect(() => {
-
     return void fetchDataProject();
-  }, [companyName]);
+  }, []);
 
   const fetchDataProject = () => {
     dispatch(getProjectDataMiddleWare());
