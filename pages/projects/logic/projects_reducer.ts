@@ -2,7 +2,14 @@ import axios from 'axios';
 import { checkArray } from 'helpers/check_array';
 import { config } from 'helpers/get_config';
 import { ProjectsPage } from 'helpers/type';
-import { getChannelsByCompany, getProject, getProjectAction, shouldShowDescription, updateChannelIDProject } from './projects_actions';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
+import { returnNotification } from './error_notifications';
+import {
+  getChannelsByCompany,
+  getProject,
+  getProjectAction,
+  shouldShowDescription,
+} from './projects_actions';
 import { projectsActionType } from './projects_type_action';
 
 const initialState: ProjectsPage = {
@@ -17,7 +24,6 @@ const initialState: ProjectsPage = {
   },
   selectedChannelID: '',
   channels: [],
-  channelIDResultInfo: {},
   shouldShowDescription: false,
 };
 
@@ -67,12 +73,6 @@ export const projectsReducer = (state = initialState, action) => {
         ...state,
         selectedChannelID: action.payload.selectedChannelID,
       };
-    case projectsActionType.UPDATE_CHANNEL_ID:
-      return {
-        ...state,
-        channelIDResultInfo: action.channelIDResultInfo,
-        selectedProject: action.channelIDResultInfo,
-      };
     case projectsActionType.SHOULD_SHOW_DESCRIPTION:
       return {
         ...state,
@@ -83,14 +83,19 @@ export const projectsReducer = (state = initialState, action) => {
   }
 };
 
-export const getProjectDataMiddleWare = () => async (dispatch) => {
+export const getProjectDataMiddleWare = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
+    const authState = getState().auth;
+    const companyID = authState.extendedCompany?.companyID?._id;
 
     const res = await axios.get(`${config.BASE_URL}/projects`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
+      },
+      params: {
+        companyID,
       },
     });
 
@@ -130,7 +135,11 @@ export const updateChannelIDMiddeleWare = (projectID: string, channelID: string)
     const token = localStorage.getItem('access_token');
 
     if (!token || !channelID || !projectID) {
-      return;
+
+      const errorNotification = returnNotification({ type: 'token' });
+      dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification }));
+
+      return ;
     }
 
     const res = await axios.put(`${config.BASE_URL}/projects/${projectID}`,
@@ -152,38 +161,27 @@ export const updateChannelIDMiddeleWare = (projectID: string, channelID: string)
       };
     }
 
-    const succeessNotofication = {
-      status: String(res?.data.status ?? ''),
-      message: '',
-      channelID: res?.data?.channelID,
-      name: '',
-      description: '',
-      eventExpirationTime: '',
-      type: 'succeed',
-    };
-
-    await dispatch(updateChannelIDProject({ channelIDResultInfo: succeessNotofication }));
+    if (res.data) {
+      const dataNotification = returnNotification({ type: 'succeedUpdateChannel' });
+      dispatch(pushNewNotifications({ variant: 'success' , message: dataNotification }));
+    }
   } catch (error) {
-    const errorNotification = {
-      status: String(error?.statusCode ?? ''),
-      message: error?.response?.data?.message,
-      channelID: '',
-      name: '',
-      description: '',
-      eventExpirationTime: '',
-      type: 'failed',
-    };
-
-    await dispatch(updateChannelIDProject({ channelIDResultInfo: errorNotification }));
+    const dataNotification = returnNotification({ type: 'failedUpdateChannel' });
+    dispatch(pushNewNotifications({ variant: 'error' , message: dataNotification }));
   }
 };
 
-export const getExtendedCompaniesMiddelWare = (companyID) => async (dispatch) => {
+export const getExtendedCompaniesMiddelWare = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
+    const authState = getState().auth;
+    const companyID = authState.extendedCompany?.companyID?._id;
 
     if (!token || !companyID) {
-      return;
+      const errorNotification = returnNotification({ type: 'companyTokenNotification' });
+      dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification }));
+
+      return ;
     }
 
     const res = await axios.get(`${config.BASE_URL}/extendedCompanies/${companyID}/slack`, {
@@ -206,6 +204,48 @@ export const getExtendedCompaniesMiddelWare = (companyID) => async (dispatch) =>
 
     return;
   } catch (error) {
-    throw error;
+    const dataNotification = returnNotification({ type: 'errorFailed' });
+    dispatch(pushNewNotifications({ variant: 'error' , message: dataNotification }));
+  }
+};
+
+export const createProjectMiddelWare = (name: string, channelID: string, description: string) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const authState = getState().auth;
+    const companyID = authState.extendedCompany?.companyID?._id;
+
+    if (!token || !companyID || !channelID) {
+
+      const errorNotification = returnNotification({ type: 'companyTokenNotification' });
+      dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification }));
+
+      return ;
+    }
+
+    const res = await axios.post(`${config.BASE_URL}/projects`,
+      {
+        name,
+        channelID,
+        companyID,
+        description,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+     );
+
+    if (res.data) {
+      const dataNotification = returnNotification({ type: 'succeedCreateProject' });
+      dispatch(pushNewNotifications({ variant: 'success' , message: dataNotification }));
+    }
+
+    return;
+  } catch (error) {
+    const dataNotification = returnNotification({ type: 'failedCreateProject' });
+    dispatch(pushNewNotifications({ variant: 'error' , message: dataNotification }));
   }
 };
