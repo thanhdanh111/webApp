@@ -3,5 +3,5 @@ import React from 'react';
 import Auth from './auth';
 
 storiesOf('Footer', module).add('Footer', () => {
-  return <Auth children='' publicPages='' />;
+  return <Auth children='' publicPages='' managerPages={['']} />;
 });
