@@ -57,7 +57,7 @@ const UserSelection: FunctionComponent = () => {
 
   return (
     <FormControl className='select-name-formcontrol' variant='outlined' color='secondary'>
-      <InputLabel className='label-select'>Select User</InputLabel>
+      <InputLabel className='label-select' ><span className='span-select' >Select User</span></InputLabel>
       <Select
         value={user}
         onChange={handleChange}
