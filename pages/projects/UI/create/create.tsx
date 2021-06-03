@@ -1,59 +1,120 @@
-import { FormControl, Grid, Input, MenuItem, Select } from '@material-ui/core';
-import React from 'react';
+import SelectOption from '@components/option_select/option_select';
+import PrimaryButtonUI from '@components/primary_button/primary_button';
+import { Box, TextareaAutosize, TextField } from '@material-ui/core';
+import { ProjectsPage } from 'helpers/type';
+import { createProjectMiddelWare, getExtendedCompaniesMiddelWare } from 'pages/projects/logic/projects_reducer';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'redux/reducers_registration';
 
-const CreateProject = () => {
+const CreateProject: FunctionComponent = () => {
+
+  const dispatch = useDispatch();
+  const {
+    channels,
+  }: ProjectsPage = useSelector((state: RootState) => state.projects);
+
+  const [name, setName] = useState('');
+  const [channelID, setChannel] = useState('');
+  const [description, setDescription] = useState('');
+  const [errorName, setErrorName] = useState(true);
+
+  useEffect(() => {
+    void fetchData();
+  }, []);
+
+  const fetchData = () => {
+    dispatch(getExtendedCompaniesMiddelWare());
+  };
+
+  const changeChannelID = (event) => {
+    if (event.target.value === channelID) {
+      return;
+    }
+    setChannel(event.target.value);
+  };
+
+  const onChangeNameProject = (event) => {
+    if (!event.target.value) {
+      setErrorName(true);
+      setName('');
+
+      return;
+    }
+    setErrorName(false);
+    setName(event.target.value);
+
+  };
+
+  const onChangeDescription = (event) => {
+    setDescription(event.target.value);
+  };
+
+  function createProjectBtn() {
+    if (errorName || !channelID) {
+      setErrorName(true);
+
+      return;
+    }
+    dispatch(createProjectMiddelWare(name, channelID, description));
+  }
 
   return (
-    <div className='create-project'>
+    <Box className='create-project'>
       <h1 className='text-create-projects'>Create a new Project</h1>
-      <h1 className='text-create-projects'>Give your project a name</h1>
       <div className='create-project-form'>
-        <Grid className='create-project-form-grid' container>
-          <Grid item xs={12} sm={3} className='create-project-form-card-item'>
+        <div className='create-project-form-grid'>
+          <div className='create-project-form-card-item'>
             <div className='form-all'>
-              <div className='form-label'>
-                Project name
-              </div>
               <div className='project-name-input'>
                 <img src='../../input.svg' className='img'/>
-                <Input type='text' name='new-name-project' placeholder='Project name' className='input-label-text'/>
+                <TextField
+                  placeholder='Project name'
+                  className='input-label-text'
+                  error={errorName}
+                  value={name}
+                  onChange={onChangeNameProject}
+                  label='Project name'
+                />
               </div>
             </div>
-          </Grid>
-        </Grid>
-        <Grid className='create-project-form-grid' container>
-          <Grid item xs={12} sm={3} className='create-project-form-card-item'>
             <div className='form-all'>
-              <div className='form-label'>
-                Team
-              </div>
               <div className='project-name-input'>
                 <div className='form-select'>
-                  <FormControl className='form-control'>
-                    <Select
-                      value='Select Team'
-                      // onChange={handleChange}
-                      className='select-empty'
-                    >
-                      <MenuItem value='all users'>Name Team</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <SelectOption
+                    list={channels}
+                    value={channelID}
+                    required={!channelID}
+                    handleChange={changeChannelID}
+                    style='border'
+                    label='Select Channel'
+                  />
                 </div>
               </div>
             </div>
-          </Grid>
-        </Grid>
-        <Grid className='create-project-form-grid' container>
-          <Grid item xs={12} sm={3} className='create-project-form-card-item'>
-            <div className='form-all'>
-              <button className='btn-create' >
-                Create Project
-              </button>
-            </div>
-          </Grid>
-        </Grid>
+          </div>
+        </div>
+        <div className='des'>
+          <div className='project-des-input'>
+            <TextareaAutosize
+              color='secondary'
+              placeholder='Description'
+              className='input-text'
+              value={description}
+              onChange={onChangeDescription}
+              aria-label='description'
+              rows={3}
+            />
+          </div>
+        </div>
+        <div className='btn'>
+          <PrimaryButtonUI
+            handleClick={() => createProjectBtn()}
+            title='Create Project'
+          />
+        </div>
       </div>
-    </div>
+    </Box>
   );
 };
 

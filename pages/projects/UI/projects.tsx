@@ -5,8 +5,8 @@ import { Typography } from '@material-ui/core';
 import { getProjectDataMiddleWare } from '../logic/projects_reducer';
 import { useRouter } from 'next/router';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { checkArray } from 'helpers/check_array';
 import ProjectPageUI from 'pages/projects/UI/project';
+import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 
 const Projects: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -14,19 +14,28 @@ const Projects: FunctionComponent = () => {
   const listProjects = project.projects;
   const router = useRouter();
   const pathname = router.pathname;
-  const companyName = checkArray(listProjects) ? listProjects[0]?.companyID.name : null;
+  const authState = useSelector((state: RootState) => state.auth);
+  const companyName = authState?.extendedCompany?.companyID?.name;
+
+  const {
+    isAdmin,
+    managerCompanyIDs,
+    managerDepartmentIDs,
+  }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
+  const loadMemberData = isAdmin || managerCompanyIDs?.length > 0 || managerDepartmentIDs?.length > 0;
 
   useEffect(() => {
-
     return void fetchDataProject();
-  }, [companyName]);
+  }, []);
 
   const fetchDataProject = () => {
     dispatch(getProjectDataMiddleWare());
   };
 
   const onPushToPage = (url: string) => {
-
+    if (!loadMemberData) {
+      return;
+    }
     void router.push(`${pathname}/${url}`);
   };
 
@@ -34,7 +43,11 @@ const Projects: FunctionComponent = () => {
       <div className='projects'>
         <h1 className='text-projects'>Project</h1>
         <div className='btn-create-project'>
-          <PrimaryButtonUI title='Create Project' handleClick={() => onPushToPage('create')}/>
+          <PrimaryButtonUI
+            title='Create Project'
+            handleClick={() => onPushToPage('create')}
+            extendClass={(!loadMemberData) ? 'hide-btn-send' : ''}
+          />
         </div>
         <div className='team-section-wrapper'>
           <div className='team-title-bar'>

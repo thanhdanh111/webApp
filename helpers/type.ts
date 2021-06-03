@@ -205,7 +205,6 @@ export interface ProjectsPage {
   selectedProject: ProjectState;
   selectedChannelID: string;
   channels: Channel[];
-  channelIDResultInfo: ChannelIDResultInfo;
   shouldShowDescription: boolean;
 }
 export interface ProjectState {
@@ -222,14 +221,4 @@ export interface ProjectState {
 export interface ChannelIDData {
   _id: string;
   channelID: string;
-}
-
-export interface ChannelIDResultInfo {
-  status?: string;
-  message?: string;
-  channelID?: string;
-  name?: string;
-  description?: string;
-  eventExpirationTime?: string;
-  type?: string;
 }

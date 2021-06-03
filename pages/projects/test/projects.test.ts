@@ -33,28 +33,24 @@ describe('Projects page', () => {
   test('Test projects page successfully', async () => {
     await page.goto('http://localhost:5000/projects');
     await page.waitForSelector('.projects');
+    await page.waitForSelector('.page-project-card');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
+
+    await page.click('.btn-primary');
+
+    const createLinksTab = await page.screenshot();
+    expect(createLinksTab).toMatchImageSnapshot();
+
 
     await page.waitForSelector('.btn-primary');
     await page.click('.btn-primary');
 
     await page.waitForSelector('.text-create-projects');
 
-    const createLinksTab = await page.screenshot();
-    expect(createLinksTab).toMatchImageSnapshot();
-
-  });
-
-  test('Test projects page successfully', async () => {
-    await page.goto('http://localhost:5000/projects');
-    await page.waitForSelector('.projects');
-
-    await page.waitForSelector('.text-nodejs');
-
-    const grid = await page.screenshot();
-    expect(grid).toMatchImageSnapshot();
+    const textCreate = await page.screenshot();
+    expect(textCreate).toMatchImageSnapshot();
 
   });
 
@@ -67,9 +63,12 @@ describe('Projects page', () => {
 
     await page.waitForSelector('.name-project');
 
+    await page.waitForFunction(
+      () => !!document.querySelector('.name-project').innerText,
+      {},
+    );
     const link = await page.screenshot();
     expect(link).toMatchImageSnapshot();
-
   });
 
 

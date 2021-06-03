@@ -7,7 +7,7 @@ import { getUserAccessAction } from 'pages/access_denied/logic/access_reducer';
 import { getBrowserToken } from 'helpers/fcm';
 import firebase from 'firebase/app';
 import 'firebase/messaging';
-import { useSnackbar, WithSnackbarProps } from 'notistack';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { getNotificationFCM } from 'pages/users/logic/users_actions';
@@ -15,12 +15,10 @@ import { getNotificationFCM } from 'pages/users/logic/users_actions';
 type Token = string | null;
 const Auth = ({ children, publicPages }) => {
   const path = window.location.pathname;
-
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const access = useSelector((state: RootState) => state.access);
   const dispatch = useDispatch();
-  const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
 
   useEffect(() => {
     void checkLogin();
@@ -65,7 +63,7 @@ const Auth = ({ children, publicPages }) => {
         const noti = payload.notification;
 
         dispatch(getNotificationFCM(noti));
-        enqueueSnackbar(`${noti.title}: ${noti.body.substring(0, 30)}...`, { variant: 'info' });
+        dispatch(pushNewNotifications({ variant: 'info' , message: `${noti.title}: ${noti.body.substring(0, 30)}...` }));
       });
     }
 

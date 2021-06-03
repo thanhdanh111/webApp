@@ -4,51 +4,44 @@
   align-items: center
   -webkit-box-pack: justify
   justify-content: space-between
-  width: 100%
+  width: 90%
+  margin: 70px auto
+  border-radius: 16px
+  box-shadow: rgba(145, 158, 171, 0.24) 0 0 2px 0, rgba(145, 158, 171, 0.24) 0 16px 32px -4px
 
   .detail-project-form
-    display: grid
-    grid-template-columns: 300px 250px max-content
-    grid-gap: 16px
     -webkit-box-align: end
     align-items: end
     padding: 20px 0
     box-shadow: rgba(0, 0, 0, 0.1) 0 -1px 0
-    background: rgb(255, 255, 255)
+    display: flex
 
     .form-label
       font-size: 20px
+      width: 30%
 
     .project-name-input
       color: rgb(43, 29, 56)
-      width: 100%
-      background: rgb(255, 255, 255)
+      width: 70%
       border: 1px solid rgb(198, 190, 207)
       border-radius: 4px
-      box-shadow: rgba(37, 11, 54, 0.04) 0 2px 0 inset
-      transition: border 0.1s linear 0s
-      resize: vertical
-      padding: 10px 10px
-      -webkit-box-align: center
-      align-items: center
+      padding: 10px
+      height: fit-content
 
       .form-select
         width: 100%
         display: grid
-        
-    .btn-update
-      margin: 10px 30px 0
-      padding: 10px
-      font-size: 18px
-      color: #fff
-      background: #00ab55
-      border: none
-      border-radius: 5px
 
-      &:hover
-        background: #137946
+  .btn
+    padding: 10px 0
+    display: flex
+    justify-content: flex-end
 
-  .name-team
+  .btn > .hide-btn-send > .btn-primary
+    background: #ccc
+    box-shadow: 0 8px 16px 0 #ccc
+
+  .all-title-project
     padding: 15px 0 20px
 
     .title-project
@@ -73,9 +66,7 @@
     box-shadow: rgba(0, 0, 0, 0.1) 0 -1px 0
     padding: 20px 0
     text-align: start
-
-    .title-des
-      font-size: 20px
+    font-size: 20px
 
     .detail-des
       font-size: 16px
@@ -86,7 +77,15 @@
   .show-description
     display: grid
 
-@media screen and (max-width: 600px)
+@media screen and (max-width: 768px)
   .detail-project
     .detail-project-form
       display: inherit
+
+      .form-label
+        width: 100%
+        padding: 10px 0
+
+      .project-name-input
+        margin: 10px 0
+        width: 100%

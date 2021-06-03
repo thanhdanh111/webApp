@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { FormControl, MenuItem, Select } from '@material-ui/core';
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 
 interface ListType {
   _id: string;
@@ -18,21 +18,35 @@ interface InitialProps {
   style?: string;
   handleChange: (e) => void;
   value: string | number;
+  disabled?: boolean;
+  required?: boolean;
+  label?: string;
 }
 
 type SelectOptionType = InitialProps;
 
 const SelectOption: FunctionComponent<SelectOptionType> = (props: InitialProps) => {
 
-  const { list, style, iconLabel, handleChange, value }: InitialProps = props;
+  const { list, style, iconLabel, handleChange, value, disabled = false, required = false, label  }: InitialProps = props;
 
   return (
     <FormControl className={`select-name-formcontrol ${style}`} variant='standard' color='secondary'>
       {iconLabel}
+      { label &&
+      <InputLabel
+        htmlFor='role-select'
+        className='options-content-label'
+      >
+        {label}
+      </InputLabel>
+
+      }
       <Select
         value={value}
         onChange={handleChange}
         className='select-list-user'
+        disabled={disabled}
+        error={required}
       >
         {Array.isArray(list) && list.map((item, index) => {
 
