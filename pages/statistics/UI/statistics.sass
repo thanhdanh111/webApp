@@ -15,9 +15,9 @@
   padding: 0 17px
 
   .statistics-body-options
-    display: flex;
-    justify-content: flex-end;
-    margin: 5px 10px 5px 5px;
+    display: flex
+    justify-content: flex-end
+    margin: 5px 10px 5px 5px
 
   .bg-gradient-default
     background: #fff
@@ -57,7 +57,7 @@
           flex-basis: 50%
 
         .MuiGrid-grid-xs-4
-          max-width: 50%
+          max-width: 100%
           flex-basis: 50%
           transform: translateY(10px)
 
@@ -135,6 +135,9 @@
               border-radius: 8px
 
 @media screen and (max-width: 1024px)
+  .space-between
+    display: grid
+
   .statistics-page
     height: 100vh
     overflow-y: scroll
@@ -158,16 +161,21 @@
       width: 100%
       padding: 0 17px
 
+      .statistics-body-options
+        width: 100%
+        margin: 0 auto
+
       .bg-gradient-default
         background: #fff
         box-shadow: 1px 0 7px 2px #e7e7e7
 
         .MuiGrid-grid-xs-8
-          max-width: 50%
+          max-width: 100%
           flex-basis: 50%
 
         .MuiGrid-grid-xs-4
-          max-width: 50%
+          margin-right: auto;
+          max-width: 100%
           flex-basis: 50%
           transform: translateY(10px)
 
@@ -184,11 +192,10 @@
 
             .label-select
               font-size: 15px
+              color: #00ab55
 
             .MuiOutlinedInput-root
               border-radius: 8px
-
-
 
 @media screen and (max-width: 480px)
   .statistics-page
@@ -215,19 +222,26 @@
       width: 100%
       padding: 0 17px
 
+      .statistics-body-options
+        width: 100%
+        margin: 0 auto
+
+        .statistics-body-options-icon
+          font-size: 1.8rem
+
       .bg-gradient-default
         background: #fff
         box-shadow: 1px 0 7px 2px #e7e7e7
 
         .MuiGrid-grid-xs-8
-          max-width: 50%
+          max-width: 100%
           flex-basis: 50%
 
           .label-graph
             font-size: 17px !important
 
         .MuiGrid-grid-xs-4
-          max-width: 50%
+          max-width: 100%
           flex-basis: 50%
           transform: translateY(10px)
 
@@ -241,14 +255,15 @@
               padding: 5px 0
 
           .select-name-formcontrol
-            min-width: 4em
-            max-width: 4em
-
+            
             .label-select
-              display: none
+              font-size: 10px
 
             .MuiOutlinedInput-root
               border-radius: 8px
+              height: 29.5px
+              width: 90px
+              
 
 @media screen and (max-width: 360px)
   .statistics-page
@@ -267,12 +282,20 @@
         .card-item
           max-width: 25%
           min-width: 87%
+          margin: 0 auto
 
     .statistics-body
       position: relative
       top: 0
-      width: 87%
-      padding: 0 17px
+      width: 100%
+      margin: 0 auto
+
+      .statistics-body-options
+        width: 100%
+        margin: 0 auto
+
+        .statistics-body-options-icon
+          font-size: 1.5rem
 
       .bg-gradient-default
         background: #fff
@@ -284,6 +307,7 @@
 
           .label-graph
             font-size: 17px !important
+            display: inline
 
         .MuiGrid-grid-xs-4
           max-width: 1000%
@@ -301,9 +325,9 @@
             .btn-switch
               padding: 5px 0
 
-          .select-name-formcontrol
-            min-width: 4em
+          .select-name-formcontrol 
             max-width: 4em
 
-            .MuiOutlinedInput-root
-              border-radius: 8px
+@media screen and ( min-width: 960px )
+  .statistics-body-options
+    width: calc(100vw - 1.7rem - var(--drawer-width))

@@ -5,10 +5,48 @@
 
 .justify-content-end
   justify-content: flex-end
+  display: flex
+  text-align: right
 
 .header
   display: block
 
-.justify-content-end
-  display: block
-  text-align: right
+@media screen and (max-width: 710px) 
+  .bg-gradient-default
+    .gragh-content
+      display: grid
+
+      .graph-header
+        display: grid
+
+        .header
+          display: inline 
+
+          .justify-content-end
+            display: flex
+            
+
+@media screen and ( max-width: 480px)
+  .MuiButton-label
+    font-size: 10px
+@media screen and ( max-width: 360px)
+  .bg-gradient-default
+    width: 97.5%
+    margin: 0 auto
+
+    .gragh-content
+      display: grid
+
+      .graph-header
+        display: grid
+
+        .header
+          display: inline
+          
+          .justify-content-end
+            display: flex
+
+@media screen and ( min-width: 960px )
+  .bg-gradient-default
+    width: calc(100vw - 1.7rem - var(--drawer-width))
+

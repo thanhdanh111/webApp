@@ -7,9 +7,15 @@
 
 .select-name-formcontrol
   color: #00ab55
+  z-index: 1
   
+
   .label-select
     transform: translate(8px, 12px)
+    position: absolute
+    z-index: 2
+    background: #fff
+    color: #00ab55
 
   .MuiOutlinedInput-input
     padding: 10px 10px
@@ -17,12 +23,7 @@
 
     .select-item
       background: #fff
-
-li
-  &.MuiListItem-button
-    &:hover
-      background: #c8facd !important
-      color: #212b36
+      color: #00ab55
 
 .MuiPopover-root
   .MuiMenu-paper
@@ -36,4 +37,3 @@ li
 
     .Mui-selected
       background: #00ab55
-      color: #fff
