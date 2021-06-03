@@ -15,7 +15,6 @@ import { getNotificationFCM } from 'pages/users/logic/users_actions';
 type Token = string | null;
 const Auth = ({ children, publicPages }) => {
   const path = window.location.pathname;
-
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const access = useSelector((state: RootState) => state.access);
