@@ -15,8 +15,10 @@ const TimeOffNotificationContent: FunctionComponent<InitialProps> = (props: Init
   const router = useRouter();
   const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
   const dayOffsStatus = taskStatuses.taskStatusNotification;
-  const userProfile = useSelector((state: RootStateOrAny) => state.auth);
-  const checkRole = isAdminOrManagerUser(userProfile.access, userProfile.access[0]?.companyID, userProfile[0]?.departentID);
+  const authState = useSelector((state: RootStateOrAny) => state.auth);
+  const companyID = authState.extendedCompany?.companyID?._id;
+  const departmentID = authState.department?._id;
+  const checkRole = isAdminOrManagerUser(authState.access, companyID, departmentID);
   useEffect(() => {
     dispatch(getTaskStatusByIDThunkAction(props.targetEntityName, props.daysOffID));
   }, []);

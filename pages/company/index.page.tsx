@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import PageCardUi from '@components/page_card/page_card';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useSnackbar, WithSnackbarProps } from 'notistack';
 import { updateCompanyNotifications } from './logic/company_actions';
 import { CompanyStateType } from './logic/company_reducer';
 import ConnectSlackTabUi from './UI/connect_slack_tab';
-import TabsUi from '@components/tabs/tabs';
-import SettingsInputAntennaIcon from '@material-ui/icons/SettingsInputAntenna';
-
-const references = ['General', 'Company', 'Company Settings'];
-const tabs = ['slack team'];
-const tabIcons = [SettingsInputAntennaIcon];
-const tabUIs = [ConnectSlackTabUi];
+import CompanyDetailTab from './UI/company_detail';
+import { Avatar, Container, Grid } from '@material-ui/core';
 
 const CompanyPage = () => {
   const { companyNotifications  }: CompanyStateType  = useSelector((state: RootState) => state.company);
+  const authState  = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
-  const [currentTabIndex, setCurrentTab] = useState(0);
+  const photoNameCompany = authState?.extendedCompany?.companyID?.name?.charAt(0);
+  const [img, setImg] = useState(true);
 
   useEffect(pushNotification, [companyNotifications]);
 
@@ -39,20 +35,30 @@ const CompanyPage = () => {
     return;
   }
 
-  function handleChange(_: React.ChangeEvent<{}>, newValue: number) {
-    setCurrentTab(newValue);
-  }
-
   return (
     <>
-      <PageCardUi references={references} heading='Company' />
-      <TabsUi
-        tabs={tabs}
-        currentTabIndex={currentTabIndex}
-        tabIcons={tabIcons}
-        tabUIs={tabUIs}
-        handleChange={handleChange}
-      />
+      <Container className='company-page'>
+        <Grid className='company-photo' sm={3} xs={12}>
+          { (authState?.extendedCompany?.companyID?.photos?.[0] && img) ?
+            <img
+              src={authState.extendedCompany.companyID.photos[0]}
+              className='img-company'
+              onError={() => setImg(false)}
+            /> :
+            <Avatar
+              variant='rounded'
+              className='img-company'
+            >
+              {photoNameCompany}
+            </Avatar>
+          }
+        </Grid>
+        <Grid className='company-information' sm={9} xs={12}>
+          <CompanyDetailTab/>
+          <ConnectSlackTabUi />
+
+        </Grid>
+      </Container>
     </>
   );
 };

@@ -7,7 +7,10 @@ import { getUserAccessAction } from 'pages/access_denied/logic/access_reducer';
 import { getBrowserToken } from 'helpers/fcm';
 import firebase from 'firebase/app';
 import 'firebase/messaging';
-import { useSnackbar, WithSnackbarProps } from 'notistack';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
+import axios from 'axios';
+import { config } from 'helpers/get_config';
+import { getNotificationFCM } from 'pages/users/logic/users_actions';
 
 type Token = string | null;
 const Auth = ({ children, publicPages }) => {
@@ -17,7 +20,6 @@ const Auth = ({ children, publicPages }) => {
   const [loading, setLoading] = useState(true);
   const access = useSelector((state: RootState) => state.access);
   const dispatch = useDispatch();
-  const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
 
   useEffect(() => {
     void checkLogin();
@@ -37,17 +39,36 @@ const Auth = ({ children, publicPages }) => {
 
   const getFCMToken = async () => {
     const fcmToken = await getBrowserToken();
-    if (!fcmToken) {
+    const token: Token =  localStorage.getItem('access_token');
+    if (!fcmToken || !token) {
       return;
     }
 
-    const messaging = firebase.messaging();
-    messaging.onMessage((payload) => {
-      // tslint:disable-next-line:no-console
-      console.log(payload);
-      const noti = payload.notification;
-      enqueueSnackbar(`${noti.title}: ${noti.body.substring(0, 30)}...`, { variant: 'info' });
-    });
+    const subscribe = await axios.post(`${config.BASE_URL}/users/me/fcm/subscribe`,
+      {
+        token: fcmToken,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (subscribe.data) {
+      const messaging = firebase.messaging();
+      messaging.onMessage((payload) => {
+        // tslint:disable-next-line:no-console
+        console.log('payload', payload);
+        const noti = payload.notification;
+
+        dispatch(getNotificationFCM(noti));
+        dispatch(pushNewNotifications({ variant: 'info' , message: `${noti.title}: ${noti.body.substring(0, 30)}...` }));
+      });
+    }
+
+    return;
   };
 
   const hasAccessPermission = () => {

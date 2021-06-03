@@ -1,14 +1,26 @@
-export function returnNotification({ resultInfo }) {
-  const newResultInfo = resultInfo ?? { };
-
-  switch (resultInfo?.type) {
-    case 'succeed':
-      newResultInfo['message'] = 'Update Channel Successfully';
-      newResultInfo['status'] = 'success';
+export function returnNotification({ type }) {
+  let newResultInfo = '';
+  switch (type) {
+    case 'succeedUpdateChannel':
+      newResultInfo = 'Update Channel Successfully';
       break;
-    case 'failed':
-      newResultInfo['message'] = 'Error';
-      newResultInfo['status'] = 'error';
+    case 'failedUpdateChannel':
+      newResultInfo = 'Failed Update Channel';
+      break;
+    case 'errorFailed':
+      newResultInfo = 'Error data. Please update slack token!';
+      break;
+    case 'succeedCreateProject':
+      newResultInfo = 'Create Project Successfully';
+      break;
+    case 'failedCreateProject':
+      newResultInfo = 'Error. Failed Create Project';
+      break;
+    case 'companyTokenNotification':
+      newResultInfo = 'You have not registered any companies for workspace';
+      break;
+    case 'token':
+      newResultInfo = 'Please check your token';
       break;
   }
 
