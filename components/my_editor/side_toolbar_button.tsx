@@ -7,7 +7,13 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ParagraphStyleSideToolbarBtn from 'pages/docs/UI/paragraph_style_toolbar_btn';
 
-const SideToolbarButton = ({ handleOnChangeLineStyle, contentBlock, onClickSideToolbar, onMoveBlockAction }) => {
+const SideToolbarButton = ({
+  handleOnChangeLineStyle,
+  contentBlock,
+  onClickSideToolbar,
+  onMoveBlockAction,
+  children,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handlePopperOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -33,10 +39,11 @@ const SideToolbarButton = ({ handleOnChangeLineStyle, contentBlock, onClickSideT
         onClick={handlePopperOpen}
       >
         <MoreVertIcon
-          style={{ marginLeft: '3px', marginTop: '6px' }}
+          style={{ width: '20px', marginTop: '8px', marginLeft: '3px' }}
           className='block-wrapper--icon'
         />
       </Button>
+      {children}
 
       <Popper
         id='sideToolbar'

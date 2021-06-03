@@ -31,7 +31,9 @@ export const UnstyledBlockCustom = (props) => {
       handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
       onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
       onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
-    />,
+    >
+      {null}
+    </SideToolbarButton>,
     <EditorBlock {...props} />,
   );
 };
@@ -44,7 +46,9 @@ export const CodeBlockCustom = (props) => React.createElement(
     handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
     onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
-  />,
+  >
+    {null}
+  </SideToolbarButton>,
   <EditorBlock {...props} />,
 );
 
@@ -56,8 +60,9 @@ export const UnorderedListItemCustom = (props) => React.createElement(
     handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
     onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
-  />,
-  <FiberManualRecordIcon style={{ width: '10px', height: '10px', marginRight: '10px' }} />,
+  >
+    <FiberManualRecordIcon style={{ width: '10px', height: '20px', marginLeft: '10px', marginRight: '7px' }} />
+  </SideToolbarButton>,
   <EditorBlock {...props} />,
 );
 
@@ -69,8 +74,9 @@ export const OrderedListItemCustom = (props) => React.createElement(
     handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
     onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
-  />,
-  <IndexElement {...props}  />,
+  >
+    <IndexElement {...props}  />
+  </SideToolbarButton>,
   <EditorBlock {...props} />,
 );
 
@@ -104,5 +110,15 @@ const IndexElement = (props) => {
     orderNumber = 1;
   }
 
-  return <div>{orderNumber}. </div>;
+  return <div
+    style={{
+      fontSize: '0.875rem',
+      lineHeight: '1.43',
+      fontWeight: 400,
+      marginLeft: '10px',
+      marginRight: '5px',
+    }}
+  >
+    {orderNumber}.
+  </div>;
 };

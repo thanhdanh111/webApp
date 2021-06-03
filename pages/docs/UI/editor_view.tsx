@@ -6,7 +6,7 @@ import { DocsValueType } from '../logic/docs_reducer';
 import { RootState } from 'redux/reducers_registration';
 import { SelectionState, EditorState } from 'draft-js';
 import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions';
-import { showUpToolbar } from '../logic/docs_inline_toolbar_actions';
+import { showUpToolbarAndUpdateState } from '../logic/docs_inline_toolbar_actions';
 
 interface EditorView {
   selectionRect?: DOMRect;
@@ -37,11 +37,7 @@ const EditorView: FunctionComponent<EditorView> = () => {
   }
 
   function handleChangeEditorState(newEditorState) {
-    showUpToolbar(newEditorState, needDisplay, dispatch);
-
-    dispatch(updateSingleEditorState({
-      editorState: newEditorState,
-    }));
+    showUpToolbarAndUpdateState(newEditorState, needDisplay, dispatch);
   }
 
   function onClickOptionInSideToolbar(action) {

@@ -58,12 +58,14 @@ const DocsPage = () => {
       handleClick={handleClickHeadingButton}
     />
     <Input
+      style={{ marginTop: '20px', paddingLeft: '45px', marginBottom: '20px' }}
       value={title}
       className='docs-page--title'
       disableUnderline
       onChange={(event) => onChangeTitle(event)}
       placeholder='UNTITLED'
       multiline={false}
+      autoFocus
       required={true}
     />
     <EditorView

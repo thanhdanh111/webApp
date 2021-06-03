@@ -45,6 +45,8 @@ interface UpdateDocs {
   editorState?: EditorState;
   shouldCallApi?: boolean;
   storeProjectsIndice?: object;
+  needDisplay?: boolean;
+  selectionRect?: DOMRect;
 }
 
 export const updateDocs = (data: UpdateDocs) => {
