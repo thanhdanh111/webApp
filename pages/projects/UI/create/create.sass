@@ -1,9 +1,11 @@
 .create-project
+  padding: 16px 30px
   -webkit-box-align: center
   align-items: center
   -webkit-box-pack: justify
   justify-content: space-between
-  transform: translateY(50%)
+  width: 90%
+  margin: 70px auto
   border-radius: 16px
   box-shadow: rgba(145, 158, 171, 0.24) 0 0 2px 0, rgba(145, 158, 171, 0.24) 0 16px 32px -4px
   
@@ -33,7 +35,7 @@
 
         .form-all
           width: 100%
-          margin: 10px
+          padding: 5px 5px
 
           .form-label
             font-size: 18px
@@ -73,11 +75,10 @@
 
     .des
       max-width: 100%
-      padding: 10px
 
       .project-des-input
         width: 100%
-        padding: 5px 0
+        padding: 5px 5px
         display: flex
 
         .input-text
@@ -90,7 +91,7 @@
           outline: none
 
     .btn
-      padding: 10px
+      padding: 5px 5px
       text-align: end
 
 @media screen and (max-width: 1366px)
@@ -102,12 +103,16 @@
     .create-project-form
       display: block
 
-@media screen and (max-width: 360px)
-  .create-project
-    .create-project-form
       .create-project-form-grid
         display: contents
 
         .create-project-form-card-item
           .form-all
-            width: 93%
+            padding: 5px 0
+
+      .des
+        .project-des-input
+          padding: 5px 0
+
+      .btn
+        padding: 5px 0

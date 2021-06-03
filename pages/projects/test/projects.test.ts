@@ -33,6 +33,7 @@ describe('Projects page', () => {
   test('Test projects page successfully', async () => {
     await page.goto('http://localhost:5000/projects');
     await page.waitForSelector('.projects');
+    await page.waitForSelector('.page-project-card');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -62,9 +63,12 @@ describe('Projects page', () => {
 
     await page.waitForSelector('.name-project');
 
+    await page.waitForFunction(
+      () => !!document.querySelector('.name-project').innerText,
+      {},
+    );
     const link = await page.screenshot();
     expect(link).toMatchImageSnapshot();
-
   });
 
 
