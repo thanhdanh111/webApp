@@ -17,10 +17,19 @@
 .public-DraftEditor-content
   padding-bottom: 200px
 
-.docs-page > .btn-primary-container
+.docs-page > .docs-action-bar
   display: flex
+  flex-direction: row
   justify-content: flex-end
-  margin-right: 55px
+  margin-right: 60px
+
+  .primary-red-btn
+    margin-left: 20px
+
+    .MuiButton-contained,
+    .Mui-disabled
+      box-shadow: none !important
+
 
 .public-DraftStyleDefault-block
   overflow-x: auto
@@ -32,3 +41,11 @@
   font-stretch: normal
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important
   font-weight: 600 !important
+
+.primary-red-btn > .btn-primary
+  box-shadow: rgba(244, 67, 54, 0.24) 0 8px 16px 0 !important
+  background-color: rgba(244, 67, 54, 0.95)
+
+  &:hover 
+    background-color: rgba(244, 67, 54, 0.95)
+    opacity: 0.8

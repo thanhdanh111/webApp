@@ -2,6 +2,25 @@ import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 
+export const blockStyles = [
+  'unstyled',
+  'header-one',
+  'header-two',
+  'header-three',
+  'code-block',
+  'ordered-list-item',
+  'unordered-list-item',
+  'header-one',
+  'header-two',
+  'header-three',
+];
+
+export const inlineStyles = [
+  'BOLD',
+  'ITALIC',
+  'UNDERLINE',
+];
+
 export const inlineToolbarButons = [
   {
     functionality: 'BOLD',

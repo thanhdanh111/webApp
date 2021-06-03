@@ -73,10 +73,17 @@ const CreateNewProjectDialog = ({ handleCreate, loading })  => {
           </Grid>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color='primary'>
+            <Button
+              style={{ color: '#f44336' }}
+              onClick={handleClose}
+              className='primary-red-btn'
+            >
               Cancel
             </Button>
-            <Button onClick={() => handleCreate(state.name, handleClose)} color='primary'>
+            <Button
+              onClick={() => handleCreate(state.name, handleClose)}
+              color='secondary'
+            >
               Create
             </Button>
           </DialogActions>

@@ -45,10 +45,7 @@ const DocsTreeView = () => {
   }
 
   function onClickPage(page) {
-    const convertedBlocks = JSON.parse(page?.pageContent)?.map((block) => {
-
-      return { ...block, data: {} };
-    });
+    const convertedBlocks = JSON.parse(page?.pageContent);
 
     const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: {} });
 

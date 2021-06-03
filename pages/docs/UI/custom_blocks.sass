@@ -3,14 +3,14 @@
   margin-left: 45px
   position: relative
   padding-right: 10px
-  height: 20px
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important
 
   span
-    display: inline
-    white-space: pre-wrap
-    word-break: break-word
-    overflow-wrap: break-word
+    &:not(.MuiButton-label)
+      display: inline
+      white-space: pre-wrap
+      word-break: break-word
+      overflow-wrap: break-word
   
   .public-DraftStyleDefault-block
     margin-left: 18px
@@ -26,6 +26,7 @@
   user-select: none
   caret-color: rgba(0, 0, 0, 0)
   width: 50px
+  height: 20px
   justify-content: flex-end
 
 .block-wrapper > .block-wrapper--btns > .MuiButton-root
@@ -76,14 +77,29 @@
 .header-one
   font-size: 32px
   font-weight: 600
-  height: 50px
+  min-height: 40px
+  margin-block-start: 0
+  margin-block-end: 5px
+
+  .block-wrapper--btns
+    transform: translateY(65%)
 
 .header-two
   font-size: 24px
   font-weight: 600
-  height: 40px
+  height: 35px
+  margin-block-end: 3px
+  margin-block-start: 0
+  
+  .block-wrapper--btns
+    transform: translateY(40%)
 
 .header-three
   font-size: 20px
   font-weight: 600
-  height: 30px
+  min-height: 32px
+  margin-block-end: 1px
+  margin-block-start: 0
+
+  .block-wrapper--btns
+    transform: translateY(20%)

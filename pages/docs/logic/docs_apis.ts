@@ -127,6 +127,58 @@ export const savePage = () => async (dispatch, getState) => {
   }
 };
 
+export const deletePage = () => async (dispatch, getState) => {
+  try {
+    const token: Token =  localStorage.getItem('access_token');
+    const {
+      title,
+      selectedDocProject,
+      selectedPage,
+      storeProjectsIndice,
+      docProjects,
+    }: DocsValueType = getState()?.docs;
+    const docProjectID = selectedDocProject?._id;
+    const selectedPageID = selectedPage?._id;
+
+    if (!title || !docProjectID || !selectedPageID) {
+
+      return;
+    }
+
+    dispatch(updateDocs({ loading: true }));
+
+    await axios.delete(
+      `${config.BASE_URL}/docProjects/${docProjectID}/docPages/${selectedPageID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    const projectIndex = storeProjectsIndice[docProjectID];
+
+    if (typeof projectIndex !== 'number') {
+      dispatch(updateDocs({ loading: false, shouldCallApi: true }));
+
+      return;
+    }
+
+    const newProjects  = docProjects;
+    newProjects[projectIndex].pages = newProjects[projectIndex]?.pages?.filter((page) => {
+      if (page?._id !== selectedPageID) {
+        return true;
+      }
+
+      return false;
+    });
+
+    dispatch(updateDocs({ loading: false, docProjects: [...newProjects] }));
+  } catch (error) {
+    dispatch(updateDocs({ loading: false }));
+  }
+};
+
 export const getDocProjects = () => async (dispatch) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
@@ -256,6 +308,41 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
     };
 
     dispatch(updateDocs({ loading: false, docProjects: [...docProjects, newDocProject] }));
+  } catch (error) {
+    dispatch(updateDocs({ loading: false }));
+  }
+};
+
+export const deleteDocProject = () => async (dispatch, getState) => {
+  try {
+    const token: Token =  localStorage.getItem('access_token');
+    const { selectedDocProject, docProjects }: DocsValueType = getState()?.docs;
+    const selectedDocProjectID = selectedDocProject?._id;
+
+    if (!token || !selectedDocProjectID) {
+      return;
+    }
+
+    dispatch(updateDocs({ loading: true }));
+
+    await axios.delete(
+      `${config.BASE_URL}/docProjects/${selectedDocProjectID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    const newDocProjects = docProjects.filter((docProject) => {
+      if (docProject?._id !== selectedDocProjectID) {
+        return true;
+      }
+
+      return false;
+    });
+
+    dispatch(updateDocs({ loading: false, docProjects: newDocProjects }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }

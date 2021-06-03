@@ -35,10 +35,17 @@ a {
   height: 100%;
 }
 
+.primary-red-btn {
+  border-radius: 8px;
+}
+
 .main-page {
   flex-grow: 1;
 }
 
+.primary-red-btn:has(.MuiButton-contained.Mui-disabled) {
+  background-color: none 
+}
 
 body::-webkit-scrollbar, body *::-webkit-scrollbar {
   width: 6px;

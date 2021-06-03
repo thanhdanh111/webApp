@@ -1,10 +1,14 @@
 import { getDefaultKeyBinding } from 'draft-js';
 
 export function handleKeyBinding({ state, event }) {
-  if (event?.code !== 'Enter' && event?.keyCode !== 13) {
-    return getDefaultKeyBinding(event);
+  if (event?.code === 'Enter' && event?.keyCode === 13) {
+    return handleEnter(state, event);
   }
 
+  return  getDefaultKeyBinding(event);
+}
+
+function handleEnter(state, event) {
   const onSelectBlockKey = state?.getSelection()?.getAnchorKey();
   const oldContentState = state?.getCurrentContent();
 

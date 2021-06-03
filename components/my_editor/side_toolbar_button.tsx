@@ -39,7 +39,7 @@ const SideToolbarButton = ({
         onClick={handlePopperOpen}
       >
         <MoreVertIcon
-          style={{ width: '20px', marginTop: '8px', marginLeft: '3px' }}
+          style={{ width: '20px', height: '20px' }}
           className='block-wrapper--icon'
         />
       </Button>

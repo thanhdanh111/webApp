@@ -1,3 +1,4 @@
+import { blockStyles, inlineStyles } from 'constants/toolbar_docs';
 import { RichUtils, EditorState } from 'draft-js';
 import { updateDocs } from './docs_actions';
 
@@ -9,27 +10,18 @@ export function handleToolbarActions(editorState, action) {
   const oldSelection = editorState.getSelection();
   let newEditorState;
 
-  switch (action) {
-    case 'unstyled':
-    case 'header-one':
-    case 'header-two':
-    case 'header-three':
-    case 'code-block':
-    case 'ordered-list-item':
-    case 'unordered-list-item':
+  if (blockStyles.includes(action)) {
+    newEditorState = RichUtils.toggleBlockType(
+      editorState,
+      action,
+    );
+  }
 
-      newEditorState = RichUtils.toggleBlockType(
-        editorState,
-        action,
-      );
-      break;
-    default:
-      newEditorState = RichUtils.toggleInlineStyle(
-        editorState,
-        action,
-      );
-
-      break;
+  if (inlineStyles.includes(action)) {
+    newEditorState = RichUtils.toggleInlineStyle(
+      editorState,
+      action,
+    );
   }
 
   return EditorState.forceSelection(
