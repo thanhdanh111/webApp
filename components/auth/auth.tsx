@@ -84,7 +84,7 @@ const Auth = ({ children, publicPages, managerPages }) => {
         return false;
       }
 
-      isManager = checkOnlyTrueInArray({
+      isManager = isManager || checkOnlyTrueInArray({
         conditionsArray: [
           item?.companyID === auth?.extendedCompany?.companyID?._id,
           item?.role ===  Roles.COMPANY_MANAGER ||
