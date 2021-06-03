@@ -37,7 +37,7 @@ const UserDetail = (props) => {
     accept: () => 'not-handled-now',
   };
 
-  const UseOutSideReturnAction = (funcProps) => {
+  const CustomizedReturnActionComponent = (funcProps) => {
     let actionList = ['delete'];
 
     if (funcProps?.status === 'ACCEPTED') {
@@ -77,7 +77,7 @@ const UserDetail = (props) => {
       loading={false}
       length={props?.data?.departmentRoles?.length}
       fetchData={() => 'handled'}
-      UseOutsideReturnAction={UseOutSideReturnAction}
+      CustomizedReturnActionComponent={CustomizedReturnActionComponent}
       needCheckBox={false}
       actions={['accept', 'delete']}
       redButtonName='delete'

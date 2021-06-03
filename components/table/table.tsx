@@ -16,7 +16,7 @@ import { checkStringCondition } from 'helpers/check_string_condtion';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import TableRowBase from './table_row';
 
-interface UseOutsideReturnAction {
+interface CustomizedReturnActionComponent {
   status?: string;
   itemIndex?: number;
 }
@@ -39,7 +39,7 @@ interface InitialProps {
   notFoundWarning?: string;
   hadExpandableRows?: boolean;
   ComponentDetail?: React.FunctionComponent;
-  UseOutsideReturnAction?: React.FunctionComponent<UseOutsideReturnAction>;
+  CustomizedReturnActionComponent?: React.FunctionComponent<CustomizedReturnActionComponent>;
 }
 
 const BaseTable = (props: InitialProps) => {
@@ -69,10 +69,10 @@ const BaseTable = (props: InitialProps) => {
       return;
     }
 
-    if (props?.UseOutsideReturnAction) {
-      const Element = props?.UseOutsideReturnAction;
+    if (props?.CustomizedReturnActionComponent) {
+      const ActionComponent = props?.CustomizedReturnActionComponent;
 
-      return  <Element status={itemStatus} itemIndex={itemIndex}/>;
+      return  <ActionComponent status={itemStatus} itemIndex={itemIndex}/>;
     }
 
     const notPendingStatus = checkStringCondition({
