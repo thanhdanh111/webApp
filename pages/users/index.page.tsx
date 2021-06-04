@@ -3,8 +3,9 @@ import ListUsers from './UI/users';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useRouter } from 'next/router';
+import { Roles } from 'constants/roles';
 
-const validAccessPage = ['COMPANY_MANAGER', 'DEPARTMENT_MANAGER'];
+const validAccessPage = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
 
 const Users = () => {
   const router = useRouter();
@@ -24,8 +25,9 @@ const Users = () => {
     for (const userAccess of userAccesses) {
       const validAccess = validAccessPage.includes(userAccess?.role) &&
       userAccess?.companyID === combinedUsersSelector?.companyID;
+      const isAdmin = userAccess?.role === Roles.ADMIN;
 
-      if (validAccess) {
+      if (validAccess || isAdmin) {
 
         return;
       }

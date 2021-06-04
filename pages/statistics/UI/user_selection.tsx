@@ -57,7 +57,7 @@ const UserSelection: FunctionComponent = () => {
         onChange={handleChange}
         className='select-list-user'
       >
-        {getOptions(users.list)}
+        {getOptions(users?.list)}
         {getMore(cursor)}
         <MenuItem value='all users' className='select-item'>All</MenuItem>
       </Select>
