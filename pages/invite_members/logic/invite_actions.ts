@@ -8,7 +8,6 @@ export enum InviteActionTypes {
   updateAvailCompanies = 'updateAvailCompanies',
   inviteMembers = 'inviteMembersPage',
   inviteLoading = 'inviteLoading',
-  updateInviteResultInfo = 'updateInviteResultInfo',
 }
 
 interface ChooseInviteCompany {
@@ -61,14 +60,6 @@ export const inviteLoading = ({ isLoading }) => {
   return {
     isLoading,
     type: InviteActionTypes.inviteLoading,
-  };
-};
-
-export const updateInviteResultInfo = ({ inviteResultInfo }) => {
-
-  return {
-    inviteResultInfo,
-    type: InviteActionTypes.updateInviteResultInfo,
   };
 };
 

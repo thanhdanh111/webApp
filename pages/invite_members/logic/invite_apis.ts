@@ -1,10 +1,14 @@
 import axios from 'axios';
-import { inviteLoading, updateInviteCompanies, updateInviteResultInfo } from './invite_actions';
+import { inviteLoading, updateInviteCompanies } from './invite_actions';
 import { AvailInviteCompanies } from './invite_interface';
 import { config } from 'helpers/get_config';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
+import { returnNotification } from './invite_error_notifications';
 
 type Token = string | null;
-
+export enum NotificationTypes{
+  error403 = 'You don\'t have permission to invite',
+}
 export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (dispatch) => {
   try {
     await dispatch(inviteLoading({ isLoading: true }));
@@ -24,29 +28,18 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
     });
 
     if (res?.data || res?.data?.length) {
-      const resultInfo = res?.data?.map((info) => {
+      await Promise.all(res.data.map((info) => {
+        const errorNotification = returnNotification({ type: info?.status, email: info?.email, message: info?.errorMessage });
 
-        return {
-          status: info?.status,
-          message: info?.errorMessage,
-          email: info?.email,
-          role: info?.role,
-        };
-      });
-
-      await dispatch(updateInviteResultInfo({ inviteResultInfo: resultInfo }));
+        return dispatch(pushNewNotifications({ variant: errorNotification['status'] , message: errorNotification['message'] }));
+      }));
     }
 
     await dispatch(inviteLoading({ isLoading: false }));
   } catch (error) {
-    const errorNotification = {
-      status: String(error.response?.data?.statusCode ?? ''),
-      message: error?.response?.data?.message,
-      email: '',
-      role: '',
-    };
+    const errorNotification = returnNotification({ type: 'failed' });
 
-    await dispatch(updateInviteResultInfo({ inviteResultInfo: [errorNotification] }));
+    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
 
     await dispatch(inviteLoading({ isLoading: false }));
   }
@@ -168,14 +161,8 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
 
     await dispatch(updateInviteCompanies({ availCompanies, isLoading: false }));
   } catch (error) {
-    const errorNotification = {
-      status: String(error.response?.data?.statusCode ?? ''),
-      message: error?.response?.data?.message,
-      email: '',
-      role: '',
-    };
 
-    await dispatch(updateInviteResultInfo({ inviteResultInfo: [errorNotification] }));
+    await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.error403 }));
     await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
   }
 };
