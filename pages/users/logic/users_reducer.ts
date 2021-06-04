@@ -46,7 +46,6 @@ const initialState: UsersData = {
   },
   editingUserInfo: {},
   onRemovingUser: false,
-  shouldCallDataUsersApi: true,
 };
 
 // tslint:disable-next-line: cyclomatic-complexity

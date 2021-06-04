@@ -111,7 +111,6 @@ export interface UsersData {
   selectNotification: NotificationTypeState;
   editingUserInfo: EditingUserInfo;
   onRemovingUser: boolean;
-  shouldCallDataUsersApi: boolean;
 }
 
 export interface ParamGetUser {
