@@ -1,13 +1,17 @@
-export function returnNotification({ resultInfo }) {
-  const newResultInfo = resultInfo ?? { };
+export function returnNotification({ type, email, message }: { type: string, email?: string, message?: string}) {
+  const newResultInfo = {};
 
-  switch (resultInfo?.status) {
+  switch (type) {
     case 'succeed':
-      newResultInfo['message'] = `Invited ${resultInfo?.email ?? ''} Successfully`;
+      newResultInfo['message'] = `Invited ${email ?? ''} Successfully`;
       newResultInfo['status'] = 'success';
       break;
     case 'failed':
-      newResultInfo['message'] = `${resultInfo?.email ?? ''}: ${resultInfo?.message ?? ''}`;
+      newResultInfo['message'] = `${email ?? ''}: ${message ?? ''}`;
+      newResultInfo['status'] = 'error';
+      break;
+    case 'invalidEmail':
+      newResultInfo['message'] = `${email ?? ''}: invalid Email`;
       newResultInfo['status'] = 'error';
       break;
     case 'failedConnection':

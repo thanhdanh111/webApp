@@ -5,7 +5,6 @@ import {
   updatePaginationTimeOff, updateTimeOffIndexLoading,
   updateStatusTimeOff, updateTimeOffLoadingStatus,
   updateOnSendingTimeOffRequest, updateTimeOffCompaniesToRequest,
-  updateTimeOffRequestNotifications,
 } from './time_off_actions';
 import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValue } from './time_off_interface';
 import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
@@ -13,8 +12,14 @@ import { checkManager } from './time_off_check_manager';
 import moment from 'moment';
 import { getUserCompanies } from 'helpers/get_user_companies';
 import { getDepartmentsIntoCompanies } from 'helpers/get_the_departments_into_companies';
-import { handleTimeOffRequestErrors } from './time_off_errors';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
+
+const notificationsType = {
+  201: 'Sent your letter successfully',
+  401: 'Something went wrong with your account',
+  403: 'You cannot use this functionality',
+};
 
 function isInvalidTimeOffApiData(timeOff) {
   if (!timeOff) {
@@ -414,12 +419,11 @@ export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
     }));
 
   } catch (error) {
-    const notifications = handleTimeOffRequestErrors({
-      error: error?.response?.data?.statusCode,
-      messageData: error?.response?.data?.message,
-    });
 
-    await dispatch(updateTimeOffRequestNotifications({ notifications, onSendingRequest: false }));
+    const handleMessage = notificationsType[error?.response?.data?.statusCode]
+      || 'Something went wrong';
+
+    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
     await dispatch(updateTimeOffCompaniesToRequest({
       companies: [
         { name: 'None' },
@@ -450,19 +454,8 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
     });
 
     if (!haveNeededData) {
-      const missingNotifications = handleTimeOffRequestErrors({
-        error: 400,
-        messageData: [
-          {
-            property: 'missingData',
-          },
-        ],
-      });
-
-      await dispatch(updateTimeOffRequestNotifications({
-        notifications: missingNotifications,
-        onSendingRequest: false,
-      }));
+      const handleError = notificationsType[400] || 'Something went wrong';
+      await dispatch(pushNewNotifications({ variant: 'error' , message: handleError }));
 
       return;
     }
@@ -489,18 +482,14 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
         },
       });
 
-    const notifications = handleTimeOffRequestErrors({
-      error: res?.status,
-      messageData: [],
-    });
+    const handleMessage = notificationsType[res?.status];
 
-    await dispatch(updateTimeOffRequestNotifications({ notifications, onSendingRequest: false }));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: handleMessage }));
+
   } catch (error) {
-    const notifications = handleTimeOffRequestErrors({
-      error: error?.response?.data?.statusCode,
-      messageData: error?.response?.data?.message,
-    });
 
-    await dispatch(updateTimeOffRequestNotifications({ notifications, onSendingRequest: false }));
+    const handleMessage = notificationsType[error?.response?.data?.statusCode] || 'Something went wrong';
+
+    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
   }
 };

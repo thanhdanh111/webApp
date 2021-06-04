@@ -38,11 +38,11 @@ const companyReducer = (state = initialState, action) => {
         ...state,
         currentTabIndex: action.currentIndex,
       };
-    case CompanyActionTypes.UpdateCompanyNotifications:
-      return {
-        ...state,
-        companyNotifications: action.notifications,
-      };
+    // case CompanyActionTypes.UpdateCompanyNotifications:
+    //   return {
+    //     ...state,
+    //     companyNotifications: action.notifications,
+    //   };
     default:
       return state;
   }

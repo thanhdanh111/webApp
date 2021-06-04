@@ -6,10 +6,7 @@ import {
 import InviteMembersUI from './UI/invite_members';
 import ChooseCompaniesUI from './UI/choose_companies';
 import { getUserCompaniesApi } from './logic/invite_apis';
-import { useSnackbar, WithSnackbarProps } from 'notistack';
 import { InviteStateProps } from './logic/invite_interface';
-import { updateInviteResultInfo } from './logic/invite_actions';
-import { returnNotification } from './logic/invite_error_notifications';
 import { RootState } from 'redux/reducers_registration';
 
 export enum InviteMembersPageFlow {
@@ -47,37 +44,14 @@ const InviteMembersPage: FunctionComponent = () => {
   const {
     currentPage,
     inviteCompany,
-    inviteResultInfo,
   }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
   const accessState = useSelector((state: RootState) => state.access);
 
   const dispatch = useDispatch();
-  const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
 
   useEffect(()  =>  {
     dispatch(getUserCompaniesApi());
   }, [accessState?.access]);
-
-  useEffect(pushNotification, [inviteResultInfo]);
-
-  function pushNotification() {
-
-    if (inviteResultInfo && typeof inviteResultInfo !== 'string' && inviteResultInfo.length) {
-      for (const resultInfo of inviteResultInfo) {
-        const newResultInfo = returnNotification({ resultInfo });
-
-        if (!resultInfo) {
-          continue;
-        }
-
-        enqueueSnackbar(newResultInfo['message'], { variant: newResultInfo['status'] });
-      }
-
-      dispatch(updateInviteResultInfo({ inviteResultInfo: [] }));
-    }
-
-    return;
-  }
 
   return (
     <>

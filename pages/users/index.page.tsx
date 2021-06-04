@@ -16,7 +16,7 @@ const Users = () => {
     };
   });
 
-  useEffect(checkInvalidAccess, []);
+  useEffect(checkInvalidAccess, [combinedUsersSelector]);
 
   function checkInvalidAccess() {
     const userAccesses = combinedUsersSelector?.access?.access;

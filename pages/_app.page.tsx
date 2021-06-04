@@ -50,9 +50,6 @@ const withoutLayoutPaths = getPaths([
   '/login',
   '/access_denied',
 ]);
-
-const managerPages = ['/users'];
-
 const notistackRef = React.createRef<SnackbarProvider>();
 const onClickDismiss = (key) => {
   notistackRef?.current?.closeSnackbar(key);
@@ -77,7 +74,6 @@ function myApp({ Component, pageProps, store }) {
             maxSnack={100}
           >
             <Auth
-              managerPages={managerPages}
               publicPages={publicPages}
             >
               <Layout withoutPaths={withoutLayoutPaths}>
