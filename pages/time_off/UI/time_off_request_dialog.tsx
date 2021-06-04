@@ -7,9 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import DateAndTimePicker from '@components/date_time_picker/date_time_picker';
 import { OptionsSelect } from '@components/options_select/options_select';
-import { useSnackbar, WithSnackbarProps } from 'notistack';
 import { TimeOffRequestProps } from 'pages/time_off/logic/time_off_interface';
-import { updateContentLetter, updateTimeOffRequestNotifications } from 'pages/time_off/logic/time_off_actions';
+import { updateContentLetter } from 'pages/time_off/logic/time_off_actions';
 import { submitTimeOffRequest, getDepartmentsAndCompanies } from 'pages/time_off/logic/time_off_apis';
 import moment from 'moment';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
@@ -19,7 +18,6 @@ const TimeOffRequetDialog: FunctionComponent = () => {
   const selectedContent = { };
   const {
     companies,
-    timeOffRequestNotifications,
     onRequest,
     onSendingRequest,
     selectedCompany,
@@ -30,7 +28,6 @@ const TimeOffRequetDialog: FunctionComponent = () => {
     reason,
   }: TimeOffRequestProps = useSelector((state : RootState) => state.timeOffRequest);
   const access = useSelector((state: RootState) => state?.auth?.access);
-  const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
   const unixStartDateAndTime = moment(`${startDate}T${startTime}`).unix();
   const unixEndDateAndTime = moment(`${endDate}T${endTime}`).unix();
   const currentDate = moment().format('YYYY-MM-DD');
@@ -54,8 +51,6 @@ const TimeOffRequetDialog: FunctionComponent = () => {
     dispatch(getDepartmentsAndCompanies());
   }, [access]);
 
-  useEffect(pushNotifications, [timeOffRequestNotifications]);
-
   const firstOptions = companies?.map((company, index) =>
     <option
       key={index}
@@ -75,22 +70,6 @@ const TimeOffRequetDialog: FunctionComponent = () => {
   );
 
   const undefinedOption = <option key='none' value='none'>{'None'}</option>;
-
-  function pushNotifications() {
-    if (!onRequest || !timeOffRequestNotifications || !timeOffRequestNotifications.length) {
-      return;
-    }
-
-    timeOffRequestNotifications.forEach((noti) => {
-      if (!noti.message || !noti.variant) {
-        return;
-      }
-
-      enqueueSnackbar(noti.message, { variant: noti.variant });
-    });
-
-    dispatch(updateTimeOffRequestNotifications({ notifications: [], onSendingRequest: false }));
-  }
 
   function handleFillingInfo({ event }) {
     const stateName = event.target.name;
