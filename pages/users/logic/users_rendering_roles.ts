@@ -1,10 +1,10 @@
-import { Access } from './type';
-import { checkArray } from './check_array';
+import { Access } from '../../../helpers/type';
+import { checkArray } from '../../../helpers/check_array';
 import { rolesRender } from 'constants/roles';
 
 const companyRoles = ['COMPANY_STAFF', 'COMPANY_MANAGER'];
 
-export const getRole = (accesses, companyID) => {
+export const getRenderingRolesForUsersPage = (accesses, companyID) => {
   if (!checkArray(accesses)) {
     return;
   }
@@ -24,8 +24,7 @@ export const getRole = (accesses, companyID) => {
       continue;
     }
 
-    const notMatchCurrentCompany = access?.companyID?._id !== companyID &&
-    companyRoles.includes(access?.role);
+    const notMatchCurrentCompany = access?.companyID?._id !== companyID;
 
     if (notMatchCurrentCompany) {
 

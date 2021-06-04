@@ -3,9 +3,9 @@ import { search, setLoading, pagination, hasNoNotification, getNotificationsActi
 import { UsersData, HeadCell, ParamGetUser, Data, UserAccess, Access } from '../../../helpers/type';
 import { config } from 'helpers/get_config';
 import { useEffect, useState } from 'react';
-import { getRole } from '../../../helpers/get_role';
 import { usersAction } from './users_type_action';
 import { rolesRender } from 'constants/roles';
+import { getRenderingRolesForUsersPage } from './users_rendering_roles';
 
 export const headCells: HeadCell[] = [
   { id: 'userName', numeric: false, disablePadding: true, label: 'User Name' },
@@ -230,7 +230,7 @@ function createData(
 
 export const renderData = (users: UserAccess[], companyID) => {
   return users.map((user: UserAccess) => {
-    const roles = getRole(user.accesses, companyID);
+    const roles = getRenderingRolesForUsersPage(user.accesses, companyID);
     const fullName = `${user.userID.firstName} ${user.userID.lastName}`;
     const id = user.userID._id;
 
