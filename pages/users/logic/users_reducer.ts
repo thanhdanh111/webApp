@@ -168,7 +168,7 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
 
 export const getSearchAction = (fullName) => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
+    const authState = getState()?.auth;
     const token = localStorage.getItem('access_token');
     const companyID = authState?.extendedCompany?.companyID?._id;
 

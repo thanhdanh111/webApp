@@ -33,11 +33,11 @@ export const deleteUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
           return departmentRole?._id !== accessID;
         });
 
-      const newListAfterEditingSearch = usersState?.list.map((user) => {
+      const newListAfterEditingSearch = usersState?.list?.map((user) => {
         if (user?.id === userRenderID) {
           return {
             ...user,
-            departmentRoles: newListSearch[userIndex].departmentRoles,
+            departmentRoles: newListSearch?.[userIndex]?.departmentRoles,
           };
         }
 
@@ -58,7 +58,7 @@ export const deleteUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
 
     newList[userIndex].departmentRoles =
       newList?.[userIndex]?.departmentRoles?.filter((departmentRole) => {
-        return departmentRole._id !== accessID;
+        return departmentRole?._id !== accessID;
       });
 
     dispatch(updateUsersReducer({
