@@ -4,7 +4,6 @@ export interface InviteValue {
   currentPage: string;
   availInviteCompanies: AvailInviteCompanies[];
   inviteLoading: boolean;
-  inviteResultInfo: InviteResultInfo[];
   hasNoCompanies: boolean;
 }
 
@@ -32,10 +31,3 @@ export interface AvailInviteCompanies {
 }
 
 export type InviteStateProps = InviteValue;
-
-export interface InviteResultInfo {
-  status: string;
-  message: string;
-  email: string;
-  role: string;
-}
