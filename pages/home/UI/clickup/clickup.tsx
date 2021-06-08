@@ -7,6 +7,7 @@ import TaskStatus from './statuses_clickup';
 import NavClickUp from './nav_clickup';
 import { TaskStatusType } from 'helpers/type';
 import { Typography } from '@material-ui/core';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 const BoardTasks: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -48,13 +49,19 @@ const BoardTasks: FunctionComponent = () => {
     });
   };
 
+  const onDragEnd = () => {
+    //
+  };
+
   return (
     <div className='board'>
       <NavClickUp handleClick={handleShowMe} show={showTask}/>
       <div className='board-tasks'>
           {!loading &&
           <>
-            {GenerateTaskStatuses()}
+            <DragDropContext onDragEnd={onDragEnd}>
+              {GenerateTaskStatuses()}
+            </DragDropContext>
             <div className='add-task task-status'>
                 <Typography component='span' className='add-task-text'>NEW TASK</Typography>
               </div>

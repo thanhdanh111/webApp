@@ -92,7 +92,7 @@ export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id;
+    const departmentID = '6048786b340cd7000859330a'; // authState?.department?._id;
 
     if (!token || !companyID) {
       await dispatch(hideLoaderListUser());
