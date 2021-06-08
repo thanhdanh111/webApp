@@ -15,7 +15,7 @@ export const getUserCompanies = ({ access, filterRoles }: GetUserCompanies) => {
 
   const companies: string[] = [];
   let isAdmin = false;
-  const storeCompanyIndice = {};
+  const filteredCompanyIDs = {};
 
   access.forEach((each, index) => {
     if (!each?.companyID) {
@@ -28,21 +28,16 @@ export const getUserCompanies = ({ access, filterRoles }: GetUserCompanies) => {
       return;
     }
 
-    const companyID = each.companyID as string;
+    const companyID = each?.companyID as string;
     const isNotSuitRole = filterRoles &&
       filterRoles?.length &&
       !filterRoles.includes(each?.role);
 
-    if (typeof storeCompanyIndice[companyID] === 'number') {
+    if (isNotSuitRole || filteredCompanyIDs[companyID] !== undefined) {
       return;
     }
 
-    if (isNotSuitRole) {
-      return;
-    }
-
-    storeCompanyIndice[companyID] = index;
-
+    filteredCompanyIDs[companyID] = index;
     companies.push(companyID);
   });
 

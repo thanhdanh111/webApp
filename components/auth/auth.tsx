@@ -74,12 +74,12 @@ const Auth = ({ children, publicPages }) => {
     const filteredAccess = access?.access?.filter((item) => {
       const isAdmin = item?.role === 'ADMIN';
       const hasPermission = item?.companyID !== null && item?.status === 'ACCEPTED';
-      if (!hasPermission && !isAdmin) {
+      if (hasPermission || isAdmin) {
 
-        return false;
+        return true;
       }
 
-      return true;
+      return false;
     });
 
     if (filteredAccess.length <= 0) {

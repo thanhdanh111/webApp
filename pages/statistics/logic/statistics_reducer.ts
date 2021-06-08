@@ -56,11 +56,7 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
         selectedUserID,
       },
       auth: {
-        extendedCompany: {
-          companyID: {
-            _id: companyID,
-          },
-        },
+        extendedCompany,
         userID,
       },
     }: RootState = state;
@@ -73,12 +69,12 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
       requestUser = selectedUserID;
     }
 
-    if (cursor === 'END' || !token || !companyID) {
+    if (cursor === 'END' || !token || !extendedCompany?.companyID?._id) {
       return;
     }
 
     const params = {
-      companyID,
+      companyID: extendedCompany?.companyID?._id,
       fromTime: fromTime.toString(),
       toTime: toTime.toString(),
     };

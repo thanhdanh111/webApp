@@ -1,10 +1,9 @@
-import { TableCell, TableRow, Avatar, Button } from '@material-ui/core';
+import { TableCell, TableRow, Avatar } from '@material-ui/core';
 import React from 'react';
 import moment from 'moment';
 import BaseTable from '@components/table/table';
 import { HeadCell } from 'helpers/type';
-import { useDispatch } from 'react-redux';
-import { updateUsersReducer } from 'pages/users/logic/users_actions';
+import CustomizedReturnActionComponent from './customized_return_user_detail';
 
 const headCells: HeadCell[] = [
   { id: 'departmentName', numeric: false, disablePadding: true, label: 'Department' },
@@ -16,58 +15,6 @@ const headCells: HeadCell[] = [
 const UserDetail = (props) => {
   const info = props?.data?.user;
   const time = moment(info?.userID?.lastAccessAt).utc().format();
-  const dispatch = useDispatch();
-
-  function removeUserFromDepartment(departmentIndex) {
-
-    dispatch(updateUsersReducer({
-      onRemovingUser: true,
-      editingUserInfo: {
-        ...props.data,
-        departmentName: props?.data?.departmentRoles?.[departmentIndex]?.departmentName,
-        departmentID: props?.data?.departmentRoles?.[departmentIndex]?.departmentID,
-        accessID: props?.data?.departmentRoles?.[departmentIndex]?._id,
-        userIndex: props?.index,
-      },
-    }));
-  }
-
-  const actionFunc = {
-    delete: removeUserFromDepartment,
-    accept: () => 'not-handled-now',
-  };
-
-  const CustomizedReturnActionComponent = (funcProps) => {
-    let actionList = ['delete'];
-
-    if (funcProps?.status === 'ACCEPTED') {
-      actionList = ['delete'];
-    }
-
-    return (
-      <ul
-        style={{ justifyContent: 'center' }}
-        className='list-action'
-      >
-        {actionList.map((action, index) => {
-          const colorButton = (action.toUpperCase() === 'DELETE') ? 'redButton' : '';
-
-          return (
-            <li className='action-item' key={index}>
-              <Button
-                variant='contained'
-                color='secondary'
-                className={`${colorButton} action`}
-                onClick={() => actionFunc?.[action]?.(funcProps?.itemIndex)}
-              >
-                {action}
-              </Button>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  };
 
   function renderDepartmentRoles() {
 
@@ -77,9 +24,9 @@ const UserDetail = (props) => {
       loading={false}
       length={props?.data?.departmentRoles?.length}
       fetchData={() => 'handled'}
-      CustomizedReturnActionComponent={CustomizedReturnActionComponent}
+      CustomizedReturnActionComponent={(funcProps) => <CustomizedReturnActionComponent {...funcProps} userData={props?.data} />}
       needCheckBox={false}
-      actions={['accept', 'delete']}
+      actions={['delete']}
       redButtonName='delete'
       hadExpandableRows={false}
     />;

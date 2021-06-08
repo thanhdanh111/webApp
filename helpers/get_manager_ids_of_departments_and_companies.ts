@@ -25,6 +25,8 @@ export const getManagerIDs = ({ access }: GetUserCompanies) => {
       return;
     }
 
+    const companyID = each?.companyID as string;
+
     if (each?.role && each?.role === 'ADMIN') {
       isAdmin = true;
 
@@ -32,18 +34,20 @@ export const getManagerIDs = ({ access }: GetUserCompanies) => {
     }
 
     if (each.role === 'COMPANY_MANAGER') {
-      managerCompanyIDs.push(each?.companyID as string);
+      managerCompanyIDs.push(companyID);
 
       return;
     }
 
-    if (!each.departmentID || each.role !== 'DEPARTMENT_MANAGER') {
+    const departmentID = each?.departmentID as string;
+
+    if (!departmentID || each.role !== 'DEPARTMENT_MANAGER') {
 
       return;
     }
 
-    managerDepartmentIDs.push(each.departmentID as string);
-    companyIDsOfDepartmentManagers.push(each.companyID as string);
+    managerDepartmentIDs.push(departmentID);
+    companyIDsOfDepartmentManagers.push(companyID);
   });
 
   return {

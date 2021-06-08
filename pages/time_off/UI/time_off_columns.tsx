@@ -105,6 +105,7 @@ const TimeOffColumns = ({
           fetchData={fetchData}
           redButtonName='REJECT'
           actionFunc={actionFunc}
+          fixedHeightInfiniteScroll={500}
           baseTableName={name}
           loadingIndex={loadingIndex}
           loadingStateName={loadingOptionStateName}

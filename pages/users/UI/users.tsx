@@ -88,6 +88,7 @@ const ListUsers: FunctionComponent = () => {
                     <BaseTable
                       headCells={headCells}
                       data={getData()}
+                      fixedHeightInfiniteScroll={500}
                       length={users?.totalCount}
                       loading={loading}
                       actions={actionList}

@@ -11,9 +11,11 @@ export const headCells: HeadCell[] = [
   { id: 'userName', numeric: false, disablePadding: true, label: 'User Name' },
   { id: 'companyRole', numeric: false, disablePadding: true, label: 'Company Role' },
   { id: 'stringPendingRoles', numeric: false, disablePadding: true, label: 'Pending Roles' },
+  { id: 'action', numeric: false, disablePadding: true, label: '' },
+
 ];
 
-export const actionList: string[] = [];
+export const actionList: string[] = ['delete'];
 
 const initialState: UsersData = {
   cursor: '',
@@ -29,7 +31,7 @@ const initialState: UsersData = {
   loadingList: true,
   totalCount: 0,
   status: 'string',
-  userLimit: 5,
+  userLimit: 10,
   notificationLimit: 10,
   selectNotification: {
     _id: '',
@@ -46,6 +48,8 @@ const initialState: UsersData = {
   },
   editingUserInfo: {},
   onRemovingUser: false,
+  accountCompanyManagerIDs: [],
+  accountDepartmentManagerIDs: [],
 };
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -57,7 +61,13 @@ export const usersReducer = (state = initialState, action) => {
         loadingList: action.payload,
       };
     case usersAction.PAGINATION:
-      const listNewUser = renderData(action.payload.list, action.companyID);
+      const listNewUser = renderData({
+        users: action.payload.list,
+        companyID: action.companyID,
+        accountCompanyManagerIDs : state.accountCompanyManagerIDs,
+        accountDepartmentMangerIDs: state.accountDepartmentManagerIDs,
+        accountUserID: action.accountUserID,
+      });
       let cursor = action.payload.cursor;
 
       if (listNewUser?.length >= action.payload.totalCount) {
@@ -80,7 +90,13 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         cursor: newCursor,
         totalCount: action.payload.totalCount,
-        listSearch: renderData(action.payload.list, action.companyID),
+        listSearch: renderData({
+          users: action.payload.list,
+          companyID: action.companyID,
+          accountCompanyManagerIDs : state.accountCompanyManagerIDs,
+          accountDepartmentMangerIDs: state.accountDepartmentManagerIDs,
+          accountUserID: action.accountUserID,
+        }),
       };
     case usersAction.HAS_NO_NOTIFICATION:
       return {
@@ -140,6 +156,7 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
     const cursor = getState().users?.cursor;
     const userLimit = getState().users?.userLimit;
     const companyID = authState?.extendedCompany?.companyID?._id;
+    const accountUserID = authState?.extendedUser?.userID;
 
     if (cursor === 'END' || !token || !companyID) {
       return;
@@ -159,7 +176,7 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
       return;
     }
 
-    dispatch(pagination(res.data, companyID));
+    dispatch(pagination(res.data, companyID, accountUserID));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));
@@ -171,6 +188,7 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
     const authState = getState()?.auth;
     const token = localStorage.getItem('access_token');
     const companyID = authState?.extendedCompany?.companyID?._id;
+    const accountUserID = authState?.extendedUser?.userID;
 
     if (!token || !companyID) {
       return;
@@ -192,7 +210,7 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
        },
      });
 
-    await dispatch(search(res.data, companyID));
+    await dispatch(search(res.data, companyID, accountUserID));
     await dispatch(setLoading(false));
   } catch (error) {
     await dispatch(setLoading(false));
@@ -223,13 +241,27 @@ function createData(
   companyRole: string,
   departmentRoles: Access[],
   stringPendingRoles: string[],
+  isManager,
 ): Data {
-  return { id, userName, user, departmentRoles, companyRole, stringPendingRoles };
+  return { id, userName, user, departmentRoles, companyRole, stringPendingRoles, isManager };
 }
 
-export const renderData = (users: UserAccess[], companyID) => {
+export const renderData = ({
+  users,
+  companyID,
+  accountDepartmentMangerIDs,
+  accountCompanyManagerIDs,
+  accountUserID,
+}) => {
   return users.map((user: UserAccess) => {
-    const roles = getRenderingRolesForUsersPage(user.accesses, companyID);
+    const exceptDeleteMyself = accountUserID === user.userID._id;
+    const roles = getRenderingRolesForUsersPage({
+      companyID,
+      exceptDeleteMyself,
+      accountDepartmentMangerIDs,
+      accountCompanyManagerIDs,
+      accesses: user.accesses,
+    });
     const fullName = `${user.userID.firstName} ${user.userID.lastName}`;
     const id = user.userID._id;
 
@@ -240,6 +272,7 @@ export const renderData = (users: UserAccess[], companyID) => {
       rolesRender[roles?.companyRole?.role],
       roles?.departmentRoles || [],
       roles?.stringPendingRoles || [],
+      roles?.companyRole?.accountIsCompanyManager,
     );
   });
 };

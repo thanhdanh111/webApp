@@ -46,6 +46,7 @@ export interface Data {
   companyRole: string;
   departmentRoles: Access[];
   stringPendingRoles: string[];
+  isManager?: boolean;
 }
 
 export interface Access {
@@ -55,6 +56,7 @@ export interface Access {
   companyID?: Company | string;
   departmentID?: Department | string;
   departmentName?: string;
+  canDelete?: boolean;
 }
 
 export interface EditingUserInfo {
@@ -111,6 +113,8 @@ export interface UsersData {
   selectNotification: NotificationTypeState;
   editingUserInfo: EditingUserInfo;
   onRemovingUser: boolean;
+  accountCompanyManagerIDs: string[];
+  accountDepartmentManagerIDs: string[];
 }
 
 export interface ParamGetUser {

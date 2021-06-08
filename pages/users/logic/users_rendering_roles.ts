@@ -1,10 +1,17 @@
 import { Access } from '../../../helpers/type';
 import { checkArray } from '../../../helpers/check_array';
 import { Roles, rolesRender } from 'constants/roles';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
 const companyRoles = [Roles.COMPANY_MANAGER, Roles.COMPANY_STAFF];
 
-export const getRenderingRolesForUsersPage = (accesses, companyID) => {
+export const getRenderingRolesForUsersPage = ({
+  accesses,
+  companyID,
+  accountDepartmentMangerIDs,
+  accountCompanyManagerIDs,
+  exceptDeleteMyself,
+}) => {
   if (!checkArray(accesses)) {
     return;
   }
@@ -12,6 +19,7 @@ export const getRenderingRolesForUsersPage = (accesses, companyID) => {
   const stringPendingRoles: string[] = [];
   let companyRole;
   const departmentRoles: Access[] = [];
+  const accountIsCompanyManager = accountCompanyManagerIDs.includes(companyID);
 
   for (const access of accesses) {
     const isPendingRole = access?.status !== 'ACCEPTED';
@@ -19,7 +27,10 @@ export const getRenderingRolesForUsersPage = (accesses, companyID) => {
       companyRoles.includes(access?.role);
 
     if (isCompanyRole) {
-      companyRole = access;
+      companyRole = {
+        accountIsCompanyManager,
+        ...access,
+      };
 
       continue;
     }
@@ -35,7 +46,17 @@ export const getRenderingRolesForUsersPage = (accesses, companyID) => {
       stringPendingRoles.push(rolesRender[access?.role]);
     }
 
+    const accountIsDepartmentManager = accountDepartmentMangerIDs.includes(access?.departmentID?._id);
+    const canDelete = checkOnlyTrueInArray({
+      conditionsArray: [
+        !exceptDeleteMyself,
+        (accountIsCompanyManager ||
+        (accountIsDepartmentManager && access.role !== Roles.DEPARTMENT_MANAGER)),
+      ],
+    });
+
     departmentRoles.push({
+      canDelete,
       ...access,
       departmentID: access?.departmentID?._id,
       departmentName: access?.departmentID?.name,

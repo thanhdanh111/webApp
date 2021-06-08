@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import ListUsers from './UI/users';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useRouter } from 'next/router';
-import { Roles } from 'constants/roles';
-
-const validAccessPage = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
+import { updateUsersReducer } from './logic/users_actions';
 
 const Users = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const combinedUsersSelector = useSelector((state: RootState) => {
 
     return {
@@ -17,22 +17,28 @@ const Users = () => {
     };
   });
 
-  useEffect(checkInvalidAccess, [combinedUsersSelector]);
+  useEffect(checkInvalidAccess, [combinedUsersSelector.access]);
 
   function checkInvalidAccess() {
     const userAccesses = combinedUsersSelector?.access?.access;
+    const {
+      isAdmin,
+      managerCompanyIDs,
+      managerDepartmentIDs,
+      companyIDsOfDepartmentManagers,
+    }: GetManagerIDsType = getManagerIDs({ access: userAccesses });
 
-    for (const userAccess of userAccesses) {
-      const validAccess = validAccessPage.includes(userAccess?.role) &&
-      userAccess?.companyID === combinedUsersSelector?.companyID;
-      const isAdmin = userAccess?.role === Roles.ADMIN;
+    const isManager = isAdmin ||
+      managerCompanyIDs.includes(combinedUsersSelector?.companyID ?? '') ||
+      companyIDsOfDepartmentManagers.includes(combinedUsersSelector?.companyID ?? '');
 
-      if (validAccess || isAdmin) {
+    if (isManager) {
+      dispatch(updateUsersReducer({
+        accountCompanyManagerIDs: managerCompanyIDs,
+        accountDepartmentManagerIDs: managerDepartmentIDs,
+      }));
 
-        return;
-      }
-
-      continue;
+      return;
     }
 
     void router.replace('/access_denied', '/access_denied.html');

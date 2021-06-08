@@ -38,6 +38,7 @@ interface InitialProps {
   notFoundAnyData?: boolean;
   notFoundWarning?: string;
   hadExpandableRows?: boolean;
+  fixedHeightInfiniteScroll?: number;
   ComponentDetail?: React.FunctionComponent;
   CustomizedReturnActionComponent?: React.FunctionComponent<CustomizedReturnActionComponent>;
 }
@@ -51,7 +52,7 @@ const BaseTable = (props: InitialProps) => {
     loadingIndex, loadingStateName, indexLoading,
     notFoundAnyData = false,
     notFoundWarning, hadExpandableRows = false,
-    ComponentDetail,
+    ComponentDetail, fixedHeightInfiniteScroll,
   }: InitialProps = props;
   const emptyState = !loading && !data?.length && notFoundAnyData;
   function actionDefaultFunc({ itemIndex, action  }) {
@@ -105,13 +106,13 @@ const BaseTable = (props: InitialProps) => {
     }
 
     return (
-      <ul className='list-action'>
+      <div className='list-action'>
         {actionList.map((action, index) => {
           const colorButton = (action.toUpperCase() === 'DELETE' || action.toUpperCase() === redButtonName) ? 'redButton' : '';
           const func = actionFunc?.[action] ?? actionDefaultFunc;
 
           return (
-            <li className='action-item' key={index}>
+            <div className='action-item' key={index}>
               <Button
                 variant='contained'
                 color='secondary'
@@ -120,10 +121,10 @@ const BaseTable = (props: InitialProps) => {
               >
                 {action}
               </Button>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
     );
   };
 
@@ -136,27 +137,30 @@ const BaseTable = (props: InitialProps) => {
           next={fetchData}
           loader={<div />}
           scrollThreshold={0.7}
+          height={fixedHeightInfiniteScroll}
         >
         <Table stickyHeader aria-label='sticky table' className='table-content' >
           <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
           { !loading &&  (checkArray(data) &&
           <TableBody className='table-body'>
-                {data.map((item, index) => {
+          {
+            data.map((item, index) => {
 
-                  return (
-                    <TableRowBase
-                      key={index}
-                      hadExpandableRows={hadExpandableRows}
-                      headCells={headCells}
-                      needCheckBox={needCheckBox}
-                      renderAction={renderAction}
-                      item={item}
-                      actions={actions}
-                      index={index}
-                      ComponentDetail={ComponentDetail}
-                    />
-                  );
-                })}
+              return (
+                <TableRowBase
+                  key={index}
+                  hadExpandableRows={hadExpandableRows}
+                  headCells={headCells}
+                  needCheckBox={needCheckBox}
+                  renderAction={renderAction}
+                  item={item}
+                  actions={actions}
+                  index={index}
+                  ComponentDetail={ComponentDetail}
+                />
+              );
+            })
+          }
           </TableBody>
         )}
         </Table>
@@ -167,12 +171,8 @@ const BaseTable = (props: InitialProps) => {
               <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
             </div>
           }
-          {
-            loading && <div style={{ marginTop: '150px', marginBottom: '150px', display: 'flex', justifyContent: 'center' }}>
-              <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
-            </div>
-          }
       </TableContainer>
+      {loading && <DisappearedLoading color={'#67cb48'} />}
     </div>
   );
 };
