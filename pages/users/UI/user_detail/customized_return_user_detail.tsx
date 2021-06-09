@@ -2,13 +2,16 @@ import { IconButton, ClickAwayListener, Popper, MenuItem, Grow,
   Paper, MenuList, ListItemIcon, ListItemText,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { updateUsersReducer } from 'pages/users/logic/users_actions';
 import { useDispatch } from 'react-redux';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
-const actionIcons = {
-  delete: <RemoveCircleIcon fontSize='small' />,
+const actions = {
+  delete: {
+    label: 'Remove from department',
+    icon: <RemoveCircleIcon fontSize='small' />,
+  },
 };
 
 const CustomizedReturnActionComponent = (departmentProps) => {
@@ -52,9 +55,9 @@ const CustomizedReturnActionComponent = (departmentProps) => {
       component='div'
     >
       <ListItemIcon style={{ minWidth: '30px' }}>
-        {actionIcons[action]}
+        {actions[action].icon}
       </ListItemIcon>
-      <ListItemText style={{ textTransform: 'capitalize' }} primary={action} />
+      <ListItemText primary={actions[action].label} />
     </MenuItem>;
   }
 
@@ -68,6 +71,7 @@ const CustomizedReturnActionComponent = (departmentProps) => {
         departmentID: departmentProps?.userData?.departmentRoles?.[departmentIndex]?.departmentID,
         accessID: departmentProps?.userData?.departmentRoles?.[departmentIndex]?._id,
         userIndex: departmentProps?.userData?.index,
+        removeUserFrom: 'department',
       },
     }));
   }
@@ -80,7 +84,7 @@ const CustomizedReturnActionComponent = (departmentProps) => {
         aria-haspopup='true'
         onClick={handleToggle}
       >
-        <MoreVertIcon />
+        <MoreHorizIcon />
       </IconButton>
       <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition >
         {({ TransitionProps }) => (

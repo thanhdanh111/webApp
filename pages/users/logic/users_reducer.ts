@@ -11,11 +11,9 @@ export const headCells: HeadCell[] = [
   { id: 'userName', numeric: false, disablePadding: true, label: 'User Name' },
   { id: 'companyRole', numeric: false, disablePadding: true, label: 'Company Role' },
   { id: 'stringPendingRoles', numeric: false, disablePadding: true, label: 'Pending Roles' },
-  { id: 'action', numeric: false, disablePadding: true, label: '' },
-
 ];
 
-export const actionList: string[] = ['delete'];
+export const actionList: string[] = [];
 
 const initialState: UsersData = {
   cursor: '',

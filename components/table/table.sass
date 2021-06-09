@@ -69,9 +69,13 @@
           height: 84px
 
           .cell-contain
+
+            &:last-child
+              text-align: center
+
             .list-action 
               display: flex
-              text-align: left
+              text-align: center
               list-style: none
               margin-left: 5px
               margin-right: 5px
@@ -79,14 +83,13 @@
 
               .action-item
                 border: none
-                margin: 0 8px    
                 transform: translateX(-10px)
                 opacity: 0.9
 
                 .action
                   font-weight: 600
                   font-size: 12px
-                  margin: 1px
+                  margin: 5px
                   border-radius: 0.5rem
                   text-transform: uppercase
 

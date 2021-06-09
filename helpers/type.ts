@@ -68,6 +68,7 @@ export interface EditingUserInfo {
   departmentID?: string;
   userIndex?: number;
   accessID?: string;
+  removeUserFrom?: string;
 }
 
 export interface NotificationTypeState {

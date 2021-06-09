@@ -67,6 +67,18 @@ const ListUsers: FunctionComponent = () => {
     dispatch(deleteUserFromDepartment({ onSearch: !!debouncedSearchTerm }));
   }
 
+  function handleWarningTitle(removeFromWhere) {
+
+    switch (removeFromWhere) {
+      case 'department':
+        return `REMOVE ${users?.editingUserInfo?.userName} from department ${users?.editingUserInfo?.departmentName ?? ''}?`;
+      case 'company':
+        return `DELETE ${users?.editingUserInfo?.userName} from company ${users?.editingUserInfo?.user?.companyID?.name ?? ''}?`;
+      default:
+        return 'Are you sure you want to CONTINUE?';
+    }
+  }
+
   return (
         <div className='users'>
             <Container className='list-user'>
@@ -102,9 +114,7 @@ const ListUsers: FunctionComponent = () => {
                 </div>
             </Container>
           <ConfirmDialog
-            warning={
-              `REMOVE ${users?.editingUserInfo?.userName} from department ${users?.editingUserInfo?.departmentName ?? ''}?`
-            }
+            warning={handleWarningTitle(users?.editingUserInfo?.removeUserFrom)}
             onOpen={users?.onRemovingUser}
             handleClose={cancelDelete}
             handleNo={cancelDelete}
