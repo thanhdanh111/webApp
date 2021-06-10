@@ -4,16 +4,18 @@ import { Token } from 'helpers/type';
 import {
   updatePaginationTimeOff, updateTimeOffIndexLoading,
   updateStatusTimeOff, updateTimeOffLoadingStatus,
-  updateOnSendingTimeOffRequest, updateTimeOffCompaniesToRequest,
+  updateOnSendingTimeOffRequest, updateTimeOffCompaniesToRequest, updateTimeOffsReducer,
+  updateTimeOffRequestReducer,
 } from './time_off_actions';
 import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValue } from './time_off_interface';
 import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 import { checkManager } from './time_off_check_manager';
 import moment from 'moment';
-import { getUserCompanies } from 'helpers/get_user_companies';
+import { getUserCompanyIDsAndDepartmentIDs } from 'helpers/get_user_companyIDs_departmentIDs';
 import { getDepartmentsIntoCompanies } from 'helpers/get_the_departments_into_companies';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
+import { dateTimeUiFormat } from 'constants/date_time_ui_format';
 
 const notificationsType = {
   201: 'Sent your letter successfully',
@@ -48,7 +50,6 @@ interface GetTimeOffsByModel {
 function getTimeOffsByModel(data, { type, userID = '', managerCompanyIDs, managerDepartmentIDs, isExceptMeInMembers = true }
 : GetTimeOffsByModel) {
   const timeOffs: TimeOffModel[] = [];
-  const dateTimeUiFormat = 'DD/MM/YYYY HH:mm';
 
   if (!data || !data.length || typeof data === 'string') {
 
@@ -375,13 +376,14 @@ export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
       return;
     }
 
-    const companiesAndIsAdmin = getUserCompanies({ access: authState.access });
+    const companiesAndIsAdmin = getUserCompanyIDsAndDepartmentIDs({ access: authState.access });
 
-    if (!companiesAndIsAdmin?.companies || !companiesAndIsAdmin?.companies?.length) {
+    if (!companiesAndIsAdmin?.companyIDs || !companiesAndIsAdmin?.companyIDs?.length) {
       return;
     }
 
-    const companiesParams = companiesAndIsAdmin.companies.map((companyID, index) => `companyID[${index}]=${companyID}`).join('&');
+    const companiesParams = companiesAndIsAdmin.companyIDs.
+      map((companyID, index) => `companyID[${index}]=${companyID}`).join('&');
 
     const token: Token =  localStorage.getItem('access_token');
 
@@ -436,6 +438,7 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
     const timeOffRequestState: TimeOffRequestProps = getState().timeOffRequest;
+    const timeOffsState = getState()?.timeoff;
 
     if (timeOffRequestState.onSendingRequest) {
 
@@ -464,12 +467,14 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
 
     const startTime = moment(`${timeOffRequestState.startDate}T${timeOffRequestState.startTime}`).toISOString();
     const endTime =  moment(`${timeOffRequestState.endDate}T${timeOffRequestState.endTime}`).toISOString();
+    const selectedCompany = timeOffRequestState?.selectedCompany;
+    const selectedDepartment = timeOffRequestState?.selectedDepartment;
     const payload = {
       startTime,
       endTime,
       reason: timeOffRequestState?.reason ?? null,
-      departmentID: timeOffRequestState?.selectedDepartment?.departmentID ?? null,
-      companyID: timeOffRequestState?.selectedCompany?.companyID ?? null,
+      departmentID: selectedDepartment?.departmentID ?? null,
+      companyID: selectedCompany?.companyID ?? null,
     };
 
     const res = await axios.post(
@@ -482,14 +487,37 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
         },
       });
 
+    const authState = getState()?.auth;
+    const timeOff = res?.data;
+    const {
+      managerCompanyIDs,
+      managerDepartmentIDs,
+    }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
+    const isManager = managerCompanyIDs?.includes(selectedCompany?.companyID ?? '') ||
+      managerDepartmentIDs?.includes(selectedDepartment?.departmentID ?? '');
+
+    const myNewTimeOff = {
+      isManager,
+      id: timeOff?._id,
+      companyName: selectedCompany?.name,
+      startTime: moment(timeOff?.startTime).format(dateTimeUiFormat),
+      endTime:  moment(timeOff?.endTime).format(dateTimeUiFormat),
+      status: timeOff?.status,
+      reason: timeOff?.reason ?? '',
+      name: `${authState?.userProfile?.lastName ?? ''} ${authState?.userProfile?.firstName ?? ''}`,
+      departmentName: selectedDepartment?.name ?? '',
+    };
+
     const handleMessage = notificationsType[res?.status];
 
     await dispatch(pushNewNotifications({ variant: 'success' , message: handleMessage }));
-
+    dispatch(updateTimeOffsReducer({ ownTimeOffs: [myNewTimeOff, ...timeOffsState?.ownTimeOffs] }));
+    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, onRequest: false, reason: '' }));
   } catch (error) {
 
     const handleMessage = notificationsType[error?.response?.data?.statusCode] || 'Something went wrong';
 
+    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, selectedCompany: undefined, selectedDepartment: undefined }));
     await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
   }
 };

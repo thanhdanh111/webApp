@@ -9,18 +9,11 @@ import { updateUsersReducer } from './logic/users_actions';
 const Users = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const combinedUsersSelector = useSelector((state: RootState) => {
+  const access = useSelector((state: RootState) => state?.access);
+  const companyID = useSelector((state: RootState) => state?.auth?.extendedCompany?.companyID?._id);
 
-    return {
-      access: state?.access,
-      companyID: state?.auth?.extendedCompany?.companyID?._id,
-    };
-  });
-
-  useEffect(checkInvalidAccess, [combinedUsersSelector.access]);
-
-  function checkInvalidAccess() {
-    const userAccesses = combinedUsersSelector?.access?.access;
+  useEffect(() => {
+    const userAccesses = access?.access;
     const {
       isAdmin,
       managerCompanyIDs,
@@ -28,11 +21,11 @@ const Users = () => {
       companyIDsOfDepartmentManagers,
     }: GetManagerIDsType = getManagerIDs({ access: userAccesses });
 
-    const isManager = isAdmin ||
-      managerCompanyIDs.includes(combinedUsersSelector?.companyID ?? '') ||
-      companyIDsOfDepartmentManagers.includes(combinedUsersSelector?.companyID ?? '');
+    const isManager = managerCompanyIDs.includes(companyID ?? '') ||
+      companyIDsOfDepartmentManagers.includes(companyID ?? '');
+    const validAccess = isAdmin || isManager;
 
-    if (isManager) {
+    if (validAccess) {
       dispatch(updateUsersReducer({
         accountCompanyManagerIDs: managerCompanyIDs,
         accountDepartmentManagerIDs: managerDepartmentIDs,
@@ -42,7 +35,7 @@ const Users = () => {
     }
 
     void router.replace('/access_denied', '/access_denied.html');
-  }
+  }, [access?.access]);
 
   return (
     <React.Fragment>

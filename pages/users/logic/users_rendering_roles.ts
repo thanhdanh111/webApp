@@ -24,7 +24,7 @@ export const getRenderingRolesForUsersPage = ({
   for (const access of accesses) {
     const isPendingRole = access?.status !== 'ACCEPTED';
     const isCompanyRole =  access?.companyID?._id === companyID &&
-      companyRoles.includes(access?.role);
+      companyRoles.includes(access?.role ?? '');
 
     if (isCompanyRole) {
       companyRole = {

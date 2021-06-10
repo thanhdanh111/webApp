@@ -1,3 +1,4 @@
+import { Roles } from 'constants/roles';
 import { checkArray } from './check_array';
 export const isAdminOrManagerUser = (accesses, companyID, departmentID) => {
   if (!checkArray(accesses)) {
@@ -10,12 +11,12 @@ export const isAdminOrManagerUser = (accesses, companyID, departmentID) => {
       continue;
     }
 
-    const isAdmin = access?.role === 'ADMIN';
+    const isAdmin = access?.role === Roles.ADMIN;
 
-    const isCompanyManager = access?.role === 'COMPANY_MANAGER' && access?.companyID === companyID;
+    const isCompanyManager = access?.role === Roles.COMPANY_MANAGER && access?.companyID === companyID;
 
     const isDepartmentManager =
-      access?.role === 'DEPARTMENT_MANAGER' && access?.companyID === companyID && access?.departmentID === departmentID;
+      access?.role === Roles.DEPARTMENT_MANAGER && access?.companyID === companyID && access?.departmentID === departmentID;
     if (isAdmin || isCompanyManager || isDepartmentManager) {
 
       return true;

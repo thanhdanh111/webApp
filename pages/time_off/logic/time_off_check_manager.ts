@@ -5,11 +5,13 @@ export function checkManager(type, timeOff, managerCompanyIDs, managerDepartment
 
   const isCompanyManager =  (
     !!managerCompanyIDs?.length &&
-    managerCompanyIDs.includes(timeOff?.companyID?._id)
+    timeOff?.companyID?._id &&
+    managerCompanyIDs.includes(timeOff.companyID._id)
   );
   const isDepartmentManager = (
     !!managerDepartmentIDs?.length &&
-    managerDepartmentIDs.includes(timeOff?.departmentID?._id)
+    timeOff?.departmentID?._id &&
+    managerDepartmentIDs.includes(timeOff.departmentID._id)
   );
 
   return isCompanyManager || isDepartmentManager;

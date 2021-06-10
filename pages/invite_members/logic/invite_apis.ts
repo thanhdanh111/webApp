@@ -4,6 +4,7 @@ import { AvailInviteCompanies } from './invite_interface';
 import { config } from 'helpers/get_config';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from './invite_error_notifications';
+import { Roles } from 'constants/roles';
 
 type Token = string | null;
 export enum NotificationTypes{
@@ -45,7 +46,7 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
   }
 };
 
-const rolesCouldInvite = ['COMPANY_MANAGER'];
+const rolesCouldInvite = [Roles.COMPANY_MANAGER];
 
 export const getUserCompaniesApi = () => async (dispatch, getState) => {
   try {
@@ -62,13 +63,14 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
     }
 
     let companiesParams = '';
-    const usedCompanies = {};
+    const filteredCompanies  = {};
 
     if (!isAdmin) {
       const companies: string[] = [];
 
       userInfo?.access.forEach((access, index) => {
         const hasInvalidRole = access?.role && !rolesCouldInvite?.includes(access.role);
+        const companyID = access?.companyID;
 
         if (access?.role && access?.role === 'ADMIN') {
           isAdmin = true;
@@ -76,17 +78,11 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
           return;
         }
 
-        const companyID = access?.companyID;
-
-        if (typeof usedCompanies[companyID] === 'number') {
+        if (!companyID || hasInvalidRole || filteredCompanies[companyID] !== undefined) {
           return;
         }
 
-        if (!companyID || hasInvalidRole) {
-          return;
-        }
-
-        usedCompanies[companyID] = index;
+        filteredCompanies[companyID] = index;
         companies.push(companyID);
       });
 

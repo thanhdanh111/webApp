@@ -89,6 +89,12 @@ const timeOffReducer = (state = initialState, action) => {
         onSelectTimeOffData: action.onSelectTimeOffData,
         onConfirm: action.onConfirm,
       };
+    case TimeOffActionTypes.UpdateTimeOffsReducer:
+
+      return {
+        ...state,
+        ...action.data,
+      };
     default:
       return state;
   }

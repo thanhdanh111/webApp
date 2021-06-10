@@ -1,3 +1,4 @@
+import { Roles } from 'constants/roles';
 import { Access } from './type';
 
 interface GetUserCompanies {
@@ -33,7 +34,7 @@ export const getManagerIDs = ({ access }: GetUserCompanies) => {
       return;
     }
 
-    if (each.role === 'COMPANY_MANAGER') {
+    if (each.role === Roles.COMPANY_MANAGER) {
       managerCompanyIDs.push(companyID);
 
       return;
@@ -41,7 +42,7 @@ export const getManagerIDs = ({ access }: GetUserCompanies) => {
 
     const departmentID = each?.departmentID as string;
 
-    if (!departmentID || each.role !== 'DEPARTMENT_MANAGER') {
+    if (!departmentID || each.role !== Roles.DEPARTMENT_MANAGER) {
 
       return;
     }

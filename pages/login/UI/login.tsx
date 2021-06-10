@@ -21,11 +21,11 @@ const LoginUi: FunctionComponent = () => {
     void logUserIn();
   }, []);
 
-  async function logUserIn() {
+  function logUserIn() {
     const localAccess = localStorage.getItem('access_token');
 
     if (localAccess) {
-      await router.replace('/home', '/home.html');
+      void router.replace('/home', '/home.html');
       setIsLogin(false);
     }
 
@@ -37,12 +37,12 @@ const LoginUi: FunctionComponent = () => {
     const accessToken = token.replace('?token=', '');
     localStorage.setItem('access_token', accessToken);
     setIsLogin(true);
-    await Promise.all([
-      dispatch(GetUserDataThunkAction(accessToken)),
-      dispatch(Login(accessToken)),
-    ]);
 
-    await router.replace('/home', '/home.html');
+    dispatch(GetUserDataThunkAction(accessToken));
+
+    dispatch(Login(accessToken));
+
+    void router.replace('/home', '/home.html');
     setIsLogin(false);
   }
 

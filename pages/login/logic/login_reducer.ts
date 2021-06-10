@@ -3,8 +3,7 @@ import { config } from 'helpers/get_config';
 import { LoginAction } from './login_type_actions';
 import { GetUserData } from './login_actions';
 import { LoginValue } from 'helpers/type';
-import { getUserCompanies } from 'helpers/get_user_companies';
-import { getUserDepartments } from 'helpers/get_user_department';
+import { getUserCompanyIDsAndDepartmentIDs, GetUserCompanyIDsAndDepartmentIDsType } from 'helpers/get_user_companyIDs_departmentIDs';
 import { GetUserAccess } from 'pages/access_denied/logic/access_action';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { checkArray } from 'helpers/check_array';
@@ -63,15 +62,19 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       },
     });
 
-    const userCompanies = getUserCompanies({ access: res.data?.access });
-    const userDepartments = getUserDepartments({ access: res.data?.access });
-    const checkUserCompanies = checkArray(userCompanies?.companies);
-    const checkUserDepartments = checkArray(userCompanies?.companies) && checkArray(userDepartments?.departments);
+    const {
+      companyIDsOfDepartmentIDs,
+      departmentIDs,
+      companyIDs,
+    }: GetUserCompanyIDsAndDepartmentIDsType = getUserCompanyIDsAndDepartmentIDs({ access: res.data?.access });
+
+    const checkUserCompanies = checkArray(companyIDsOfDepartmentIDs) || checkArray(companyIDs);
+    const checkUserDepartments = checkArray(companyIDsOfDepartmentIDs) && checkArray(departmentIDs);
 
     data = res.data;
 
     if (checkUserCompanies) {
-      const extendedCompany = await axios.get(`${config.BASE_URL}/extendedCompanies/${userCompanies?.companies?.[0]}`, {
+      const extendedCompany = await axios.get(`${config.BASE_URL}/extendedCompanies/${companyIDsOfDepartmentIDs?.[0] ?? companyIDs?.[0]}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +93,7 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
     }
 
     if (checkUserDepartments) {
-      const department = await axios.get(`${config.BASE_URL}/companies/${userCompanies?.companies[0]}/departments/${userDepartments?.departments[0]}`, {
+      const department = await axios.get(`${config.BASE_URL}/companies/${companyIDsOfDepartmentIDs?.[0]}/departments/${departmentIDs?.[0]}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
