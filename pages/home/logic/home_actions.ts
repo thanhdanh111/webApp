@@ -1,3 +1,4 @@
+import { SetTasksToTaskStatus, Task, UpdateTaskToTaskStatus } from 'helpers/type';
 import { dashboardClickUp } from './home_type';
 
 export const getDataTaskStatuses = (res: object) => {
@@ -30,5 +31,26 @@ export const showLoaderListUser = () => {
 export const hideLoaderListUser = () => {
   return {
     type: dashboardClickUp.HIDE_LOADER_LIST,
+  };
+};
+
+export const setTasksToTaskStatus = (data: SetTasksToTaskStatus) => {
+  return {
+    data,
+    type: dashboardClickUp.SET_TASKS_TO_TASK_STATUS,
+  };
+};
+
+export const updateTaskToTaskStatus = (data: UpdateTaskToTaskStatus) => {
+  return {
+    data,
+    type: dashboardClickUp.UPDATE_TASKS_TO_TASK_STATUS,
+  };
+};
+
+export const setSelectedTask = (task: Task) => {
+  return {
+    type: dashboardClickUp.SET_SELECTED_TASK,
+    data: task,
   };
 };

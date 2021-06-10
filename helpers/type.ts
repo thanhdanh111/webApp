@@ -219,3 +219,35 @@ export interface ChannelIDData {
   _id: string;
   channelID: string;
 }
+
+export interface Tag {
+  tagId: string;
+  title: string;
+  workspaceId: string;
+  description?: string;
+  createdBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+interface UpdateTaskData {
+  taskStatusId?: string;
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  priority?: string;
+  tags?: Tag[];
+  createdBy?: string;
+  createdAt?: Date;
+  isHover?: boolean;
+}
+
+export interface UpdateTaskToTaskStatus {
+  taskId: string;
+  taskStatusId: string;
+  data: UpdateTaskData;
+}
+export interface SetTasksToTaskStatus {
+  taskStatusId: string;
+  tasks: Task[];
+}

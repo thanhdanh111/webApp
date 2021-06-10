@@ -9,18 +9,32 @@ import PersonIcon from '@material-ui/icons/Person';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import ListIcon from '@material-ui/icons/List';
-interface InitProps {
-  handleClick: (e) => void;
-  show: string;
-}
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { setTaskFiltering } from 'pages/home/logic/task_filtering_action';
+import { TaskFilteringState } from 'pages/home/logic/task_filtering_reducer';
 
-const NavClickUp = (props: InitProps) => {
+const NavClickUp = () => {
+  const dispatch = useDispatch();
+  const taskFilter: TaskFilteringState = useSelector((state: RootStateOrAny) => state.taskFilter);
 
-  const { handleClick, show }: InitProps = props;
+  const getActiveColor = (isActive: boolean) => {
+    if (!isActive) {
+      return { };
+    }
 
-  const btnShowMe = show === 'me' ? 'btn-show' : 'btn';
+    return {
+      background: '#117bc8',
+      color: '#fff',
+    };
+  };
 
-  const btnShowEvery = show === 'everyone' ? 'btn-show' : 'btn';
+  const onChangeMe = () => {
+    dispatch(setTaskFiltering({ isMe: true }));
+  };
+
+  const toggleAssigneesBar = () => {
+    dispatch(setTaskFiltering({ isEveryOne: true }));
+  };
 
   return (
         <div className='nav-click_up'>
@@ -90,16 +104,16 @@ const NavClickUp = (props: InitProps) => {
                     <li className='item-action'>
                         <div className='action action-use'>
                             <div className='btn-assign'>
-                                <Button className={`btn ${btnShowMe}`} onClick={() => handleClick('me')}>
-                                    <div className='assign'>
+                                <Button className='btn' onClick={onChangeMe}>
+                                    <div className='assign' style={getActiveColor(!!taskFilter?.isMe)} >
                                         <PersonIcon className='icon' />
                                         <Typography className='text-per'>Me</Typography>
                                     </div>
                                 </Button>
                             </div>
                             <div className='btn-assign'>
-                                <Button className={`btn ${btnShowEvery}`} onClick={() => handleClick('everyone')}>
-                                    <div className='assign assign-other'>
+                                <Button className='btn' onClick={toggleAssigneesBar}>
+                                    <div className='assign assign-other' style={getActiveColor(!!taskFilter?.isEveryOne)}>
                                         <PeopleAltIcon className='icon' />
                                     </div>
                                 </Button>

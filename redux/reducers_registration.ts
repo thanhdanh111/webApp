@@ -12,6 +12,7 @@ import timeOffRequestReducer from 'pages/time_off/logic/time_off_request_reducer
 import { eventLogsReducer } from 'pages/event_logs/logic/event_log_reducer';
 import companyReducer from 'pages/company/logic/company_reducer';
 import { notificationReducer } from './common/notifications/reducer';
+import taskFilteringReducer from 'pages/home/logic/task_filtering_reducer';
 
 const rootReducer = combineReducers({
   auth,
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   eventLogs: eventLogsReducer,
   company: companyReducer,
   newNotifications: notificationReducer,
+  taskFilter: taskFilteringReducer,
 });
 
 export default rootReducer;

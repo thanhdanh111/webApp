@@ -2,7 +2,13 @@ import { dashboardClickUp } from './home_type';
 import { Task, TaskStatusType } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { getDataTaskStatuses, hideLoaderListUser, getDataTasksByUserThunkAction, getTasksStatusByID } from './home_actions';
+import {
+  getDataTaskStatuses,
+  hideLoaderListUser,
+  getDataTasksByUserThunkAction,
+  getTasksStatusByID,
+  setSelectedTask,
+ } from './home_actions';
 
 interface Data {
   loading: boolean;
@@ -32,6 +38,33 @@ const initialState: Data = {
     description: '',
   },
 };
+
+interface DataTaskStatusUpdate {
+  taskIDs: string[];
+}
+
+interface UpdateTaskStatus {
+  taskStatusID: string;
+  data: DataTaskStatusUpdate;
+}
+
+let updatedTaskStatuses: TaskStatusType[];
+
+interface UpdateTask {
+  taskStatusID?: string;
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  estimateDate?: string;
+  timeTracked?: string;
+  priority?: string;
+  tagIDs?: string[];
+}
+
+interface IUpdateTask {
+  taskID: string;
+  data: UpdateTask;
+}
 
 export  const taskStatusesReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -81,6 +114,54 @@ export  const taskStatusesReducer = (state = initialState, action) => {
       return {
         ...state,
         taskStatusNotification: action.payload,
+      };
+    case dashboardClickUp.SET_TASKS_TO_TASK_STATUS:
+      updatedTaskStatuses = state.list?.map((each) => {
+        if (each._id !== action?.data?.taskStatusId) {
+          return each;
+        }
+
+        return {
+          ...each,
+          taskIDs: action?.data.tasks,
+        };
+      });
+
+      return {
+        ...state,
+        list: updatedTaskStatuses,
+      };
+    case dashboardClickUp.UPDATE_TASKS_TO_TASK_STATUS:
+      updatedTaskStatuses = state.list?.map((each) => {
+        if (each._id !== action?.data?.taskStatusId) {
+          return each;
+        }
+
+        const tasks = each.taskIDs?.map((item: Task) => {
+          if (item._id !== action.data?.taskId) {
+            return item;
+          }
+
+          return {
+            ...item,
+            ...action.data?.data,
+          };
+        });
+
+        return {
+          ...each,
+          tasks,
+        };
+      });
+
+      return {
+        ...state,
+        taskStatuses: updatedTaskStatuses,
+      };
+    case dashboardClickUp.SET_SELECTED_TASK:
+      return {
+        ...state,
+        ...action.data,
       };
     default:
       return state;
@@ -180,6 +261,47 @@ export const getTaskStatusByIDThunkAction = (tittle, taskStatusID) => async (dis
         },
       });
     dispatch(getTasksStatusByID(res.data));
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateTaskStatusById = ({ taskStatusID, data }: UpdateTaskStatus) => async () => {
+  try {
+    const localAccess = localStorage.getItem('access_token');
+
+    await axios({
+      data,
+      url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localAccess}`,
+      },
+      method: 'PUT',
+    });
+
+  } catch (error) {
+    // tslint:disable-next-line:no-console
+    console.log('Update task status error', error);
+  }
+};
+
+export const updateTaskById = ({ taskID, data = { } }: IUpdateTask) => async (dispatch, getState) => {
+  try {
+    const localAccess = localStorage.getItem('access_token');
+    const authState = getState().auth;
+    const companyID = authState?.extendedCompany?.companyID?._id;
+
+    const response = await axios({
+      data,
+      url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localAccess}`,
+      },
+      method: 'PUT',
+    });
+    await dispatch(setSelectedTask(response.data));
   } catch (error) {
     throw error;
   }
