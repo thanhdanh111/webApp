@@ -1,8 +1,4 @@
 import React, { useEffect } from 'react';
-import TreeView from '@material-ui/lab/TreeView';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import TreeItem from '@material-ui/lab/TreeItem';
 import HomeIcon from '@material-ui/icons/Home';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useRouter } from 'next/router';
@@ -13,7 +9,8 @@ import { DocsValueType } from '../logic/docs_reducer';
 import { updateDocs } from '../logic/docs_actions';
 import { convertFromRaw, EditorState } from 'draft-js';
 import CreateNewProjectDialog from './docs_new_project';
-import { Tooltip, IconButton } from '@material-ui/core';
+import { Tooltip, IconButton, List } from '@material-ui/core';
+import DocsProjectUI from './docs_project';
 
 const DocsTreeView = () => {
   const dispatch = useDispatch();
@@ -68,30 +65,14 @@ const DocsTreeView = () => {
     handleClose();
   }
 
-  function showListTreeOfDocProjects(project, index) {
-    let treeItemPages = null;
+  function showListTreeOfDocProjects(project) {
 
-    if (typeof project?.pages !== 'string' && project?.pages?.length) {
-      treeItemPages = project?.pages?.map((page) =>
-        <TreeItem
-          key={page?._id}
-          onClick={() => onClickPage(page)}
-          className='doc-project-item'
-          nodeId={page?._id ?? `doc-project-item-${index}`}
-          label={page?.title}
-        />,
-      );
-    }
-
-    return <TreeItem
-      key={project?._id}
-      onClick={() => onClickProject(project)}
-      className='doc-project-item'
-      nodeId={project?._id ?? `doc-project-item-${index}`}
-      label={project?.title}
-    >
-      {treeItemPages}
-    </TreeItem>;
+    return <DocsProjectUI
+      project={project}
+      pages={project?.pages}
+      onClickPage={onClickPage}
+      onClickProject={onClickProject}
+    />;
   }
 
   return (
@@ -119,13 +100,10 @@ const DocsTreeView = () => {
           <HomeIcon color='secondary'/>
         </div>
       </div>
-      <TreeView
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-        multiSelect
-      >
+      <List component='div'>
         {docProjects.map(showListTreeOfDocProjects)}
-      </TreeView>
+
+      </List>
       <CreateNewProjectDialog loading={loading} handleCreate={handleCreate}/>
     </>
   );

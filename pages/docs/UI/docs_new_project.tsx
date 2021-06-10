@@ -5,9 +5,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Grid, IconButton, Typography, Input } from '@material-ui/core';
+import { Grid, IconButton, Typography, Input, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import AddBoxIcon from '@material-ui/icons/AddBox';
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 
 const CreateNewProjectDialog = ({ handleCreate, loading })  => {
   const [state, setState] = React.useState({
@@ -25,16 +25,17 @@ const CreateNewProjectDialog = ({ handleCreate, loading })  => {
 
   return (
     <>
-      <Button
-        onClick={handleClickOpen}
-        fullWidth
-        component='div'
-        className='docs-drawer--add-new-project'
-        startIcon={<AddBoxIcon />}
-        disabled={loading}
-      >
-        <Typography>New Project</Typography>
-      </Button>
+    <ListItem
+      className='doc-project-item docs-drawer--add-new-project'
+      button
+      onClick={handleClickOpen}
+      disabled={loading}
+    >
+      <ListItemIcon>
+        <CreateNewFolderIcon />
+      </ListItemIcon>
+      <ListItemText primary='New Project' />
+    </ListItem>
       <Dialog
         open={state.openDialog}
         onClose={handleClose}

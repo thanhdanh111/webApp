@@ -21,29 +21,31 @@ const LoginUi: FunctionComponent = () => {
     void logUserIn();
   }, []);
 
-  async function logUserIn() {
+  function logUserIn() {
     const localAccess = localStorage.getItem('access_token');
 
     if (localAccess) {
-      await router.replace('/home', '/home.html');
       setIsLogin(false);
+      void router.replace('/home', '/home.html');
     }
 
     const query = qs.parse(window.location.search);
     const token = query.token;
+
     if (!token) {
       return;
     }
+
     const accessToken = token.replace('?token=', '');
     localStorage.setItem('access_token', accessToken);
     setIsLogin(true);
-    await Promise.all([
-      dispatch(GetUserDataThunkAction(accessToken)),
-      dispatch(Login(accessToken)),
-    ]);
 
-    await router.replace('/home', '/home.html');
+    dispatch(GetUserDataThunkAction(accessToken));
+
+    dispatch(Login(accessToken));
+
     setIsLogin(false);
+    void router.replace('/home', '/home.html');
   }
 
   const FormLogin = () => {

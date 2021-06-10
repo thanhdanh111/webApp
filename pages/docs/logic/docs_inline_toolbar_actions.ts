@@ -10,14 +10,14 @@ export function handleToolbarActions(editorState, action) {
   const oldSelection = editorState.getSelection();
   let newEditorState;
 
-  if (blockStyles.includes(action)) {
+  if (blockStyles.includes(action ?? '')) {
     newEditorState = RichUtils.toggleBlockType(
       editorState,
       action,
     );
   }
 
-  if (inlineStyles.includes(action)) {
+  if (inlineStyles.includes(action ?? '')) {
     newEditorState = RichUtils.toggleInlineStyle(
       editorState,
       action,

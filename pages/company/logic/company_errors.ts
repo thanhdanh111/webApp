@@ -30,30 +30,3 @@ export const handleEmptyField = ({ contentFields }): CompanyNotification => {
     message: 'Something went wrong',
   };
 };
-
-export const handleCompanyErrors = ({ statusCode }): CompanyNotification => {
-  if (!statusCode) {
-    return {
-      variant: 'error',
-      message: 'Something went wrong',
-    };
-  }
-
-  switch (statusCode) {
-    case 200:
-      return {
-        variant: 'success',
-        message: 'Connect your slack token successfully',
-      };
-    case 400:
-      return {
-        variant: 'error',
-        message: 'You have no company right now!',
-      };
-    default:
-      return {
-        variant: 'error',
-        message: 'Something went wrong',
-      };
-  }
-};
