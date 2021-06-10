@@ -11,7 +11,7 @@ import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValu
 import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 import { checkManager } from './time_off_check_manager';
 import moment from 'moment';
-import { getUserCompanyIDsAndDepartmentIDs } from 'helpers/get_user_companyIDs_departmentIDs';
+import { getUserCompanyIDsAndDepartmentIDs } from 'helpers/get_user_companyids_departmentids';
 import { getDepartmentsIntoCompanies } from 'helpers/get_the_departments_into_companies';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';

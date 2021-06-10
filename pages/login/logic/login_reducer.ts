@@ -3,7 +3,7 @@ import { config } from 'helpers/get_config';
 import { LoginAction } from './login_type_actions';
 import { GetUserData } from './login_actions';
 import { LoginValue } from 'helpers/type';
-import { getUserCompanyIDsAndDepartmentIDs, GetUserCompanyIDsAndDepartmentIDsType } from 'helpers/get_user_companyIDs_departmentIDs';
+import { getUserCompanyIDsAndDepartmentIDs, GetUserCompanyIDsAndDepartmentIDsType } from 'helpers/get_user_companyids_departmentids';
 import { GetUserAccess } from 'pages/access_denied/logic/access_action';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { checkArray } from 'helpers/check_array';
