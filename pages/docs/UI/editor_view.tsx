@@ -8,12 +8,7 @@ import { SelectionState, EditorState } from 'draft-js';
 import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions';
 import { showUpToolbarAndUpdateState } from '../logic/docs_inline_toolbar_actions';
 
-interface EditorView {
-  selectionRect?: DOMRect;
-  handleOnChangeStyleLine?: (action, contentState) => void;
-}
-
-const EditorView: FunctionComponent<EditorView> = () => {
+const EditorView: FunctionComponent = () => {
   const dispatch = useDispatch();
   const { editorState, needDisplay }: DocsValueType = useSelector((state: RootState) => state?.docs);
 

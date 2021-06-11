@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import HomeIcon from '@material-ui/icons/Home';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { createNewDocProject, getDocProjects } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
-import { DocsValueType } from '../logic/docs_reducer';
 import { updateDocs } from '../logic/docs_actions';
 import { convertFromRaw, EditorState } from 'draft-js';
 import CreateNewProjectDialog from './docs_new_project';
@@ -14,24 +13,27 @@ import DocsDrawerProjectUI from './docs_drawer_project_item';
 
 const DocsTreeView = () => {
   const dispatch = useDispatch();
-  const {
-    docProjects,
-    shouldCallApi,
-    loading,
-    selectedDocProject,
-    selectedPage,
-  }: DocsValueType = useSelector((state: RootState) => state?.docs);
+  const ownComponentState = useSelector((state: RootState) => {
+
+    return {
+      docProjects: state?.docs?.docProjects,
+      shouldCallApi: state?.docs?.shouldCallApi,
+      loading: state?.docs?.loading,
+      selectedDocProject: state?.docs?.selectedDocProject,
+      selectedPage: state?.docs?.selectedPage,
+    };
+  }, shallowEqual);
   const router = useRouter();
 
   useEffect(() => {
-    if (!shouldCallApi) {
+    if (!ownComponentState?.shouldCallApi) {
 
       return;
     }
 
     dispatch(getDocProjects());
     dispatch(updateDocs({ shouldCallApi: false }));
-  }, [shouldCallApi]);
+  }, [ownComponentState?.shouldCallApi]);
 
   function backToHome() {
 
@@ -73,7 +75,8 @@ const DocsTreeView = () => {
   }
 
   function showListTreeOfDocProjects(project) {
-    const onSelectedProject = !selectedPage?._id && selectedDocProject?._id === project?._id;
+    const onSelectedProject = !ownComponentState?.selectedPage?._id &&
+      ownComponentState?.selectedDocProject?._id === project?._id;
 
     return <DocsDrawerProjectUI
       key={project?._id}
@@ -111,9 +114,9 @@ const DocsTreeView = () => {
         </div>
       </div>
       <List component='nav'>
-        {docProjects.map(showListTreeOfDocProjects)}
+        {ownComponentState?.docProjects.map(showListTreeOfDocProjects)}
       </List>
-      <CreateNewProjectDialog loading={loading} handleCreate={handleCreate}/>
+      <CreateNewProjectDialog loading={ownComponentState?.loading} handleCreate={handleCreate}/>
     </>
   );
 };

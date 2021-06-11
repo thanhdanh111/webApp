@@ -88,9 +88,7 @@ const DocsPage = () => {
       autoFocus
       required={true}
     />
-    <EditorView
-      selectionRect={selectionRect}
-    />
+    <EditorView />
     <InlineToolbar
       editorState={editorState}
       onClickOption={onClickOptionInToolbar}
