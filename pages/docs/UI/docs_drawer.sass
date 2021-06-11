@@ -1,29 +1,44 @@
-.Mui-selected > .MuiTreeItem-content > .MuiTreeItem-label
-  background-color: rgb(225, 241, 244) !important
-
 .doc-page-item
   user-select: none
   -webkit-user-select: none
   -ms-user-select: none
   cursor: pointer
+  width: 240px !important
+  border-radius: 16px
+  height: 30px
+  margin: 8px 30px
+  padding-right: 25px
+  padding-left: 15px
+
+  .side-toolbar--menu-item
+    width: 82px
+
+  .side-toolbar--menu-icon
+    min-width: 25px !important
+
+    .MuiSvgIcon-root
+      width: 20px
+      height: 20px
+
+  .MuiListItemIcon-root
+    min-width: 30px
 
   .block-wrapper--btn
     height: 10px
     width: 20px
     align-items: center
-    margin-right: 20px !important
     opacity: 0
-  
-  .side-toolbar--menu-item
-    width: 100px
 
   &:hover
-    background-color: rgba(99, 115, 129, 0.08)
+    background-color: rgb(224, 224, 224)
 
     .block-wrapper--btn
       opacity: 1
 
 .doc-project-item
+  user-select: none
+  cursor: pointer
+
   .MuiListItemIcon-root
     min-width: 40px
 
@@ -49,3 +64,9 @@
   user-select: none
   display: flex
   justify-content: center
+
+.docs-project-selected
+  background-color: rgba(13, 134, 143, 0.15) !important
+
+.docs-page-selected
+  background-color: rgba(13, 134, 143, 0.15) !important

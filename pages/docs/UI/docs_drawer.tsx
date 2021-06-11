@@ -10,11 +10,17 @@ import { updateDocs } from '../logic/docs_actions';
 import { convertFromRaw, EditorState } from 'draft-js';
 import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
-import DocsProjectUI from './docs_project_drawer';
+import DocsDrawerProjectUI from './docs_drawer_project_item';
 
 const DocsTreeView = () => {
   const dispatch = useDispatch();
-  const { docProjects, shouldCallApi, loading }: DocsValueType = useSelector((state: RootState) => state.docs);
+  const {
+    docProjects,
+    shouldCallApi,
+    loading,
+    selectedDocProject,
+    selectedPage,
+  }: DocsValueType = useSelector((state: RootState) => state?.docs);
   const router = useRouter();
 
   useEffect(() => {
@@ -67,13 +73,15 @@ const DocsTreeView = () => {
   }
 
   function showListTreeOfDocProjects(project) {
+    const onSelectedProject = !selectedPage?._id && selectedDocProject?._id === project?._id;
 
-    return <DocsProjectUI
+    return <DocsDrawerProjectUI
       key={project?._id}
       project={project}
       pages={project?.pages}
       onClickPage={onClickPage}
       onClickProject={onClickProject}
+      selected={onSelectedProject}
     />;
   }
 
@@ -102,7 +110,7 @@ const DocsTreeView = () => {
           <HomeIcon color='secondary'/>
         </div>
       </div>
-      <List component='div'>
+      <List component='nav'>
         {docProjects.map(showListTreeOfDocProjects)}
       </List>
       <CreateNewProjectDialog loading={loading} handleCreate={handleCreate}/>

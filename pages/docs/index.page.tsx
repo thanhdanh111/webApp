@@ -22,9 +22,9 @@ const DocsPage = () => {
     selectedPage,
     selectedDocProject,
   }: DocsValueType = useSelector((state: RootState) => state?.docs);
-  const onEditPage = selectedPage?._id || selectedPage?.title;
+  const onEditPage = !!selectedPage?._id || !!selectedPage?.title;
   const cannotClickButton = loading || !title?.length;
-  const cannotDelete = loading || !selectedDocProject._id || (!selectedPage?._id && !selectedDocProject._id);
+  const cannotDelete = loading || !selectedDocProject._id;
 
   function onClickOptionInToolbar(action) {
     if (!action) {
@@ -55,11 +55,6 @@ const DocsPage = () => {
   }
 
   function handleDeleteButton() {
-    if (onEditPage) {
-
-      return;
-    }
-
     dispatch(deleteDocProject());
   }
 
@@ -73,12 +68,14 @@ const DocsPage = () => {
         title={onEditPage ? 'Save' : 'Create'}
         handleClick={handleClickHeadingButton}
       />
-      <PrimaryButtonUI
-        title='Delete'
-        disabled={cannotDelete}
-        extendClass='primary-red-btn'
-        handleClick={handleDeleteButton}
-      />
+      {
+        !onEditPage && <PrimaryButtonUI
+          title='Delete'
+          disabled={cannotDelete}
+          extendClass='primary-red-btn'
+          handleClick={handleDeleteButton}
+        />
+      }
     </div>
     <Input
       style={{ marginTop: '20px', paddingLeft: '45px', marginBottom: '20px' }}

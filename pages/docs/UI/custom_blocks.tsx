@@ -26,7 +26,10 @@ function sildeTextToolbarActions({ onMoveBlockAction, handleOnChangeLineStyle })
   const sideToolbarActions = [
     {
       type: 'component',
-      component: <ParagraphStyleSideToolbarBtn handleOnChangeLineStyle={handleOnChangeLineStyle} />,
+      component: <ParagraphStyleSideToolbarBtn
+        key='menu-item-index-0'
+        handleOnChangeLineStyle={handleOnChangeLineStyle}
+      />,
     },
     {
       type: 'normal',
@@ -56,16 +59,15 @@ export const UnstyledBlockCustom = (props) => {
       key={props?.block?.getKey()}
       contentBlock={props?.block}
       onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+      disableProtal={false}
+      children={undefined}
       actionsNeedToRender={
         sildeTextToolbarActions({
           onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
           handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
         })
       }
-      disableProtal={false}
-    >
-      {undefined}
-    </SideToolbarButton>,
+    />,
     <EditorBlock {...props} />,
   );
 };
@@ -78,15 +80,14 @@ export const CodeBlockCustom = (props) => React.createElement(
     key={props?.block?.getKey()}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
     disableProtal={false}
+    children={undefined}
     actionsNeedToRender={
       sildeTextToolbarActions({
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
       })
     }
-  >
-    {undefined}
-  </SideToolbarButton>,
+  />,
   <EditorBlock {...props} />,
 );
 
@@ -98,15 +99,23 @@ export const UnorderedListItemCustom = (props) => React.createElement(
     key={props?.block?.getKey()}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
     disableProtal={false}
+    children={
+      <FiberManualRecordIcon
+        style={{
+          width: '10px',
+          height: '20px',
+          marginLeft: '10px',
+          marginRight: '7px',
+        }}
+      />
+    }
     actionsNeedToRender={
       sildeTextToolbarActions({
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
       })
     }
-  >
-    <FiberManualRecordIcon style={{ width: '10px', height: '20px', marginLeft: '10px', marginRight: '7px' }} />
-  </SideToolbarButton>,
+  />,
   <EditorBlock {...props} />,
 );
 
@@ -118,15 +127,14 @@ export const OrderedListItemCustom = (props) => React.createElement(
     key={props?.block?.getKey()}
     disableProtal={false}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+    children={<IndexElement {...props}  />}
     actionsNeedToRender={
       sildeTextToolbarActions({
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
       })
     }
-  >
-    <IndexElement {...props}  />
-  </SideToolbarButton>,
+  />,
   <EditorBlock {...props} />,
 );
 

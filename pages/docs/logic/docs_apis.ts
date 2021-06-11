@@ -227,28 +227,32 @@ export const getDocProjects = () => async (dispatch) => {
     });
 
     const storeNewParentsIndice = docPagesIntoDocProjects.desiredParentsIndice;
+    let newIndex = 0;
 
     if (docProjects?.data?.list?.length) {
 
-      for (const [index, docProject] of docProjects?.data?.list.entries()) {
+      for (const docProject of docProjects?.data?.list) {
         const projectID = docProject?._id;
 
-        if (typeof storeNewParentsIndice[projectID] === 'number') {
-          projects.push(docPagesIntoDocProjects.desiredParents[storeNewParentsIndice[projectID]]);
-          storeNewParentsIndice[projectID] = index;
+        if (docPagesIntoDocProjects?.desiredParentsIndice[projectID] !== undefined) {
+          const filteredProjectIndex = docPagesIntoDocProjects?.desiredParentsIndice[projectID];
+
+          projects.push(docPagesIntoDocProjects.desiredParents[filteredProjectIndex]);
+          storeNewParentsIndice[projectID] = newIndex;
+          newIndex = newIndex + 1;
 
           continue;
         }
 
         const invalidProject = !projectID || !docProject?.title || !docProject?.companyID;
-        const cannotContinue = invalidProject;
 
-        if (cannotContinue) {
+        if (invalidProject) {
 
           continue;
         }
 
-        storeNewParentsIndice[projectID] = index;
+        storeNewParentsIndice[projectID] = newIndex;
+        newIndex = newIndex + 1;
 
         projects.push({
           title: docProject.title,
@@ -269,7 +273,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
   try {
     const token: Token =  localStorage.getItem('access_token');
     const { extendedCompany }: LoginValueType = getState()?.auth;
-    const { docProjects }: DocsValueType = getState()?.docs;
+    const { docProjects, storeProjectsIndice }: DocsValueType = getState()?.docs;
     const companyID = extendedCompany?.companyID?._id;
 
     if (!companyID || !projectName || !token) {
@@ -307,7 +311,9 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
       title: newTitle,
     };
 
-    dispatch(updateDocs({ loading: false, docProjects: [...docProjects, newDocProject] }));
+    storeProjectsIndice[newProjectID] = docProjects.length;
+
+    dispatch(updateDocs({ storeProjectsIndice, loading: false, docProjects: [...docProjects, newDocProject] }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
@@ -316,7 +322,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
 export const deleteDocProject = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const { selectedDocProject, docProjects }: DocsValueType = getState()?.docs;
+    const { selectedDocProject, docProjects, storeProjectsIndice }: DocsValueType = getState()?.docs;
     const selectedDocProjectID = selectedDocProject?._id;
 
     if (!token || !selectedDocProjectID) {
@@ -334,15 +340,22 @@ export const deleteDocProject = () => async (dispatch, getState) => {
         },
       });
 
+    const newStoreProjectsIndice = storeProjectsIndice;
+    let newIndex = 0;
+
     const newDocProjects = docProjects.filter((docProject) => {
+      const currentProjectID = docProject?._id ?? '';
       if (docProject?._id !== selectedDocProjectID) {
+        newStoreProjectsIndice[currentProjectID] = newIndex;
+        newIndex = newIndex + 1;
+
         return true;
       }
 
       return false;
     });
 
-    dispatch(updateDocs({ loading: false, docProjects: newDocProjects }));
+    dispatch(updateDocs({ loading: false, docProjects: newDocProjects,  storeProjectsIndice: newStoreProjectsIndice }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
