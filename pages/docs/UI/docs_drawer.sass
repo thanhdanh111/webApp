@@ -2,8 +2,26 @@
   background-color: rgb(225, 241, 244) !important
 
 .doc-page-item
-  .MuiListItemIcon-root
-    min-width: 40px
+  user-select: none
+  -webkit-user-select: none
+  -ms-user-select: none
+  cursor: pointer
+
+  .block-wrapper--btn
+    height: 10px
+    width: 20px
+    align-items: center
+    margin-right: 20px !important
+    opacity: 0
+  
+  .side-toolbar--menu-item
+    width: 100px
+
+  &:hover
+    background-color: rgba(99, 115, 129, 0.08)
+
+    .block-wrapper--btn
+      opacity: 1
 
 .doc-project-item
   .MuiListItemIcon-root

@@ -35,9 +35,9 @@ export const auth = (state = initialState, action) => {
       return {
         ...state,
         userProfile: action.payload?.userProfile,
-        access: action.payload.access,
-        userID: action.payload.userID,
-        extendedUser: action.payload.extendedUser,
+        access: action?.payload?.access,
+        userID: action?.payload?.userID,
+        extendedUser: action?.payload?.extendedUser,
         extendedCompany: action?.payload?.extendedCompany ?? {},
         department: action?.payload?.department ?? {},
       };

@@ -13,7 +13,7 @@ const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle }) => {
   const lists = () => {
     return changeLineStyleButons.map((button, index) =>
       <div
-        key={`paragraph-style-toolbar--list-item-${index}`}
+        key={`list-item-${index}`}
         className='paragraph-style-toolbar--list-item'
         onClick={() => handleOnChangeLineStyle(button.functionality)}
       >

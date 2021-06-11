@@ -1,23 +1,39 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Button, ClickAwayListener, Paper,
-  Popper, MenuList, MenuItem, ListItemIcon, Typography,
+import {
+  ClickAwayListener, Paper,
+  Popper, MenuList, MenuItem, ListItemIcon,
+  Typography, IconButton,
 } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ParagraphStyleSideToolbarBtn from 'pages/docs/UI/paragraph_style_toolbar_btn';
 
-const SideToolbarButton = ({
-  handleOnChangeLineStyle,
+interface RenderAction {
+  type?: string;
+  label?: string;
+  startIcont?: JSX.Element;
+  component?: JSX.Element;
+}
+
+interface SideToolbarButton {
+  contentBlock: object;
+  onClickSideToolbar: (props) => void;
+  actionsNeedToRender: RenderAction[];
+  children?: JSX.Element;
+  buttonIcon?: JSX.Element;
+  disableProtal: boolean;
+}
+
+const SideToolbarButton: FunctionComponent<SideToolbarButton> = ({
   contentBlock,
   onClickSideToolbar,
-  onMoveBlockAction,
   children,
+  actionsNeedToRender,
+  buttonIcon,
+  disableProtal = false,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handlePopperOpen = (event: React.MouseEvent<HTMLElement>) => {
-    onClickSideToolbar(contentBlock);
+    onClickSideToolbar({ contentBlock, event });
 
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
@@ -28,21 +44,36 @@ const SideToolbarButton = ({
 
   const open = Boolean(anchorEl);
 
+  function renderAction(action, index) {
+    if (action?.type === 'component') {
+      return action?.component ?? <div />;
+    }
+
+    return <MenuItem
+      className='side-toolbar--menu-item'
+      component='div'
+      key={`menu-item-index-${index}`}
+      onClick={action?.function}
+    >
+      <ListItemIcon className='side-toolbar--menu-icon'>
+        {action?.startIcon}
+      </ListItemIcon>
+      <Typography variant='inherit'>{action?.label}</Typography>
+    </MenuItem>;
+  }
+
   return <>
     <div
       className='block-wrapper--btns'
     >
-      <Button
+      <IconButton
         component='div'
         className='block-wrapper--btn'
         aria-describedby={open ? 'sideToolbar' : undefined}
         onClick={handlePopperOpen}
       >
-        <MoreVertIcon
-          style={{ width: '20px', height: '20px' }}
-          className='block-wrapper--icon'
-        />
-      </Button>
+        {buttonIcon ?? <MoreVertIcon className='block-wrapper--icon'/>}
+      </IconButton>
       {children}
 
       <Popper
@@ -51,44 +82,16 @@ const SideToolbarButton = ({
         open={open}
         anchorEl={anchorEl}
         role={undefined}
+        disablePortal={disableProtal}
       >
-        <Paper>
-            <ClickAwayListener onClickAway={handleClose}>
+          <ClickAwayListener onClickAway={handleClose} disableReactTree>
+            <Paper>
               <MenuList>
-                <ParagraphStyleSideToolbarBtn
-                  handleOnChangeLineStyle={handleOnChangeLineStyle}
-                />
-              <MenuItem
-                className='side-toolbar--menu-item'
-                component='div'
-                onClick={() => onMoveBlockAction('UP')}
-              >
-                <ListItemIcon className='side-toolbar--menu-icon'>
-                  <ArrowUpwardIcon />
-                </ListItemIcon>
-                <Typography variant='inherit'>
-                  Move Up
-                </Typography>
-              </MenuItem>
-
-              <MenuItem
-                className='side-toolbar--menu-item'
-                component='div'
-                onClick={() => onMoveBlockAction('DOWN')}
-              >
-                <ListItemIcon className='side-toolbar--menu-icon'>
-                  <ArrowDownwardIcon />
-                </ListItemIcon>
-                <Typography variant='inherit'>
-                  Move Down
-                </Typography>
-              </MenuItem>
-
+                {actionsNeedToRender.map(renderAction)}
               </MenuList>
-            </ClickAwayListener>
-          </Paper>
+            </Paper>
+          </ClickAwayListener>
       </Popper>
-
     </div>
   </>;
 };

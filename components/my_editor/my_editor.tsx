@@ -13,7 +13,7 @@ interface MyEditor {
   editorState?: EditorState;
   handleChangeEditorState: (newEditorState) => void;
   handleOnChangeStyleLine?: (action, contentState) => void;
-  onClickSideToolbar?: (contentBlock) => void;
+  onClickSideToolbar?: (props) => void;
   onMoveBlockAction?: (action) => void;
 }
 

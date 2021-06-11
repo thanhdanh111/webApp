@@ -17,7 +17,8 @@ const EditorView: FunctionComponent<EditorView> = () => {
   const dispatch = useDispatch();
   const { editorState, needDisplay }: DocsValueType = useSelector((state: RootState) => state?.docs);
 
-  function onClickSideToolbar(contentBlock) {
+  function onClickSideToolbar(props) {
+    const contentBlock = props?.contentBlock;
     if (!contentBlock) {
       return;
     }

@@ -8,7 +8,7 @@ import { DocsValueType } from './logic/docs_reducer';
 import { handleToolbarActions } from './logic/docs_inline_toolbar_actions';
 import { Input } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { createNewPage, deleteDocProject, deletePage, savePage } from './logic/docs_apis';
+import { createNewPage, deleteDocProject, savePage } from './logic/docs_apis';
 import { handleKeyCombination } from './logic/handle_combination_key';
 
 const DocsPage = () => {
@@ -56,7 +56,6 @@ const DocsPage = () => {
 
   function handleDeleteButton() {
     if (onEditPage) {
-      dispatch(deletePage());
 
       return;
     }

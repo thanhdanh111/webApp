@@ -10,7 +10,7 @@ import { updateDocs } from '../logic/docs_actions';
 import { convertFromRaw, EditorState } from 'draft-js';
 import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
-import DocsProjectUI from './docs_project';
+import DocsProjectUI from './docs_project_drawer';
 
 const DocsTreeView = () => {
   const dispatch = useDispatch();
@@ -27,9 +27,9 @@ const DocsTreeView = () => {
     dispatch(updateDocs({ shouldCallApi: false }));
   }, [shouldCallApi]);
 
-  async function backToHome() {
+  function backToHome() {
 
-    await router.push('/home');
+    void router.push('/home');
   }
 
   function onClickProject(project) {
@@ -41,8 +41,8 @@ const DocsTreeView = () => {
     }));
   }
 
-  function onClickPage(page) {
-    const convertedBlocks = JSON.parse(page?.pageContent);
+  function onClickPage(props) {
+    const convertedBlocks = JSON.parse(props?.page?.pageContent);
 
     const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: {} });
 
@@ -51,8 +51,9 @@ const DocsTreeView = () => {
         EditorState.createEmpty(),
         newContentState,
       ),
-      selectedPage: page,
-      title: page?.title,
+      selectedDocProject: props?.project,
+      selectedPage: props?.page,
+      title: props?.page?.title,
     }));
   }
 
@@ -68,6 +69,7 @@ const DocsTreeView = () => {
   function showListTreeOfDocProjects(project) {
 
     return <DocsProjectUI
+      key={project?._id}
       project={project}
       pages={project?.pages}
       onClickPage={onClickPage}
@@ -102,7 +104,6 @@ const DocsTreeView = () => {
       </div>
       <List component='div'>
         {docProjects.map(showListTreeOfDocProjects)}
-
       </List>
       <CreateNewProjectDialog loading={loading} handleCreate={handleCreate}/>
     </>

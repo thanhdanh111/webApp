@@ -3,6 +3,9 @@ import SideToolbarButton from '../../../components/my_editor/side_toolbar_button
 import { EditorBlock, DefaultDraftBlockRenderMap } from 'draft-js';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import Immutable from 'immutable';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ParagraphStyleSideToolbarBtn from './paragraph_style_toolbar_btn';
 
 const blockRenderMap = Immutable.Map({
   'unordered-list-item': {
@@ -19,20 +22,49 @@ const blockRenderMap = Immutable.Map({
   },
 });
 
+function sildeTextToolbarActions({ onMoveBlockAction, handleOnChangeLineStyle }) {
+  const sideToolbarActions = [
+    {
+      type: 'component',
+      component: <ParagraphStyleSideToolbarBtn handleOnChangeLineStyle={handleOnChangeLineStyle} />,
+    },
+    {
+      type: 'normal',
+      label: 'Move Up',
+      startIcon: <ArrowUpwardIcon />,
+      function: () => onMoveBlockAction('UP'),
+    },
+    {
+      type: 'normal',
+      label: 'Move Down',
+      startIcon: <ArrowDownwardIcon />,
+      function: () => onMoveBlockAction('DOWN'),
+    },
+  ];
+
+  return sideToolbarActions;
+}
+
 export const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
 
 export const UnstyledBlockCustom = (props) => {
 
   return React.createElement(
     React.Fragment,
-    { key: 'unstyled-block-custom' },
+    { key: `block-${props?.block?.getKey()}` },
     <SideToolbarButton
+      key={props?.block?.getKey()}
       contentBlock={props?.block}
-      handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
       onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
-      onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
+      actionsNeedToRender={
+        sildeTextToolbarActions({
+          onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
+          handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+        })
+      }
+      disableProtal={false}
     >
-      {null}
+      {undefined}
     </SideToolbarButton>,
     <EditorBlock {...props} />,
   );
@@ -40,26 +72,38 @@ export const UnstyledBlockCustom = (props) => {
 
 export const CodeBlockCustom = (props) => React.createElement(
   React.Fragment,
-  { key: 'code-block-custom' },
+  { key: `block-${props?.block?.getKey()}` },
   <SideToolbarButton
     contentBlock={props?.block}
-    handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
+    key={props?.block?.getKey()}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
-    onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
+    disableProtal={false}
+    actionsNeedToRender={
+      sildeTextToolbarActions({
+        onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
+        handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+      })
+    }
   >
-    {null}
+    {undefined}
   </SideToolbarButton>,
   <EditorBlock {...props} />,
 );
 
 export const UnorderedListItemCustom = (props) => React.createElement(
   React.Fragment,
-  { key: 'unordered-list-item' },
+  { key: `block-${props?.block?.getKey()}` },
   <SideToolbarButton
     contentBlock={props?.block}
-    handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
+    key={props?.block?.getKey()}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
-    onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
+    disableProtal={false}
+    actionsNeedToRender={
+      sildeTextToolbarActions({
+        onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
+        handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+      })
+    }
   >
     <FiberManualRecordIcon style={{ width: '10px', height: '20px', marginLeft: '10px', marginRight: '7px' }} />
   </SideToolbarButton>,
@@ -68,12 +112,18 @@ export const UnorderedListItemCustom = (props) => React.createElement(
 
 export const OrderedListItemCustom = (props) => React.createElement(
   React.Fragment,
-  { key: 'ordered-list-item' },
+  { key: `block-${props?.block?.getKey()}` },
   <SideToolbarButton
     contentBlock={props?.block}
-    handleOnChangeLineStyle={props?.blockProps?.handleOnChangeLineStyle}
+    key={props?.block?.getKey()}
+    disableProtal={false}
     onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
-    onMoveBlockAction={props?.blockProps?.onMoveBlockAction}
+    actionsNeedToRender={
+      sildeTextToolbarActions({
+        onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
+        handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+      })
+    }
   >
     <IndexElement {...props}  />
   </SideToolbarButton>,
