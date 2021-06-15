@@ -179,15 +179,20 @@ export const deletePage = () => async (dispatch, getState) => {
   }
 };
 
-export const getDocProjects = () => async (dispatch) => {
+export const getDocProjects = ({ companyID }) => async (dispatch) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
+
+    if (!companyID) {
+      return;
+    }
 
     dispatch(updateDocs({ loading: true }));
 
     const docPages = await axios.get(`${config.BASE_URL}/docPages`,
       {
         params: {
+          companyID,
           limit: 1000,
         },
         headers: {
@@ -206,6 +211,7 @@ export const getDocProjects = () => async (dispatch) => {
     const docProjects = await axios.get(`${config.BASE_URL}/docProjects`,
       {
         params: {
+          companyID,
           limit: 1000,
         },
         headers: {

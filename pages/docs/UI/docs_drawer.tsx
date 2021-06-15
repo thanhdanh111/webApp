@@ -17,23 +17,17 @@ const DocsTreeView = () => {
 
     return {
       docProjects: state?.docs?.docProjects,
-      shouldCallApi: state?.docs?.shouldCallApi,
       loading: state?.docs?.loading,
       selectedDocProject: state?.docs?.selectedDocProject,
       selectedPage: state?.docs?.selectedPage,
+      companyID: state?.auth?.extendedCompany?.companyID?._id,
     };
   }, shallowEqual);
   const router = useRouter();
 
   useEffect(() => {
-    if (!ownComponentState?.shouldCallApi) {
-
-      return;
-    }
-
-    dispatch(getDocProjects());
-    dispatch(updateDocs({ shouldCallApi: false }));
-  }, [ownComponentState?.shouldCallApi]);
+    dispatch(getDocProjects({ companyID: ownComponentState?.companyID }));
+  }, [ownComponentState?.companyID]);
 
   function backToHome() {
 
