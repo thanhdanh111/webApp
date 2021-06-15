@@ -134,23 +134,6 @@ const BoardTasks: FunctionComponent = () => {
     sourceTasks = movedData[source.droppableId] as Task[];
     destinationTasks = movedData[destination.droppableId] as Task[];
 
-    const sourceTaskIds = sourceTasks.map((each) => each?._id);
-    const destinationTaskIds = destinationTasks.map((each) => each?._id);
-
-    dispatch(updateTaskStatusById({
-      taskStatusID: source.droppableId,
-      data: {
-        taskIDs: sourceTaskIds,
-      },
-    }));
-
-    dispatch(updateTaskStatusById({
-      taskStatusID: destination.droppableId,
-      data: {
-        taskIDs: destinationTaskIds,
-      },
-    }));
-
     dispatch(setTasksToTaskStatus({
       taskStatusId: source.droppableId,
       tasks: sourceTasks,
@@ -158,7 +141,7 @@ const BoardTasks: FunctionComponent = () => {
 
     dispatch(setTasksToTaskStatus({
       taskStatusId: destination.droppableId,
-      tasks: destinationTaskIds,
+      tasks: destinationTasks,
     }));
   };
 

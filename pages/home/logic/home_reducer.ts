@@ -7,7 +7,7 @@ import {
   hideLoaderListUser,
   getDataTasksByUserThunkAction,
   getTasksStatusByID,
-  setSelectedTask,
+  updateTaskByIDAction,
  } from './home_actions';
 
 interface Data {
@@ -20,6 +20,7 @@ interface Data {
   taskTotalCount: number;
   taskCursor: string;
   taskStatusNotification: TaskStatusType;
+  selectTask: Task;
 }
 
 const initialState: Data = {
@@ -35,6 +36,15 @@ const initialState: Data = {
     _id: '',
     title: '',
     taskIDs: [],
+    description: '',
+  },
+  selectTask: {
+    _id: '',
+    companyID: '',
+    departmentID: '',
+    tagIDs: [],
+    userIDs: [],
+    title: '',
     description: '',
   },
 };
@@ -131,37 +141,10 @@ export  const taskStatusesReducer = (state = initialState, action) => {
         ...state,
         list: updatedTaskStatuses,
       };
-    case dashboardClickUp.UPDATE_TASKS_TO_TASK_STATUS:
-      updatedTaskStatuses = state.list?.map((each) => {
-        if (each._id !== action?.data?.taskStatusId) {
-          return each;
-        }
-
-        const tasks = each.taskIDs?.map((item: Task) => {
-          if (item._id !== action.data?.taskId) {
-            return item;
-          }
-
-          return {
-            ...item,
-            ...action.data?.data,
-          };
-        });
-
-        return {
-          ...each,
-          tasks,
-        };
-      });
-
-      return {
-        ...state,
-        taskStatuses: updatedTaskStatuses,
-      };
     case dashboardClickUp.SET_SELECTED_TASK:
       return {
         ...state,
-        ...action.data,
+        selectTask: action?.data,
       };
     default:
       return state;
@@ -173,7 +156,7 @@ export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = '6048786b340cd7000859330a'; // authState?.department?._id;
+    const departmentID = '60487820340cd70008593306'; // authState?.department?._id;
 
     if (!token || !companyID) {
       await dispatch(hideLoaderListUser());
@@ -292,7 +275,7 @@ export const updateTaskById = ({ taskID, data = { } }: IUpdateTask) => async (di
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
 
-    const response = await axios({
+    const res = await axios({
       data,
       url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
       headers: {
@@ -301,7 +284,8 @@ export const updateTaskById = ({ taskID, data = { } }: IUpdateTask) => async (di
       },
       method: 'PUT',
     });
-    await dispatch(setSelectedTask(response.data));
+
+    await dispatch(updateTaskByIDAction(res));
   } catch (error) {
     throw error;
   }
