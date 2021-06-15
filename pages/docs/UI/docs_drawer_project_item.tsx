@@ -1,11 +1,16 @@
 import React from 'react';
 import {
-  ListItem, ListItemIcon, ListItemText, Collapse,
+  ListItem, ListItemText, Collapse, ListItemIcon,
 } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import FolderIcon from '@material-ui/icons/Folder';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { useDispatch } from 'react-redux';
 import DocsDrawerPageUI from './docs_drawer_page_item';
+import SideToolbarButton from '@components/my_editor/side_toolbar_button';
+import { deleteDocProject } from '../logic/docs_apis';
 
 const DocsDrawerProjectUI = ({
   project,
@@ -16,6 +21,7 @@ const DocsDrawerProjectUI = ({
 }) => {
   const [open, setOpen] = React.useState(true);
   let renderPages = null;
+  const dispatch = useDispatch();
 
   const handleClick = () => {
     setOpen(!open);
@@ -33,6 +39,35 @@ const DocsDrawerProjectUI = ({
     );
   }
 
+  function renderEndIcons() {
+    const expandedIcon = renderPages !== null ?
+      (open ?
+        <ExpandLess className='doc-project-expanded-icon' /> :
+        <ExpandMore className='doc-project-expanded-icon' />
+      ) : <div />;
+
+    const sideToolbarActions = [
+      {
+        type: 'normal',
+        label: 'Delete Project',
+        startIcon: <DeleteIcon />,
+        function: () => dispatch(deleteDocProject({ projectID: project?._id })),
+      },
+    ];
+
+    return <SideToolbarButton
+      contentBlock={{}}
+      onClickSideToolbar={() => 'handed'}
+      disableProtal={true}
+      children={undefined}
+      buttonIcon={<div className='doc-project-start-icons'>
+        {expandedIcon}
+        <MoreHoriz className='doc-project-hover-icon-options' />
+      </div>}
+      actionsNeedToRender={sideToolbarActions}
+    />;
+  }
+
   return <>
     <ListItem
       className='doc-project-item'
@@ -41,10 +76,10 @@ const DocsDrawerProjectUI = ({
       selected={selected}
     >
       <ListItemIcon>
-        <FolderIcon/>
+        <FolderIcon />
       </ListItemIcon>
       <ListItemText primary={project?.title} />
-      {renderPages !== null && (open ? <ExpandLess /> : <ExpandMore />)}
+      {renderEndIcons()}
     </ListItem>
     <Collapse in={open} timeout='auto' unmountOnExit>
       {renderPages}

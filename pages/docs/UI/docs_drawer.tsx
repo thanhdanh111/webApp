@@ -90,23 +90,10 @@ const DocsTreeView = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', marginLeft: '10px', marginBottom: '50px' }}>
+      <div className='docs-drawer-back-home-layout'>
         <Tooltip title='Back to home'>
-          <IconButton
-            style={{
-              width: '15px',
-              height: '15px',
-              marginTop: '15px',
-            }}
-            onClick={() => backToHome()}
-          >
-            <ArrowBackIosIcon
-              style={{
-                width: '15px',
-                height: '15px',
-                marginLeft: '5px',
-              }}
-            />
+          <IconButton className='arrow-back-home' onClick={() => backToHome()}>
+            <ArrowBackIosIcon style={{ marginLeft: '5px', width: '15px', height: '15px' }} />
           </IconButton>
         </Tooltip>
         <div className='docs-drawer--icon-layout'>

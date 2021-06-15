@@ -319,20 +319,19 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
   }
 };
 
-export const deleteDocProject = () => async (dispatch, getState) => {
+export const deleteDocProject = ({ projectID }) => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const { selectedDocProject, docProjects, storeProjectsIndice }: DocsValueType = getState()?.docs;
-    const selectedDocProjectID = selectedDocProject?._id;
+    const { docProjects, storeProjectsIndice }: DocsValueType = getState()?.docs;
 
-    if (!token || !selectedDocProjectID) {
+    if (!token || !projectID) {
       return;
     }
 
     dispatch(updateDocs({ loading: true }));
 
     await axios.delete(
-      `${config.BASE_URL}/docProjects/${selectedDocProjectID}`,
+      `${config.BASE_URL}/docProjects/${projectID}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -345,7 +344,7 @@ export const deleteDocProject = () => async (dispatch, getState) => {
 
     const newDocProjects = docProjects.filter((docProject) => {
       const currentProjectID = docProject?._id ?? '';
-      if (docProject?._id !== selectedDocProjectID) {
+      if (docProject?._id !== projectID) {
         newStoreProjectsIndice[currentProjectID] = newIndex;
         newIndex = newIndex + 1;
 

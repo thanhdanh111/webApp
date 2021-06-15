@@ -32,6 +32,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
 
   return <Editor
     stripPastedStyles={true}
+    placeholder='Write something'
     customStyleMap={customStyleMapDraftjs}
     handlePastedText={(_, styles, state) => handlePastedText({ styles, state, handleOnChange })}
     editorState={editorState}

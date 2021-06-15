@@ -26,10 +26,11 @@ const CreateNewProjectDialog = ({ handleCreate, loading })  => {
   return (
     <>
     <ListItem
-      className='doc-project-item docs-drawer--add-new-project'
+      className='docs-drawer--add-new-project'
       button
       onClick={handleClickOpen}
       disabled={loading}
+      disableGutters
     >
       <ListItemIcon>
         <CreateNewFolderIcon />
