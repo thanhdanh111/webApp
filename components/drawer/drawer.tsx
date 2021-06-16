@@ -11,7 +11,7 @@ import { EqualizerOutlined } from '@material-ui/icons';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import EditIcon from '@material-ui/icons/Edit';
 import BusinessIcon from '@material-ui/icons/Business';
-import DocsTreeView from 'pages/docs/UI/docs_drawer';
+import DocsDrawer from 'pages/docs/UI/docs_drawer';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -85,7 +85,7 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
     const currentPath = window?.location?.pathname;
 
     if (currentPath === '/docs') {
-      return <DocsTreeView />;
+      return <DocsDrawer />;
     }
 
     return <div>

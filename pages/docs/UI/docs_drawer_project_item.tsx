@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  ListItem, ListItemText, Collapse, ListItemIcon,
+  ListItem, ListItemText, Collapse, ListItemIcon, Tooltip,
 } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -78,7 +78,7 @@ const DocsDrawerProjectUI = ({
       <ListItemIcon>
         <FolderIcon />
       </ListItemIcon>
-      <ListItemText primary={project?.title} />
+        <ListItemText title={project?.title} primary={project?.title} />
       {renderEndIcons()}
     </ListItem>
     <Collapse in={open} timeout='auto' unmountOnExit>

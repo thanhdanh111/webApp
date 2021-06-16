@@ -11,7 +11,7 @@ import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
 import DocsDrawerProjectUI from './docs_drawer_project_item';
 
-const DocsTreeView = () => {
+const DocsDrawer = () => {
   const dispatch = useDispatch();
   const ownComponentState = useSelector((state: RootState) => {
 
@@ -102,4 +102,4 @@ const DocsTreeView = () => {
   );
 };
 
-export default DocsTreeView;
+export default DocsDrawer;

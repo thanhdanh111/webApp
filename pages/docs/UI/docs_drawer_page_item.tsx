@@ -41,7 +41,7 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
     <ListItemIcon>
       <DescriptionIcon style={{ width: '20px', height: '20px' }} />
     </ListItemIcon>
-    <ListItemText primary={page?.title} />
+    <ListItemText title={page?.title} primary={page?.title} />
     <SideToolbarButton
       contentBlock={{}}
       onClickSideToolbar={() => 'handed'}
