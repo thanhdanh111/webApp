@@ -1,0 +1,152 @@
+.style-page
+	width: 100%
+	height: 90vh
+
+	.back-ground
+		background-color: #f0f4f7
+
+	.card-shape-all
+		position: absolute
+		left: 20px
+		top: 65px
+		z-index: 4
+		padding: 20px
+
+		.card-shape
+			background-color: #273746
+			border-color: #273746
+			position: absolute
+			padding: 10px
+			border-radius: 10%
+
+			.svg-process
+				border: 2px solid #ffffff
+
+			.svg-decision
+				border: 2px solid #ffffff
+
+	.shapes
+		display: contents
+
+.node-item-process
+	width: 100px
+	min-width: 10px
+	height: 40px
+	transition: 0.01s
+	min-height: 40px
+	outline: none
+
+	.border
+		border: 1px solid #af00e7
+		height: 100%
+		width: 100%
+		position: absolute
+
+	.text-input
+		position: absolute
+		border: none
+		color: #9097a0
+		text-align: center
+		background: none
+		width: 100%
+		height: 100%
+		font-size: 8px
+		outline: none
+
+	.process-svg
+		display: block
+
+.node-item-flow-cicle
+	width: 5rem
+	height: 5rem
+	border-radius: 50%
+	display: flex
+	text-align: center
+	align-items: center
+	padding: 10px
+	background-color: #ffffff
+
+.node-item-flow-oval
+	border-radius: 45%
+	display: flex
+	text-align: center
+	align-items: center
+	padding: 10px
+	background-color: #ffffff
+
+.custom
+	width: 100px
+	min-width: 10px
+	box-sizing: border-box
+	height: 40px
+	transition: 0.01s
+	min-height: 40px
+	outline: none
+
+	.border-decision
+		border: 1px solid #af00e7
+		height: 100%
+		width: 100%
+		position: absolute
+
+	.resizer
+		width: 7px
+		height: 7px
+		background: white
+		border: 1px solid #dddddd
+
+	.resizer.top-left
+		left: -3px
+		top: -3px
+		cursor: nwse-resize
+		position: absolute
+
+	.resizer.top-right
+		right: -3px
+		top: -3px
+		cursor: nesw-resize
+		position: absolute
+
+	.resizer.bottom-left
+		left: -3px
+		bottom: -3px
+		cursor: nesw-resize
+		position: absolute
+
+	.resizer.bottom-right
+		right: -3px
+		bottom: -3px
+		cursor: nwse-resize
+		position: absolute
+
+	.decision
+		display: block
+		overflow: visible
+
+	.input-decision
+		color: #9097a0
+		width: 100%
+		font-size: 8px
+		position: absolute
+		text-align: center
+		height: 100%
+		border: none
+		background: none
+		outline: none
+
+.node-item-flow-extract
+	width: 0
+	height: 0
+	border-left: 35px solid transparent
+	border-right: 35px solid transparent
+	border-bottom: 70px solid #ffffff
+
+.text-input
+	border: none
+	color: #9097a0
+	text-align: center
+	background: none
+	width: 100%
+	font-size: 8px
+	outline: none
+	word-wrap: break-word

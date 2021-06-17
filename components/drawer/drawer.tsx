@@ -21,11 +21,12 @@ const elementIcons = {
   event_logs: <EventNoteIcon />,
   projects: <EventNoteIcon />,
   company: <BusinessIcon />,
+  flow_chart: <img alt='logo' width='24px' src='../project-diagram-solid.svg' />,
 };
 
 const drawerElements = {
   general: ['home', 'users', 'statistics'],
-  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects'],
+  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects', 'flow_chart'],
 };
 
 interface DrawerUi {
