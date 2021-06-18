@@ -34,7 +34,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     stripPastedStyles={true}
     placeholder='Write something'
     customStyleMap={customStyleMapDraftjs}
-    handlePastedText={(_, styles, state) => handlePastedText({ styles, state, handleOnChange })}
+    handlePastedText={(text, html, state) => handlePastedText({ text, html, state, handleOnChange })}
     editorState={editorState}
     blockRendererFn={(contentState) =>
       editorBlockRenderer(

@@ -38,6 +38,11 @@ export const inlineToolbarButons = [
     styleName: 'UNDERLINE',
   },
   {
+    functionality: 'LINK',
+    icon: 'L',
+    styleName: 'LINK',
+  },
+  {
     functionality: 'header-one',
     icon: <p>H<sub>1</sub></p>,
     overrideClass: 'text-headings',

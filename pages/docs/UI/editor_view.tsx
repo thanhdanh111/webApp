@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSingleEditorState } from '../logic/docs_actions';
 import { DocsValueType } from '../logic/docs_reducer';
 import { RootState } from 'redux/reducers_registration';
-import { SelectionState, EditorState } from 'draft-js';
+import { SelectionState, EditorState, CompositeDecorator } from 'draft-js';
 import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions';
 import { showUpToolbarAndUpdateState } from '../logic/docs_inline_toolbar_actions';
+import { docsLinkDecorator } from 'pages/docs/UI/link_decorator';
+import { handleUrlForText } from '../logic/handle_pasted_text';
 
 const EditorView: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -46,6 +48,10 @@ const EditorView: FunctionComponent = () => {
     }));
   }
 
+  const decorator = new CompositeDecorator([
+    docsLinkDecorator,
+  ]);
+
   return <MyEditor
     handleOnChangeStyleLine={onClickOptionInSideToolbar}
     onMoveBlockAction={(action) => onMoveBlockAction({
@@ -55,7 +61,7 @@ const EditorView: FunctionComponent = () => {
     })}
     key='editor-view'
     handleChangeEditorState={handleChangeEditorState}
-    editorState={editorState ?? EditorState.createEmpty()}
+    editorState={editorState ?? EditorState.createEmpty(decorator)}
     onClickSideToolbar={onClickSideToolbar}
   />;
 };

@@ -63,8 +63,8 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       },
     });
 
-    const userCompanies = getUserCompanies({ access: res.data?.access });
-    const userDepartments = getUserDepartments({ access: res.data?.access });
+    const userCompanies = getUserCompanies({ access: res?.data?.access });
+    const userDepartments = getUserDepartments({ access: res?.data?.access });
     const checkUserCompanies = checkArray(userCompanies?.companies);
     const checkUserDepartments = checkArray(userCompanies?.companies) && checkArray(userDepartments?.departments);
 
@@ -109,9 +109,9 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
     }
 
     await dispatch(GetUserData(data));
-    await dispatch(GetUserAccess(res.data?.access ?? []));
+    await dispatch(GetUserAccess(res?.data?.access ?? []));
   } catch (error) {
     await dispatch(GetUserData(data));
-    await dispatch(GetUserAccess(res.data?.access ?? []));
+    await dispatch(GetUserAccess(res?.data?.access ?? []));
   }
 };

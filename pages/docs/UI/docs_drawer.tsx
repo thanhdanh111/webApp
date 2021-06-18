@@ -6,10 +6,11 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { createNewDocProject, getDocProjects } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
 import { updateDocs } from '../logic/docs_actions';
-import { convertFromRaw, EditorState } from 'draft-js';
+import { convertFromRaw, EditorState, CompositeDecorator } from 'draft-js';
 import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
 import DocsDrawerProjectUI from './docs_drawer_project_item';
+import { docsLinkDecorator } from 'pages/docs/UI/link_decorator';
 
 const DocsDrawer = () => {
   const dispatch = useDispatch();
@@ -46,12 +47,16 @@ const DocsDrawer = () => {
   function onClickPage(props) {
     const convertedBlocks = JSON.parse(props?.page?.pageContent);
 
+    const decorator = new CompositeDecorator([
+      docsLinkDecorator,
+    ]);
+
     const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: {} });
 
     dispatch(updateDocs({
-      editorState: EditorState.push(
-        EditorState.createEmpty(),
+      editorState: EditorState.createWithContent(
         newContentState,
+        decorator,
       ),
       selectedDocProject: props?.project,
       selectedPage: props?.page,
