@@ -20,11 +20,15 @@ const UserDetail = (props) => {
   const dispatch = useDispatch();
 
   function removeUserFromCompany() {
-
     dispatch(updateUsersReducer({
       onRemovingUser: true,
       editingUserInfo: {
-        ...props.data,
+        editingCompany: {
+          ...props?.data.user?.companyID,
+          companyRole: props?.data?.companyRole,
+        },
+        userData: props?.data?.user,
+        userName: props?.data?.userName,
         removeUserFrom: 'company',
       },
     }));
@@ -38,7 +42,15 @@ const UserDetail = (props) => {
       loading={false}
       length={props?.data?.departmentRoles?.length}
       fetchData={() => 'handled'}
-      CustomizedReturnActionComponent={(funcProps) => <CustomizedReturnActionComponent {...funcProps} userData={props?.data} />}
+      needStickyHeader={false}
+      CustomizedReturnActionComponent={
+        (funcProps) =>
+        <CustomizedReturnActionComponent
+          {...funcProps}
+          userIndex={props?.index}
+          userData={props?.data}
+        />
+      }
       needCheckBox={false}
       actions={['delete']}
       redButtonName='delete'
@@ -56,6 +68,8 @@ const UserDetail = (props) => {
         <TableRow style={{ borderBottom: 'none' }} >{time}</TableRow>
       </TableCell>
       <TableCell style={{ borderBottom: 'none', textAlign: 'end', flexGrow: 4 }}>
+      {
+        props?.data?.isCompanyManager &&
         <Button
           style={{
             color: 'white',
@@ -65,8 +79,9 @@ const UserDetail = (props) => {
           }}
           onClick={() => removeUserFromCompany()}
         >
-            Delete
+          Remove
         </Button>
+      }
       </TableCell>
     </TableRow>
       {

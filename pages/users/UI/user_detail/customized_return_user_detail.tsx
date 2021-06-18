@@ -48,11 +48,12 @@ const CustomizedReturnActionComponent = (departmentProps) => {
     delete: removeUserFromDepartment,
   };
 
-  function handleReturnActionsList(action) {
+  function handleReturnActionsList(action, index) {
 
     return <MenuItem
       onClick={() => actionFunc?.[action]?.(departmentProps?.itemIndex)}
       component='div'
+      key={`action-in-users-page-${index}`}
     >
       <ListItemIcon style={{ minWidth: '30px' }}>
         {actions[action].icon}
@@ -62,16 +63,14 @@ const CustomizedReturnActionComponent = (departmentProps) => {
   }
 
   function removeUserFromDepartment(departmentIndex) {
-
     dispatch(updateUsersReducer({
       onRemovingUser: true,
       editingUserInfo: {
-        ...departmentProps?.userData,
-        departmentName: departmentProps?.userData?.departmentRoles?.[departmentIndex]?.departmentName,
-        departmentID: departmentProps?.userData?.departmentRoles?.[departmentIndex]?.departmentID,
-        accessID: departmentProps?.userData?.departmentRoles?.[departmentIndex]?._id,
-        userIndex: departmentProps?.userData?.index,
+        editingDepartment: departmentProps?.userData?.departmentRoles?.[departmentIndex],
+        userData: departmentProps?.userData?.user,
+        userIndex: departmentProps?.userIndex,
         removeUserFrom: 'department',
+        userName: departmentProps?.userData?.userName,
       },
     }));
   }

@@ -15,7 +15,7 @@ import { RootState } from 'redux/reducers_registration';
 import UserDetail from './user_detail/user_detail';
 import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
 import { updateUsersReducer } from '../logic/users_actions';
-import { deleteUserFromDepartment } from '../logic/users_apis';
+import { removeUserFromCompany, removeUserFromDepartment } from '../logic/users_apis';
 
 const ListUsers: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -64,16 +64,23 @@ const ListUsers: FunctionComponent = () => {
   }
 
   function agreeToRemoveUser() {
-    dispatch(deleteUserFromDepartment({ onSearch: !!debouncedSearchTerm }));
+    const removeFromWhere = users?.editingUserInfo?.removeUserFrom;
+
+    if (removeFromWhere === 'company') {
+      dispatch(removeUserFromCompany({ onSearch: !!debouncedSearchTerm }));
+
+      return;
+    }
+
+    dispatch(removeUserFromDepartment({ onSearch: !!debouncedSearchTerm }));
   }
 
   function handleWarningTitle(removeFromWhere) {
-
     switch (removeFromWhere) {
       case 'department':
-        return `REMOVE ${users?.editingUserInfo?.userName} from department ${users?.editingUserInfo?.departmentName ?? ''}?`;
+        return `REMOVE ${users?.editingUserInfo?.userName} from department ${users?.editingUserInfo?.editingDepartmentRole?.departmentName ?? ''}?`;
       case 'company':
-        return `DELETE ${users?.editingUserInfo?.userName} from company ${users?.editingUserInfo?.user?.companyID?.name ?? ''}?`;
+        return `REMOVE ${users?.editingUserInfo?.userName} from company ${users?.editingUserInfo?.editingCompany?.name ?? ''}?`;
       default:
         return 'Are you sure you want to CONTINUE?';
     }

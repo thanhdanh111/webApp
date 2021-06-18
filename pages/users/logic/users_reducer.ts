@@ -9,7 +9,7 @@ import { getRenderingRolesForUsersPage } from './users_rendering_roles';
 
 export const headCells: HeadCell[] = [
   { id: 'userName', numeric: false, disablePadding: true, label: 'User Name' },
-  { id: 'companyRole', numeric: false, disablePadding: true, label: 'Company Role' },
+  { id: 'companyRoleRender', numeric: false, disablePadding: true, label: 'Company Role' },
   { id: 'stringPendingRoles', numeric: false, disablePadding: true, label: 'Pending Roles' },
 ];
 
@@ -237,11 +237,22 @@ function createData(
   userName: string,
   user: UserAccess,
   companyRole: string,
+  companyRoleRender,
   departmentRoles: Access[],
   stringPendingRoles: string[],
-  isManager,
+  isCompanyManager,
 ): Data {
-  return { id, userName, user, departmentRoles, companyRole, stringPendingRoles, isManager };
+
+  return {
+    id,
+    userName,
+    user,
+    departmentRoles,
+    companyRole,
+    companyRoleRender,
+    stringPendingRoles,
+    isCompanyManager,
+  };
 }
 
 export const renderData = ({
@@ -261,12 +272,13 @@ export const renderData = ({
       accesses: user.accesses,
     });
     const fullName = `${user.userID.firstName} ${user.userID.lastName}`;
-    const id = user.userID._id;
+    const id = user._id;
 
     return createData(
       id,
       fullName,
       user,
+      roles?.companyRole?.role,
       rolesRender[roles?.companyRole?.role],
       roles?.departmentRoles || [],
       roles?.stringPendingRoles || [],

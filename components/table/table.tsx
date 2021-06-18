@@ -38,6 +38,7 @@ interface InitialProps {
   notFoundAnyData?: boolean;
   notFoundWarning?: string;
   hadExpandableRows?: boolean;
+  needStickyHeader?: boolean;
   fixedHeightInfiniteScroll?: number;
   ComponentDetail?: React.FunctionComponent;
   CustomizedReturnActionComponent?: React.FunctionComponent<CustomizedReturnActionComponent>;
@@ -53,6 +54,7 @@ const BaseTable = (props: InitialProps) => {
     notFoundAnyData = false,
     notFoundWarning, hadExpandableRows = false,
     ComponentDetail, fixedHeightInfiniteScroll,
+    needStickyHeader = true,
   }: InitialProps = props;
   const emptyState = !loading && !data?.length && notFoundAnyData;
   function actionDefaultFunc({ itemIndex, action  }) {
@@ -139,7 +141,7 @@ const BaseTable = (props: InitialProps) => {
           scrollThreshold={0.7}
           height={fixedHeightInfiniteScroll}
         >
-        <Table stickyHeader aria-label='sticky table' className='table-content' >
+        <Table stickyHeader={needStickyHeader} aria-label='sticky table' className='table-content' >
           <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
           { !loading &&  (checkArray(data) &&
           <TableBody className='table-body'>

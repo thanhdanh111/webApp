@@ -46,7 +46,8 @@ export interface Data {
   companyRole: string;
   departmentRoles: Access[];
   stringPendingRoles: string[];
-  isManager?: boolean;
+  isCompanyManager?: boolean;
+  companyRoleRender?: string;
 }
 
 export interface Access {
@@ -59,16 +60,22 @@ export interface Access {
   canDelete?: boolean;
 }
 
+interface EditingUserData {
+  accesses?: Access[];
+  companyID?: Company;
+  companyIDAndUserID?: string;
+  departmentID?: Department[];
+  userID?: User;
+  _id?: object;
+}
+
 export interface EditingUserInfo {
-  companyEmail?: string;
-  role?: string;
-  id?: string;
-  userName?: string;
-  departmentName?: string;
-  departmentID?: string;
+  userData?: EditingUserData;
   userIndex?: number;
-  accessID?: string;
   removeUserFrom?: string;
+  editingDepartment?: object;
+  editingCompany?: object;
+  userName?: string;
 }
 
 export interface NotificationTypeState {
