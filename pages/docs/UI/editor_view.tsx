@@ -8,7 +8,6 @@ import { SelectionState, EditorState, CompositeDecorator } from 'draft-js';
 import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions';
 import { showUpToolbarAndUpdateState } from '../logic/docs_inline_toolbar_actions';
 import { docsLinkDecorator } from 'pages/docs/UI/link_decorator';
-import { handleUrlForText } from '../logic/handle_pasted_text';
 
 const EditorView: FunctionComponent = () => {
   const dispatch = useDispatch();
