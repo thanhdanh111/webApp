@@ -46,8 +46,7 @@ const initialState: UsersData = {
   },
   editingUserInfo: {},
   onRemovingUser: false,
-  accountCompanyManagerIDs: [],
-  accountDepartmentManagerIDs: [],
+  rolesOfCompanies: {},
 };
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -62,9 +61,8 @@ export const usersReducer = (state = initialState, action) => {
       const listNewUser = renderData({
         users: action.payload.list,
         companyID: action.companyID,
-        accountCompanyManagerIDs : state.accountCompanyManagerIDs,
-        accountDepartmentMangerIDs: state.accountDepartmentManagerIDs,
         accountUserID: action.accountUserID,
+        rolesOfCompanies: state.rolesOfCompanies,
       });
       let cursor = action.payload.cursor;
 
@@ -91,9 +89,8 @@ export const usersReducer = (state = initialState, action) => {
         listSearch: renderData({
           users: action.payload.list,
           companyID: action.companyID,
-          accountCompanyManagerIDs : state.accountCompanyManagerIDs,
-          accountDepartmentMangerIDs: state.accountDepartmentManagerIDs,
           accountUserID: action.accountUserID,
+          rolesOfCompanies:  state.rolesOfCompanies,
         }),
       };
     case usersAction.HAS_NO_NOTIFICATION:
@@ -258,17 +255,15 @@ function createData(
 export const renderData = ({
   users,
   companyID,
-  accountDepartmentMangerIDs,
-  accountCompanyManagerIDs,
   accountUserID,
+  rolesOfCompanies,
 }) => {
   return users.map((user: UserAccess) => {
     const exceptDeleteMyself = accountUserID === user.userID._id;
     const roles = getRenderingRolesForUsersPage({
       companyID,
       exceptDeleteMyself,
-      accountDepartmentMangerIDs,
-      accountCompanyManagerIDs,
+      rolesOfCompanies,
       accesses: user.accesses,
     });
     const fullName = `${user.userID.firstName} ${user.userID.lastName}`;

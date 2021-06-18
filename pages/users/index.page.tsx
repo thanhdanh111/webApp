@@ -3,8 +3,9 @@ import ListUsers from './UI/users';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useRouter } from 'next/router';
-import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
+import { GetRolesOfCompaniesMap, getRolesOfCompaniesMap } from 'helpers/get_roles_of_companies_map';
 import { updateUsersReducer } from './logic/users_actions';
+import { Roles } from 'constants/roles';
 
 const Users = () => {
   const router = useRouter();
@@ -16,20 +17,15 @@ const Users = () => {
     const userAccesses = access?.access;
     const {
       isAdmin,
-      managerCompanyIDs,
-      managerDepartmentIDs,
-      companyIDsOfDepartmentManagers,
-    }: GetManagerIDsType = getManagerIDs({ access: userAccesses });
+      rolesOfCompanies,
+    }: GetRolesOfCompaniesMap = getRolesOfCompaniesMap({ accesses: userAccesses });
 
-    const isManager = managerCompanyIDs.includes(companyID ?? '') ||
-      companyIDsOfDepartmentManagers.includes(companyID ?? '');
-    const validAccess = isAdmin || isManager;
+    const validAccess = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+    const couldAccess = rolesOfCompanies?.[companyID]?.rolesInCompany?.some((role) => validAccess.includes(role));
+    const couldAccessThiSite = isAdmin || couldAccess;
 
-    if (validAccess) {
-      dispatch(updateUsersReducer({
-        accountCompanyManagerIDs: managerCompanyIDs,
-        accountDepartmentManagerIDs: managerDepartmentIDs,
-      }));
+    if (couldAccessThiSite) {
+      dispatch(updateUsersReducer({ rolesOfCompanies }));
 
       return;
     }
