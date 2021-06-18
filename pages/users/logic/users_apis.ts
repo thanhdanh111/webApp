@@ -116,7 +116,6 @@ export const removeUserFromCompany = ({ onSearch }) => async (dispatch, getState
       url: `${config.BASE_URL}/companies/${companyID}/members`,
       data: {
         userID,
-        role: companyRole,
       },
       headers: {
         'Content-Type': 'application/json',
