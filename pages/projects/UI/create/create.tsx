@@ -1,6 +1,6 @@
 import SelectOption from '@components/option_select/option_select';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { Container, TextareaAutosize, TextField } from '@material-ui/core';
+import { Box, TextareaAutosize, TextField } from '@material-ui/core';
 import { ProjectsPage } from 'helpers/type';
 import { createProjectMiddelWare, getExtendedCompaniesMiddelWare } from 'pages/projects/logic/projects_reducer';
 import React, { FunctionComponent, useEffect, useState } from 'react';
@@ -60,7 +60,7 @@ const CreateProject: FunctionComponent = () => {
   }
 
   return (
-    <Container className='create-project'>
+    <Box className='create-project'>
       <h1 className='text-create-projects'>Create a new Project</h1>
       <div className='create-project-form'>
         <div className='create-project-form-grid'>
@@ -114,7 +114,7 @@ const CreateProject: FunctionComponent = () => {
           />
         </div>
       </div>
-    </Container>
+    </Box>
   );
 };
 

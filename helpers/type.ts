@@ -219,3 +219,12 @@ export interface ChannelIDData {
   _id: string;
   channelID: string;
 }
+
+export interface TaskBoard {
+  _id: string;
+  companyID?: Company | string;
+  departmentID?: Department | string;
+  taskStatusIDs?: TaskStatusType[];
+  title: string;
+  description?: string;
+}

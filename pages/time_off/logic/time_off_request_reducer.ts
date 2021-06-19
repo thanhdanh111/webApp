@@ -44,6 +44,12 @@ const timeOffRequestReducer = (state = initialTimeOffRequestState, action) => {
         timeOffRequestNotifications: action.notifications,
         onSendingRequest: action.onSendingRequest,
       };
+    case TimeOffRequestActionTypes.UpdateTimeOffRequestReducer:
+
+      return {
+        ...state,
+        ...action.data,
+      };
     default:
       return state;
   }

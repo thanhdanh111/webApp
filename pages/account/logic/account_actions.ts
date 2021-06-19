@@ -18,7 +18,6 @@ export enum AccountActionTypes {
   saveAccountInfo = 'saveAccountInfo',
   publicProfile = 'publicProfile',
   ChangeCurrentIndexAccountTabs = 'ChangeCurrentIndexAccountTabs',
-  UpdateAccountNotifications = 'UpdateAccountNotifications',
 }
 
 export const saveAccountInfo = ({ changedInfo }: SaveAccountInfo) => {
@@ -38,12 +37,5 @@ export const changeCurrentIndexAccountTabs = ({ currentIndex }) => {
   return {
     currentIndex,
     type: AccountActionTypes.ChangeCurrentIndexAccountTabs,
-  };
-};
-
-export const updateAccountNotifications = ({ notifications }) => {
-  return {
-    notifications,
-    type: AccountActionTypes.UpdateAccountNotifications,
   };
 };

@@ -53,7 +53,7 @@ const StatisticsUi: FunctionComponent<BodyProps> = () => {
                 disableFocusRipple
                 size='medium'
               >
-                <PersonIcon fontSize='large' name='me' color={getMe ? 'secondary' : 'primary'} />
+                <PersonIcon className='statistics-body-options-icon' fontSize='large' name='me' color={getMe ? 'secondary' : 'primary'} />
               </IconButton>
               {isAdmin && (
                 <IconButton
@@ -64,7 +64,7 @@ const StatisticsUi: FunctionComponent<BodyProps> = () => {
                   disableFocusRipple
                   size='medium'
                 >
-                  <PeopleAltIcon fontSize='large' name='members' color={!getMe ? 'secondary' : 'primary'} />
+                  <PeopleAltIcon className='statistics-body-options-icon' fontSize='large' name='members' color={!getMe ? 'secondary' : 'primary'} />
                 </IconButton>
               )}
             </div>

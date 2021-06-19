@@ -27,17 +27,45 @@
     position: relative
     z-index: 3
     width: auto
-    display: flex
     flex-wrap: wrap
     margin: 10px 10px
     min-height: 35px
     padding: 0 12px 0 0
     background: #fff
     border-bottom: 1px solid #e9ebf0
+    display: flex;
+
+    .nav-click-up-search
+      display: flex;
+      width: 69%;
+      margin: 0;
+      align-items: flex-end;
+      float: left;
+      padding: 0
+
+      .nav-click-up-task-board
+        align-items: center;
+        width: 14%;
+        border: 1px solid #ccc;
+        border-radius: 15px
+        display: flex
+
+        .add-task-board
+          padding: 0 5px
+
+        .nav-click-up-task-board-select
+          width: -webkit-fill-available;
+
+          &:before
+            border-bottom: none
+
+          .MuiInputBase-input
+            width: 87px;
+            font-size: 14px;
 
     .nav-search
       width: 15em
-      left: 0
+      left: 11em
       float: left
       position: absolute
       display: flex
@@ -45,11 +73,11 @@
       height: 30px
       border-radius: 15px
       padding: 0
-      border: none
       margin: 0 17px
       justify-content: start
       flex-wrap: wrap
       min-width: 0
+      border: 0.5px solid #ccc;
 
       .icon-search
         transition: all .1s cubic-bezier(.785, .135, .15, .86) 0s
@@ -61,6 +89,8 @@
         stroke: #bcc0c7
         cursor: pointer
         padding: 0 10px
+        position: absolute;
+        left: 7em;
 
       .nav-input-search
         transition: all .2s cubic-bezier(.785, .135, .15, .86) 0s
@@ -72,14 +102,17 @@
         flex-grow: 1
         width: 55px
         height: 28px
-        padding: 0
-        border: none
         -webkit-font-smoothing: antialiased
         color: #343434
         background: transparent
         box-shadow: none
         min-width: 0
         max-width: none
+        border: none;
+        padding: 15px 0 15px 10px;
+
+        &:focus
+          outline: none;
 
     .nav-actions
       display: contents
@@ -256,6 +289,38 @@
           padding: 0
           text-align: right
 
+        .add-status-modal
+          display: flex
+          width: 100%
+
+          .add-status-input
+            font-size: 1em
+            border: none;
+            width: 90%
+            padding: 4px 0;
+
+            &:focus
+              outline: none;
+
+          .close-create-status
+            .close-create-status-icon
+              font-size: 18px;
+              color: #ccc;
+
+              &:hover
+                color: #ca3131
+                cursor: pointer
+
+          .submit-create-status
+            .submit-create-status-icon
+              font-size: 14px;
+              color: #ccc;
+
+              &:hover
+                color: #00ab55
+                cursor: pointer
+
+
       .status-task-list
         padding: 0 1px
         overflow-y: auto
@@ -331,7 +396,8 @@
         border-top: 2px solid rgb(107, 201, 80)
 
       .add-task-text
-        transform: translateY(25px)
+        font-size: 1em;
+        padding: 3px 0;
 
     .add-task
       display: flex
@@ -339,6 +405,16 @@
 
       .icon-add-task
         color: #d3d3d3
+
+
+.request-dialog-content
+  .title-task-board-create
+    margin-bottom: 10px
+
+  .title-required
+    .text-field-form
+      .text-field
+        border-bottom: 1px solid #fff000
 
 @media screen and ( min-width: 1025px )
   .board
