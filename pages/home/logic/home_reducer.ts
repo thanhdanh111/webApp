@@ -60,7 +60,7 @@ interface UpdateTaskStatus {
 let updatedTaskStatuses: TaskStatusType[];
 
 interface UpdateTask {
-  taskStatusID?: string;
+  taskStatusID: string;
   title?: string;
   description?: string;
   dueDate?: string;
@@ -73,6 +73,9 @@ interface UpdateTask {
 interface IUpdateTask {
   taskID: string;
   data: UpdateTask;
+  sourceTaskStatusID: string;
+  destinationTasks: Task[];
+  sourceTasks: Task[];
 }
 
 export  const taskStatusesReducer = (state = initialState, action) => {
@@ -155,7 +158,7 @@ export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = '60487820340cd70008593306'; // authState?.department?._id;
+    const departmentID = authState?.department?._id;
 
     if (!token || !companyID) {
       await dispatch(hideLoaderListUser());
@@ -194,7 +197,7 @@ export const getTasksByUserThunkAction = () => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = '60487820340cd70008593306'; // authState?.department?._id;
+    const departmentID = authState?.department?._id;
     const userID = authState?.userID;
 
     if (!token || !companyID || !userID) {
@@ -279,11 +282,30 @@ export const updateTaskStatusById = ({ taskStatusID, tasks }: UpdateTaskStatus) 
   }
 };
 
-export const updateTaskById = ({ taskID, data = { } }: IUpdateTask) => async (dispatch, getState) => {
+export const updateTaskById = ({
+  taskID,
+  data,
+  sourceTaskStatusID,
+  sourceTasks,
+  destinationTasks,
+}: IUpdateTask) => async (dispatch, getState) => {
   try {
     const localAccess = localStorage.getItem('access_token');
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
+
+    if (!localAccess || !companyID || !taskID) {
+      return;
+    }
+
+    dispatch(setTasksToTaskStatus({
+      taskStatusId: sourceTaskStatusID,
+      tasks: sourceTasks,
+    }));
+    dispatch(setTasksToTaskStatus({
+      taskStatusId: data.taskStatusID,
+      tasks: destinationTasks,
+    }));
 
     const res = await axios({
       data,
@@ -297,6 +319,7 @@ export const updateTaskById = ({ taskID, data = { } }: IUpdateTask) => async (di
 
     await dispatch(updateTaskByIDAction(res));
   } catch (error) {
-    throw error;
+    const errorNotification = returnNotification({ type: 'failed' });
+    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
   }
 };

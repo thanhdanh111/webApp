@@ -8,7 +8,6 @@ import NavClickUp from './nav_clickup';
 import { Task, TaskStatusType } from 'helpers/type';
 import { Typography } from '@material-ui/core';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { setTasksToTaskStatus } from 'pages/home/logic/home_actions';
 interface IDroppable {
   droppableId: string;
   index: number;
@@ -34,11 +33,11 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
   destClone.splice(droppableDestination.index, 0, removed);
 
-  const result = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
+  const resultMove = {};
+  resultMove[droppableSource.droppableId] = sourceClone;
+  resultMove[droppableDestination.droppableId] = destClone;
 
-  return result;
+  return resultMove;
 };
 
 const BoardTasks: FunctionComponent = () => {
@@ -107,7 +106,7 @@ const BoardTasks: FunctionComponent = () => {
       return;
     }
 
-    let sourceTasks = getTasksFromTaskStatus({ taskStatusId: source.droppableId }) || [];
+    const sourceTasks = getTasksFromTaskStatus({ taskStatusId: source.droppableId }) || [];
     let destinationTasks = getTasksFromTaskStatus({ taskStatusId: destination.droppableId });
 
     const movedData = move(
@@ -117,22 +116,15 @@ const BoardTasks: FunctionComponent = () => {
       destination,
     );
 
-    dispatch(updateTaskById({
-      taskID: sourceTasks[source.index]?._id,
-      data: { taskStatusID: destination.droppableId },
-    }));
-
-    sourceTasks = movedData[source.droppableId] as Task[];
+    const newSourceTasks = movedData[source.droppableId] as Task[];
     destinationTasks = movedData[destination.droppableId] as Task[];
 
-    dispatch(setTasksToTaskStatus({
-      taskStatusId: source.droppableId,
-      tasks: sourceTasks,
-    }));
-
-    dispatch(setTasksToTaskStatus({
-      taskStatusId: destination.droppableId,
-      tasks: destinationTasks,
+    dispatch(updateTaskById({
+      destinationTasks,
+      taskID: sourceTasks[source.index]?._id,
+      data: { taskStatusID: destination.droppableId },
+      sourceTasks: newSourceTasks,
+      sourceTaskStatusID: source.droppableId,
     }));
   };
 
