@@ -138,7 +138,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               type='date'
               error={isStartDateBeforeCurrent}
               onChoosingValue={handleFillingInfo}
-              defaultValue={startDate}
+              value={startDate}
             />
             <DateAndTimePicker
               name='startTime'
@@ -147,7 +147,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               type='time'
               error={!isStartTimeAfterCurrent}
               onChoosingValue={handleFillingInfo}
-              defaultValue={startTime}
+              value={startTime}
             />
             <OptionsSelect
               options={
@@ -166,7 +166,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               type='date'
               error={isEndDateBeforeCurrent}
               onChoosingValue={handleFillingInfo}
-              defaultValue={endDate}
+              value={endDate}
             />
             <DateAndTimePicker
               name='endTime'
@@ -175,7 +175,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               type='time'
               error={!isEndTimeAfterStartTime}
               onChoosingValue={handleFillingInfo}
-              defaultValue={endTime}
+              value={endTime}
             />
             <OptionsSelect
               disabled={!selectedCompany}
@@ -189,7 +189,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
           <div className='request-dialog-content--input-label' >Reason<span className='required-label'>*</span></div>
           <TextField
             name='reason'
-            defaultValue={reason}
+            value={reason}
             margin='normal'
             fullWidth
             id='outlined-multiline-static'

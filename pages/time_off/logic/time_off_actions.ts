@@ -8,6 +8,7 @@ export enum TimeOffActionTypes {
   UpdateTimeOffIndexLoading = 'UpdateTimeOffIndexLoading',
   UpdateOnConfirmDialog = 'UpdateOnConfirmDialog',
   UpdateOnSelectTimeOff = 'UpdateOnSelectTimeOff',
+  UpdateTimeOffsReducer = 'UpdateTimeOffsReducer',
 }
 
 export enum TimeOffRequestActionTypes {
@@ -15,6 +16,7 @@ export enum TimeOffRequestActionTypes {
   UpdateContentLetter = 'UpdateContentLetter',
   UpdateOnSendingTimeOffRequest = 'UpdateOnSendingTimeOffRequest',
   UpdateTimeOffRequestNotifications = 'UpdateTimeOffRequestNotifications',
+  UpdateTimeOffRequestReducer = 'UpdateTimeOffRequestReducer',
 }
 
 export const updatePaginationTimeOff = ({ pagination, loadingStatus }) => {
@@ -98,5 +100,20 @@ export const updateTimeOffRequestNotifications = ({ notifications, onSendingRequ
     notifications,
     onSendingRequest,
     type: TimeOffRequestActionTypes.UpdateTimeOffRequestNotifications,
+  };
+};
+
+export const updateTimeOffsReducer = (data) => {
+  return {
+    data,
+    type: TimeOffActionTypes.UpdateTimeOffsReducer,
+  };
+};
+
+export const updateTimeOffRequestReducer = (data) => {
+
+  return {
+    data,
+    type: TimeOffRequestActionTypes.UpdateTimeOffRequestReducer,
   };
 };

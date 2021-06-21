@@ -9,7 +9,7 @@
     "start:staging": "export NODE_ENV=staging && next build && next export && serve out",
     "start": "export NODE_ENV=local && next build && next export && serve out",
     "static": "serve out",
-    "debug": "next dev -p 5000",
+    "debug": "export NODE_ENV=local && next dev -p 5000",
     "build": "NODE_ENV=production next build && next export",
     "build:staging": "NODE_ENV=staging next build && next export",
     "test": "NODE_ENV=test jest",

@@ -5,7 +5,7 @@ interface DateTimePickerType {
   label: string;
   className?: string;
   type?: string;
-  defaultValue?: string;
+  value?: string;
   name?: string;
   onChoosingValue: ({ event }) => void;
   error?: boolean;
@@ -15,7 +15,7 @@ type BodyProps = DateTimePickerType;
 
 const DateAndTimePicker: FunctionComponent<BodyProps> = ({
   label,
-  defaultValue= '',
+  value= '',
   className = '',
   type = 'datetime-local',
   name= '',
@@ -35,7 +35,7 @@ const DateAndTimePicker: FunctionComponent<BodyProps> = ({
         error={error}
         onChange={(event) => onChoosingValue({ event })}
         type={type}
-        defaultValue={defaultValue}
+        value={value}
         className='date-time-picker--text-field'
         InputLabelProps={{
           shrink: true,
