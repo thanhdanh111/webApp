@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 
 import { Handle, Position } from 'react-flow-renderer';
-import { initialElements } from '../new_flow_chart/initial_elements';
 import { Direction } from '../resizer/constants';
 import Resizer from '../resizer/resize';
 
@@ -10,15 +9,6 @@ const CustomNodeComponent = () => {
   const heightRef = useRef(100);
   const widthRef = useRef(100);
   const [focus, setForcus] = useState<boolean>(false);
-  const [, setElements] = useState(initialElements);
-
-  const addShapeProcess = () => {
-    setElements((element) => element.concat({
-      id: (element.length + 1).toString(),
-      position: { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight },
-      type: 'process',
-    }));
-  };
 
   const handleResize = (direction, movementX, movementY) => {
     const panel = panelRef.current;
@@ -99,29 +89,23 @@ const CustomNodeComponent = () => {
         <Handle
           type='source'
           position={Position.Right}
-          style={{ borderRadius: 0 }}
-          id='1'
-          onClick={addShapeProcess}
+          id='handle-process-right'
         />
+
         <Handle
           type='target'
           position={Position.Left}
-          id='2'
-          style={{ borderRadius: 0 }}
-          // isValidConnection={(connection) => connection.source === 'some-id'}
-          // onConnect={(params) => console.log('handle onConnect', params)}
+          id='handle-process-left'
         />
         <Handle
           type='target'
           position={Position.Top}
-          id='3'
-          style={{ borderRadius: 0 }}
+          id='handle-process-top'
         />
         <Handle
           type='source'
           position={Position.Bottom}
-          id='4'
-          style={{ borderRadius: 0 }}
+          id='handle-process-bottom'
         />
       </div>
     </div>

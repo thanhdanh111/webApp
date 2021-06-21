@@ -7,6 +7,7 @@ import ReactFlow, {
   Background,
   ConnectionLineType,
   updateEdge,
+  ArrowHeadType,
 } from 'react-flow-renderer';
 import CustomNodeComponent from '../shapes/shape_process';
 import CustomDicision from '../shapes/shape_decision';
@@ -37,7 +38,6 @@ const NewFlowChart = () => {
   const addShapeDecision = () => {
     setElements((element) => element.concat({
       id: (element.length + 1).toString(),
-      // data: { label: `${name}` },
       position: { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight },
       type: 'decision',
     }));
@@ -48,7 +48,7 @@ const NewFlowChart = () => {
   const onEdgeUpdate = (oldEdge, newConnection) =>
     setElements((els) => updateEdge(oldEdge, newConnection, els));
 
-  const onConnect = (params) => setElements((els) => addEdge(params, els));
+  const onConnect = (params) => setElements((els) => addEdge({ ...params, arrowHeadType: ArrowHeadType.ArrowClosed }, els));
 
   return (
     <Fragment>
@@ -57,15 +57,13 @@ const NewFlowChart = () => {
           elements={elements}
           onLoad={onLoad}
           onConnect={onConnect}
-          connectionLineStyle={{ stroke: 'red', strokeWidth: 2 }}
+          connectionLineStyle={{ stroke: '#af00e7', strokeWidth: 2 }}
           connectionLineType={ConnectionLineType.SmoothStep}
           snapToGrid={true}
           snapGrid={[16, 16]}
           onElementsRemove={onElementsRemove}
           nodeTypes={nodeTypes}
           onEdgeUpdate={onEdgeUpdate}
-          edgeTypes={{ smoothstep: CustomNodeComponent }}
-
         >
           <Background
             className='back-ground'
@@ -82,31 +80,24 @@ const NewFlowChart = () => {
           <Controls />
           <div className='card-shape-all'>
             <Box className='card-shape'>
-              <svg onClick={addShapeProcess} width='35' height='30' className='svg-process'>
-                <rect rx='0' ry='100' x='2.5' y='2.5' height='25' width='30' fill='none'/>
-              </svg>
-
-              <svg width='30' height='30' onClick={addShapeDecision} className='svg-decision'>
-                <path id='my' className='rhombus' d='M15 0 L0 15 L15 30 L30 15z' fill='none'/>
-              </svg>
+              <div className='div-svg-process'>
+                <svg onClick={addShapeProcess} width='34' height='27' className='svg-process'>
+                  <rect rx='0' ry='100' height='25' width='30' fill='none'/>
+                </svg>
+              </div>
+              <div className='div-svg-decision'>
+                <svg width='34' height='33' viewBox='-0.5, -0.5, 31, 31' onClick={addShapeDecision} >
+                  <path
+                    d='M15 0 L0 15 L15 30 L30 15z'
+                    stroke='#ffffff'
+                    fill='none'
+                    strokeWidth='2px'
+                  />
+                </svg>
+              </div>
             </Box>
           </div>
         </ReactFlow>
-        <div className='shapes' style={{ resize: 'both' }}>
-          {/* <svg onClick={addShapeCircle} width='25' height='25'>
-            <circle r='12.5' cx='12.5' cy='12.5' stroke='#3de' fill='none'/>
-          </svg> */}
-          <svg onClick={addShapeProcess} width='35' height='30'>
-            <rect rx='0' ry='100' x='2.5' y='2.5' height='25' width='30' stroke='#3de' fill='none'/>
-          </svg>
-          <svg width='30' height='30' onClick={addShapeDecision}>
-            <path id='my' className='rhombus' d='M15 0 L0 15 L15 30 L30 15z' stroke='#3de' fill='none'/>
-          </svg>
-          {/* <svg onClick={addShapeEllip} width='40' height='25' style={{ cursor: 'nwse-resize' }}>
-            <ellipse cx='18' cy='12.5' rx='18' ry='12.5' stroke='#3de' fill='none' />
-          </svg> */}
-
-        </div>
       </div>
     </Fragment>
   );

@@ -72,7 +72,7 @@ const CustomDecision = () => {
 
   return (
     <div
-      className='custom'
+      className='node-item-decision'
       tabIndex={0}
       ref={panelRef}
       onFocus={() => setForcus(true)}
@@ -88,28 +88,28 @@ const CustomDecision = () => {
         <path id='my' className='rhombus' d='M600 0 L0 600 L600 1200 L1200 600z' />
       </svg>
       <Handle
+        id='handel-decision-right'
         type='source'
         position={Position.Right}
-        id='a'
-        style={{ top: '50%', borderRadius: 0 }}
+        style={{ top: '50%' }}
       />
       <Handle
+        id='handel-decision-left'
         type='target'
         position={Position.Left}
-        id='b'
-        style={{ top: '50%', borderRadius: 0 }}
+        style={{ top: '50%' }}
       />
       <Handle
+        id='handel-decision-bottom'
         type='source'
         position={Position.Right}
-        id='c'
-        style={{ top: '100%', left: '48%', borderRadius: 0 }}
+        style={{ top: '100%', left: '48%' }}
       />
       <Handle
+        id='handel-decision-top'
         type='target'
         position={Position.Left}
-        id='d'
-        style={{ top: '0%', left: '48%', borderRadius: 0 }}
+        style={{ top: '0%', left: '48%' }}
       />
     </div>
   );

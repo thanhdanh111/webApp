@@ -6,22 +6,14 @@ export const initialElements: Elements = [
     position: { x: 0, y: 0 },
     isHidden: false,
   },
-
   // {
   //   id: 'e1-2',
+  //   type: 'smoothstep',
   //   source: '1',
   //   target: '2',
-  //   label: 'edge',
   //   animated: true,
+  //   label: 'edge label',
   // },
-  {
-    id: 'e1-3',
-    type: 'smoothstep',
-    source: '1',
-    target: '2',
-    animated: true,
-    label: 'edge label',
-  },
   {
     id: '2' ,
     type: 'decision',

@@ -31,18 +31,20 @@ beforeAll(async () => {
 describe('Users Page', () => {
 
   test('Test UI list users page successfully after login', async () => {
-    await page.goto('http://localhost:5000/users');
-    await page.waitForSelector('.users');
+    await page.goto('http://localhost:5000/flow_chart');
+    await page.waitForSelector('.flowchart');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
 
-    await page.waitForSelector('.btn-expanded');
-    await page.click('.btn-expanded');
-    await page.waitFor(5000);
+    await page.waitForSelector('.btn-primary');
+    await page.click('.btn-primary');
 
-    const expanded = await page.screenshot();
-    expect(expanded).toMatchImageSnapshot();
+    await page.waitForSelector('.back-ground');
+
+    const createFlowChart = await page.screenshot();
+    expect(createFlowChart).toMatchImageSnapshot();
+
   });
 
 });
