@@ -29,6 +29,8 @@ export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
       return;
     }
 
+    dispatch(updateUsersReducer({ isLoading: true }));
+
     await axios({
       url: `${config.BASE_URL}/companies/${companyID}/department/${departmentID}/members`,
       data: {
@@ -66,6 +68,7 @@ export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
         onRemovingUser: false,
         editingUserInfo: { },
         list: newListAfterEditingSearch,
+        isLoading: false,
       }));
 
       return;
@@ -81,12 +84,13 @@ export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
     dispatch(updateUsersReducer({
       list: newList,
       onRemovingUser: false,
+      isLoading: false,
       editingUserInfo: { },
     }));
 
     return;
   } catch (error) {
-    dispatch(updateUsersReducer({ onRemovingUser: false }));
+    dispatch(updateUsersReducer({ onRemovingUser: false, isLoading: false }));
   }
 };
 
@@ -111,6 +115,8 @@ export const removeUserFromCompany = ({ onSearch }) => async (dispatch, getState
 
       return;
     }
+
+    dispatch(updateUsersReducer({ isLoading: true }));
 
     await axios({
       url: `${config.BASE_URL}/companies/${companyID}/members`,
@@ -147,6 +153,7 @@ export const removeUserFromCompany = ({ onSearch }) => async (dispatch, getState
         onRemovingUser: false,
         editingUserInfo: { },
         list: newListAfterEditingSearch,
+        isLoading: false,
       }));
 
       return;
@@ -165,10 +172,11 @@ export const removeUserFromCompany = ({ onSearch }) => async (dispatch, getState
       list: newList,
       onRemovingUser: false,
       editingUserInfo: { },
+      isLoading: false,
     }));
 
     return;
   } catch (error) {
-    dispatch(updateUsersReducer({ onRemovingUser: false }));
+    dispatch(updateUsersReducer({ onRemovingUser: false, isLoading: false }));
   }
 };

@@ -1,5 +1,4 @@
 import { VariantType } from 'notistack';
-import { RolesOfCompanyMap } from './get_roles_of_companies_map';
 
 export type Token = string | null;
 
@@ -122,7 +121,7 @@ export interface UsersData {
   selectNotification: NotificationTypeState;
   editingUserInfo: EditingUserInfo;
   onRemovingUser: boolean;
-  rolesOfCompanies: RolesOfCompanyMap;
+  isLoading: boolean;
 }
 
 export interface ParamGetUser {

@@ -8,8 +8,7 @@ import { RootState } from 'redux/reducers_registration';
 import { sendSlackCompanyToken } from '../logic/company_apis';
 import { CompanyStateType } from '../logic/company_reducer';
 import { fillingToken } from '../logic/company_actions';
-import { getRolesOfCompaniesMap, GetRolesOfCompaniesMap } from 'helpers/get_roles_of_companies_map';
-import { Roles } from 'constants/roles';
+import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 
 const ConnectSlackTabUi: FunctionComponent = ({}) => {
   const dispatch = useDispatch();

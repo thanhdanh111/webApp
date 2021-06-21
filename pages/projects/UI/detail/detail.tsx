@@ -1,7 +1,7 @@
 import SelectOption from '@components/option_select/option_select';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { Avatar, Box } from '@material-ui/core';
-import { getManagerIDs, GetManagerIDsType } from 'helpers/get_roles_of_companies_map';
+import { getManagerIDs, GetManagerIDsType } from '../../../../helpers/get_manager_ids_of_departments_and_companies';
 import { ProjectsPage } from 'helpers/type';
 import { useRouter } from 'next/router';
 import { setSelectedChannelID } from 'pages/projects/logic/projects_actions';

@@ -121,6 +121,7 @@ const ListUsers: FunctionComponent = () => {
                 </div>
             </Container>
           <ConfirmDialog
+            loading={users?.isLoading}
             warning={handleWarningTitle(users?.editingUserInfo?.removeUserFrom)}
             onOpen={users?.onRemovingUser}
             handleClose={cancelDelete}

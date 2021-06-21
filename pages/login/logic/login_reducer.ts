@@ -7,6 +7,7 @@ import { getUserCompanyIDsAndDepartmentIDs, GetUserCompanyIDsAndDepartmentIDsTyp
 import { GetUserAccess } from 'pages/access_denied/logic/access_action';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { checkArray } from 'helpers/check_array';
+import { GetRolesOfLoggedInUser, getRolesOfLoggedInUser } from 'helpers/get_roles_of_logged_in_user';
 
 const initialState: LoginValue = {
   value: '',
@@ -66,7 +67,7 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       companyIDsOfDepartmentIDs,
       departmentIDs,
       companyIDs,
-    }: GetUserCompanyIDsAndDepartmentIDsType = getUserCompanyIDsAndDepartmentIDs({ access: res.data?.access });
+    }: GetUserCompanyIDsAndDepartmentIDsType = getUserCompanyIDsAndDepartmentIDs({ access: res?.data?.access ?? [] });
 
     const checkUserCompanies = checkArray(companyIDsOfDepartmentIDs) || checkArray(companyIDs);
     const checkUserDepartments = checkArray(companyIDsOfDepartmentIDs) && checkArray(departmentIDs);
@@ -111,10 +112,19 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       data.department = validDepartment ? department.data : {};
     }
 
-    await dispatch(GetUserData(data));
-    await dispatch(GetUserAccess(res?.data?.access ?? []));
+    const {
+      rolesInCompany,
+      rolesInDepartments,
+      isAdmin,
+    }: GetRolesOfLoggedInUser = getRolesOfLoggedInUser({
+      accesses: res?.data?.access,
+      filterCompanyID:  companyIDsOfDepartmentIDs?.[0] ?? companyIDs?.[0],
+    });
+
+    dispatch(GetUserData(data));
+    dispatch(GetUserAccess({ isAdmin, rolesInCompany, rolesInDepartments, access: res?.data?.access ?? [] }));
   } catch (error) {
-    await dispatch(GetUserData(data));
-    await dispatch(GetUserAccess(res?.data?.access ?? []));
+    dispatch(GetUserData(data));
+    dispatch(GetUserAccess({ access: res?.data?.access ?? [] }));
   }
 };

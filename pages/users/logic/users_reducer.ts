@@ -46,7 +46,7 @@ const initialState: UsersData = {
   },
   editingUserInfo: {},
   onRemovingUser: false,
-  rolesOfCompanies: {},
+  isLoading: false,
 };
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -58,15 +58,10 @@ export const usersReducer = (state = initialState, action) => {
         loadingList: action.payload,
       };
     case usersAction.PAGINATION:
-      const listNewUser = renderData({
-        users: action.payload.list,
-        companyID: action.companyID,
-        accountUserID: action.accountUserID,
-        rolesOfCompanies: state.rolesOfCompanies,
-      });
       let cursor = action.payload.cursor;
+      const listNewUsers = action.payload.listNewUsers;
 
-      if (listNewUser?.length >= action.payload.totalCount) {
+      if (listNewUsers?.length >= action.payload.totalCount) {
         cursor = 'END';
       }
 
@@ -74,7 +69,7 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         cursor,
         totalCount: action.payload.totalCount,
-        list: [...state.list, ...listNewUser],
+        list: [...state.list, ...listNewUsers],
       };
     case usersAction.SEARCH:
       let newCursor = action.payload.cursor;
@@ -86,12 +81,7 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         cursor: newCursor,
         totalCount: action.payload.totalCount,
-        listSearch: renderData({
-          users: action.payload.list,
-          companyID: action.companyID,
-          accountUserID: action.accountUserID,
-          rolesOfCompanies:  state.rolesOfCompanies,
-        }),
+        listSearch: action.payload.listSearchUsers,
       };
     case usersAction.HAS_NO_NOTIFICATION:
       return {
@@ -152,6 +142,7 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
     const userLimit = getState().users?.userLimit;
     const companyID = authState?.extendedCompany?.companyID?._id;
     const accountUserID = authState?.extendedUser?.userID;
+    const accessState = getState().access;
 
     if (cursor === 'END' || !token || !companyID) {
       return;
@@ -166,12 +157,19 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
        });
 
     if (res.data.totalCount === 0){
-      await dispatch(setLoading(true));
+      dispatch(setLoading(true));
 
       return;
     }
 
-    dispatch(pagination(res.data, companyID, accountUserID));
+    const listNewUsers = renderData({
+      accountUserID,
+      users: res?.data?.list,
+      rolesInCompany: accessState?.rolesInCompany,
+      rolesInDepartments: accessState?.rolesInDepartments,
+    });
+
+    dispatch(pagination({ listNewUsers, ...res.data }));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));
@@ -184,12 +182,13 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const companyID = authState?.extendedCompany?.companyID?._id;
     const accountUserID = authState?.extendedUser?.userID;
+    const accessState = getState()?.access;
 
     if (!token || !companyID) {
       return;
     }
 
-    await dispatch(setLoading(true));
+    dispatch(setLoading(true));
 
     const params: ParamGetUser = {
       companyID,
@@ -205,10 +204,17 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
        },
      });
 
-    await dispatch(search(res.data, companyID, accountUserID));
-    await dispatch(setLoading(false));
+    const listSearchUsers = renderData({
+      accountUserID,
+      users: res?.data?.list,
+      rolesInCompany: accessState?.rolesInCompany,
+      rolesInDepartments: accessState?.rolesInDepartments,
+    });
+
+    dispatch(search({ listSearchUsers, ...res.data }));
+    dispatch(setLoading(false));
   } catch (error) {
-    await dispatch(setLoading(false));
+    dispatch(setLoading(false));
   }
 };
 
@@ -254,16 +260,16 @@ function createData(
 
 export const renderData = ({
   users,
-  companyID,
   accountUserID,
-  rolesOfCompanies,
+  rolesInCompany,
+  rolesInDepartments,
 }) => {
   return users.map((user: UserAccess) => {
     const exceptDeleteMyself = accountUserID === user.userID._id;
     const roles = getRenderingRolesForUsersPage({
-      companyID,
       exceptDeleteMyself,
-      rolesOfCompanies,
+      rolesInCompany,
+      rolesInDepartments,
       accesses: user.accesses,
     });
     const fullName = `${user.userID.firstName} ${user.userID.lastName}`;

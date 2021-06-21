@@ -1,7 +1,6 @@
 import { Button, Menu, MenuItem, Typography, Avatar, Grid, Divider } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import { Logout, Login } from 'pages/login/logic/login_actions';
-import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
+import React from 'react';
+import { Logout } from 'pages/login/logic/login_actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import HomeIcon from '@material-ui/icons/Home';
@@ -13,39 +12,10 @@ import UserAvatar from '@components/user_avatar/info_user';
 import { deleteBrowserToken } from 'helpers/fcm';
 import BusinessIcon from '@material-ui/icons/Business';
 
-type Token = string | null;
-
 const DropDown = () => {
   const auth = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const router = useRouter();
-
-  useEffect(() => {
-    let token: Token = window.location.search;
-    if (!token && typeof localStorage !== 'undefined') {
-      token = localStorage.getItem('access_token');
-    }
-    if (!token) {
-      onPushToPage('login');
-
-      return;
-    }
-    const accessToken = token.replace('?token=', '');
-    localStorage.setItem('access_token', accessToken);
-    void logUserIn(accessToken);
-  }, []);
-
-  async function logUserIn(token: string) {
-
-    if (!token) {
-      return;
-    }
-
-    await Promise.all([
-      dispatch(GetUserDataThunkAction(token)),
-      dispatch(Login(token)),
-    ]);
-  }
 
   async function logUserOut() {
     dispatch(Logout());

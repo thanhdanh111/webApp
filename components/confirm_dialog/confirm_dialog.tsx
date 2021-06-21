@@ -14,6 +14,7 @@ interface ConfirmDialog {
   onOpen: boolean;
   title?: string;
   warning?: string;
+  loading?: boolean;
 }
 
 enum Action {
@@ -33,6 +34,7 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({
   handleYes,
   title,
   warning,
+  loading = false,
 }) => {
 
   return (
@@ -62,10 +64,19 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({
           </Typography>
         </DialogContent>
         <DialogActions className='confirm-dialog-actions'>
-          <Button className='confirm-dialog--yes-btn' onClick={handleYes} autoFocus>
+          <Button
+            disabled={loading}
+            className={loading ? '' : 'confirm-dialog--yes-btn'}
+            onClick={handleYes}
+            autoFocus
+          >
             <DoneIcon />
           </Button>
-          <Button onClick={handleClose} className='confirm-dialog--no-btn'>
+          <Button
+            disabled={loading}
+            onClick={handleClose}
+            className={loading ? '' : 'confirm-dialog--no-btn'}
+          >
             <CloseIcon />
           </Button>
         </DialogActions>

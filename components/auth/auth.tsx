@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { DisappearedLoading } from 'react-loadingg';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
-import { getUserAccessAction } from 'pages/access_denied/logic/access_reducer';
 import { getBrowserToken } from 'helpers/fcm';
 import firebase from 'firebase/app';
 import 'firebase/messaging';
@@ -11,6 +10,7 @@ import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { getNotificationFCM } from 'pages/users/logic/users_actions';
+import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
 
 type Token = string | null;
 const Auth = ({ children, publicPages }) => {
@@ -22,17 +22,15 @@ const Auth = ({ children, publicPages }) => {
 
   useEffect(() => {
     void checkLogin();
-  }, []);
-
-  useEffect(() => {
-    dispatch(getUserAccessAction());
-  }, [path]);
+  });
 
   useEffect(() => {
     const hasPermission = hasAccessPermission();
     if (hasPermission || access?.access.length <= 0) {
+
       return;
     }
+
     checkAccessUser();
   }, [access?.access]);
 
@@ -58,8 +56,6 @@ const Auth = ({ children, publicPages }) => {
     if (subscribe.data) {
       const messaging = firebase.messaging();
       messaging.onMessage((payload) => {
-        // tslint:disable-next-line:no-console
-        console.log('payload', payload);
         const noti = payload.notification;
 
         dispatch(getNotificationFCM(noti));
@@ -91,6 +87,7 @@ const Auth = ({ children, publicPages }) => {
 
   const checkAccessUser = () => {
     if (publicPages.includes(path)) {
+
       return;
     }
 
@@ -101,14 +98,15 @@ const Auth = ({ children, publicPages }) => {
     const token: Token =  localStorage.getItem('access_token');
 
     if (!token && path !== '/login') {
-      await router.push('/login', '/login.html');
+      void router.push('/login', '/login.html');
       setLoading(false);
 
       return;
     }
 
-    setLoading(false);
+    dispatch(GetUserDataThunkAction(token));
     await getFCMToken();
+    setLoading(false);
 
     return;
   };
@@ -119,7 +117,7 @@ const Auth = ({ children, publicPages }) => {
 
   return (
     <>
-        {children}
+      {children}
     </>
   );
 };

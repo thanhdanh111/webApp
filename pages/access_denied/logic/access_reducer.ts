@@ -1,5 +1,7 @@
 import axios from 'axios';
+import { Roles } from 'constants/roles';
 import { config } from 'helpers/get_config';
+import { GetRolesOfLoggedInUser, getRolesOfLoggedInUser, RolesInDepartments } from 'helpers/get_roles_of_logged_in_user';
 import { GetUserAccess } from './access_action';
 import { AccessAction } from './access_type_action';
 
@@ -16,20 +18,25 @@ export interface AccessUser {
 
 interface AccessState {
   access: AccessUser[];
+  rolesInCompany: Roles[];
+  rolesInDepartments: RolesInDepartments;
+  isAdmin: boolean;
 }
 
 const initialState: AccessState = {
   access: [],
+  rolesInCompany: [],
+  rolesInDepartments: {},
+  isAdmin: false,
 };
 
 const accessReducer = (state = initialState, action) => {
   switch (action.type) {
     case AccessAction.GET_ACCESS:
-      const access = [...action.payload];
 
       return {
         ...state,
-        access,
+        ...action.payload,
       };
     default:
       return state;
@@ -38,12 +45,13 @@ const accessReducer = (state = initialState, action) => {
 
 export default accessReducer;
 
-export const getUserAccessAction = () => async (dispatch) => {
+export const getUserAccessAction = () => async (dispatch, getState) => {
   try {
     const token: Token = localStorage.getItem('access_token');
+    const authState = getState()?.auth;
 
     if (!token) {
-      await dispatch(GetUserAccess([]));
+      dispatch(GetUserAccess({ access: [] }));
 
       return;
     }
@@ -55,9 +63,18 @@ export const getUserAccessAction = () => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    await dispatch(GetUserAccess(userInfo?.data?.access ?? []));
+
+    const {
+      rolesInCompany,
+      rolesInDepartments,
+      isAdmin,
+    }: GetRolesOfLoggedInUser = getRolesOfLoggedInUser({
+      accesses: userInfo?.data?.access,
+      filterCompanyID:  authState?.extendedCompany?.companyID?._id,
+    });
+
+    dispatch(GetUserAccess({ isAdmin, rolesInCompany, rolesInDepartments, access: userInfo?.data?.access ?? [] }));
   } catch (error) {
-    await dispatch(GetUserAccess([]));
-    // console.log(error);
+    dispatch(GetUserAccess({ access: [] }));
   }
 };

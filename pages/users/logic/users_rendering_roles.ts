@@ -7,8 +7,8 @@ const companyRoles = [Roles.COMPANY_MANAGER, Roles.COMPANY_STAFF];
 
 export const getRenderingRolesForUsersPage = ({
   accesses,
-  companyID,
-  rolesOfCompanies,
+  rolesInCompany,
+  rolesInDepartments,
   exceptDeleteMyself,
 }) => {
   if (!checkArray(accesses)) {
@@ -18,12 +18,11 @@ export const getRenderingRolesForUsersPage = ({
   const stringPendingRoles: string[] = [];
   let companyRole;
   const departmentRoles: Access[] = [];
-  const accountIsCompanyManager = rolesOfCompanies?.[companyID]?.rolesInCompany?.includes(Roles.COMPANY_MANAGER);
+  const accountIsCompanyManager = rolesInCompany?.includes(Roles.COMPANY_MANAGER) && !exceptDeleteMyself;
 
   for (const access of accesses) {
     const isPendingRole = access?.status !== 'ACCEPTED';
-    const isCompanyRole =  access?.companyID?._id === companyID &&
-      companyRoles.includes(access?.role ?? '');
+    const isCompanyRole = companyRoles.includes(access?.role ?? '');
 
     if (isCompanyRole) {
       companyRole = {
@@ -34,19 +33,12 @@ export const getRenderingRolesForUsersPage = ({
       continue;
     }
 
-    const notMatchCurrentCompany = access?.companyID?._id !== companyID;
-
-    if (notMatchCurrentCompany || !access?.role) {
-
-      continue;
-    }
-
     if (isPendingRole) {
       stringPendingRoles.push(rolesRender[access?.role]);
     }
 
     const departmentID = access?.departmentID?._id;
-    const accountIsDepartmentManager = rolesOfCompanies?.[companyID]?.[departmentID]?.includes(Roles.DEPARTMENT_MANAGER);
+    const accountIsDepartmentManager = rolesInDepartments?.[departmentID]?.includes(Roles.DEPARTMENT_MANAGER);
     const canDelete = checkOnlyTrueInArray({
       conditionsArray: [
         !exceptDeleteMyself,

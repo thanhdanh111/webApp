@@ -17,6 +17,7 @@ const LoginUi: FunctionComponent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
+
   useEffect(() => {
     void logUserIn();
   }, []);
@@ -25,15 +26,19 @@ const LoginUi: FunctionComponent = () => {
     const localAccess = localStorage.getItem('access_token');
 
     if (localAccess) {
-      void router.replace('/home', '/home.html');
       setIsLogin(false);
+      void router.replace('/home', '/home.html');
+
+      return;
     }
 
     const query = qs.parse(window.location.search);
     const token = query.token;
+
     if (!token) {
       return;
     }
+
     const accessToken = token.replace('?token=', '');
     localStorage.setItem('access_token', accessToken);
     setIsLogin(true);
