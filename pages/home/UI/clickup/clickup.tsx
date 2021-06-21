@@ -99,18 +99,9 @@ const BoardTasks: FunctionComponent = () => {
         destination.index,
       ) as Task[];
 
-      dispatch(setTasksToTaskStatus({
-        taskStatusId: source.droppableId,
-        tasks: items,
-      }));
-
-      const taskIDs = items.map((each) => each._id);
-
       dispatch(updateTaskStatusById({
         taskStatusID: source.droppableId,
-        data: {
-          taskIDs,
-        },
+        tasks: items,
       }));
 
       return;

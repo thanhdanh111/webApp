@@ -8,7 +8,10 @@ import {
   getDataTasksByUserThunkAction,
   getTasksStatusByID,
   updateTaskByIDAction,
+  setTasksToTaskStatus,
  } from './home_actions';
+import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
 
 interface Data {
   loading: boolean;
@@ -49,13 +52,9 @@ const initialState: Data = {
   },
 };
 
-interface DataTaskStatusUpdate {
-  taskIDs: string[];
-}
-
 interface UpdateTaskStatus {
   taskStatusID: string;
-  data: DataTaskStatusUpdate;
+  tasks: Task[];
 }
 
 let updatedTaskStatuses: TaskStatusType[];
@@ -156,7 +155,7 @@ export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id;
+    const departmentID = '60487820340cd70008593306'; // authState?.department?._id;
 
     if (!token || !companyID) {
       await dispatch(hideLoaderListUser());
@@ -195,7 +194,7 @@ export const getTasksByUserThunkAction = () => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id;
+    const departmentID = '60487820340cd70008593306'; // authState?.department?._id;
     const userID = authState?.userID;
 
     if (!token || !companyID || !userID) {
@@ -249,12 +248,23 @@ export const getTaskStatusByIDThunkAction = (tittle, taskStatusID) => async (dis
   }
 };
 
-export const updateTaskStatusById = ({ taskStatusID, data }: UpdateTaskStatus) => async () => {
+export const updateTaskStatusById = ({ taskStatusID, tasks }: UpdateTaskStatus) => async (dispatch) => {
   try {
     const localAccess = localStorage.getItem('access_token');
+    if (!localAccess || !taskStatusID) {
+      return;
+    }
+    const taskIDs = tasks.map((each) => each._id);
+
+    dispatch(setTasksToTaskStatus({
+      tasks,
+      taskStatusId: taskStatusID,
+    }));
 
     await axios({
-      data,
+      data: {
+        taskIDs,
+      },
       url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
       headers: {
         'Content-Type': 'application/json',
@@ -264,8 +274,8 @@ export const updateTaskStatusById = ({ taskStatusID, data }: UpdateTaskStatus) =
     });
 
   } catch (error) {
-    // tslint:disable-next-line:no-console
-    console.log('Update task status error', error);
+    const errorNotification = returnNotification({ type: 'failed' });
+    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
   }
 };
 
