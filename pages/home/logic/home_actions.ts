@@ -32,3 +32,17 @@ export const hideLoaderListUser = () => {
     type: dashboardClickUp.HIDE_LOADER_LIST,
   };
 };
+
+export const addTask = (data) => {
+  return {
+    type: dashboardClickUp.ADD_TASK,
+    payload: data,
+  };
+};
+
+export const setTypeCreateTask = (data) => {
+  return {
+    type: dashboardClickUp.SET_TYPE_CREATE_TASK,
+    payload: data,
+  };
+};

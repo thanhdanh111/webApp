@@ -2,7 +2,7 @@ import { dashboardClickUp } from './home_type';
 import { Task, TaskStatusType } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { getDataTaskStatuses, hideLoaderListUser, getDataTasksByUserThunkAction, getTasksStatusByID } from './home_actions';
+import { getDataTaskStatuses, hideLoaderListUser, getDataTasksByUserThunkAction, getTasksStatusByID, addTask } from './home_actions';
 
 interface Data {
   loading: boolean;
@@ -14,6 +14,7 @@ interface Data {
   taskTotalCount: number;
   taskCursor: string;
   taskStatusNotification: TaskStatusType;
+  typeCreateTask: string;
 }
 
 const initialState: Data = {
@@ -31,6 +32,7 @@ const initialState: Data = {
     taskIDs: [],
     description: '',
   },
+  typeCreateTask: '',
 };
 
 export  const taskStatusesReducer = (state = initialState, action) => {
@@ -78,9 +80,25 @@ export  const taskStatusesReducer = (state = initialState, action) => {
         listTasks: listTask,
       };
     case dashboardClickUp.GET_TASK_STATUS_BY_ID:
+
       return {
         ...state,
         taskStatusNotification: action.payload,
+      };
+    case dashboardClickUp.ADD_TASK:
+      const taskTypes = [...state.list];
+      const index = taskTypes.findIndex((type) => type._id === action.payload.taskStatusID);
+      taskTypes[index].taskIDs.unshift(action.payload);
+
+      return {
+        ...state,
+        list: [...taskTypes],
+      };
+    case dashboardClickUp.SET_TYPE_CREATE_TASK:
+
+      return {
+        ...state,
+        typeCreateTask: action.payload,
       };
     default:
       return state;
@@ -180,6 +198,26 @@ export const getTaskStatusByIDThunkAction = (tittle, taskStatusID) => async (dis
         },
       });
     dispatch(getTasksStatusByID(res.data));
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addTaskThunkAction = (task, companyID) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    if (!token || !companyID) {
+      return;
+    }
+    const res = await axios.post(`${config.BASE_URL}/companies/${companyID}/tasks`,
+      task,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    dispatch(addTask(res.data));
   } catch (error) {
     throw error;
   }

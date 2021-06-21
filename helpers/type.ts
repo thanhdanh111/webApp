@@ -112,20 +112,21 @@ export interface MenuItem {
 }
 
 export interface Task {
-  _id: string;
-  companyID: Company;
-  departmentID: Department;
-  taskStatusID: TaskStatusType;
-  tagIDs: string[];
-  userIDs: User[];
+  _id?: string;
+  companyID?: Company;
+  departmentID?: Department;
+  taskStatusID?: TaskStatusType;
+  tagIDs?: string[];
+  userIDs?: User[];
   title: string;
-  description: string;
-  attachments: string[];
-  dueDate: string;
-  estimateTime: string;
-  timeTracked: string;
-  priority: string;
-  logs: string[];
+  description?: string;
+  attachments?: string[];
+  dueDate?: string;
+  estimateDate?: string;
+  timeTracked?: string;
+  priority?: string;
+  logs?: string[];
+  startDate?: string;
 }
 
 export interface TaskStatusType {

@@ -35,6 +35,9 @@ describe('Home page', () => {
   test('Test home successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.home-page');
+    await page.waitFor(5000)
+    await page.click('.add-task');
+    await page.waitForSelector('.task-add');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();

@@ -17,7 +17,7 @@ const TaskItem = (props: Task) => {
                 <Typography component='span' className='task-name'>{taskName}</Typography>
                 <AvatarGroup max={2}>
                     {checkArray(props?.userIDs) ?
-                    props.userIDs.map((user) => {
+                    props?.userIDs?.map((user) => {
                       return (
                         <Avatar key={user.email} alt={user.firstName} src={user.profilePicture} />
                       );
