@@ -171,7 +171,7 @@ const BaseTable = (props: InitialProps) => {
       </TableContainer>
       {
         emptyState &&
-        <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
+        <Typography color='textSecondary' className='empty-state-table--text'>{notFoundWarning}</Typography>
       }
       {loading && <DisappearedLoading color={'#67cb48'} />}
     </div>
