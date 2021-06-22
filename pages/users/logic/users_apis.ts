@@ -44,12 +44,14 @@ export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
       method: 'DELETE',
     });
 
+    const accessID = usersState?.editingUserInfo?.editingDepartment?._id;
+
     if (onSearch) {
       const newListSearch  = usersState?.listSearch;
 
       newListSearch[userIndex].departmentRoles =
-        newListSearch?.[userIndex]?.departmentRoles?.filter((role) => {
-          return role?.role !== departmentRole;
+        newListSearch?.[userIndex]?.departmentRoles?.filter((access) => {
+          return access?._id !== accessID;
         });
 
       const newListAfterEditingSearch = usersState?.list?.map((user) => {
@@ -77,8 +79,8 @@ export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
     const newList  = usersState?.list;
 
     newList[userIndex].departmentRoles =
-      newList?.[userIndex]?.departmentRoles?.filter((role) => {
-        return role?.role !== departmentRole;
+      newList?.[userIndex]?.departmentRoles?.filter((access) => {
+        return access?._id !== accessID;
       });
 
     dispatch(updateUsersReducer({

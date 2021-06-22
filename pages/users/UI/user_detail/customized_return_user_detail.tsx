@@ -63,6 +63,7 @@ const CustomizedReturnActionComponent = (departmentProps) => {
   }
 
   function removeUserFromDepartment(departmentIndex) {
+
     dispatch(updateUsersReducer({
       onRemovingUser: true,
       editingUserInfo: {

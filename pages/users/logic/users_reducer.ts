@@ -272,7 +272,7 @@ export const renderData = ({
       rolesInDepartments,
       accesses: user.accesses,
     });
-    const fullName = `${user.userID.firstName} ${user.userID.lastName}`;
+    const fullName = user?.userID?.status === 'INACTIVE' ? 'Inactive User' : `${user.userID.firstName} ${user.userID.lastName}`;
     const id = user._id;
 
     return createData(

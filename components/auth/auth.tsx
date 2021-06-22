@@ -13,6 +13,7 @@ import { getNotificationFCM } from 'pages/users/logic/users_actions';
 import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
 
 type Token = string | null;
+
 const Auth = ({ children, publicPages }) => {
   const path = window.location.pathname;
   const router = useRouter();
@@ -22,7 +23,7 @@ const Auth = ({ children, publicPages }) => {
 
   useEffect(() => {
     void checkLogin();
-  });
+  }, []);
 
   useEffect(() => {
     const hasPermission = hasAccessPermission();
@@ -104,8 +105,10 @@ const Auth = ({ children, publicPages }) => {
       return;
     }
 
-    dispatch(GetUserDataThunkAction(token));
-    await getFCMToken();
+    await Promise.all([
+      dispatch(GetUserDataThunkAction(token)),
+      getFCMToken(),
+    ]);
     setLoading(false);
 
     return;

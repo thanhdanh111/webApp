@@ -167,13 +167,12 @@ const BaseTable = (props: InitialProps) => {
         )}
         </Table>
         </InfiniteScroll>
-          {
-            emptyState &&
-            <div className='empty-state'>
-              <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
-            </div>
-          }
+
       </TableContainer>
+      {
+        emptyState &&
+        <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
+      }
       {loading && <DisappearedLoading color={'#67cb48'} />}
     </div>
   );

@@ -3,10 +3,10 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Login } from '../logic/login_actions';
 import { config } from 'helpers/get_config';
-import { GetUserDataThunkAction } from '../logic/login_reducer';
 import * as qs from 'query-string';
 import { useRouter } from 'next/router';
 import { DisappearedLoading } from 'react-loadingg';
+import { GetUserDataThunkAction } from '../logic/login_reducer';
 const redirectUrl = `${config.BASE_URL}/auth/google/callback&state=${config.STATE}`
   .split(':')
   .join('%3A')
@@ -22,7 +22,7 @@ const LoginUi: FunctionComponent = () => {
     void logUserIn();
   }, []);
 
-  function logUserIn() {
+  async function logUserIn() {
     const localAccess = localStorage.getItem('access_token');
 
     if (localAccess) {
@@ -43,8 +43,7 @@ const LoginUi: FunctionComponent = () => {
     localStorage.setItem('access_token', accessToken);
     setIsLogin(true);
 
-    dispatch(GetUserDataThunkAction(accessToken));
-
+    await Promise.resolve(dispatch(GetUserDataThunkAction(accessToken)));
     dispatch(Login(accessToken));
 
     void router.replace('/home', '/home.html');
