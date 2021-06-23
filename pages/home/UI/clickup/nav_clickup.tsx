@@ -5,7 +5,7 @@ import {
   MenuItem,
   Typography,
 } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
@@ -16,18 +16,34 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import ListIcon from '@material-ui/icons/List';
 import TaskBoardUI from './show_task_board';
+import { HomeDataType } from 'pages/home/logic/home_reducer';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { setFilterTaskByUserAction } from 'pages/home/logic/home_actions';
+import { isAdminOrManagerUser } from 'helpers/check_role_user';
 
-interface InitProps {
-  handleClick: (e) => void;
-  show: string;
-}
+const NavClickUp = () => {
+  const dispatch = useDispatch();
+  const { filteringTaskByUser }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
+  const auth = useSelector((state: RootStateOrAny) => state.auth);
+  const companyID = auth?.extendedCompany?.companyID?._id;
+  const departmentID = auth?.department?._id;
+  const btnShow = filteringTaskByUser ? 'btn-show-me' : 'btn-show-all';
 
-const NavClickUp = (props: InitProps) => {
-  const { handleClick, show }: InitProps = props;
+  useEffect(() => {
+    if (isAdminOrManagerUser(auth?.access, companyID, departmentID)) {
+      dispatch(setFilterTaskByUserAction(false));
+    }
 
-  const btnShowMe = show === 'me' ? 'btn-show' : 'btn';
+    return;
+  }, []);
 
-  const btnShowEvery = show === 'everyone' ? 'btn-show' : 'btn';
+  const onChangeMe = () => {
+    dispatch(setFilterTaskByUserAction(true));
+  };
+
+  const onChangeAll = () => {
+    dispatch(setFilterTaskByUserAction(false));
+  };
 
   return (
     <div className='nav-click_up'>
@@ -122,8 +138,8 @@ const NavClickUp = (props: InitProps) => {
             <div className='action action-use'>
               <div className='btn-assign'>
                 <Button
-                  className={`btn ${btnShowMe}`}
-                  onClick={() => handleClick('me')}
+                  className={`btn ${btnShow}`}
+                  onClick={onChangeMe}
                 >
                   <div className='assign'>
                     <PersonIcon className='icon' />
@@ -133,8 +149,8 @@ const NavClickUp = (props: InitProps) => {
               </div>
               <div className='btn-assign'>
                 <Button
-                  className={`btn ${btnShowEvery}`}
-                  onClick={() => handleClick('everyone')}
+                  className={`btn ${btnShow}`}
+                  onClick={onChangeAll}
                 >
                   <div className='assign assign-other'>
                     <PeopleAltIcon className='icon' />

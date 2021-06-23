@@ -1,8 +1,8 @@
 import { dashboardClickUp } from './home_type';
 
-export const getDataTasksByUserThunkAction = (res: object) => {
+export const setFilterTaskByUserAction = (res: boolean) => {
   return {
-    type: dashboardClickUp.GET_TASK_BY_USER_ID,
+    type: dashboardClickUp.FILTERING_TASK_BY_USER,
     payload: res,
   };
 };
@@ -14,6 +14,13 @@ export const getTasksStatusByID = (res: object) => {
   };
 };
 
+export const getTaskStatuses = (res: object) => {
+  return {
+    type: dashboardClickUp.GET_TASK_STATUSES,
+    payload: res,
+  };
+};
+
 export const setLoading = (loading: boolean) => {
   return {
     type: dashboardClickUp.SET_LOADING,
@@ -21,11 +28,11 @@ export const setLoading = (loading: boolean) => {
   };
 };
 
-export const setSelectedTaskBoard = (res: string) => {
+export const setSelectedTaskBoard = (res: object) => {
   return {
     type: dashboardClickUp.SET_SELECTED_TASKBOARD,
     payload: {
-      selectTaskBoardID: res,
+      currentTaskBoard: res,
     },
   };
 };
@@ -34,13 +41,6 @@ export const getTaskBoard = (data: object) => {
   return {
     data,
     type: dashboardClickUp.GET_TASK_BOARD,
-  };
-};
-
-export const getTaskBoardByID = (data: object) => {
-  return {
-    data,
-    type: dashboardClickUp.GET_TASK_BOARD_BY_ID,
   };
 };
 

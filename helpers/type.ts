@@ -115,7 +115,7 @@ export interface Task {
   _id: string;
   companyID: Company;
   departmentID: Department;
-  taskStatusID: TaskStatusType;
+  taskStatusID: TaskStatus;
   tagIDs: string[];
   userIDs: User[];
   title: string;
@@ -128,15 +128,15 @@ export interface Task {
   logs: string[];
 }
 
-export interface TaskStatusType {
+export interface TaskStatus {
   _id: string;
-  statusID?: string;
-  companyID?: Company;
-  departmentID?: Department;
-  taskBoardID?: string;
-  title?: string;
+  companyID?: Company | string;
+  departmentID?: Department | string;
+  taskBoardID: TaskBoard | string;
+  title: string;
   taskIDs: Task[];
   description?: string;
+  createdBy?: User | string;
 }
 export interface CheckInCheckOut {
   checkInAt?: string;
@@ -224,7 +224,9 @@ export interface TaskBoard {
   _id: string;
   companyID?: Company | string;
   departmentID?: Department | string;
-  taskStatusIDs?: TaskStatusType[];
+  taskStatusIDs?: string[];
   title: string;
   description?: string;
+  updatedBy?: User ;
+  createdBy?: User | string;
 }

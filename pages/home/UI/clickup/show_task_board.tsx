@@ -21,7 +21,7 @@ const TaskBoardUI = () => {
   const dispatch = useDispatch();
   const {
     taskBoards,
-    selectTaskBoardID,
+    currentTaskBoard,
     hasNoData,
     loading,
   }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
@@ -42,11 +42,18 @@ const TaskBoardUI = () => {
   };
 
   const changeTaskBoard = (event) => {
-    if (event.target.value === selectTaskBoardID) {
+    if (event.target.value === currentTaskBoard._id) {
       return;
     }
 
-    dispatch(setSelectedTaskBoard(event.target.value));
+    taskBoards.map((taskBoard) => {
+      if (taskBoard._id === event.target.value) {
+        dispatch(setSelectedTaskBoard(taskBoard));
+      }
+
+      return;
+    });
+
   };
 
   const handleOpenOrClose = () => {
@@ -142,7 +149,7 @@ const TaskBoardUI = () => {
       </IconButton>
       {modalCreatedTaskBoard()}
       <Select
-          value={selectTaskBoardID}
+          value={currentTaskBoard?._id}
           onChange={changeTaskBoard}
           className='nav-click-up-task-board-select'
       >

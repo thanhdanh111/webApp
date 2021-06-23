@@ -1,52 +1,38 @@
 import { dashboardClickUp } from './home_type';
-import { Task, TaskBoard, TaskStatusType } from '../../../helpers/type';
+import { TaskBoard, TaskStatus } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import {
   setLoading,
-  getDataTasksByUserThunkAction,
   getTasksStatusByID,
   getTaskBoard,
   createdTaskBoard,
-  getTaskBoardByID,
   setSelectedTaskBoard,
+  getTaskStatuses,
 } from './home_actions';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 
 export interface HomeDataType {
   loading: boolean;
-  limit: number;
-  listTasks: Task[];
-  taskTotalCount: number;
-  taskCursor: string;
-  taskStatusNotification: TaskStatusType;
-  selectTaskBoardID: string;
-  selectTaskBoard: TaskBoard;
+  taskStatus: { [key: string]: TaskStatus };
+  currentTaskBoard: TaskBoard;
   taskBoards: TaskBoard[];
   hasNoData: boolean;
   onSendingRequest: boolean;
+  filteringTaskByUser: boolean;
 }
 
 const initialState: HomeDataType = {
   loading: true,
-  limit: 5,
-  listTasks: [],
-  taskTotalCount: 0,
-  taskCursor: '',
-  taskStatusNotification: {
-    _id: '',
-    title: '',
-    taskIDs: [],
-    description: '',
-  },
-  selectTaskBoardID: '',
-  selectTaskBoard: {
+  taskStatus: {},
+  currentTaskBoard: {
     _id: '',
     title: '',
   },
   taskBoards: [],
   hasNoData: false,
   onSendingRequest: false,
+  filteringTaskByUser: false,
 };
 
 export  const taskStatusesReducer = (state = initialState, action) => {
@@ -56,22 +42,20 @@ export  const taskStatusesReducer = (state = initialState, action) => {
         ...state,
         loading: action.payload,
       };
-    case dashboardClickUp.GET_TASK_BY_USER_ID:
+    case dashboardClickUp.FILTERING_TASK_BY_USER:
       return {
         ...state,
-        taskCursor: action.payload.cursor,
-        taskTotalCount: action.payload.totalCount,
-        listTasks: action.payload.list,
+        filteringTaskByUser: action?.payload,
       };
     case dashboardClickUp.SET_SELECTED_TASKBOARD:
       return {
         ...state,
-        selectTaskBoardID: action?.payload?.selectTaskBoardID,
+        currentTaskBoard: action?.payload?.currentTaskBoard,
       };
-    case dashboardClickUp.  GET_TASK_STATUS_BY_ID:
+    case dashboardClickUp.GET_TASK_STATUSES:
       return {
         ...state,
-        taskStatusNotification: action.payload,
+        taskStatus: action.payload,
       };
     case dashboardClickUp.GET_TASK_BOARD:
       return {
@@ -81,11 +65,6 @@ export  const taskStatusesReducer = (state = initialState, action) => {
       return {
         ...state,
         taskBoards: [...state.taskBoards, action?.data],
-      };
-    case dashboardClickUp.GET_TASK_BOARD_BY_ID:
-      return {
-        ...state,
-        selectTaskBoard: action?.data,
       };
     default:
       return state;
@@ -97,46 +76,7 @@ const notificationsType = {
   400: 'You have no company right now!',
 };
 
-export const getTasksByUserThunkAction = (taskStatusID) => async (dispatch, getState) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id;
-    const userID = authState?.userID;
-
-    if (!token || !companyID || !userID || !taskStatusID) {
-      return;
-    }
-    const res = await axios.get(`${config.BASE_URL}/tasks`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          companyID,
-          departmentID,
-          userID,
-          taskStatusID,
-        },
-      });
-
-    if (res.data.totalCount === 0){
-      await dispatch(setLoading(false));
-
-      return;
-    }
-
-    await dispatch(getDataTasksByUserThunkAction(res.data));
-    await dispatch(setLoading(false));
-
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getTaskStatusByIDThunkAction = (tittle, taskStatusID) => async (dispatch) => {
+export const getTaskStatusByIDThunkAction = (title, taskStatusID) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
 
@@ -144,7 +84,7 @@ export const getTaskStatusByIDThunkAction = (tittle, taskStatusID) => async (dis
       return;
     }
     // title is targetEntityName
-    const res = await axios.get(`${config.BASE_URL}/${tittle}/${taskStatusID}`,
+    const res = await axios.get(`${config.BASE_URL}/${title}/${taskStatusID}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +92,14 @@ export const getTaskStatusByIDThunkAction = (tittle, taskStatusID) => async (dis
         },
       });
 
-    dispatch(getTasksStatusByID(res.data));
+    if (!res.data) {
+      await dispatch(setLoading(false));
+
+      return;
+    }
+
+    await dispatch(getTasksStatusByID(res.data));
+    await dispatch(setLoading(false));
   } catch (error) {
     throw error;
   }
@@ -188,37 +135,30 @@ export const getTaskBoardThunkAction = () => async (dispatch, getState) => {
     }
 
     await dispatch(getTaskBoard(res?.data));
-    await dispatch(setSelectedTaskBoard(res?.data?.list[0]?._id));
-    await dispatch(setLoading(false));
-  } catch (error) {
-    throw error;
-  }
-};
+    await dispatch(setSelectedTaskBoard(res?.data?.list[0]));
 
-export const getTaskBoardByIDThunkAction = (taskBoardID) => async (dispatch, getState) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id; // '60487820340cd70008593306'; //
+    const dataRes: TaskStatus[] = await Promise.all(res?.data?.list[0]?.taskStatusIDs?.map((item) => {
+      return new Promise(async (rel) => {
+        // item string _id => get api for each _id
+        const taskStatusRes = await axios.get(`${config.BASE_URL}/taskStatuses/${item}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-    if (!token || !companyID || !taskBoardID) {
-      return;
-    }
-
-    const res = await axios.get(`${config.BASE_URL}/taskBoards/${taskBoardID}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          companyID,
-          departmentID,
-        },
+        rel(taskStatusRes?.data);
       });
+    }));
 
-    await dispatch(getTaskBoardByID(res.data));
+    const hash: { [key: string]: TaskStatus } = {};
+    dataRes.forEach((item: TaskStatus) => {
+      hash[item._id] = item;
+    });
+
+    await dispatch(getTaskStatuses(hash));
+    await dispatch(setLoading(false));
   } catch (error) {
     throw error;
   }

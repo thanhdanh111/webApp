@@ -1,57 +1,35 @@
-import { HomeDataType, getTaskBoardByIDThunkAction } from 'pages/home/logic/home_reducer';
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { HomeDataType } from 'pages/home/logic/home_reducer';
+import React, { FunctionComponent, useState } from 'react';
+import { RootStateOrAny, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
-import { checkArray } from 'helpers/check_array';
-import TaskStatus from './statuses_clickup';
+import TaskStatusUI from './statuses_clickup';
 import NavClickUp from './nav_clickup';
-import { TaskStatusType } from 'helpers/type';
 import { Typography } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 
 const BoardTasks: FunctionComponent = () => {
-  const dispatch = useDispatch();
   const {
-    selectTaskBoardID,
-    selectTaskBoard,
     loading,
+    taskStatus,
   }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
-  const authState = useSelector((state: RootStateOrAny) => state.auth);
-  const companyID = authState?.extendedCompany?.companyID?._id;
-  const departmentID = authState?.department?._id;
-  const [showTask, setShowTask] = useState('me');
   const [isAddStatus, setIsAddStatus] = useState(false);
 
-  useEffect(() => {
-    void fetchData();
-  }, [selectTaskBoardID]);
-
-  const fetchData = () => {
-    dispatch(getTaskBoardByIDThunkAction(selectTaskBoardID));
-  };
-
-  const handleShowMe = (text) => {
-    setShowTask(text);
-  };
-
   const GenerateTaskStatuses = () => {
-    return checkArray(selectTaskBoard?.taskStatusIDs) && selectTaskBoard?.taskStatusIDs?.map(
-      (taskStatus: JSX.IntrinsicAttributes & TaskStatusType) => {
-        return (
+    if (!taskStatus) {
+      return;
+    }
+
+    return Object.keys(taskStatus)?.map((key) => {
+      return (
           <>
-            <TaskStatus
-              key={taskStatus._id}
-              taskStatus={taskStatus}
-              user={authState}
-              companyID={companyID}
-              departmentID={departmentID}
-              taskStatusID={taskStatus?._id}
-              showTask={showTask}
+            <TaskStatusUI
+              key={key}
+              taskStatusID={taskStatus[key]}
             />
           </>
-        );
-      },
+      );
+    },
     );
   };
 
@@ -71,7 +49,7 @@ const BoardTasks: FunctionComponent = () => {
 
   return (
     <div className='board'>
-      <NavClickUp handleClick={handleShowMe} show={showTask}/>
+      <NavClickUp />
       <div className='board-tasks'>
           {!loading &&
           <>

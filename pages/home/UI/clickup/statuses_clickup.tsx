@@ -1,82 +1,70 @@
 import { Container, Link, Typography } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
-import { TaskStatusType } from 'helpers/type';
 import TaskItem from './task_clickup';
-import { LoginValue } from '../../../../helpers/type';
-import { isAdminOrManagerUser } from '../../../../helpers/check_role_user';
+import { LoginValue, TaskStatus } from '../../../../helpers/type';
 import { checkArray } from 'helpers/check_array';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { getTasksByUserThunkAction, HomeDataType } from 'pages/home/logic/home_reducer';
+import { RootStateOrAny,  useSelector } from 'react-redux';
+import {  HomeDataType } from 'pages/home/logic/home_reducer';
 
 interface InitProps {
-  taskStatus: TaskStatusType;
-  taskStatusID: string;
-  user: LoginValue;
-  companyID: string | '';
-  departmentID: string | '';
-  showTask: string;
+  taskStatusID: TaskStatus;
 }
 
-const TaskStatus = (props: InitProps) => {
-  const { taskStatus, taskStatusID, user, companyID, departmentID, showTask }: InitProps = props;
-  const style = taskStatus?.title?.split(' ').join('-').toLowerCase();
-  const dispatch = useDispatch();
-  const {
-    listTasks,
-  }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
+const TaskStatusUI = (props: InitProps) => {
+  const { taskStatusID }: InitProps = props;
+  const { filteringTaskByUser }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
+  const { userID }: LoginValue = useSelector((state: RootStateOrAny) => state.auth);
 
-  useEffect(() => {
-    void fetchData();
-  }, []);
-
-  const fetchData = () => {
-    dispatch(getTasksByUserThunkAction(taskStatusID));
-  };
+  const style = taskStatusID?.title?.split(' ').join('-').toLowerCase();
 
   const GenerateTasks = () => {
+    let taskIDs = taskStatusID?.taskIDs;
 
-    if (!isAdminOrManagerUser(user.access, companyID, departmentID) || showTask === 'me') {
-      return checkArray(listTasks) && listTasks.map((task) => {
-        return (
-          <TaskItem key={task?.taskStatusID?._id} {...task}/>
-        );
+    if (!checkArray(taskIDs)) {
+      return;
+    }
+
+    if (filteringTaskByUser) {
+      taskIDs = taskIDs.filter((task) => {
+
+        if (task.userIDs) {
+          task.userIDs.filter((user) => user._id === userID);
+        }
+
+        return;
       });
     }
 
-    if (isAdminOrManagerUser(user.access, companyID, departmentID) || showTask === 'everyone') {
-      return checkArray(taskStatus.taskIDs) && taskStatus.taskIDs.map((task) => {
-        return (
-          <TaskItem key={task?._id} {...task}/>
-        );
-      });
-    }
-
-    return;
+    taskIDs.map((task) => {
+      return (
+        <TaskItem key={task?._id} {...task}/>
+      );
+    });
   };
 
   return (
-        <div className='task-status'>
-            <div className={`status ${style}`}>
-              <Container className='status-left'>
-                  <Typography className='name-status'>{taskStatus?.title}</Typography>
-                  <Typography className='quality-task'>{taskStatus?.taskIDs.length}</Typography>
-              </Container>
-              <Container className='status-right'>
-                  <Link className='actions-status more-actions'><MoreHorizIcon/></Link>
-                  <Link className='actions-status add-action'><AddIcon /></Link>
-              </Container>
-            </div>
-            <div className='status-task-list'>
-              {GenerateTasks()}
-              <div className='add-task'>
-                <Link className='icon-add-task'><AddIcon/></Link>
-                <Typography component='span' className='text-add-task'>NEW TASK</Typography>
-              </div>
-            </div>
+    <div className='task-status'>
+        <div className={`status ${style}`}>
+          <Container className='status-left'>
+              <Typography className='name-status'>{taskStatusID?.title}</Typography>
+              <Typography className='quality-task'>{taskStatusID?.taskIDs?.length}</Typography>
+          </Container>
+          <Container className='status-right'>
+              <Link className='actions-status more-actions'><MoreHorizIcon/></Link>
+              <Link className='actions-status add-action'><AddIcon /></Link>
+          </Container>
         </div>
+        <div className='status-task-list'>
+          {GenerateTasks()}
+          <div className='add-task'>
+            <Link className='icon-add-task'><AddIcon/></Link>
+            <Typography component='span' className='text-add-task'>NEW TASK</Typography>
+          </div>
+        </div>
+    </div>
   );
 };
 
-export default (TaskStatus);
+export default (TaskStatusUI);
