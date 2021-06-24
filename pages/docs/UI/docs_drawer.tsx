@@ -11,10 +11,27 @@ import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
 import DocsDrawerProjectUI from './docs_drawer_project_item';
 import { docsLinkDecorator } from 'pages/docs/UI/link_decorator';
+import { DocProject, PageContent } from '../logic/docs_reducer';
+
+interface DocsDrawerData {
+  docProjects: DocProject[];
+  loading: boolean;
+  selectedDocProject: DocProject;
+  selectedPage: PageContent;
+  companyID: string;
+}
+
+type DocsDrawerDataType = DocsDrawerData;
 
 const DocsDrawer = () => {
   const dispatch = useDispatch();
-  const ownComponentState = useSelector((state: RootState) => {
+  const {
+    docProjects,
+    loading,
+    selectedDocProject,
+    selectedPage,
+    companyID,
+  }: DocsDrawerDataType = useSelector((state: RootState) => {
 
     return {
       docProjects: state?.docs?.docProjects,
@@ -27,8 +44,8 @@ const DocsDrawer = () => {
   const router = useRouter();
 
   useEffect(() => {
-    dispatch(getDocProjects({ companyID: ownComponentState?.companyID }));
-  }, [ownComponentState?.companyID]);
+    dispatch(getDocProjects({ companyID }));
+  }, [companyID]);
 
   function backToHome() {
 
@@ -36,22 +53,25 @@ const DocsDrawer = () => {
   }
 
   function onClickProject(project) {
+    const decorator = new CompositeDecorator([
+      docsLinkDecorator,
+    ]);
+
     dispatch(updateDocs({
       selectedDocProject: project,
       selectedPage: {},
-      editorState: EditorState.createEmpty(),
+      editorState: EditorState.createEmpty(decorator),
       title: '',
     }));
   }
 
   function onClickPage(props) {
     const convertedBlocks = JSON.parse(props?.page?.pageContent);
-
+    const convertedEntityMap = JSON.parse(props?.page?.entityMap);
+    const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: convertedEntityMap });
     const decorator = new CompositeDecorator([
       docsLinkDecorator,
     ]);
-
-    const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: {} });
 
     dispatch(updateDocs({
       editorState: EditorState.createWithContent(
@@ -74,8 +94,8 @@ const DocsDrawer = () => {
   }
 
   function showListTreeOfDocProjects(project) {
-    const onSelectedProject = !ownComponentState?.selectedPage?._id &&
-      ownComponentState?.selectedDocProject?._id === project?._id;
+    const onSelectedProject = !selectedPage?._id &&
+      selectedDocProject?._id === project?._id;
 
     return <DocsDrawerProjectUI
       key={project?._id}
@@ -100,9 +120,9 @@ const DocsDrawer = () => {
         </div>
       </div>
       <List component='nav'>
-        {ownComponentState?.docProjects.map(showListTreeOfDocProjects)}
+        {docProjects.map(showListTreeOfDocProjects)}
       </List>
-      <CreateNewProjectDialog loading={ownComponentState?.loading} handleCreate={handleCreate}/>
+      <CreateNewProjectDialog loading={loading} handleCreate={handleCreate}/>
     </>
   );
 };

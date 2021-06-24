@@ -1,17 +1,33 @@
 import React, { FunctionComponent } from 'react';
 import MyEditor from '@components/my_editor/my_editor';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { updateSingleEditorState } from '../logic/docs_actions';
-import { DocsValueType } from '../logic/docs_reducer';
 import { RootState } from 'redux/reducers_registration';
 import { SelectionState, EditorState, CompositeDecorator } from 'draft-js';
 import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions';
 import { showUpToolbarAndUpdateState } from '../logic/docs_inline_toolbar_actions';
 import { docsLinkDecorator } from 'pages/docs/UI/link_decorator';
 
+interface EditorViewData {
+  needDisplay: boolean;
+  editorState: EditorState;
+}
+
+type EditorViewDataType = EditorViewData;
+
 const EditorView: FunctionComponent = () => {
   const dispatch = useDispatch();
-  const { editorState, needDisplay }: DocsValueType = useSelector((state: RootState) => state?.docs);
+  const {
+    editorState,
+    needDisplay,
+  }: EditorViewDataType = useSelector((state: RootState) => {
+
+    return {
+      editorState: state?.docs?.editorState,
+      needDisplay: state?.docs?.needDisplay,
+      typingWord: state?.docs?.typingWord,
+    };
+  }, shallowEqual);
 
   function onClickSideToolbar(props) {
     const contentBlock = props?.contentBlock;

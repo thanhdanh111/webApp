@@ -61,31 +61,34 @@ function turnMutableToImmutableLinkEntity({ rawContentState }) {
 
 export function handleUrlForText({ contentBlocks, contentState }) {
   let newContentState = contentState;
-  const urlRegexFunc = new RegExp(urlRegex);
 
   contentBlocks.forEach((contentBlock) => {
+    const urlRegexFunc = new RegExp(urlRegex);
+
     const textOfBlock = contentBlock?.getText();
     const blockKey = contentBlock?.getKey();
 
     const splitedSpaces = textOfBlock?.split(' ');
 
-    let filteredTextLength = -1;
+    let filteredIndex = 0;
 
     splitedSpaces.forEach((word) => {
       const spaceLength = 1;
-      const isUrl = urlRegexFunc.test(word);
+      const isUrl = word.length > 5 && urlRegexFunc.test(word);
 
       if (isUrl) {
-        const contentStateWithEntity = newContentState.createEntity(
-          'LINK',
-          'IMMUTABLE',
-          { url: word, href: word },
-        );
+        const contentStateWithEntity = contentState.createEntity(
+            'LINK',
+            'IMMUTABLE',
+            { url: word, href: word },
+          );
         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
         const newSelection = SelectionState.createEmpty(blockKey);
+        const startOffset = filteredIndex;
+        const endOffset = filteredIndex + word.length - 1;
         const updatedSelection = newSelection.merge({
-          anchorOffset: filteredTextLength + 1,
-          focusOffset: filteredTextLength + 1 + word.length,
+          anchorOffset: startOffset,
+          focusOffset: endOffset + 1,
           hasFocus: true,
         });
 
@@ -94,11 +97,9 @@ export function handleUrlForText({ contentBlocks, contentState }) {
           updatedSelection,
           entityKey,
         );
-
-        return;
       }
 
-      filteredTextLength = filteredTextLength + word.length + spaceLength;
+      filteredIndex = filteredIndex + word.length + spaceLength;
     });
   });
 

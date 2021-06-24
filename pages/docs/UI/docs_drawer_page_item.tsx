@@ -6,14 +6,25 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SideToolbarButton from '@components/my_editor/side_toolbar_button';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { deletePage } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
-import { DocsValueType } from '../logic/docs_reducer';
+import { PageContent } from '../logic/docs_reducer';
+
+interface DocsDrawerPageData {
+  selectedPage: PageContent;
+}
+
+type DocsDrawerPageDataType = DocsDrawerPageData;
 
 const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
   const dispatch = useDispatch();
-  const { selectedPage }: DocsValueType = useSelector((state: RootState) => state?.docs);
+  const { selectedPage }: DocsDrawerPageDataType = useSelector((state: RootState) => {
+
+    return {
+      selectedPage: state?.docs?.selectedPage,
+    };
+  }, shallowEqual);
 
   function sildePageDrawerToolbarActions() {
 

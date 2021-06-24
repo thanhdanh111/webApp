@@ -1,15 +1,28 @@
 import React from 'react';
 import EditorView from './UI/editor_view';
 import InlineToolbar from '../../components/inline_toolbar/inline_toolbar';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { updateDocs, updateSingleEditorState } from './logic/docs_actions';
 import { RootState } from 'redux/reducers_registration';
-import { DocsValueType } from './logic/docs_reducer';
 import { handleToolbarActions } from './logic/docs_inline_toolbar_actions';
 import { Input } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { createNewPage, savePage } from './logic/docs_apis';
 import { handleKeyCombination } from './logic/handle_combination_key';
+import { EditorState } from 'draft-js';
+import { DocProject, PageContent } from './logic/docs_reducer';
+
+interface DocsPageData {
+  needDisplay: boolean;
+  selectionRect:  DOMRect | undefined;
+  editorState: EditorState;
+  title: string;
+  loading: boolean;
+  selectedPage: PageContent;
+  selectedProject: DocProject;
+}
+
+type DocsPageDataType = DocsPageData;
 
 const DocsPage = () => {
   const dispatch = useDispatch();
@@ -20,9 +33,21 @@ const DocsPage = () => {
     title,
     loading,
     selectedPage,
-  }: DocsValueType = useSelector((state: RootState) => state?.docs);
+    selectedProject,
+  }: DocsPageDataType = useSelector((state: RootState) => {
+
+    return {
+      needDisplay: state?.docs?.needDisplay,
+      selectionRect: state?.docs?.selectionRect,
+      editorState: state?.docs?.editorState,
+      title: state?.docs?.title,
+      loading: state?.docs?.loading,
+      selectedPage: state?.docs?.selectedPage,
+      selectedProject: state?.docs?.selectedDocProject,
+    };
+  }, shallowEqual);
   const onEditPage = !!selectedPage?._id || !!selectedPage?.title;
-  const cannotClickButton = loading || !title?.length;
+  const cannotClickButton = loading || !title?.length || !selectedProject._id;
 
   function onClickOptionInToolbar(action) {
     if (!action) {

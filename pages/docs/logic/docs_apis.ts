@@ -35,6 +35,7 @@ export const createNewPage = () => async (dispatch, getState) => {
         title,
         companyID,
         pageContent: rawBlocks?.blocks,
+        entityMap: Object.values(rawBlocks.entityMap),
       },
       {
         headers: {
@@ -52,7 +53,8 @@ export const createNewPage = () => async (dispatch, getState) => {
     }
 
     const newProjects  = docProjects;
-    newProjects[projectIndex]?.pages?.push({
+
+    newProjects?.[projectIndex]?.pages?.push({
       title: res?.data?.title,
       _id: res?.data?._id,
       pageContent: res?.data?.pageContent,
@@ -92,6 +94,7 @@ export const savePage = () => async (dispatch, getState) => {
       {
         title,
         pageContent: rawBlocks?.blocks,
+        entityMap: Object.values(rawBlocks.entityMap),
       },
       {
         headers: {
@@ -115,6 +118,7 @@ export const savePage = () => async (dispatch, getState) => {
           pageContent: res?.data?.pageContent,
           title: res?.data?.title,
           _id: res?.data?._id,
+          entityMap: res?.data?.entityMap,
         };
       }
 
@@ -226,7 +230,7 @@ export const getDocProjects = ({ companyID }) => async (dispatch) => {
     const docPagesIntoDocProjects = getDesiredChildrenIntoDesiredParents({
       children: docPages?.data?.list,
       fieldsOfParent: ['_id', 'title', 'companyID'],
-      fieldsOfChild: ['_id', 'title', 'pageContent'],
+      fieldsOfChild: ['_id', 'title', 'pageContent', 'entityMap'],
       parentFieldID: '_id',
       parentFieldInChild: 'docProjectID',
       childName: 'pages',
@@ -315,6 +319,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
       companyID: newCompanyID,
       _id: newProjectID,
       title: newTitle,
+      pages: [],
     };
 
     storeProjectsIndice[newProjectID] = docProjects.length;

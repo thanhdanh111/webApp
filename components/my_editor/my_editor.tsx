@@ -8,6 +8,7 @@ import handlePastedText from 'pages/docs/logic/handle_pasted_text';
 import myBlockStyleFn from 'pages/docs/logic/handle_return_styles';
 import handleKeyCommand from 'pages/docs/logic/handle_key_command';
 import { handleKeyBinding } from 'pages/docs/logic/handle_key_binding';
+import { handleBeforeInput } from 'pages/docs/logic/handle_before_input';
 
 interface MyEditor {
   editorState?: EditorState;
@@ -26,7 +27,6 @@ const MyEditor: FunctionComponent<MyEditor> = ({
 }) => {
 
   function handleOnChange(newEditorState) {
-
     handleChangeEditorState(newEditorState);
   }
 
@@ -35,6 +35,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     placeholder='Write something'
     customStyleMap={customStyleMapDraftjs}
     handlePastedText={(text, html, state) => handlePastedText({ text, html, state, handleOnChange })}
+    handleKeyCommand={(command, state) => handleKeyCommand(command, state, handleOnChange)}
     editorState={editorState}
     blockRendererFn={(contentState) =>
       editorBlockRenderer(
@@ -46,12 +47,9 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     blockStyleFn={(contentBlock) => myBlockStyleFn(contentBlock, editorState)}
     blockRenderMap={extendedBlockRenderMap}
     preserveSelectionOnBlur={true}
-    keyBindingFn={(event) => handleKeyBinding({
-      event,
-      state: editorState,
-    })}
+    keyBindingFn={(event) => handleKeyBinding({ event, state: editorState })}
     onChange={(newEditorState) => handleOnChange(newEditorState)}
-    handleKeyCommand={(command, state) => handleKeyCommand(command, state, handleOnChange)}
+    handleBeforeInput={(chars, state) => handleBeforeInput(chars, state, handleOnChange)}
   />;
 };
 

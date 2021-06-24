@@ -5,16 +5,9 @@ function returnDesiredData({  data, fields }) {
 
   const newData = {  };
 
-  const isValid = fields.every((field) =>  {
-
+  fields.forEach((field) =>  {
     newData[field] = data[field];
-
-    return !!data[field];
   });
-
-  if (!isValid) {
-    return null;
-  }
 
   return newData;
 }

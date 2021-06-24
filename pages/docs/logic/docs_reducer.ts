@@ -33,6 +33,7 @@ export interface PageContent {
   pageContent?: string;
   title?: string;
   _id?: string;
+  entityMap?: string;
 }
 
 export interface DocProject {

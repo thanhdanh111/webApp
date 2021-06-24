@@ -5,7 +5,7 @@ export function handleKeyBinding({ state, event }) {
     return handleEnter(state, event);
   }
 
-  return  getDefaultKeyBinding(event);
+  return getDefaultKeyBinding(event);
 }
 
 function handleEnter(state, event) {
