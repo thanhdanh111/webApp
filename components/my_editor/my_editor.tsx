@@ -9,11 +9,13 @@ import myBlockStyleFn from 'pages/docs/logic/handle_return_styles';
 import handleKeyCommand from 'pages/docs/logic/handle_key_command';
 import { handleKeyBinding } from 'pages/docs/logic/handle_key_binding';
 import { handleBeforeInput } from 'pages/docs/logic/handle_before_input';
+import { handleDroppedFiles } from 'pages/docs/logic/handle_dropped_files';
+import { handlePastedFiles } from 'pages/docs/logic/handle_pasted_files';
 
 interface MyEditor {
   editorState?: EditorState;
   handleChangeEditorState: (newEditorState) => void;
-  handleOnChangeStyleLine?: (action, contentState) => void;
+  handleOnChangeLineStyle?: (action, contentState) => void;
   onClickSideToolbar?: (props) => void;
   onMoveBlockAction?: (action) => void;
 }
@@ -21,7 +23,7 @@ interface MyEditor {
 const MyEditor: FunctionComponent<MyEditor> = ({
   editorState,
   handleChangeEditorState,
-  handleOnChangeStyleLine,
+  handleOnChangeLineStyle,
   onClickSideToolbar,
   onMoveBlockAction,
 }) => {
@@ -37,19 +39,21 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     handlePastedText={(text, html, state) => handlePastedText({ text, html, state, handleOnChange })}
     handleKeyCommand={(command, state) => handleKeyCommand(command, state, handleOnChange)}
     editorState={editorState}
-    blockRendererFn={(contentState) =>
-      editorBlockRenderer(
-        contentState,
-        handleOnChangeStyleLine,
+    blockRendererFn={(contentBlock) =>
+      editorBlockRenderer({
+        contentBlock,
         onClickSideToolbar,
         onMoveBlockAction,
-      )}
+        handleOnChangeLineStyle,
+      })}
     blockStyleFn={(contentBlock) => myBlockStyleFn(contentBlock, editorState)}
     blockRenderMap={extendedBlockRenderMap}
     preserveSelectionOnBlur={true}
     keyBindingFn={(event) => handleKeyBinding({ event, state: editorState })}
     onChange={(newEditorState) => handleOnChange(newEditorState)}
     handleBeforeInput={(chars, state) => handleBeforeInput(chars, state, handleOnChange)}
+    handleDroppedFiles={(selectionState, files) => handleDroppedFiles(selectionState, files, editorState, handleOnChange)}
+    handlePastedFiles={(files) => handlePastedFiles(files, editorState, handleOnChange)}
   />;
 };
 

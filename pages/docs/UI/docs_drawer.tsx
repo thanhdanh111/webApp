@@ -10,8 +10,9 @@ import { convertFromRaw, EditorState, CompositeDecorator } from 'draft-js';
 import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
 import DocsDrawerProjectUI from './docs_drawer_project_item';
-import { docsLinkDecorator } from 'pages/docs/UI/link_decorator';
+import { docsLinkDecorator } from 'pages/docs/UI/decorator_link';
 import { DocProject, PageContent } from '../logic/docs_reducer';
+import { docsImageDecorator } from './decorator_image';
 
 interface DocsDrawerData {
   docProjects: DocProject[];
@@ -55,6 +56,7 @@ const DocsDrawer = () => {
   function onClickProject(project) {
     const decorator = new CompositeDecorator([
       docsLinkDecorator,
+      docsImageDecorator,
     ]);
 
     dispatch(updateDocs({
@@ -71,6 +73,7 @@ const DocsDrawer = () => {
     const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: convertedEntityMap });
     const decorator = new CompositeDecorator([
       docsLinkDecorator,
+      docsImageDecorator,
     ]);
 
     dispatch(updateDocs({

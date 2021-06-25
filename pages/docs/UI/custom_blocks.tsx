@@ -138,6 +138,51 @@ export const OrderedListItemCustom = (props) => React.createElement(
   <EditorBlock {...props} />,
 );
 
+export const MediaBlockComponent = (props) =>  {
+  const entityKey = props?.block?.getEntityAt(0);
+  if (!entityKey) {
+
+    return <div />;
+  }
+
+  const entity = props?.contentState?.getEntity(entityKey);
+
+  return React.createElement(
+    React.Fragment,
+    { key: `block-${props?.block?.getKey()}` },
+    <SideToolbarButton
+      key={props?.block?.getKey()}
+      contentBlock={props?.block}
+      onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+      disableProtal={false}
+      children={undefined}
+      actionsNeedToRender={
+        sildeTextToolbarActions({
+          onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
+          handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+        })
+      }
+    />,
+    <Image
+      src={entity?.getData()?.url}
+    />,
+  );
+};
+
+const Image = ({ src }) => {
+  const defaultHeight = 480;
+  const defaultWidth = 600;
+
+  return <img
+    src={src ?? ''}
+    style={{
+      width: `${defaultWidth}px`,
+      height: `${defaultHeight}`,
+      marginLeft: '18px',
+    }}
+  />;
+};
+
 const IndexElement = (props) => {
   const currentContentBlock = props.block;
   const currentKey = currentContentBlock.getKey();

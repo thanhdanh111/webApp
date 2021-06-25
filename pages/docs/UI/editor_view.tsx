@@ -6,7 +6,8 @@ import { RootState } from 'redux/reducers_registration';
 import { SelectionState, EditorState, CompositeDecorator } from 'draft-js';
 import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions';
 import { showUpToolbarAndUpdateState } from '../logic/docs_inline_toolbar_actions';
-import { docsLinkDecorator } from 'pages/docs/UI/link_decorator';
+import { docsLinkDecorator } from 'pages/docs/UI/decorator_link';
+import { docsImageDecorator } from './decorator_image';
 
 interface EditorViewData {
   needDisplay: boolean;
@@ -65,10 +66,11 @@ const EditorView: FunctionComponent = () => {
 
   const decorator = new CompositeDecorator([
     docsLinkDecorator,
+    docsImageDecorator,
   ]);
 
   return <MyEditor
-    handleOnChangeStyleLine={onClickOptionInSideToolbar}
+    handleOnChangeLineStyle={onClickOptionInSideToolbar}
     onMoveBlockAction={(action) => onMoveBlockAction({
       action,
       dispatch,
