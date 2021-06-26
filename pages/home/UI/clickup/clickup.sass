@@ -339,11 +339,14 @@
           flex-direction: column
           min-height: max-content
           color: #7c828d
+
           .add-icon
             .MuiSvgIcon-root
               font-size: 18px
+
           .close-icon
             margin-right: 8px
+
           .badge-task
             border-radius: 50%;
 
@@ -363,6 +366,7 @@
             .MuiAvatar-colorDefault
               text-align: right;
               font-size: 12px;
+
             .no-user-assign
               border-radius: 50px
               padding: 2px
@@ -374,6 +378,7 @@
             .icon-add 
               .date-text
                 font-size: 11px
+                
             .urgent-icon
               color: #f24423
 
@@ -427,12 +432,13 @@
       .icon-add-task
         color: #d3d3d3
 
-    .add-task:hover
-      color: #50ac55
-      cursor: pointer
-
-      .icon-add-task
+    .add-task
+      &:hover
         color: #50ac55
+        cursor: pointer
+
+        .icon-add-task
+          color: #50ac55
 
 .user-popup
   .avata-popup
