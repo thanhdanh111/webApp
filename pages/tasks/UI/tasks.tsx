@@ -9,7 +9,7 @@ interface InitialProp {
   task: Task;
 }
 
-const TaskItem: FunctionComponent<InitialProp> = (props: InitialProp) => {
+const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
 
   const { task }: InitialProp = props;
 
@@ -23,7 +23,7 @@ const TaskItem: FunctionComponent<InitialProp> = (props: InitialProp) => {
                 <Typography component='span' className='task-name'>{taskName}</Typography>
                 <AvatarGroup max={2}>
                     {checkArray(task?.userIDs) ?
-                    task.userIDs.map((user) => {
+                    task?.userIDs?.map((user) => {
                       return (
                         <Avatar key={user.email} alt={user.firstName} src={user.profilePicture} />
                       );
@@ -37,4 +37,4 @@ const TaskItem: FunctionComponent<InitialProp> = (props: InitialProp) => {
   );
 };
 
-export default (TaskItem);
+export default (TasksUI);

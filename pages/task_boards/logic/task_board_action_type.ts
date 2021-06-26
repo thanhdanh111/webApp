@@ -1,4 +1,4 @@
-export const dashboardClickUp = {
+export const taskBoardsActionType = {
   GET_TASK_STATUS: 'GET_TASK_STATUS',
   SET_LOADING: 'SET_LOADING',
   HIDE_LOADER_LIST: 'HIDE_LOADER_LIST',
@@ -8,4 +8,5 @@ export const dashboardClickUp = {
   SET_SELECTED_TASKBOARD: 'SET_SELECTED_TASKBOARD',
   HAS_NO_DATA: 'HAS_NO_DATA',
   CREATE_TASK_BOARD: 'CREATE_TASK_BOARD',
+  CREATE_TASK_STATUS: 'CREATE_TASK_STATUS',
 };

@@ -1,36 +1,36 @@
-import { dashboardClickUp } from './home_type';
+import { taskBoardsActionType } from './task_board_action_type';
 
 export const setFilterTaskByUserAction = (res: boolean) => {
   return {
-    type: dashboardClickUp.FILTERING_TASK_BY_USER,
+    type: taskBoardsActionType.FILTERING_TASK_BY_USER,
     payload: res,
   };
 };
 
 export const getTasksStatusByID = (res: object) => {
   return {
-    type: dashboardClickUp.GET_TASK_STATUS_BY_ID,
+    type: taskBoardsActionType.GET_TASK_STATUS_BY_ID,
     payload: res,
   };
 };
 
 export const getTaskStatus = (res: object) => {
   return {
-    type: dashboardClickUp.GET_TASK_STATUS,
+    type: taskBoardsActionType.GET_TASK_STATUS,
     payload: res,
   };
 };
 
 export const setLoading = (loading: boolean) => {
   return {
-    type: dashboardClickUp.SET_LOADING,
+    type: taskBoardsActionType.SET_LOADING,
     payload: loading,
   };
 };
 
 export const setSelectedTaskBoard = (res: object) => {
   return {
-    type: dashboardClickUp.SET_SELECTED_TASKBOARD,
+    type: taskBoardsActionType.SET_SELECTED_TASKBOARD,
     payload: {
       currentTaskBoard: res,
     },
@@ -40,13 +40,20 @@ export const setSelectedTaskBoard = (res: object) => {
 export const getTaskBoard = (data: object) => {
   return {
     data,
-    type: dashboardClickUp.GET_TASK_BOARD,
+    type: taskBoardsActionType.GET_TASK_BOARD,
   };
 };
 
 export const createdTaskBoard = (data: object) => {
   return {
     data,
-    type: dashboardClickUp.CREATE_TASK_BOARD,
+    type: taskBoardsActionType.CREATE_TASK_BOARD,
+  };
+};
+
+export const createdTaskStatus = (data: object) => {
+  return {
+    data,
+    type: taskBoardsActionType.CREATE_TASK_STATUS,
   };
 };

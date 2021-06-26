@@ -1,4 +1,4 @@
-import { dashboardClickUp } from './home_type';
+import { taskBoardsActionType } from './task_board_action_type';
 import { TaskBoard, TaskStatus } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
@@ -9,10 +9,11 @@ import {
   createdTaskBoard,
   setSelectedTaskBoard,
   getTaskStatus,
-} from './home_actions';
+  createdTaskStatus,
+} from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 
-export interface HomeDataType {
+export interface TaskBoardsType {
   loading: boolean;
   taskStatus: { [key: string]: TaskStatus };
   currentTaskBoard: TaskBoard;
@@ -22,7 +23,7 @@ export interface HomeDataType {
   filteringTaskByUser: boolean;
 }
 
-const initialState: HomeDataType = {
+const initialState: TaskBoardsType = {
   loading: true,
   taskStatus: {},
   currentTaskBoard: {
@@ -35,24 +36,24 @@ const initialState: HomeDataType = {
   filteringTaskByUser: false,
 };
 
-export  const taskStatusesReducer = (state = initialState, action) => {
+export  const taskBoardsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case dashboardClickUp.SET_LOADING:
+    case taskBoardsActionType.SET_LOADING:
       return {
         ...state,
         loading: action.payload,
       };
-    case dashboardClickUp.FILTERING_TASK_BY_USER:
+    case taskBoardsActionType.FILTERING_TASK_BY_USER:
       return {
         ...state,
         filteringTaskByUser: action?.payload,
       };
-    case dashboardClickUp.SET_SELECTED_TASKBOARD:
+    case taskBoardsActionType.SET_SELECTED_TASKBOARD:
       return {
         ...state,
         currentTaskBoard: action?.payload?.currentTaskBoard,
       };
-    case dashboardClickUp.GET_TASK_STATUS:
+    case taskBoardsActionType.GET_TASK_STATUS:
       const taskStatus = {};
       taskStatus[action.payload?._id] = action.payload;
 
@@ -60,14 +61,26 @@ export  const taskStatusesReducer = (state = initialState, action) => {
         ...state,
         taskStatus: { ...state.taskStatus, ...taskStatus },
       };
-    case dashboardClickUp.GET_TASK_BOARD:
+    case taskBoardsActionType.GET_TASK_BOARD:
       return {
         taskBoards: action?.data?.list,
       };
-    case dashboardClickUp.CREATE_TASK_BOARD:
+    case taskBoardsActionType.CREATE_TASK_BOARD:
       return {
         ...state,
         taskBoards: [...state.taskBoards, action?.data],
+      };
+    case taskBoardsActionType.CREATE_TASK_STATUS:
+      const newTAskStatus = {};
+      newTAskStatus[action.data?._id] = action.data;
+
+      return {
+        ...state,
+        currentTaskBoard: {
+          ...state.currentTaskBoard,
+          taskStatusIDs: [...(state.currentTaskBoard?.taskStatusIDs as string[]), action.data?._id],
+        },
+        taskStatus: { ...state.taskStatus, ...newTAskStatus },
       };
     default:
       return state;
@@ -115,7 +128,7 @@ export const getTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
     if (!token || !taskStatusID) {
       return;
     }
-    // title is targetEntityName
+
     const res = await axios.get(`${config.BASE_URL}/taskStatuses/${taskStatusID}`,
       {
         headers: {
@@ -142,7 +155,7 @@ export const getTaskBoardThunkAction = () => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
     const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id; // '60487820340cd70008593306'; //
+    const departmentID = authState?.department?._id;
 
     if (!token || !companyID) {
       return;
@@ -214,9 +227,9 @@ export const createTaskBoardThunkAction = (title, description) => async (dispatc
 export const createTaskStatusThunkAction = (title) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const taskBoardID = getState().auth?.department?._id;
+    const taskBoardID = getState().taskBoards?.currentTaskBoard?._id;
 
-    if (!token) {
+    if (!token || !taskBoardID) {
       return;
     }
 
@@ -227,7 +240,7 @@ export const createTaskStatusThunkAction = (title) => async (dispatch, getState)
       taskBoardID,
     };
 
-    const res = await axios.post(`${config.BASE_URL}/taskBoards`,
+    const res = await axios.post(`${config.BASE_URL}/taskStatuses`,
       data,
       {
         headers: {
@@ -237,7 +250,7 @@ export const createTaskStatusThunkAction = (title) => async (dispatch, getState)
       });
 
     const notification = notificationsType[res.status];
-    await dispatch(createdTaskBoard(res.data));
+    await dispatch(createdTaskStatus(res.data));
     await dispatch(setLoading(false));
     await dispatch(pushNewNotifications({ variant: 'success' , message: notification }));
   } catch (error) {

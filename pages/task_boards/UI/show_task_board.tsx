@@ -12,8 +12,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { setSelectedTaskBoard } from 'pages/home/logic/home_actions';
-import { createTaskBoardThunkAction, getTaskBoardThunkAction, HomeDataType } from 'pages/home/logic/home_reducer';
+import { setSelectedTaskBoard } from '../logic/task_boards_action';
+import { createTaskBoardThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
 import { Close } from '@material-ui/icons';
 import { checkArray } from 'helpers/check_array';
 
@@ -24,7 +24,7 @@ const TaskBoardUI = () => {
     currentTaskBoard,
     hasNoData,
     loading,
-  }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
+  }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const [open, setOpen] = useState(false);
   const [titleTaskBoard, setTileTaskBoard] = useState('');
   const [descriptionTaskBoard, setDescriptionTaskBoard] = useState('');

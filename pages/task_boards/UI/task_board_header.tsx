@@ -16,14 +16,14 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import ListIcon from '@material-ui/icons/List';
 import TaskBoardUI from './show_task_board';
-import { HomeDataType } from 'pages/home/logic/home_reducer';
+import { TaskBoardsType } from '../logic/task_boards_reducer';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { setFilterTaskByUserAction } from 'pages/home/logic/home_actions';
+import { setFilterTaskByUserAction } from '../logic/task_boards_action';
 import { isAdminOrManagerUser } from 'helpers/check_role_user';
 
 const NavClickUp = () => {
   const dispatch = useDispatch();
-  const { filteringTaskByUser }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
+  const { filteringTaskByUser }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const auth = useSelector((state: RootStateOrAny) => state.auth);
   const companyID = auth?.extendedCompany?.companyID?._id;
   const departmentID = auth?.department?._id;
@@ -141,8 +141,8 @@ const NavClickUp = () => {
                   className={`btn ${btnShow}`}
                   onClick={onChangeMe}
                 >
-                  <div className='assign'>
-                    <PersonIcon className='icon' />
+                  <div className='assign assign-me'>
+                    <PersonIcon className='icon icon-me' />
                     <Typography className='text-per'>Me</Typography>
                   </div>
                 </Button>
@@ -153,7 +153,7 @@ const NavClickUp = () => {
                   onClick={onChangeAll}
                 >
                   <div className='assign assign-other'>
-                    <PeopleAltIcon className='icon' />
+                    <PeopleAltIcon className='icon icon-other' />
                   </div>
                 </Button>
               </div>

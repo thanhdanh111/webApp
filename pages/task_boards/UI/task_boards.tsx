@@ -1,9 +1,9 @@
-import { HomeDataType } from 'pages/home/logic/home_reducer';
+import { createTaskStatusThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
 import React, { FunctionComponent, useState } from 'react';
-import { RootStateOrAny, useSelector } from 'react-redux';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
-import TaskStatusUI from './statuses_clickup';
-import NavClickUp from './nav_clickup';
+import TaskStatusUI from '../../task_statuses/UI/task_statuses';
+import NavClickUp from './task_board_header';
 import { Typography } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
@@ -12,8 +12,10 @@ const BoardTasks: FunctionComponent = () => {
   const {
     loading,
     currentTaskBoard,
-  }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
+  }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
+  const dispatch = useDispatch();
   const [isAddStatus, setIsAddStatus] = useState(false);
+  const [title, setTitle] = useState('');
 
   const GenerateTaskStatuses = () => {
     if (!currentTaskBoard) {
@@ -36,11 +38,11 @@ const BoardTasks: FunctionComponent = () => {
   const addTaskStatusUI = () => {
     return (
       <div className='add-status-modal'>
-        <input placeholder='STATUS NAME' className='add-status-input' />
-        <div className='close-create-status'>
+        <input className='add-status-input' placeholder='STATUS NAME' onChange={(event) => setTitle(event.target.value)} />
+        <div className='close-create-status' onClick={() => setIsAddStatus(false)}>
           <CloseIcon className='close-create-status-icon' />
         </div>
-        <div className='submit-create-status'>
+        <div className='submit-create-status' onClick={() => dispatch(createTaskStatusThunkAction(title))} >
           <CheckIcon className='submit-create-status-icon' />
         </div>
       </div>
@@ -55,10 +57,14 @@ const BoardTasks: FunctionComponent = () => {
           <>
             {GenerateTaskStatuses()}
             <div className='add-task task-status'>
-              <div className='status' onClick={() => setIsAddStatus(true)}>
-                {!isAddStatus ?
-                  <Typography component='span' className='add-task-text'>NEW STATUS</Typography>
-                : addTaskStatusUI()}
+              <div className='status'>
+                {isAddStatus &&
+                  addTaskStatusUI()}
+                {!isAddStatus &&
+                  <Typography component='span' className='add-task-text'  onClick={() => setIsAddStatus(true)}>
+                    NEW STATUS
+                  </Typography>
+                }
               </div>
             </div>
           </>}
