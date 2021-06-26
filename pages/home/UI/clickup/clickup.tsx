@@ -11,21 +11,21 @@ import CloseIcon from '@material-ui/icons/Close';
 const BoardTasks: FunctionComponent = () => {
   const {
     loading,
-    taskStatus,
+    currentTaskBoard,
   }: HomeDataType = useSelector((state: RootStateOrAny) => state.taskStatuses);
   const [isAddStatus, setIsAddStatus] = useState(false);
 
   const GenerateTaskStatuses = () => {
-    if (!taskStatus) {
+    if (!currentTaskBoard) {
       return;
     }
 
-    return Object.keys(taskStatus)?.map((key) => {
+    return currentTaskBoard?.taskStatusIDs?.map((each) => {
       return (
           <>
             <TaskStatusUI
-              key={key}
-              taskStatusID={taskStatus[key]}
+              key={each}
+              taskStatusID={each}
             />
           </>
       );

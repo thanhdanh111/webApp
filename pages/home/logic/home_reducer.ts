@@ -8,7 +8,7 @@ import {
   getTaskBoard,
   createdTaskBoard,
   setSelectedTaskBoard,
-  getTaskStatuses,
+  getTaskStatus,
 } from './home_actions';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 
@@ -52,10 +52,13 @@ export  const taskStatusesReducer = (state = initialState, action) => {
         ...state,
         currentTaskBoard: action?.payload?.currentTaskBoard,
       };
-    case dashboardClickUp.GET_TASK_STATUSES:
+    case dashboardClickUp.GET_TASK_STATUS:
+      const taskStatus = {};
+      taskStatus[action.payload?._id] = action.payload;
+
       return {
         ...state,
-        taskStatus: action.payload,
+        taskStatus: { ...state.taskStatus, ...taskStatus },
       };
     case dashboardClickUp.GET_TASK_BOARD:
       return {
@@ -105,6 +108,35 @@ export const getTaskStatusByIDThunkAction = (title, taskStatusID) => async (disp
   }
 };
 
+export const getTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    if (!token || !taskStatusID) {
+      return;
+    }
+    // title is targetEntityName
+    const res = await axios.get(`${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    if (!res.data) {
+      await dispatch(setLoading(false));
+
+      return;
+    }
+
+    await dispatch(getTaskStatus(res.data));
+    await dispatch(setLoading(false));
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getTaskBoardThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
@@ -136,28 +168,6 @@ export const getTaskBoardThunkAction = () => async (dispatch, getState) => {
 
     await dispatch(getTaskBoard(res?.data));
     await dispatch(setSelectedTaskBoard(res?.data?.list[0]));
-
-    const dataRes: TaskStatus[] = await Promise.all(res?.data?.list[0]?.taskStatusIDs?.map((item) => {
-      return new Promise(async (rel) => {
-        // item string _id => get api for each _id
-        const taskStatusRes = await axios.get(`${config.BASE_URL}/taskStatuses/${item}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-        rel(taskStatusRes?.data);
-      });
-    }));
-
-    const hash: { [key: string]: TaskStatus } = {};
-    dataRes.forEach((item: TaskStatus) => {
-      hash[item._id] = item;
-    });
-
-    await dispatch(getTaskStatuses(hash));
     await dispatch(setLoading(false));
   } catch (error) {
     throw error;

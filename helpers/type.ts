@@ -130,14 +130,15 @@ export interface Task {
 
 export interface TaskStatus {
   _id: string;
-  companyID?: Company | string;
-  departmentID?: Department | string;
-  taskBoardID: TaskBoard | string;
+  companyID?: Company;
+  departmentID?: Department;
+  taskBoardID: string;
   title: string;
   taskIDs: Task[];
   description?: string;
-  createdBy?: User | string;
+  createdBy?: User;
 }
+
 export interface CheckInCheckOut {
   checkInAt?: string;
   checkOutAt?: string;

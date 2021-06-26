@@ -14,9 +14,9 @@ export const getTasksStatusByID = (res: object) => {
   };
 };
 
-export const getTaskStatuses = (res: object) => {
+export const getTaskStatus = (res: object) => {
   return {
-    type: dashboardClickUp.GET_TASK_STATUSES,
+    type: dashboardClickUp.GET_TASK_STATUS,
     payload: res,
   };
 };
