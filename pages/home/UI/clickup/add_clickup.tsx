@@ -4,16 +4,15 @@ import {
   InputBase,
   Link,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import Tooltip from '@material-ui/core/Tooltip';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { addTaskThunkAction } from 'pages/home/logic/home_reducer';
-import { setTypeCreateTask } from 'pages/home/logic/home_actions';
+import { setTypeCreateTask, updateNewTask } from 'pages/home/logic/home_actions';
 import Panel from './panel_task_clickup';
-import { Task } from 'helpers/type';
 import AssignUser from './assign_user_clickup';
 
 interface InitProps {
@@ -22,20 +21,12 @@ interface InitProps {
 }
 
 const AddTask: React.FC<InitProps> = (props) => {
-  const [task, setTask] = useState<Task>({ title: '' });
   const dispatch = useDispatch();
-  const authState = useSelector((state: RootStateOrAny) => state.auth);
-  const [userAssign, setUserAssign] = useState([
-    {
-      _id: authState.userID,
-      profilePhoto: authState.userProfile.profilePhoto,
-      fullName: `
-        ${authState.userProfile.firstName} ${authState.userProfile.lastName}`,
-    },
-  ]);
+  const newTask = useSelector((state: RootStateOrAny) => state.taskStatuses.newTask);
+  const usersAssigned = useSelector((state: RootStateOrAny) => state.taskStatuses.usersAssigned);
 
   const onChangeTitle = (event) => {
-    setTask({ ...task, [event.target.name]: event.target.value });
+    dispatch(updateNewTask({ ...newTask, title: event.target.value }));
 
     if (event.keyCode !== 13) {
       return;
@@ -45,45 +36,37 @@ const AddTask: React.FC<InitProps> = (props) => {
   };
 
   const addNewTask = () => {
-    if (!task.title) {
+    if (!newTask.title) {
       return;
     }
 
-    const newTask = {
-      ...task,
+    dispatch(updateNewTask({
+      ...newTask,
       taskStatusID: props.taskStatusID,
-      userIDs: userAssign.map((user) => user?._id),
-    };
-    dispatch(addTaskThunkAction(newTask, props.companyID));
-    dispatch(setTypeCreateTask(''));
+      userIDs: usersAssigned.map((user) => user?._id),
+    }));
+
+    dispatch(addTaskThunkAction(props.companyID));
   };
 
   return (
     <Box className='task-add' position='relative' mx={3}>
       <Box display='flex' flexDirection='row' alignItems='center'>
-        <Box
-          className='icon-add'
-          onClick={() => dispatch(setTypeCreateTask(''))}
-        >
-          <CloseIcon />
-        </Box>
-        <Box mx={1}>
+          <CloseIcon onClick={() => dispatch(setTypeCreateTask(''))} className='icon-add close-icon'/>
           <InputBase
             placeholder="Task name or type '/' for commands"
             name='title'
             onKeyUp={onChangeTitle}
           />
-        </Box>
-        <AssignUser userAssign={userAssign} setUserAssign={setUserAssign} />
+        <AssignUser/>
       </Box>
-      <Box height='25px' />
-      <Box display='flex' px={2} pb={'10px'} fontWeight={100}>
-        <Panel setTask={setTask} task={task} />
+      <Box display='flex' px={2} pb={'10px'} mt={'25px'} fontWeight={100}>
+        <Panel/>
       </Box>
       <Box position='absolute' bottom={10} right={10}>
         <Tooltip
           title={
-            task.title
+            newTask.title
               ? 'Press enter to save (ctrl+enter to open)'
               : 'Please type a task name'
           }
@@ -114,16 +97,16 @@ const AddTask: React.FC<InitProps> = (props) => {
         className='direct-add'
       >
         <Box className='box-direct'>
-          <Box>
+          <div>
             <Link className='actions-status'>
               <ArrowUpwardIcon className='icon-direct' fontSize='small' />
             </Link>
-          </Box>
-          <Box>
+          </div>
+          <div>
             <Link className='actions-status'>
               <ArrowDownwardIcon className='icon-direct' fontSize='small' />
             </Link>
-          </Box>
+          </div>
         </Box>
       </Box>
     </Box>

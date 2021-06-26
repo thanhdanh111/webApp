@@ -46,3 +46,24 @@ export const setTypeCreateTask = (data) => {
     payload: data,
   };
 };
+
+export const updateNewTask = (newTask) => {
+  return {
+    type: dashboardClickUp.UPDATE_NEW_TASK,
+    payload: newTask,
+  };
+};
+
+export const assignUser = (user) => {
+  return {
+    type: dashboardClickUp.ASSIGN_USER,
+    payload: user,
+  };
+};
+
+export const unassignUser = (userID) => {
+  return {
+    type: dashboardClickUp.UNASSIGN_USER,
+    payload: userID,
+  };
+};

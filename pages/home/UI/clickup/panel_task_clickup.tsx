@@ -11,11 +11,12 @@ import EventOutlinedIcon from '@material-ui/icons/EventOutlined';
 import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined';
 import HourglassEmptyOutlinedIcon from '@material-ui/icons/HourglassEmptyOutlined';
 import React from 'react';
-import { Task } from 'helpers/type';
 import moment from 'moment';
 import CloseIcon from '@material-ui/icons/Close';
 import DateIconPicker from './date_picker_clickup';
-import DatetimeIconPicker from './datetime_picker';
+import DatetimeIconPicker from './date_and_time_picker';
+import { updateNewTask } from 'pages/home/logic/home_actions';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 
 const priorityLevel = [
   {
@@ -40,7 +41,7 @@ const priorityLevel = [
   },
   {
     text: 'Clear',
-    value: 'CLEAR',
+    value: '',
     color: '#F8B6B1',
   },
 ];
@@ -52,34 +53,32 @@ enum TypePiority {
   LOW = 'low-icon',
 }
 
-interface InitProps {
-  setTask: (e) => void;
-  task: Task;
-}
+const Panel: React.FC = () => {
+  const newTask = useSelector((state: RootStateOrAny) => state.taskStatuses.newTask);
+  const dispatch = useDispatch();
 
-const Panel: React.FC<InitProps> = (props) => {
   const onChoosingValue = (priority) => {
-    props.setTask({ ...props.task, priority });
+    dispatch(updateNewTask({ ...newTask, priority }));
   };
 
   const onChangeDate = (event) => {
     if (event.name === 'estimateDate') {
-      props.setTask({
-        ...props.task,
+      dispatch(updateNewTask({
+        ...newTask,
         [event.name]: moment(event.value).endOf('day').toString(),
-      });
+      }));
 
       return;
     }
 
-    props.setTask({ ...props.task, [event.name]: event.value.toString() });
+    dispatch(updateNewTask({ ...newTask, [event.name]: event.value.toString() }));
   };
 
   return (
     <Grid
       container
       justify='flex-start'
-      spacing={props.task.startDate ? 1 : 2}
+      spacing={newTask.startDate ? 1 : 2}
       className='grid-icon'
     >
       <Grid item>
@@ -87,12 +86,11 @@ const Panel: React.FC<InitProps> = (props) => {
           {(popupState) => (
             <React.Fragment>
               <Tooltip title='Set Priority' arrow={true} placement='top'>
-                <Box className='icon-add' {...bindTrigger(popupState)}>
                   <OutlinedFlagIcon
                     fontSize='small'
-                    className={TypePiority[props.task.priority || '']}
+                    className={`icon-add ${TypePiority[newTask.priority || '']}`}
+                    {...bindTrigger(popupState)}
                   />
-                </Box>
               </Tooltip>
               <Menu
                 {...bindMenu(popupState)}
@@ -108,7 +106,7 @@ const Panel: React.FC<InitProps> = (props) => {
                     }}
                   >
                     <Box display='flex' alignItems='center'>
-                      {val.value === 'CLEAR' ? (
+                      {val.value === '' ? (
                         <CloseIcon
                           fontSize='small'
                           className='icon-popup'
@@ -145,9 +143,9 @@ const Panel: React.FC<InitProps> = (props) => {
           onChangeDate={onChangeDate}
           title='Due Date'
           minDateTime={
-            props.task.startDate
-              ? moment(props.task.startDate) > moment()
-                ? props.task.startDate
+            newTask.startDate
+              ? moment(newTask.startDate) > moment()
+                ? newTask.startDate
                 : moment()
               : moment()
           }

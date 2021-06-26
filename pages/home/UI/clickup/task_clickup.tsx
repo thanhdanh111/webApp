@@ -19,7 +19,7 @@ const TaskItem = (props: Task) => {
                     {checkArray(props?.userIDs) ?
                     props?.userIDs?.map((user) => {
                       return (
-                        <Avatar key={user.email} alt={user.firstName} src={user.profilePicture} />
+                        <Avatar key={user?.email} alt={user?.firstName} src={user?.profilePicture} />
                       );
                     }) : null}
                 </AvatarGroup>

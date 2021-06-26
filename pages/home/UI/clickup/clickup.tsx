@@ -16,7 +16,7 @@ const BoardTasks: FunctionComponent = () => {
   const companyID = authState?.extendedCompany?.companyID?._id;
   const departmentID = authState?.department?._id;
   const [showTask, setShowTask] = useState('me');
-  const typeCreateTask = taskStatuses.typeCreateTask;
+  const currentTaskStatus = taskStatuses.currentTaskStatus;
 
   useEffect(() => {
     void fetchData();
@@ -43,7 +43,7 @@ const BoardTasks: FunctionComponent = () => {
             departmentID={departmentID}
             listTasks={taskStatuses.listTasks}
             showTask={showTask}
-            typeCreateTask={typeCreateTask}
+            currentTaskStatus={currentTaskStatus}
           />
         </>
       );

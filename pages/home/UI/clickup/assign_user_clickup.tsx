@@ -13,27 +13,19 @@ import {
   useDebounce,
 } from 'pages/users/logic/users_reducer';
 import { useEffect, useState } from 'react';
+import { assignUser, unassignUser } from 'pages/home/logic/home_actions';
 
-interface UserAssign {
-  _id: string;
-  profilePhoto: string;
-  fullName: string;
-}
-interface InitProps {
-  setUserAssign: (e) => void;
-  userAssign: UserAssign[];
-}
-
-const AssignUser: React.FC<InitProps> = (props) => {
+const AssignUser: React.FC = () => {
   const dispatch = useDispatch();
   const authState = useSelector((state: RootStateOrAny) => state.auth);
   const listUser = useSelector((state: RootStateOrAny) => state.users);
+  const usersAssigned = useSelector((state: RootStateOrAny) => state.taskStatuses.usersAssigned);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
 
   const isAssignUser = (user) => {
     return (
-      props.userAssign.filter((assign) => assign._id === user.userID._id)
+      usersAssigned.filter((assign) => assign._id === user.userID._id)
         .length !== 0
     );
   };
@@ -46,6 +38,12 @@ const AssignUser: React.FC<InitProps> = (props) => {
   }, [debouncedSearchTerm]);
 
   useEffect(() => {
+    dispatch(assignUser({
+      _id: authState.userID,
+      profilePhoto: authState.userProfile.profilePhoto,
+      fullName: `
+        ${authState.userProfile.firstName} ${authState.userProfile.lastName}`,
+    }));
     getUser();
   }, []);
 
@@ -53,21 +51,17 @@ const AssignUser: React.FC<InitProps> = (props) => {
     dispatch(getPaginationThunkAction());
   };
 
-  const assignUser = (user) => {
-    isAssignUser(user)
-      ? props.setUserAssign([
-        ...props.userAssign.filter(
-            (assign) => assign._id !== user.userID._id,
-          ),
-      ])
-      : props.setUserAssign([
-        ...props.userAssign,
-        {
-          _id: user.userID._id,
-          profilePhoto: user.userID.profilePhoto,
-          fullName: `${user.userID.firstName} ${user.userID.lastName}`,
-        },
-      ]);
+  const updateUsersAssigned = (user) => {
+    if (isAssignUser(user)){
+      dispatch(unassignUser(user.userID._id));
+
+      return;
+    }
+    dispatch(assignUser({
+      _id: user.userID._id,
+      profilePhoto: user.userID.profilePhoto,
+      fullName: `${user.userID.firstName} ${user.userID.lastName}`,
+    }));
   };
 
   const handleChange = (event) => {
@@ -78,18 +72,16 @@ const AssignUser: React.FC<InitProps> = (props) => {
     const user = debouncedSearchTerm ? listUser.listSearch : listUser.list;
     const renderUser = user.map((userAccess) => {
       return (
-        <MenuItem key={userAccess?._id} onClick={() => assignUser(userAccess)}>
+        <MenuItem key={userAccess?._id} onClick={() => updateUsersAssigned(userAccess)}>
           <Box
             display='flex'
             alignItems='center'
             className={isAssignUser(userAccess) ? 'user-accept' : ''}
           >
-            <Box mr={2}>
               <Avatar
                 src={userAccess.userID.profilePhoto}
                 className='avata-popup'
               />
-            </Box>
             <span className='name-popup'>
               {`${userAccess.userID.firstName} ${userAccess.userID.lastName}`}
             </span>
@@ -111,8 +103,8 @@ const AssignUser: React.FC<InitProps> = (props) => {
             className='group-avatar-task'
             {...bindTrigger(popupState)}
           >
-            {props.userAssign.length > 0 ? (
-              props.userAssign.map((user) => (
+            {usersAssigned.length > 0 ? (
+              usersAssigned.map((user) => (
                 <Badge
                   key={user._id}
                   overlap='circle'
@@ -151,7 +143,6 @@ const AssignUser: React.FC<InitProps> = (props) => {
             autoFocus={false}
             className='user-popup'
           >
-            <Box>
               <Box display='flex' alignItems='center' px={'16px'} py={'6px'}>
                 <SearchIcon className='icon-search' />
                 <Input
@@ -171,7 +162,6 @@ const AssignUser: React.FC<InitProps> = (props) => {
               >
                 {generateUser()}
               </InfiniteScroll>
-            </Box>
           </Menu>
         </div>
       )}

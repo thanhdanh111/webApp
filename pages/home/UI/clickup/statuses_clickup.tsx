@@ -1,5 +1,5 @@
 import { Container, Link, Typography } from '@material-ui/core';
-import React from 'react';
+import React, { useRef } from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import { Task, TaskStatusType } from 'helpers/type';
@@ -18,14 +18,15 @@ interface InitProps {
   companyID: string | '';
   departmentID: string | '';
   showTask: string;
-  typeCreateTask: string;
+  currentTaskStatus: string;
 }
 
 const TaskStatus = (props: InitProps) => {
 
-  const { taskStatus, listTasks, user, companyID, departmentID, showTask, typeCreateTask }: InitProps = props;
+  const { taskStatus, listTasks, user, companyID, departmentID, showTask, currentTaskStatus }: InitProps = props;
   const style = taskStatus?.title?.split(' ').join('-').toLowerCase();
   const dispatch = useDispatch();
+  const newTaskRef = useRef<HTMLTitleElement>(null);
 
   const GenerateTasks = () => {
 
@@ -49,11 +50,18 @@ const TaskStatus = (props: InitProps) => {
     return;
   };
 
+  const scrollInput = () => {
+    if (!newTaskRef.current) {
+      return;
+    }
+    newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   return (
     <div className='task-status'>
       <div className={`status ${style}`}>
         <Container className='status-left'>
-          <Typography className='name-status'>{taskStatus?.title}</Typography>
+          <Typography className='name-status'ref={newTaskRef}>{taskStatus?.title}</Typography>
           <Typography className='quality-task'>{taskStatus?.taskIDs.length}</Typography>
         </Container>
         <Container className='status-right'>
@@ -67,9 +75,20 @@ const TaskStatus = (props: InitProps) => {
         </Container>
       </div>
       <div className='status-task-list'>
+        {
+          currentTaskStatus === taskStatus?._id &&
+           <AddTask companyID={companyID} taskStatusID={taskStatus._id} />
+        }
         {GenerateTasks()}
         {
-          typeCreateTask === taskStatus?._id ? <AddTask companyID={companyID} taskStatusID={taskStatus._id} /> : <div className='add-task' onClick={() => dispatch(setTypeCreateTask(taskStatus?._id || ''))}>
+          currentTaskStatus !== taskStatus?._id &&
+          <div
+            className='add-task'
+            onClick={() => {
+              dispatch(setTypeCreateTask(taskStatus?._id || ''));
+              scrollInput();
+            }}
+          >
             <Link className='icon-add-task'><AddIcon /></Link>
             <Typography component='span' className='text-add-task'>NEW TASK</Typography>
           </div>

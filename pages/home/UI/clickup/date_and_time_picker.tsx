@@ -29,7 +29,7 @@ const DatetimeIconPicker: React.FC<InitProps> = (props) => {
         open={openDatePicker}
         onOpen={() => setOpenDatePicker(true)}
         onClose={() => setOpenDatePicker(false)}
-        value={date}
+        value={date || moment()}
         onChange={(event) => {
           setDate(event?.toString() || '');
           props.onChangeDate({ name: props.name, value: event });

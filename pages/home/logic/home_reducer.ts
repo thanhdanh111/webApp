@@ -3,7 +3,13 @@ import { Task, TaskStatusType } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { getDataTaskStatuses, hideLoaderListUser, getDataTasksByUserThunkAction, getTasksStatusByID, addTask } from './home_actions';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
 
+interface UserAssigned {
+  _id: string;
+  profilePhoto: string;
+  fullname: string;
+}
 interface Data {
   loading: boolean;
   totalCount: number;
@@ -14,7 +20,14 @@ interface Data {
   taskTotalCount: number;
   taskCursor: string;
   taskStatusNotification: TaskStatusType;
-  typeCreateTask: string;
+  currentTaskStatus: string;
+  newTask: Task;
+  usersAssigned: UserAssigned[];
+}
+
+export enum NotificationTypes {
+  failCreateTask = 'Failed Create Task',
+  succeedCreateTask = 'Create Task Successfully',
 }
 
 const initialState: Data = {
@@ -32,9 +45,12 @@ const initialState: Data = {
     taskIDs: [],
     description: '',
   },
-  typeCreateTask: '',
+  currentTaskStatus: '',
+  newTask: { title: '' },
+  usersAssigned: [],
 };
 
+// tslint:disable-next-line:cyclomatic-complexity
 export  const taskStatusesReducer = (state = initialState, action) => {
   switch (action.type) {
     case dashboardClickUp.SHOW_LOADER_LIST:
@@ -93,12 +109,35 @@ export  const taskStatusesReducer = (state = initialState, action) => {
       return {
         ...state,
         list: [...taskTypes],
+        currentTaskStatus: '',
+        usersAssigned: [],
       };
     case dashboardClickUp.SET_TYPE_CREATE_TASK:
+      if (state.currentTaskStatus === action.payload){
+        return { ...state };
+      }
 
       return {
         ...state,
-        typeCreateTask: action.payload,
+        currentTaskStatus: action.payload,
+        newTask: { title: '' },
+        usersAssigned: [],
+      };
+    case dashboardClickUp.UPDATE_NEW_TASK:
+
+      return {
+        ...state,
+        newTask: { ...action.payload },
+      };
+    case dashboardClickUp.ASSIGN_USER:
+      return {
+        ...state,
+        usersAssigned: [...state.usersAssigned, action.payload],
+      };
+    case dashboardClickUp.UNASSIGN_USER:
+      return {
+        ...state,
+        usersAssigned: state.usersAssigned.filter((user) => action.payload !== user._id),
       };
     default:
       return state;
@@ -203,14 +242,16 @@ export const getTaskStatusByIDThunkAction = (tittle, taskStatusID) => async (dis
   }
 };
 
-export const addTaskThunkAction = (task, companyID) => async (dispatch) => {
+export const addTaskThunkAction = (companyID) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     if (!token || !companyID) {
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failCreateTask }));
+
       return;
     }
     const res = await axios.post(`${config.BASE_URL}/companies/${companyID}/tasks`,
-      task,
+    getState().taskStatuses.newTask,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -218,7 +259,15 @@ export const addTaskThunkAction = (task, companyID) => async (dispatch) => {
         },
       });
     dispatch(addTask(res.data));
+    dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateTask }));
   } catch (error) {
+    dispatch(
+      pushNewNotifications({
+        variant: 'error',
+        message:
+          error?.response?.data?.message || NotificationTypes.failCreateTask,
+      }),
+    );
     throw error;
   }
 };
