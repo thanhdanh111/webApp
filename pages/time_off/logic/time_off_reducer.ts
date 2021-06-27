@@ -18,6 +18,7 @@ const initialState: TimeOffValue = {
   notFoundAnyOwnTimeOffs: false,
   onConfirm: false,
   onSelectTimeOffData: {},
+  dayOff: {},
 };
 
 function updateStatusTimeOffReducer({ action, state }) {
@@ -94,6 +95,12 @@ const timeOffReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.data,
+      };
+    case TimeOffActionTypes.getTimeOffByID:
+
+      return {
+        ...state,
+        dayOff: action.data,
       };
     default:
       return state;

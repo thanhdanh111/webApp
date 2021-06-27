@@ -12,7 +12,7 @@ export interface User {
   _id: string;
   firstName?: string;
   lastName?: string;
-  profilePicture?: string;
+  profilePhoto?: string;
   gender?: string;
   address?: string;
   phoneNumber?: string;
@@ -218,4 +218,16 @@ export interface ProjectState {
 export interface ChannelIDData {
   _id: string;
   channelID: string;
+}
+
+export interface DayOff {
+  departmentID?: Department;
+  status?: string;
+  reason?: string;
+  description?: string;
+  _id?: string;
+  startTime?: string;
+  endTime?: string;
+  companyID?: Company;
+  createdBy?: User;
 }
