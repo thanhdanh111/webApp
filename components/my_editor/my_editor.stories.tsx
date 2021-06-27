@@ -5,7 +5,7 @@ import MyEditor from './my_editor';
 
 storiesOf('My Editor', module).add('Header', () => {
   return <MyEditor
-    handleOnChangeStyleLine={() => 'handled'}
+    handleOnChangeLineStyle={() => 'handled'}
     onMoveBlockAction={() => 'handled'}
     key='my-editor'
     handleChangeEditorState={() => 'handled'}
