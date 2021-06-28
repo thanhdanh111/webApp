@@ -24,10 +24,10 @@ const StatisticsCard: React.FunctionComponent<BodyProps> = ({ title, numTitle, v
       <CardContent className='page-card-content'>
         <Grid container>
           <Grid item xs={6}>
-            <Typography color='textSecondary' gutterBottom>
+            <Typography color='textSecondary' gutterBottom className='page-card-title'>
               {title.toUpperCase()}
             </Typography>
-            <Typography variant='h5' component='h3'>
+            <Typography className='page-card-numtitle' variant='h5' component='h3'>
               {numTitle}
             </Typography>
           </Grid>

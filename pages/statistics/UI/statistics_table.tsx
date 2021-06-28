@@ -10,7 +10,7 @@ const StatisticsTable: FunctionComponent = () => {
   const statisticsList = statistics.checkInCheckOuts;
 
   return (
-    <Box className='statistics-table' >
+    <Box className='statistics-table'>
       <Typography className='table-title' >Detail Time</Typography>
       <TableContainer>
         <Table aria-label='simple table'>

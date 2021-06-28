@@ -1,8 +1,14 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { Token } from 'helpers/type';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { updateCompanyOnSending } from './company_actions';
-import { handleCompanyErrors, handleEmptyField } from './company_errors';
+import { handleEmptyField } from './company_errors';
+
+const notificationsType = {
+  200: 'Sent your letter successfully',
+  400: 'You have no company right now!',
+};
 
 export const sendSlackCompanyToken = () => async (dispatch, getState) => {
   try {
@@ -14,7 +20,8 @@ export const sendSlackCompanyToken = () => async (dispatch, getState) => {
     if (!token || !companyID || !slackToken?.length) {
       const emptyNotification = handleEmptyField({ contentFields: { companyID, slackToken } });
 
-      await dispatch(updateCompanyOnSending({ loading: false, notifications: [emptyNotification] }));
+      await dispatch(updateCompanyOnSending({ loading: false }));
+      await dispatch(pushNewNotifications({ variant: 'error' , message: emptyNotification['message'] }));
 
       return;
     }
@@ -33,12 +40,12 @@ export const sendSlackCompanyToken = () => async (dispatch, getState) => {
       },
     });
 
-    const notification = handleCompanyErrors({ statusCode: res.status });
-
-    await dispatch(updateCompanyOnSending({ loading: false, notifications: [notification] }));
+    const notification = notificationsType[res.status];
+    await dispatch(updateCompanyOnSending({ loading: false }));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: notification }));
   } catch (error) {
-    const notification = handleCompanyErrors({ statusCode: error?.response?.status });
-
-    await dispatch(updateCompanyOnSending({ loading: false, notifications: [notification] }));
+    const notification = notificationsType[error?.response?.status] || 'Something went wrong';
+    await dispatch(updateCompanyOnSending({ loading: false }));
+    await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
   }
 };

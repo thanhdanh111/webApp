@@ -15,9 +15,16 @@
     font-size: 20
     font-weight: 600
   
-
   .table-header
     background-color: #f6f9fc
     color: #8999ab
     font-size: 0.875rem
 
+@media screen and ( max-width: 410px)
+  .statistics-table
+    .table-header
+      font-size: 0.69rem 
+
+@media screen and ( min-width: 960px )
+  .statistics-table
+    width: calc(100vw - 1.7rem - var(--drawer-width))

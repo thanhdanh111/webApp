@@ -16,7 +16,6 @@ const initialState: InviteValue = {
     departments: [],
   },
   inviteLoading: false,
-  inviteResultInfo: [],
   hasNoCompanies: false,
 };
 
@@ -56,11 +55,6 @@ const inviteReducer = (state = initialState, action) => {
       return {
         ...state,
         inviteLoading: action.isLoading,
-      };
-    case InviteActionTypes.updateInviteResultInfo:
-      return {
-        ...state,
-        inviteResultInfo: action.inviteResultInfo,
       };
     default:
       return state;

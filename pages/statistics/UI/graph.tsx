@@ -36,10 +36,9 @@ const Graph: React.FunctionComponent<GraphProps> = (props) => {
   const data = getGraphOptions(statistics.checkInCheckOuts);
 
   return (
-    <>
       <Card className='bg-gradient-default' style={{ borderRadius: 10 }}>
-        <CardContent>
-          <Grid container alignContent='space-between'>
+        <CardContent className='gragh-content'>
+          <Grid container alignContent='space-between' className='graph-header'>
             <Grid item xs={8} className='header'>
               <Typography style={{ color: '#000000', fontSize: 11 }}>OVERVIEW</Typography>
               <Typography className='label-graph' style={{ color: '#000000', fontSize: 24, fontWeight: 700 }}>
@@ -55,7 +54,7 @@ const Graph: React.FunctionComponent<GraphProps> = (props) => {
           <Chart options={data} series={data.series} />
         </CardContent>
       </Card>
-    </>
+
   );
 };
 

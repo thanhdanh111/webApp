@@ -4,7 +4,7 @@ export enum CompanyActionTypes {
   FillingToken = 'FillingToken',
   UpdateOnSendingToken = 'UpdateOnSendingToken',
   ChangeCurrentIndexAccountTabs = 'ChangeCurrentIndexAccountTabs',
-  UpdateCompanyNotifications = 'UpdateCompanyNotifications',
+  // UpdateCompanyNotifications = 'UpdateCompanyNotifications',
 }
 
 interface UpdateCompanyOnSending {
@@ -19,17 +19,16 @@ export const fillingToken = ({ data }) => {
   };
 };
 
-export const updateCompanyNotifications = ({ notifications }) => {
-  return {
-    notifications,
-    type: CompanyActionTypes.UpdateCompanyNotifications,
-  };
-};
+// export const updateCompanyNotifications = ({ notifications }) => {
+//   return {
+//     notifications,
+//     type: CompanyActionTypes.UpdateCompanyNotifications,
+//   };
+// };
 
-export const updateCompanyOnSending = ({ loading, notifications }: UpdateCompanyOnSending) => {
+export const updateCompanyOnSending = ({ loading }: UpdateCompanyOnSending) => {
   return {
     loading,
-    notifications,
     type: CompanyActionTypes.UpdateOnSendingToken,
   };
 };

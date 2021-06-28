@@ -50,11 +50,6 @@ const accountReducer = (state = initialState, action) => {
         ...state,
         currentTabIndex: action.currentIndex,
       };
-    case AccountActionTypes.UpdateAccountNotifications:
-      return {
-        ...state,
-        accountNotifications: action.notifactions,
-      };
     default:
       return state;
   }
