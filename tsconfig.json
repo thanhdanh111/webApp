@@ -44,5 +44,5 @@
     "components/**/*.ts",
     "static/**/*.tsx",
     "static/**/*.ts"
-, "pages/home/UI/task_boards/.stories.tsx"  ]
+  ]
 }

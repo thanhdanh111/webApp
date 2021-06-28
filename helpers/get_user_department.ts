@@ -19,29 +19,25 @@ export const getUserDepartments = ({ access, filterRoles, companyID }: GetUserDe
   let isAdmin = false;
 
   access.forEach((each) => {
-    if (each.companyID === companyID) {
-      if (!each?.departmentID) {
-        return;
-      }
-
-      if (each?.role && each?.role === 'ADMIN') {
-        isAdmin = true;
-
-        return;
-      }
-
-      const isNotSuitRole = filterRoles &&
-        filterRoles?.length &&
-        !filterRoles.includes(each?.role);
-
-      if (isNotSuitRole) {
-        return;
-      }
-
-      departments.push(each?.departmentID);
+    if (!each?.companyID || each?.companyID !== companyID || !each?.departmentID) {
+      return;
     }
 
-    return;
+    if (each?.role && each?.role === 'ADMIN') {
+      isAdmin = true;
+
+      return;
+    }
+
+    const isNotSuitRole = filterRoles &&
+      filterRoles?.length &&
+      !filterRoles.includes(each?.role);
+
+    if (isNotSuitRole) {
+      return;
+    }
+
+    departments.push(each?.departmentID);
   });
 
   return {
