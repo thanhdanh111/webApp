@@ -64,7 +64,7 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
     });
 
     const userCompanies = getUserCompanies({ access: res.data?.access });
-    const userDepartments = getUserDepartments({ access: res.data?.access });
+    const userDepartments = getUserDepartments({ access: res.data?.access, companyID: userCompanies?.companies?.[0] });
     const checkUserCompanies = checkArray(userCompanies?.companies);
     const checkUserDepartments = checkArray(userCompanies?.companies) && checkArray(userDepartments?.departments);
 

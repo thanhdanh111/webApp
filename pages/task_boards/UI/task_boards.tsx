@@ -1,13 +1,15 @@
-import { getTaskStatusThunkAction, getTasksByUserThunkAction, updateTaskStatusById, updateTaskById } from 'pages/home/logic/home_reducer';
-import React, { FunctionComponent, useEffect } from 'react';
+import { createTaskStatusThunkAction, TaskBoardsType, updateTaskById, updateTaskStatusById } from '../logic/task_boards_reducer';
+import React, { FunctionComponent, useState } from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
-import { checkArray } from 'helpers/check_array';
-import TaskStatus from './statuses_clickup';
-import NavClickUp from './nav_clickup';
-import { Task, TaskStatusType } from 'helpers/type';
+import TaskStatusUI from '../../task_statuses/UI/task_statuses';
+import NavClickUp from './task_board_header';
 import { Typography } from '@material-ui/core';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
+import { Task } from 'helpers/type';
 import { DragDropContext } from 'react-beautiful-dnd';
+
 interface IDroppable {
   droppableId: string;
   index: number;
@@ -39,49 +41,40 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
   return resultMove;
 };
-
 const BoardTasks: FunctionComponent = () => {
+  const {
+    loading,
+    currentTaskBoard,
+    taskStatus,
+  }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const dispatch = useDispatch();
-  const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
-  const authState = useSelector((state: RootStateOrAny) => state.auth);
-  const loading = taskStatuses.loading;
-  const companyID = authState?.extendedCompany?.companyID?._id;
-  const departmentID = authState?.department?._id;
-
-  useEffect(() => {
-    void fetchData();
-  }, []);
-
-  const fetchData = () => {
-    dispatch(getTaskStatusThunkAction());
-    dispatch(getTasksByUserThunkAction());
-  };
+  const [isAddStatus, setIsAddStatus] = useState(false);
+  const [title, setTitle] = useState('');
 
   const GenerateTaskStatuses = () => {
-    return checkArray(taskStatuses.list) && taskStatuses.list.map((taskStatus: JSX.IntrinsicAttributes & TaskStatusType) => {
+    if (!currentTaskBoard) {
+      return;
+    }
+
+    return currentTaskBoard?.taskStatusIDs?.map((each) => {
       return (
-        <>
-          <TaskStatus
-            key={taskStatus._id}
-            taskStatus={taskStatus}
-            user={authState}
-            companyID={companyID}
-            departmentID={departmentID}
-            listTasks={taskStatuses.listTasks}
-          />
-        </>
+          <>
+            <TaskStatusUI
+              key={each}
+              taskStatusID={each}
+            />
+          </>
       );
-    });
+    },
+    );
   };
 
   const getTasksFromTaskStatus = ({ taskStatusId }) => {
-    for (const taskStatus of taskStatuses.list) {
-      if (!taskStatus || taskStatus._id !== taskStatusId) {
-        continue;
-      }
-
-      return taskStatus.taskIDs;
+    if (!taskStatus[taskStatusId]) {
+      return;
     }
+
+    return taskStatus[taskStatusId].taskIDs;
   };
 
   const onDragEnd = (result) => {
@@ -128,9 +121,23 @@ const BoardTasks: FunctionComponent = () => {
     }));
   };
 
+  const addTaskStatusUI = () => {
+    return (
+      <div className='add-status-modal'>
+        <input className='add-status-input' placeholder='STATUS NAME' onChange={(event) => setTitle(event.target.value)} />
+        <div className='close-create-status' onClick={() => setIsAddStatus(false)}>
+          <CloseIcon className='close-create-status-icon' />
+        </div>
+        <div className='submit-create-status' onClick={() => dispatch(createTaskStatusThunkAction(title))} >
+          <CheckIcon className='submit-create-status-icon' />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className='board'>
-      <NavClickUp/>
+      <NavClickUp />
       <div className='board-tasks'>
           {!loading &&
           <>
@@ -138,8 +145,16 @@ const BoardTasks: FunctionComponent = () => {
               {GenerateTaskStatuses()}
             </DragDropContext>
             <div className='add-task task-status'>
-                <Typography component='span' className='add-task-text'>NEW TASK</Typography>
+              <div className='status'>
+                {isAddStatus &&
+                  addTaskStatusUI()}
+                {!isAddStatus &&
+                  <Typography component='span' className='add-task-text'  onClick={() => setIsAddStatus(true)}>
+                    NEW STATUS
+                  </Typography>
+                }
               </div>
+            </div>
           </>}
             {loading && <DisappearedLoading color={'#67cb48'}/>}
         </div>

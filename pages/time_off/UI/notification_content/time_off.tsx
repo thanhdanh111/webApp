@@ -2,7 +2,7 @@ import { Button, Container } from '@material-ui/core';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { getTaskStatusByIDThunkAction } from 'pages/home/logic/home_reducer';
+import { getTaskStatusByIDThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 import { isAdminOrManagerUser } from 'helpers/check_role_user';
 
 interface InitialProps {

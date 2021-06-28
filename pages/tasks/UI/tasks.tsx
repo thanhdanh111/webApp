@@ -1,14 +1,20 @@
 import { Typography } from '@material-ui/core';
 import { Task } from 'helpers/type';
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import { checkArray } from 'helpers/check_array';
 
-const TaskItem = (props: Task) => {
+interface InitialProp {
+  task: Task;
+}
 
-  const taskName = props?.title?.split('_').join(' ');
-  const taskID = props?._id?.slice(0, 6);
+const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
+
+  const { task }: InitialProp = props;
+
+  const taskName = task?.title?.split('_').join(' ');
+  const taskID = task?._id?.slice(0, 6);
 
   return (
         <div className='task-item'>
@@ -16,8 +22,8 @@ const TaskItem = (props: Task) => {
             <div className='task-title'>
                 <Typography component='span' className='task-name'>{taskName}</Typography>
                 <AvatarGroup max={2}>
-                    {checkArray(props?.userIDs) ?
-                    props.userIDs.map((user) => {
+                    {checkArray(task?.userIDs) ?
+                    task?.userIDs?.map((user) => {
                       return (
                         <Avatar key={user.email} alt={user.firstName} src={user.profilePicture} />
                       );
@@ -31,4 +37,4 @@ const TaskItem = (props: Task) => {
   );
 };
 
-export default (TaskItem);
+export default (TasksUI);

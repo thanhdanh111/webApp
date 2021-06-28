@@ -1,10 +1,9 @@
 import { storiesOf } from '@storybook/react';
-import BoardTasks from './clickup';
+import React from 'react';
 
 storiesOf('Body Scripts', module).add('Body Scripts', () => {
   return (
     <>
-      <BoardTasks />
     </>
   );
 });

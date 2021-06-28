@@ -113,11 +113,11 @@ export interface MenuItem {
 
 export interface Task {
   _id: string;
-  companyID: Company | string;
-  departmentID: Department | string;
-  taskStatusID?: TaskStatusType;
-  tagIDs: string[];
-  userIDs: User[];
+  companyID: Company;
+  departmentID?: Department;
+  taskStatusID: TaskStatus;
+  tagIDs?: string[];
+  userIDs?: User[];
   title: string;
   description?: string;
   attachments?: string[];
@@ -128,16 +128,17 @@ export interface Task {
   logs?: string[];
 }
 
-export interface TaskStatusType {
+export interface TaskStatus {
   _id: string;
-  statusID?: string;
   companyID?: Company;
   departmentID?: Department;
-  taskBoardID?: string;
-  title?: string;
+  taskBoardID: string;
+  title: string;
   taskIDs: Task[];
   description?: string;
+  createdBy?: User;
 }
+
 export interface CheckInCheckOut {
   checkInAt?: string;
   checkOutAt?: string;
@@ -250,4 +251,14 @@ export interface UpdateTaskToTaskStatus {
 export interface SetTasksToTaskStatus {
   taskStatusId: string;
   tasks: Task[];
+}
+export interface TaskBoard {
+  _id: string;
+  companyID?: Company | string;
+  departmentID?: Department | string;
+  taskStatusIDs?: string[];
+  title: string;
+  description?: string;
+  updatedBy?: User ;
+  createdBy?: User | string;
 }

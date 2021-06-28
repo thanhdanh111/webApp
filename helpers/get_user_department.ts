@@ -4,9 +4,10 @@ import { Access } from './type';
 interface GetUserDepartments {
   access: Access[];
   filterRoles?: string[];
+  companyID: string;
 }
 
-export const getUserDepartments = ({ access, filterRoles }: GetUserDepartments) => {
+export const getUserDepartments = ({ access, filterRoles, companyID }: GetUserDepartments) => {
   if (!checkArray(access)) {
     return {
       isAdmin: false,
@@ -18,7 +19,7 @@ export const getUserDepartments = ({ access, filterRoles }: GetUserDepartments) 
   let isAdmin = false;
 
   access.forEach((each) => {
-    if (!each?.departmentID) {
+    if (!each?.companyID || each?.companyID !== companyID || !each?.departmentID) {
       return;
     }
 
