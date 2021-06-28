@@ -372,6 +372,10 @@ export const changeStatusOfTimeOff = () => async (dispatch, getState) => {
       loadingOptionName: undefined,
     }));
   } catch (error) {
+    const handleMessage = notificationsType[error?.response?.data?.statusCode]
+    || 'Something went wrong';
+
+    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
     await dispatch(updateTimeOffIndexLoading({
       isLoading: false,
       loadingIndex: undefined,

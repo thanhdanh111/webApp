@@ -6,7 +6,7 @@ import { updateCompanyOnSending } from './company_actions';
 import { handleEmptyField } from './company_errors';
 
 const notificationsType = {
-  200: 'Sent your letter successfully',
+  200: 'Sent your token successfully',
   400: 'You have no company right now!',
 };
 
