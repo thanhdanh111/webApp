@@ -22,7 +22,7 @@ const ConnectSlackTabUi: FunctionComponent = () => {
     rolesInCompany,
     currentExtendedCompany,
   }: UserInfoType =  useSelector((state: RootState) => state.userInfo);
-  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses  });
+  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
 
   function handleSavingChanges() {
     if (!loadMemberData || onSendingToken || !slackToken) {

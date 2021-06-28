@@ -14,7 +14,7 @@ interface DataType {
 }
 
 type BodyProps = DataType;
-const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+const validAccesses = [Roles.COMPANY_MANAGER];
 
 const StatisticsUi: FunctionComponent<BodyProps> = () => {
   const userInfo = useSelector((state: RootState) => state?.userInfo);

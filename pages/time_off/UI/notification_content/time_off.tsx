@@ -3,7 +3,8 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { getTaskStatusByIDThunkAction } from 'pages/home/logic/home_reducer';
-import { isAdminOrManagerUser } from 'helpers/check_role_user';
+import { checkValidAccess } from 'helpers/check_valid_access';
+import { Roles } from 'constants/roles';
 
 interface InitialProps {
   targetEntityName: string;
@@ -15,13 +16,23 @@ const TimeOffNotificationContent: FunctionComponent<InitialProps> = (props: Init
   const router = useRouter();
   const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
   const dayOffsStatus = taskStatuses.taskStatusNotification;
-  const authState = useSelector((state: RootStateOrAny) => state.auth);
-  const companyID = authState.extendedCompany?.companyID?._id;
-  const departmentID = authState.department?._id;
-  const checkRole = isAdminOrManagerUser(authState.access, companyID, departmentID);
+  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
+  const departmentID = userInfo?.currentDepartment?._id;
+  const haveComanyAccess = checkValidAccess({
+    rolesInCompany: userInfo?.rolesInCompany,
+    validAccesses: [Roles.COMPANY_MANAGER],
+  });
+  const haveDepartmentAccess = checkValidAccess({
+    departmentID,
+    rolesInDepartments: userInfo?.rolesInDepartments,
+    validAccesses: [Roles.DEPARTMENT_MANAGER],
+  });
+  const checkRole = userInfo?.isAdmin || haveComanyAccess || haveDepartmentAccess;
+
   useEffect(() => {
     dispatch(getTaskStatusByIDThunkAction(props.targetEntityName, props.daysOffID));
   }, []);
+
   const onPushToPage = (path: string) => {
     return router.push(`/${path}`, `/${path}.html`);
   };
