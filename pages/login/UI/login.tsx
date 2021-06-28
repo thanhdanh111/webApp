@@ -1,7 +1,6 @@
 import { Box, Button, Container, Grid, Link, Typography } from '@material-ui/core';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Login } from '../logic/login_actions';
 import { config } from 'helpers/get_config';
 import { GetUserDataThunkAction } from '../logic/login_reducer';
 import * as qs from 'query-string';
@@ -17,6 +16,7 @@ const LoginUi: FunctionComponent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(false);
+
   useEffect(() => {
     void logUserIn();
   }, []);
@@ -27,22 +27,23 @@ const LoginUi: FunctionComponent = () => {
     if (localAccess) {
       await router.replace('/home', '/home.html');
       setIsLogin(false);
+
+      return;
     }
 
     const query = qs.parse(window.location.search);
     const token = query.token;
-    if (!token) {
-      return;
-    }
+
     const accessToken = token.replace('?token=', '');
+
     localStorage.setItem('access_token', accessToken);
+
     setIsLogin(true);
-    await Promise.all([
-      dispatch(GetUserDataThunkAction(accessToken)),
-      dispatch(Login(accessToken)),
-    ]);
+
+    await Promise.resolve(dispatch(GetUserDataThunkAction(accessToken)));
 
     await router.replace('/home', '/home.html');
+
     setIsLogin(false);
   }
 

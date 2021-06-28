@@ -5,6 +5,7 @@ import React, { FunctionComponent } from 'react';
 
 const AccessDenied: FunctionComponent = () => {
   const router = useRouter();
+
   const onBackToLogin = async () => {
     await router.replace('/login', '/login.html');
     await deleteBrowserToken();

@@ -1,22 +1,26 @@
 import { CircularProgress, Grid, IconButton } from '@material-ui/core';
-import React, { FunctionComponent, useMemo, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PersonIcon from '@material-ui/icons/Person';
 import Graph from './graph';
 import StatisticsCard from './statistics_card';
 import StatisticsTable from './statistics_table';
-import { useSelector, RootStateOrAny } from 'react-redux';
-import { isAdminOrManagerUser } from 'helpers/check_role_user';
+import { useSelector } from 'react-redux';
+import { Roles } from 'constants/roles';
+import { checkValidAccess } from 'helpers/check_valid_access';
+import { RootState } from 'redux/reducers_registration';
 interface DataType {
   title: string;
 }
 
 type BodyProps = DataType;
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+
 const StatisticsUi: FunctionComponent<BodyProps> = () => {
-  const access = useSelector((state: RootStateOrAny) => state.auth.access);
-  const userID = useSelector((state: RootStateOrAny) => state.auth.userID);
-  const company = useSelector((state: RootStateOrAny) => state.auth.extendedCompany.companyID);
-  const isAdmin = useMemo(() => isAdminOrManagerUser(access, company?._id, null), [company?._id, access]);
+  const userInfo = useSelector((state: RootState) => state?.userInfo);
+  const userID = userInfo?.userID;
+  const company = userInfo?.currentCompany;
+  const isAdmin = userInfo?.isAdmin || checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany });
   const [getMe, setGetMe] = useState(true);
 
   return (

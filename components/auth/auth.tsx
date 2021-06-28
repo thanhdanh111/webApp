@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { DisappearedLoading } from 'react-loadingg';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
-import { getUserAccessAction } from 'pages/access_denied/logic/access_reducer';
 import { getBrowserToken } from 'helpers/fcm';
 import firebase from 'firebase/app';
 import 'firebase/messaging';
@@ -11,13 +10,14 @@ import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { getNotificationFCM } from 'pages/users/logic/users_actions';
+import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
 
 type Token = string | null;
 const Auth = ({ children, publicPages }) => {
   const path = window.location.pathname;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const access = useSelector((state: RootState) => state.access);
+  const accesses = useSelector((state: RootState) => state?.userInfo?.accesses);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,16 +25,12 @@ const Auth = ({ children, publicPages }) => {
   }, []);
 
   useEffect(() => {
-    dispatch(getUserAccessAction());
-  }, [path]);
-
-  useEffect(() => {
     const hasPermission = hasAccessPermission();
-    if (hasPermission || access?.access.length <= 0) {
+    if (hasPermission || accesses?.length <= 0) {
       return;
     }
     checkAccessUser();
-  }, [access?.access]);
+  }, [accesses]);
 
   const getFCMToken = async () => {
     const fcmToken = await getBrowserToken();
@@ -58,8 +54,6 @@ const Auth = ({ children, publicPages }) => {
     if (subscribe.data) {
       const messaging = firebase.messaging();
       messaging.onMessage((payload) => {
-        // tslint:disable-next-line:no-console
-        console.log('payload', payload);
         const noti = payload.notification;
 
         dispatch(getNotificationFCM(noti));
@@ -71,7 +65,7 @@ const Auth = ({ children, publicPages }) => {
   };
 
   const hasAccessPermission = () => {
-    const filteredAccess = access?.access?.filter((item) => {
+    const filteredAccess = accesses?.filter((item) => {
       const isAdmin = item?.role === 'ADMIN';
       const hasPermission = item?.companyID !== null && item?.status === 'ACCEPTED';
       if (hasPermission || isAdmin) {
@@ -107,8 +101,11 @@ const Auth = ({ children, publicPages }) => {
       return;
     }
 
-    setLoading(false);
+    await Promise.resolve(dispatch(GetUserDataThunkAction(token)));
+
     await getFCMToken();
+
+    setLoading(false);
 
     return;
   };

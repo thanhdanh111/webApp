@@ -4,6 +4,8 @@ import { AvailInviteCompanies } from './invite_interface';
 import { config } from 'helpers/get_config';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from './invite_error_notifications';
+import { Roles } from 'constants/roles';
+import { checkValidAccess } from 'helpers/check_valid_access';
 
 type Token = string | null;
 export enum NotificationTypes{
@@ -45,50 +47,23 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
   }
 };
 
-const rolesCouldInvite = ['COMPANY_MANAGER'];
-
 export const getUserCompaniesApi = () => async (dispatch, getState) => {
   try {
-    let isAdmin = false;
     await dispatch(inviteLoading({ isLoading: true }));
-
+    const userInfo = getState()?.userInfo;
     const token: Token = localStorage.getItem('access_token');
-    const userInfo = getState().access;
-
-    if (!userInfo?.access || !userInfo?.access.length) {
-      await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
-
-      return;
-    }
-
+    const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+    const haveAccess = checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany });
+    const isAdmin = userInfo?.isAdmin;
     let companiesParams = '';
-    const filteredCompanies  = {};
 
-    if (!isAdmin) {
-      const companies: string[] = [];
-
-      userInfo?.access.forEach((access, index) => {
-        const hasInvalidRole = access?.role && !rolesCouldInvite?.includes(access.role);
-        const companyID = access?.companyID;
-
-        if (access?.role && access?.role === 'ADMIN') {
-          isAdmin = true;
-
-          return;
-        }
-
-        if (!companyID || hasInvalidRole || filteredCompanies[companyID] !== undefined) {
-          return;
-        }
-
-        filteredCompanies[companyID] = index;
-        companies.push(companyID);
-      });
+    if (!isAdmin && haveAccess) {
+      const companies: string[] = [userInfo?.currentCompany?._id];
 
       companiesParams = companies.map((companyID, index) => `companyID[${index}]=${companyID}`).join('&');
     }
 
-    if (!isAdmin && !companiesParams) {
+    if (!isAdmin && !companiesParams?.length) {
       await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
 
       return;

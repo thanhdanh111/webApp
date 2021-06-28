@@ -8,9 +8,9 @@ import { updateOnSelectTimeOff } from './logic/time_off_actions';
 
 const TimeOff = () => {
   const dispatch = useDispatch();
-  const authState = useSelector((state: RootState) => state?.auth);
-  const userID = authState?.extendedUser?.userID;
-  const access = authState?.access;
+  const userInfo = useSelector((state: RootState) => state?.userInfo);
+  const userID = userInfo?.userID;
+  const accesses = userInfo?.accesses;
   const {
     optionState,
     ownTimeOffs,
@@ -29,22 +29,22 @@ const TimeOff = () => {
   }: TimeOffValueType = useSelector((state: RootState) => state.timeoff);
 
   useEffect(() => {
-    if (membersTimeOffsLoading || membersTimeOffs.length || !access?.length) {
+    if (membersTimeOffsLoading || membersTimeOffs.length || !accesses?.length) {
 
       return;
     }
 
     dispatch(getMembersDaysOffApi({ userID, limit: 30 }));
-  }, [access]);
+  }, [accesses]);
 
   useEffect(() => {
-    if (ownTimeOffsLoading || !userID || ownTimeOffs.length || !access?.length) {
+    if (ownTimeOffsLoading || !userID || ownTimeOffs.length || !accesses?.length) {
 
       return;
     }
 
     dispatch(getUserDaysOffApi({ userID, limit: 30, cursor: membersTimeOffsCursor }));
-  }, [userID, access]);
+  }, [userID, accesses]);
 
   function fetchUserDaysOffData() {
     dispatch(getUserDaysOffApi({ userID , limit: 30, cursor: ownTimeOffsCursor, infiniteScroll: true }));

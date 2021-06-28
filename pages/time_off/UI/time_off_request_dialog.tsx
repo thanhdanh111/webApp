@@ -27,7 +27,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
     endTime,
     reason,
   }: TimeOffRequestProps = useSelector((state : RootState) => state.timeOffRequest);
-  const access = useSelector((state: RootState) => state?.auth?.access);
+  const accesses = useSelector((state: RootState) => state?.userInfo?.accesses);
   const unixStartDateAndTime = moment(`${startDate}T${startTime}`).unix();
   const unixEndDateAndTime = moment(`${endDate}T${endTime}`).unix();
   const currentDate = moment().format('YYYY-MM-DD');
@@ -49,7 +49,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
 
   useEffect(() => {
     dispatch(getDepartmentsAndCompanies());
-  }, [access]);
+  }, [accesses]);
 
   const firstOptions = companies?.map((company, index) =>
     <option
