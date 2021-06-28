@@ -10,8 +10,8 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import Tooltip from '@material-ui/core/Tooltip';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { addTaskThunkAction } from 'pages/home/logic/home_reducer';
-import { setTypeCreateTask, updateNewTask } from 'pages/home/logic/home_actions';
+import { addTaskThunkAction } from '../../home/logic/home_reducer';
+import { setTypeCreateTask, updateNewTask } from '../../home/logic/home_actions';
 import Panel from './panel_task_clickup';
 import AssignUser from './assign_user_clickup';
 
@@ -20,7 +20,7 @@ interface InitProps {
   companyID: string;
 }
 
-const AddTask: React.FC<InitProps> = (props) => {
+const TaskNew: React.FC<InitProps> = (props) => {
   const dispatch = useDispatch();
   const newTask = useSelector((state: RootStateOrAny) => state.taskStatuses.newTask);
   const usersAssigned = useSelector((state: RootStateOrAny) => state.taskStatuses.usersAssigned);
@@ -50,7 +50,7 @@ const AddTask: React.FC<InitProps> = (props) => {
   };
 
   return (
-    <Box className='task-add' position='relative' mx={3}>
+    <Box className='task-add' position='relative'>
       <Box display='flex' flexDirection='row' alignItems='center'>
           <CloseIcon onClick={() => dispatch(setTypeCreateTask(''))} className='icon-add close-icon'/>
           <InputBase
@@ -113,4 +113,4 @@ const AddTask: React.FC<InitProps> = (props) => {
   );
 };
 
-export default AddTask;
+export default TaskNew;

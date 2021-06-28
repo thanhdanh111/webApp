@@ -11,9 +11,9 @@ import {
   getPaginationThunkAction,
   getSearchAction,
   useDebounce,
-} from 'pages/users/logic/users_reducer';
+} from '../../users/logic/users_reducer';
 import { useEffect, useState } from 'react';
-import { assignUser, unassignUser } from 'pages/home/logic/home_actions';
+import { assignUser, unassignUser } from '../../home/logic/home_actions';
 
 const AssignUser: React.FC = () => {
   const dispatch = useDispatch();

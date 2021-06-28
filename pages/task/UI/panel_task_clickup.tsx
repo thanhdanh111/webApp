@@ -15,7 +15,7 @@ import moment from 'moment';
 import CloseIcon from '@material-ui/icons/Close';
 import DateIconPicker from './date_picker_clickup';
 import DatetimeIconPicker from './date_and_time_picker';
-import { updateNewTask } from 'pages/home/logic/home_actions';
+import { updateNewTask } from '../../home/logic/home_actions';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 
 const priorityLevel = [

@@ -7,9 +7,9 @@ import TaskItem from './task_clickup';
 import { LoginValue } from '../../../../helpers/type';
 import { isAdminOrManagerUser } from '../../../../helpers/check_role_user';
 import { checkArray } from 'helpers/check_array';
-import AddTask from './add_clickup';
 import { useDispatch } from 'react-redux';
 import { setTypeCreateTask } from 'pages/home/logic/home_actions';
+import TaskNew from '../../../task/UI/task_new';
 
 interface InitProps {
   taskStatus: TaskStatusType;
@@ -29,7 +29,6 @@ const TaskStatus = (props: InitProps) => {
   const newTaskRef = useRef<HTMLTitleElement>(null);
 
   const GenerateTasks = () => {
-
     if (!isAdminOrManagerUser(user.access, companyID, departmentID) || showTask === 'me') {
       return checkArray(listTasks) && listTasks.map((task) => {
         return (
@@ -77,7 +76,7 @@ const TaskStatus = (props: InitProps) => {
       <div className='status-task-list'>
         {
           currentTaskStatus === taskStatus?._id &&
-           <AddTask companyID={companyID} taskStatusID={taskStatus._id} />
+           <TaskNew companyID={companyID} taskStatusID={taskStatus._id} />
         }
         {GenerateTasks()}
         {
