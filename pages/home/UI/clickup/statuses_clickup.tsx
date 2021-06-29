@@ -34,7 +34,7 @@ const TaskStatus = (props: InitProps) => {
     });
     const haveAccesses = user?.isAdmin || haveComanyAccess || haveDepartmentAccess;
 
-    if (haveAccesses || showTask === 'me') {
+    if (!haveAccesses || showTask === 'me') {
       return checkArray(listTasks) && listTasks.map((task) => {
         return (
           <TaskItem key={task?.taskStatusID?._id} {...task}/>
