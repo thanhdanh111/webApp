@@ -21,7 +21,7 @@ const ConnectSlackTabUi: FunctionComponent = () => {
     isAdmin,
     rolesInCompany,
     currentExtendedCompany,
-  }: UserInfoType =  useSelector((state: RootState) => state.userInfo);
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
 
   function handleSavingChanges() {

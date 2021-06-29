@@ -10,7 +10,7 @@ import { RootState } from 'redux/reducers_registration';
 
 const Layout = ({ children, withoutPaths }) => {
   const path = window.location.pathname;
-  const userID = useSelector((state: RootStateOrAny) => state.userInfo.userID);
+  const userID = useSelector((state: RootStateOrAny) => state?.userInfo?.userID);
   const notifications = useSelector((state: RootState) => state.newNotifications);
   const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
   const [isDrawerOpen, setOpenDrawer] = useState(false);

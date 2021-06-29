@@ -16,7 +16,7 @@ const TimeOffNotificationContent: FunctionComponent<InitialProps> = (props: Init
   const router = useRouter();
   const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
   const dayOffsStatus = taskStatuses.taskStatusNotification;
-  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
+  const userInfo = useSelector((state: RootStateOrAny) => state?.userInfo);
   const departmentID = userInfo?.currentDepartment?._id;
   const haveComanyAccess = checkValidAccess({
     rolesInCompany: userInfo?.rolesInCompany,

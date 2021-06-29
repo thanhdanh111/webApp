@@ -12,9 +12,9 @@ const notificationsType = {
 
 export const sendSlackCompanyToken = () => async (dispatch, getState) => {
   try {
-    const userInfo = getState().userInfo;
-    const companyID = userInfo?.currentCompany._id;
-    const slackToken = getState().company?.slackToken;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
+    const slackToken = getState()?.company?.slackToken;
     const token: Token =  localStorage.getItem('access_token');
 
     if (!token || !companyID || !slackToken?.length) {

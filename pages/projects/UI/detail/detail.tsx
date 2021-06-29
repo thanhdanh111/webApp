@@ -30,7 +30,7 @@ const ProjectDetail: FunctionComponent = () => {
   const {
     isAdmin,
     rolesInCompany,
-  }: UserInfoType =  useSelector((state: RootState) => state.userInfo);
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
 
   useEffect(() => {
