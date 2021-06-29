@@ -4,60 +4,42 @@ interface GetUserCompanies {
   access: Access[];
 }
 
-interface GetUserCompanyIDsAndDepartmentIDs {
-  companyIDs: string[];
-  departmentIDs: string[];
-  companyIDsOfDepartmentIDs: string[];
+interface GetFirstCompanyIDAndDepartmentID {
+  companyID: string;
+  departmentID: string;
 }
 
-export type GetUserCompanyIDsAndDepartmentIDsType = GetUserCompanyIDsAndDepartmentIDs;
+export type GetFirstCompanyIDAndDepartmentIDType = GetFirstCompanyIDAndDepartmentID;
 
-export const getUserCompanyIDsAndDepartmentIDs = ({
+export const getFirstCompanyIDAndDepartmentID = ({
   access,
-}: GetUserCompanies): GetUserCompanyIDsAndDepartmentIDs => {
+}: GetUserCompanies): GetFirstCompanyIDAndDepartmentID => {
+  let companyID;
+  let departmentID;
+
   if (!access || !access?.length) {
     return {
-      companyIDs: [],
-      departmentIDs: [],
-      companyIDsOfDepartmentIDs: [],
+      companyID,
+      departmentID,
     };
   }
 
-  const companyIDs: string[] = [];
-  const departmentIDs: string[] = [];
-  const companyIDsOfDepartmentIDs: string[] = [];
-  const filteredCompanies = { };
-  const filteredDepartmentIDs = { };
-
-  access.forEach((each, index) => {
-    const companyID = each?.companyID as string;
-    const departmentID = each?.departmentID as string;
-    const filteredCompanyID = (!departmentID && filteredCompanies[companyID] !== undefined);
-
-    if (!companyID || filteredCompanyID) {
-      return;
+  for (const each of access) {
+    if (each?.companyID) {
+      companyID = each.companyID;
     }
 
-    if (!departmentID) {
-      filteredCompanies[companyID] = index;
-      companyIDs.push(companyID);
+    if (each?.departmentID) {
+      departmentID = each?.departmentID;
 
-      return;
+      break;
     }
 
-    if (filteredDepartmentIDs[departmentID] !== undefined) {
-
-      return;
-    }
-
-    filteredDepartmentIDs[departmentID] = index;
-    departmentIDs.push(departmentID);
-    companyIDsOfDepartmentIDs.push(companyID);
-  });
+    continue;
+  }
 
   return {
-    companyIDs,
-    departmentIDs,
-    companyIDsOfDepartmentIDs,
+    companyID,
+    departmentID,
   };
 };
