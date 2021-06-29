@@ -28,6 +28,8 @@ const BoardTasks: FunctionComponent = () => {
   const [isAddStatus, setIsAddStatus] = useState(false);
   const [title, setTitle] = useState('');
 
+  const addStatusStyle = !isAddStatus ? 'no-add-status' : 'add-status-style';
+
   const GenerateTaskStatuses = () => {
     if (!currentTaskBoard) {
       return;
@@ -56,7 +58,7 @@ const BoardTasks: FunctionComponent = () => {
 
   const addTaskStatusUI = () => {
     return (
-      <div className='add-status-modal'>
+      <div className={`add-status-modal ${addStatusStyle}`} >
         <input className='add-status-input' placeholder='STATUS NAME' onChange={(event) => setTitle(event.target.value)} />
         <div className='close-create-status' onClick={() => setIsAddStatus(false)}>
           <CloseIcon className='close-create-status-icon' />
