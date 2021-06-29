@@ -15,7 +15,7 @@ const linkAPILogin = `${config.API_LOGIN}&redirect_uri=${redirectUrl}`;
 const LoginUi: FunctionComponent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   useEffect(() => {
     void logUserIn();
@@ -25,6 +25,8 @@ const LoginUi: FunctionComponent = () => {
     const localAccess = localStorage.getItem('access_token');
 
     if (localAccess) {
+      void router.replace('/home', '/home.html');
+
       setIsLogin(false);
 
       return;
@@ -34,6 +36,7 @@ const LoginUi: FunctionComponent = () => {
     const token = query?.token;
 
     if (!token) {
+      setIsLogin(false);
 
       return;
     }
