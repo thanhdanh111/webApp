@@ -522,14 +522,14 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
   }
 };
 
-export const getDaysoffByIDThunkAction = (dayOffID) => async (dispatch) => {
+export const getTimeoffByIDThunkAction = (timeOffID) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
 
     if (!token) {
       return;
     }
-    const res = await axios.get(`${config.BASE_URL}/daysOff/${dayOffID}`,
+    const res = await axios.get(`${config.BASE_URL}/daysOff/${timeOffID}`,
       {
         headers: {
           'Content-Type': 'application/json',

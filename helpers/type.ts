@@ -219,15 +219,3 @@ export interface ChannelIDData {
   _id: string;
   channelID: string;
 }
-
-export interface DayOff {
-  departmentID?: Department;
-  status?: string;
-  reason?: string;
-  description?: string;
-  _id?: string;
-  startTime?: string;
-  endTime?: string;
-  companyID?: Company;
-  createdBy?: User;
-}

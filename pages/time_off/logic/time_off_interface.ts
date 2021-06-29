@@ -1,4 +1,4 @@
-import { Company, DayOff, Department } from 'helpers/type';
+import { Company, Department, User } from 'helpers/type';
 import { VariantType } from 'notistack';
 
 export interface TimeOffValue {
@@ -20,7 +20,7 @@ export interface TimeOffValue {
   notFoundAnyMembersTimeOffs: boolean;
   onConfirm: boolean;
   onSelectTimeOffData: SelectedTimeOffData;
-  dayOff: DayOff;
+  timeOffDetail: TimeOff;
 }
 
 export interface TimeOffRequestValue {
@@ -76,3 +76,15 @@ export interface UpdateOnConfirmDialog {
 }
 
 export type TimeOffRequestProps = TimeOffRequestValue;
+
+export interface TimeOff {
+  departmentID?: Department;
+  status?: string;
+  reason?: string;
+  description?: string;
+  _id?: string;
+  startTime?: string;
+  endTime?: string;
+  companyID?: Company;
+  createdBy?: User;
+}
