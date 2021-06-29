@@ -31,8 +31,13 @@ const LoginUi: FunctionComponent = () => {
       return;
     }
 
-    const query = qs.parse(window.location.search);
-    const token = query.token;
+    const query = qs?.parse(window?.location?.search);
+    const token = query?.token;
+
+    if (!token) {
+
+      return;
+    }
 
     const accessToken = token.replace('?token=', '');
 
