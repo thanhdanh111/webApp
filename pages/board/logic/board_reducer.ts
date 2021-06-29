@@ -68,8 +68,8 @@ export const getBoardDataMiddleWare = () => async (dispatch, getState) => {
 
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState.extendedCompany?.companyID?._id;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
 
     const res = await axios.get(`${config.BASE_URL}/boards`, {
       headers: {
@@ -112,8 +112,8 @@ export const getBoardDetailDataMiddleWare = (detailsBoardID) => async (dispatch)
 export const createFlowChartMiddleWare = (router, currentPath) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState.extendedCompany?.companyID?._id;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
 
     const nameNewBoardDefault = 'untitled';
 
@@ -148,8 +148,8 @@ export const createFlowChartMiddleWare = (router, currentPath) => async (dispatc
 export const updateNameFlowChartMiddleWare = (boardID: string, name: string) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState.extendedCompany?.companyID?._id;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !companyID || !name || !boardID) {
 

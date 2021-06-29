@@ -37,6 +37,11 @@ describe('Board Page', () => {
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
 
+    await page.waitForSelector('.list-board');
+
+    const imageListBoard = await page.screenshot();
+    expect(imageListBoard).toMatchImageSnapshot();
+
     await page.waitForSelector('.btn-primary');
     await page.click('.btn-primary');
 
