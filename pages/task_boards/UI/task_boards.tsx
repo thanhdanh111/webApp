@@ -7,12 +7,23 @@ import NavClickUp from './task_board_header';
 import { Typography } from '@material-ui/core';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
+import { Roles } from 'constants/roles';
+import { UserInfoType } from 'helpers/type';
+import { RootState } from 'redux/reducers_registration';
+import { checkValidAccess } from 'helpers/check_valid_access';
+
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
 
 const BoardTasks: FunctionComponent = () => {
   const {
     loading,
     currentTaskBoard,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
+  const {
+    isAdmin,
+    rolesInCompany,
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
+  const checkUserScope = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
   const dispatch = useDispatch();
   const [isAddStatus, setIsAddStatus] = useState(false);
   const [title, setTitle] = useState('');
@@ -35,6 +46,14 @@ const BoardTasks: FunctionComponent = () => {
     );
   };
 
+  const submitCreatedTaskStatus = () => {
+    if (!checkUserScope) {
+      return;
+    }
+
+    dispatch(createTaskStatusThunkAction(title));
+  };
+
   const addTaskStatusUI = () => {
     return (
       <div className='add-status-modal'>
@@ -42,7 +61,7 @@ const BoardTasks: FunctionComponent = () => {
         <div className='close-create-status' onClick={() => setIsAddStatus(false)}>
           <CloseIcon className='close-create-status-icon' />
         </div>
-        <div className='submit-create-status' onClick={() => dispatch(createTaskStatusThunkAction(title))} >
+        <div className='submit-create-status' onClick={submitCreatedTaskStatus} >
           <CheckIcon className='submit-create-status-icon' />
         </div>
       </div>

@@ -153,9 +153,9 @@ export const getTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
 export const getTaskBoardThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id;
+    const userInfo = getState().userInfo;
+    const companyID = userInfo.currentCompany._id;
+    const departmentID = userInfo?.currentDepartment?._id;
 
     if (!token || !companyID) {
       return;
@@ -190,7 +190,8 @@ export const getTaskBoardThunkAction = () => async (dispatch, getState) => {
 export const createTaskBoardThunkAction = (title, description) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const departmentID = getState().auth?.department?._id;
+    const userInfo = getState().userInfo;
+    const departmentID = userInfo?.currentDepartment?._id;
 
     if (!token) {
       return;

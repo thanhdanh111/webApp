@@ -11,11 +11,17 @@ import {
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedTaskBoard } from '../logic/task_boards_action';
 import { createTaskBoardThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
 import { Close } from '@material-ui/icons';
 import { checkArray } from 'helpers/check_array';
+import { Roles } from 'constants/roles';
+import { RootState } from 'redux/reducers_registration';
+import { UserInfoType } from 'helpers/type';
+import { checkValidAccess } from 'helpers/check_valid_access';
+
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
 
 const TaskBoardUI = () => {
   const dispatch = useDispatch();
@@ -24,7 +30,12 @@ const TaskBoardUI = () => {
     currentTaskBoard,
     hasNoData,
     loading,
-  }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
+  }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
+  const {
+    isAdmin,
+    rolesInCompany,
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
+  const checkUserScope = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
   const [open, setOpen] = useState(false);
   const [titleTaskBoard, setTileTaskBoard] = useState('');
   const [descriptionTaskBoard, setDescriptionTaskBoard] = useState('');
@@ -103,6 +114,10 @@ const TaskBoardUI = () => {
   };
 
   const onSubmitCreateTaskBoard = () => {
+    if (!checkUserScope) {
+      return;
+    }
+
     dispatch(createTaskBoardThunkAction(titleTaskBoard, descriptionTaskBoard));
   };
 

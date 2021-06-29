@@ -3,10 +3,11 @@ import React, { useEffect } from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import TasksUI from '../../tasks/UI/tasks';
-import { LoginValue } from '../../../helpers/type';
 import { RootStateOrAny,  useDispatch,  useSelector } from 'react-redux';
 import {  getTaskStatusThunkAction, TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
 import { DisappearedLoading } from 'react-loadingg';
+import { UserInfoType } from 'helpers/type';
+import { RootState } from 'redux/reducers_registration';
 
 interface InitProps {
   taskStatusID: string;
@@ -15,7 +16,7 @@ interface InitProps {
 const TaskStatusUI = (props: InitProps) => {
   const { taskStatusID }: InitProps = props;
   const { filteringTaskByUser, taskStatus, loading }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
-  const { userID }: LoginValue = useSelector((state: RootStateOrAny) => state.auth);
+  const { userID }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const dispatch = useDispatch();
 
   const style = taskStatus && taskStatus[taskStatusID]?.title?.split(' ').join('-').toLowerCase();

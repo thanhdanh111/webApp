@@ -1,22 +1,22 @@
 import { Access } from './type';
 import { checkArray } from './check_array';
 
-export const getRole = (accesses) => {
+export const getRole = (access) => {
 
-  if (!checkArray(accesses)) {
+  if (!checkArray(access)) {
     return;
   }
 
   const activeRoles: string[] = [];
   const pendingRoles: string[] = [];
 
-  accesses.map((access: Access) => {
-    if (access.status === 'ACCEPTED') {
-      return activeRoles.push(access.role);
+  access.map((each: Access) => {
+    if (each.status === 'ACCEPTED') {
+      return activeRoles.push(each.role);
     }
 
-    if (access.status.toUpperCase() !== 'ACCEPTED') {
-      return pendingRoles.push(access.role);
+    if (each.status.toUpperCase() !== 'ACCEPTED') {
+      return pendingRoles.push(each.role);
     }
 
     return;
