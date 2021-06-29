@@ -25,11 +25,12 @@ export const getFirstCompanyIDAndDepartmentID = ({
   }
 
   for (const each of access) {
-    if (each?.companyID) {
+    if (each?.companyID && !companyID) {
       companyID = each.companyID;
     }
 
-    if (each?.departmentID) {
+    if (each?.companyID && each?.departmentID) {
+      companyID = each?.companyID;
       departmentID = each?.departmentID;
 
       break;

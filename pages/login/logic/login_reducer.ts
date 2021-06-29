@@ -3,7 +3,7 @@ import { config } from 'helpers/get_config';
 import { LoginAction } from './login_type_actions';
 import { GetUserData } from './login_actions';
 import { UserInfo } from 'helpers/type';
-import { getFirstCompanyIDAndDepartmentID, GetFirstCompanyIDAndDepartmentIDType } from 'helpers/get_companyids_departmentids';
+import { getFirstCompanyIDAndDepartmentID, GetFirstCompanyIDAndDepartmentIDType } from 'helpers/get_first_companyid_and_departmentid';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { GetRolesOfLoggedInUser, getRolesOfLoggedInUser } from '../../../helpers/get_roles_of_logged_in_user';
 
