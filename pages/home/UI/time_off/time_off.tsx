@@ -2,11 +2,12 @@ import { Box, Typography } from '@material-ui/core';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
-import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
 import { getMembersDaysOffApi, getUserDaysOffApi } from 'pages/time_off/logic/time_off_apis';
 import BaseTable from '@components/table/table';
 import { TimeOffValueType } from 'pages/time_off/logic/time_off_interface';
-import { HeadCell } from 'helpers/type';
+import { HeadCell, UserInfoType } from 'helpers/type';
+import { Roles } from 'constants/roles';
+import { checkValidAccess } from 'helpers/check_valid_access';
 
 export const headCells: HeadCell[] = [
   { id: 'companyName', numeric: false, disablePadding: true, label: 'Company Name' },
@@ -17,18 +18,17 @@ export const headCells: HeadCell[] = [
   { id: 'reason', numeric: false, disablePadding: true, label: 'Reason' },
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
 ];
-const TimeOffTab: FunctionComponent = () => {
 
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+
+const TimeOffTab: FunctionComponent = () => {
   const dispatch = useDispatch();
-  const authState = useSelector((state: RootState) => state?.auth);
-  const userID = authState?.extendedUser?.userID;
   const {
     isAdmin,
-    managerCompanyIDs,
-    managerDepartmentIDs,
-  }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
-  const loadMemberData = isAdmin || managerCompanyIDs?.length > 0 || managerDepartmentIDs?.length > 0;
-
+    rolesInCompany,
+    userID,
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
+  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses  });
   const today = new Date();
 
   const {

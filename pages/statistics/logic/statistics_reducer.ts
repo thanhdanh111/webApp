@@ -55,11 +55,9 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
         limit,
         selectedUserID,
       },
-      auth: {
-        extendedCompany: {
-          companyID: {
-            _id: companyID,
-          },
+      userInfo: {
+        currentCompany: {
+          _id: companyID,
         },
         userID,
       },
@@ -99,6 +97,7 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
         Authorization: `Bearer ${token}`,
       },
     });
+
     if (res.data.totalCount === 0) {
       await dispatch(getAllStatistics([]));
 

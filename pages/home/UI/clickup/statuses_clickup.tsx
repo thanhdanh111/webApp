@@ -4,14 +4,14 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import { Task, TaskStatusType } from 'helpers/type';
 import TaskItem from './task_clickup';
-import { LoginValue } from '../../../../helpers/type';
+import { UserInfo } from '../../../../helpers/type';
 import { isAdminOrManagerUser } from '../../../../helpers/check_role_user';
 import { checkArray } from 'helpers/check_array';
 
 interface InitProps {
   taskStatus: TaskStatusType;
   listTasks: Task[];
-  user: LoginValue;
+  user: UserInfo;
   companyID: string | '';
   departmentID: string | '';
   showTask: string;
@@ -24,7 +24,7 @@ const TaskStatus = (props: InitProps) => {
 
   const GenerateTasks = () => {
 
-    if (!isAdminOrManagerUser(user.access, companyID, departmentID) || showTask === 'me') {
+    if (!isAdminOrManagerUser(user.accesses, companyID, departmentID) || showTask === 'me') {
       return checkArray(listTasks) && listTasks.map((task) => {
         return (
           <TaskItem key={task?.taskStatusID?._id} {...task}/>
@@ -32,7 +32,7 @@ const TaskStatus = (props: InitProps) => {
       });
     }
 
-    if (isAdminOrManagerUser(user.access, companyID, departmentID) || showTask === 'everyone') {
+    if (isAdminOrManagerUser(user.accesses, companyID, departmentID) || showTask === 'everyone') {
       return checkArray(taskStatus.taskIDs) && taskStatus.taskIDs.map((task) => {
         return (
           <TaskItem key={task?._id} {...task}/>
