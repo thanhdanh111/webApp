@@ -4,7 +4,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import { Direction } from '../resizer/constants';
 import Resizer from '../resizer/resize';
 
-const CustomNodeComponent = () => {
+const CustomProcess = () => {
   const panelRef = useRef<HTMLDivElement>(null);
   const heightRef = useRef(100);
   const widthRef = useRef(100);
@@ -14,10 +14,7 @@ const CustomNodeComponent = () => {
     const panel = panelRef.current;
     if (!panel) return;
 
-    // gọi getBoundsClientRect để lấy các thuộc tính hiện tại của nó
-    // và tạo bốn chức năng để xử lý việc thay đổi kích thước theo bốn hướng chính
-    // tslint:disable-next-line: typedef
-    const { x, y } = panel.getBoundingClientRect();
+    const clientRect = panel.getBoundingClientRect();
 
     const resizeTop = () => {
       if (!movementY) {
@@ -25,7 +22,7 @@ const CustomNodeComponent = () => {
       }
       heightRef.current = heightRef.current - movementY;
       panel.style.height = `${heightRef.current}px`;
-      panel.style.top = `${y - movementY}px`;
+      panel.style.top = `${clientRect.y - movementY}px`;
     };
 
     const resizeRight = () => {
@@ -41,7 +38,7 @@ const CustomNodeComponent = () => {
     const resizeLeft = () => {
       widthRef.current = widthRef.current - movementX;
       panel.style.width = `${widthRef.current}px`;
-      panel.style.left = `${x - movementX}px`;
+      panel.style.left = `${clientRect.x - movementX}px`;
     };
 
     switch (direction) {
@@ -112,4 +109,4 @@ const CustomNodeComponent = () => {
   );
 };
 
-export default CustomNodeComponent;
+export default CustomProcess;

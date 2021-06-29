@@ -1,10 +1,10 @@
 import React from 'react';
-import FlowChart from './UI/flow_chart';
+import Board from './UI/board';
 
 const FlowChartPage = () => {
   return (
     <>
-      <FlowChart />
+      <Board />
     </>
   );
 };

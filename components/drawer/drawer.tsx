@@ -10,6 +10,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import { EqualizerOutlined } from '@material-ui/icons';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import BusinessIcon from '@material-ui/icons/Business';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -21,12 +22,12 @@ const elementIcons = {
   event_logs: <EventNoteIcon />,
   projects: <EventNoteIcon />,
   company: <BusinessIcon />,
-  flow_chart: <img alt='logo' width='24px' src='../project-diagram-solid.svg' />,
+  board: <DashboardIcon />,
 };
 
 const drawerElements = {
   general: ['home', 'users', 'statistics'],
-  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects', 'flow_chart'],
+  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects', 'board'],
 };
 
 interface DrawerUi {

@@ -1,8 +1,8 @@
 import { storiesOf } from '@storybook/react';
 import React from 'react';
-import NewFlowChart from './new_flow_chart';
+import NewFlowChart from './new_board';
 
-storiesOf('NewFlowChart Scripts', module).add('NewFlowChart Scripts', () => {
+storiesOf('NewBoard Scripts', module).add('NewBoard Scripts', () => {
   return (
     <>
         <NewFlowChart />

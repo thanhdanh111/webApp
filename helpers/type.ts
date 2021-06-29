@@ -2,6 +2,18 @@ import { VariantType } from 'notistack';
 
 export type Token = string | null;
 
+enum Arrow {
+  OUT_LINE = 'OUT_LINE',
+}
+
+enum Shape {
+  PROCESS = 'PROCESS',
+  DECISION = 'DECISION',
+}
+enum BoardStatus{
+    PUBLIC = 'PUBLIC',
+    PRIVATE = 'PRIVATE',
+}
 export interface HeadCell {
   disablePadding?: boolean;
   id: string;
@@ -218,4 +230,42 @@ export interface ProjectState {
 export interface ChannelIDData {
   _id: string;
   channelID: string;
+}
+
+export interface Board {
+  _id: string;
+  companyID?: string;
+  departmentID?: string;
+  projectID?: string;
+  name:	string;
+  status?: BoardStatus;
+
+}
+
+export interface BoardsPage {
+  boards: Board[];
+  selectedBoard: Board;
+}
+
+export interface ConnecToData {
+  cardID: string;
+  text: string;
+  arrow: Arrow;
+}
+
+export interface Card {
+  _id: string;
+  boardID: string | Board;
+  companyID?: string;
+  departmentID?: string;
+  shape: Shape;
+  image?: string;
+  textContent?: string;
+  border?: string;
+  background?: string;
+  leftTo?: ConnecToData;
+  rightTo?: ConnecToData;
+  bottomTo?: ConnecToData;
+  topTo?: ConnecToData;
+  position?: string;
 }

@@ -28,10 +28,10 @@ beforeAll(async () => {
   }
 });
 
-describe('Users Page', () => {
+describe('Board Page', () => {
 
-  test('Test UI list users page successfully after login', async () => {
-    await page.goto('http://localhost:5000/flow_chart');
+  test('Test UI list board page successfully after login', async () => {
+    await page.goto('http://localhost:5000/board');
     await page.waitForSelector('.flowchart');
 
     const image = await page.screenshot();
