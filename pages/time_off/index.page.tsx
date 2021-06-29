@@ -8,9 +8,9 @@ import { updateOnSelectTimeOff } from './logic/time_off_actions';
 
 const TimeOff = () => {
   const dispatch = useDispatch();
-  const authState = useSelector((state: RootState) => state?.auth);
-  const userID = authState?.extendedUser?.userID;
-  const access = authState?.access;
+  const userInfo = useSelector((state: RootState) => state?.userInfo);
+  const userID = userInfo?.userID;
+  const access = userInfo?.access;
   const {
     optionState,
     ownTimeOffs,

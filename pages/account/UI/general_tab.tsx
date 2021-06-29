@@ -51,7 +51,7 @@ const labels = [
 
 const GeneralTabUi: FunctionComponent = ({}) => {
   const accountState = useSelector((state: RootState) => state.account);
-  const user = useSelector((state: RootState) => state.auth.userProfile);
+  const userProfile = useSelector((state: RootState) => state?.userInfo?.profile);
   const dispatch = useDispatch();
   const newState = { };
 
@@ -107,7 +107,7 @@ const GeneralTabUi: FunctionComponent = ({}) => {
     <Box className='general-tab'>
       <Box className='avatar-section'>
         <Box className='avatar-cricle-border'>
-          <UserAvatar alt='user icon' style='profile-picture' user={user} />
+          <UserAvatar alt='user icon' style='profile-picture' user={userProfile} />
           <Box className='update-image-overlay' onClick={() => uploadImage()}>
             <AddAPhotoIcon className='update-image-icon' />
             <Typography className='update-image-text'>Update Photo</Typography>

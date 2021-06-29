@@ -4,15 +4,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { Button, DialogActions, DialogContent, IconButton, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
-interface InitalProps {
+interface InitialProps {
   open: boolean;
   onClose: () => void;
   handleDelete?: () => void;
 }
 
-const ConfirmDeleteBoard: FC<InitalProps> = (props: InitalProps) => {
+const ConfirmDeleteBoard: FC<InitialProps> = (props: InitialProps) => {
 
-  const { onClose, open, handleDelete }: InitalProps = props;
+  const { onClose, open, handleDelete }: InitialProps = props;
 
   return (
     <Dialog
