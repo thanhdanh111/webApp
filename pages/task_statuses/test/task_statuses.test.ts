@@ -38,13 +38,20 @@ describe('Home page', () => {
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
+
+
+    await page.waitForSelector('.status');
+
+    const status = await page.screenshot();
+    expect(status).toMatchImageSnapshot();
+
     await page.waitForSelector('.add-task-text');
     await page.click('.add-task-text');
 
     await page.waitForSelector('.add-status-modal');
 
-    const showTaskBoards = await page.screenshot();
-    expect(showTaskBoards).toMatchImageSnapshot();
+    const addStatus = await page.screenshot();
+    expect(addStatus).toMatchImageSnapshot();
   });
 
 });
