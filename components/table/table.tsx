@@ -1,21 +1,14 @@
 import {
-    Table,
-    TableBody,
-    TableContainer,
     Paper,
     Button,
     CircularProgress,
-    Typography,
 } from '@material-ui/core';
 import React from 'react';
-import HeadTable from './head_table';
 import { HeadCell } from '../../helpers/type';
 import { checkArray } from 'helpers/check_array';
-import { DisappearedLoading } from 'react-loadingg';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { checkStringCondition } from 'helpers/check_string_condtion';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
-import TableRowBase from './table_row';
+import TableContent from './table_content';
 
 interface InitialProps {
   headCells: HeadCell[];
@@ -121,50 +114,20 @@ const BaseTable = (props: InitialProps) => {
 
   return (
     <Paper className='table-paper'>
-      <TableContainer className='table-list'>
-        <InfiniteScroll
-          dataLength={data.length}
-          hasMore={data.length < length}
-          next={fetchData}
-          loader={<div />}
-          scrollThreshold={0.7}
-          height={(emptyState || loading) ? 0 : 500}
-        >
-        <Table stickyHeader aria-label='sticky table' className='table-content' >
-          <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
-          { !loading &&  (checkArray(data) &&
-          <TableBody className='table-body'>
-                {data.map((item, index) => {
-                  return (
-                    <TableRowBase
-                      key={index}
-                      hadExpandableRows={hadExpandableRows}
-                      headCells={headCells}
-                      needCheckBox={needCheckBox}
-                      renderAction={renderAction}
-                      item={item}
-                      actions={actions}
-                      index={index}
-                      ComponentDetail={ComponentDetail}
-                    />
-                  );
-                })}
-          </TableBody>
-        )}
-        </Table>
-        </InfiniteScroll>
-          {
-            emptyState &&
-            <div className='empty-state'>
-              <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
-            </div>
-          }
-          {
-            loading && <div style={{ marginTop: '150px', marginBottom: '150px', display: 'flex', justifyContent: 'center' }}>
-              <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
-            </div>
-          }
-      </TableContainer>
+      <TableContent
+        data={data}
+        length={length}
+        loading={loading}
+        emptyState={emptyState}
+        fetchData={fetchData}
+        headCells={headCells}
+        hadExpandableRows={hadExpandableRows}
+        needCheckBox={needCheckBox}
+        actions={actions}
+        renderAction={renderAction}
+        ComponentDetail={ComponentDetail}
+        notFoundWarning={notFoundWarning}
+      />
     </Paper>
   );
 };

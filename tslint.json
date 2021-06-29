@@ -53,7 +53,7 @@
     "import-blacklist": [true, {"react": ["Component"]}],
     "unnecessary-else": [true, {"allow-else-if": false}],
     "early-exit": [true, { "max-length": 0, "ignore-constructor": true }],
-    "cyclomatic-complexity": [true, 0],
+    "cyclomatic-complexity": [true, 10],
     "member-access": [false],
     "newline-before-return": true,
     "prefer-object-spread": true,
