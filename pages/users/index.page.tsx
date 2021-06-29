@@ -4,16 +4,21 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useRouter } from 'next/router';
 import { Roles } from 'constants/roles';
+import { checkValidAccess } from 'helpers/check_valid_access';
+import { UserInfoType } from 'helpers/type';
 
-const validAccess = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
 
 const Users: FunctionComponent = () => {
   const router = useRouter();
-  const access = useSelector((state: RootState) => state?.access);
+  const {
+    isAdmin,
+    rolesInCompany,
+    access,
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
 
   useEffect(() => {
-    const couldAccess = access?.rolesInCompany.some((role) => validAccess.includes(role));
-    const couldAccessThiSite = access?.isAdmin || couldAccess;
+    const couldAccessThiSite = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
 
     if (couldAccessThiSite) {
 
@@ -21,7 +26,7 @@ const Users: FunctionComponent = () => {
     }
 
     void router.replace('/access_denied', '/access_denied.html');
-  }, [access?.access]);
+  }, [access]);
 
   return (
     <React.Fragment>

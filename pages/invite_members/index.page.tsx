@@ -45,13 +45,13 @@ const InviteMembersPage: FunctionComponent = () => {
     currentPage,
     inviteCompany,
   }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
-  const accessState = useSelector((state: RootState) => state.access);
+  const access = useSelector((state: RootState) => state?.userInfo?.access);
 
   const dispatch = useDispatch();
 
   useEffect(()  =>  {
     dispatch(getUserCompaniesApi());
-  }, [accessState?.access]);
+  }, [access]);
 
   return (
     <>

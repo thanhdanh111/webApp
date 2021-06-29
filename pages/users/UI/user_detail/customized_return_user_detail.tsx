@@ -35,7 +35,7 @@ const CustomizedReturnActionComponent = (departmentProps) => {
 
   if (
     departmentProps?.status === 'ACCEPTED' &&
-    departmentProps?.userData?.departmentRoles?.[currentDepartmentIndex]?.canDelete
+    departmentProps?.userData?.departmentRoles?.[currentDepartmentIndex]?.canRemoveFromDepartment
     ) {
     actionList = ['delete'];
   }

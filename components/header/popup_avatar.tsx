@@ -1,5 +1,5 @@
 import { Button, Menu, MenuItem, Typography, Avatar, Grid, Divider } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Logout } from 'pages/login/logic/login_actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -11,11 +11,26 @@ import { RootState } from 'redux/reducers_registration';
 import UserAvatar from '@components/user_avatar/info_user';
 import { deleteBrowserToken } from 'helpers/fcm';
 import BusinessIcon from '@material-ui/icons/Business';
+import { Token } from 'helpers/type';
 
 const DropDown = () => {
-  const auth = useSelector((state: RootState) => state.auth);
+  const userInfo = useSelector((state: RootState) => state?.userInfo);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    let token: Token = window.location.search;
+    if (!token && typeof localStorage !== 'undefined') {
+      token = localStorage.getItem('access_token');
+    }
+    if (!token) {
+      onPushToPage('login');
+
+      return;
+    }
+    const accessToken = token.replace('?token=', '');
+    localStorage.setItem('access_token', accessToken);
+  }, []);
 
   async function logUserOut() {
     dispatch(Logout());
@@ -66,36 +81,37 @@ const DropDown = () => {
 
   const InfoUser = () => {
 
-    const userName = ` ${auth?.userProfile?.lastName} ${auth?.userProfile?.firstName}`;
+    const userName = ` ${userInfo?.profile?.lastName} ${userInfo?.profile?.firstName}`;
 
     return (
       <Grid className='sublist-item' container wrap='nowrap' spacing={2}>
         <Grid item>
-          <UserAvatar style='info-avatar' user={auth?.userProfile}/>
+          <UserAvatar style='info-avatar' user={userInfo?.profile}/>
         </Grid>
         <Grid item xs justify='center'>
           <Typography >{userName}</Typography>
-          <Typography >{auth?.userProfile?.email}</Typography>
+          <Typography >{userInfo?.profile?.email}</Typography>
         </Grid>
       </Grid>
     );
   };
 
   const InfoCompany = () => {
-    if (!auth?.extendedCompany?.companyID?.name || !auth?.extendedCompany?.companyID?.emails?.length) {
+    const currentCompany = userInfo?.currentCompany;
+    if (!currentCompany?.name || !currentCompany?.emails?.length) {
       return <div />;
     }
 
     return (
       <Grid className='sublist-item' container wrap='nowrap' spacing={2}>
         <Grid item>
-          <Avatar variant='rounded' src={auth?.extendedCompany?.companyID?.photos?.[0]} style={{ backgroundColor: '#00AB55' }}>
+          <Avatar variant='rounded' src={currentCompany.photos?.[0]} style={{ backgroundColor: '#00AB55' }}>
             <BusinessIcon />
           </Avatar>
         </Grid>
         <Grid item xs justify='center'>
-          <Typography >{auth.extendedCompany?.companyID?.name}</Typography>
-          <Typography >{auth?.extendedCompany?.companyID?.emails?.[0]}</Typography>
+          <Typography >{currentCompany.name}</Typography>
+          <Typography >{currentCompany.emails?.[0]}</Typography>
         </Grid>
       </Grid>
     );
@@ -107,7 +123,7 @@ const DropDown = () => {
         <React.Fragment>
 
           <Button variant='contained' color='primary' {...bindTrigger(popupState)} className='drop-avt'>
-          <UserAvatar alt='user icon' style='info-avatar' user={auth?.userProfile}/>
+          <UserAvatar alt='user icon' style='info-avatar' user={userInfo?.profile}/>
           </Button>
           <Menu {...bindMenu(popupState)} className='menu-drop'>
             <InfoUser />

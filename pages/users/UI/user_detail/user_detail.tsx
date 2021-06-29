@@ -69,7 +69,7 @@ const UserDetail = (props) => {
       </TableCell>
       <TableCell style={{ borderBottom: 'none', textAlign: 'end', flexGrow: 4 }}>
       {
-        props?.data?.isCompanyManager &&
+        props?.data?.companyRoleCouldDelete &&
         <Button
           style={{
             color: 'white',

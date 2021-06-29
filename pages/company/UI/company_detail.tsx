@@ -6,8 +6,8 @@ import { RootState } from 'redux/reducers_registration';
 
 const CompanyDetailTab = () => {
 
-  const authState  = useSelector((state: RootState) => state.auth);
-  const company: Company = authState.extendedCompany?.companyID;
+  const userInfo  = useSelector((state: RootState) => state?.userInfo);
+  const company: Company = userInfo?.currentCompany;
   const infoCompany = [
     {
       name: 'Email',
@@ -30,7 +30,7 @@ const CompanyDetailTab = () => {
             variant='h4'
             className='company-name'
           >
-            {authState?.extendedCompany?.companyID?.name ?? 'My Company'}
+            {company?.name ?? 'My Company'}
           </Typography>
           <div className='company-information-div'>
               <Table className='table-info-company'>

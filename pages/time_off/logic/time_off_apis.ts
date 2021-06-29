@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { Token } from 'helpers/type';
+import { RolesInDepartments, Token } from 'helpers/type';
 import {
   updatePaginationTimeOff, updateTimeOffIndexLoading,
   updateStatusTimeOff, updateTimeOffLoadingStatus,
@@ -8,14 +8,14 @@ import {
   updateTimeOffRequestReducer,
 } from './time_off_actions';
 import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValue } from './time_off_interface';
-import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
-import { checkManager } from './time_off_check_manager';
 import moment from 'moment';
-import { getUserCompanyIDsAndDepartmentIDs } from 'helpers/get_user_companyids_departmentids';
 import { getDepartmentsIntoCompanies } from 'helpers/get_the_departments_into_companies';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { dateTimeUiFormat } from 'constants/date_time_ui_format';
+import { checkValidAccess } from 'helpers/check_valid_access';
+import { Roles } from 'constants/roles';
+import { getIDsOfValidAccesses } from 'helpers/get_ids_of_valid_accesses';
 
 const notificationsType = {
   201: 'Sent your letter successfully',
@@ -41,13 +41,21 @@ function isInvalidTimeOffApiData(timeOff) {
 
 interface GetTimeOffsByModel {
   userID?: string;
-  managerCompanyIDs?: string[];
-  managerDepartmentIDs?: string[];
+  rolesInCompany?: Roles[];
+  rolesInDepartments?: RolesInDepartments;
   type: string;
   isExceptMeInMembers?: boolean;
 }
 
-function getTimeOffsByModel(data, { type, userID = '', managerCompanyIDs, managerDepartmentIDs, isExceptMeInMembers = true }
+function getTimeOffsByModel(
+  data,
+  {
+    type,
+    userID = '',
+    rolesInCompany,
+    rolesInDepartments,
+    isExceptMeInMembers = true,
+  }
 : GetTimeOffsByModel) {
   const timeOffs: TimeOffModel[] = [];
 
@@ -66,12 +74,18 @@ function getTimeOffsByModel(data, { type, userID = '', managerCompanyIDs, manage
       return;
     }
 
-    const isManager = checkManager(
-      type,
-      timeOff,
-      managerCompanyIDs,
-      managerDepartmentIDs,
-    );
+    const canEditTimeOffInDepartment = checkValidAccess({
+      rolesInDepartments,
+      validAccesses: [Roles.DEPARTMENT_MANAGER],
+      departmentID: timeOff?.departmentID?._id,
+    });
+
+    const canEditTimeOffInCompany = checkValidAccess({
+      rolesInCompany,
+      validAccesses: [Roles.COMPANY_MANAGER],
+    });
+
+    const isManager = type === 'members' || canEditTimeOffInCompany || canEditTimeOffInDepartment;
 
     timeOffs.push({
       isManager,
@@ -105,7 +119,7 @@ export const getUserDaysOffApi = ({
   try {
     const token: Token =  localStorage.getItem('access_token');
     const state = getState();
-    const authState = state?.auth;
+    const userInfo = state?.userInfo;
 
     if (!infiniteScroll) {
       await dispatch(updateTimeOffLoadingStatus({
@@ -145,16 +159,11 @@ export const getUserDaysOffApi = ({
       return;
     }
 
-    const {
-      managerCompanyIDs,
-      managerDepartmentIDs,
-    }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
-
     const timeOffs = getTimeOffsByModel(
       getDaysoff?.data?.list,
       {
-        managerCompanyIDs,
-        managerDepartmentIDs,
+        rolesInCompany: userInfo?.rolesInCompany,
+        rolesInDepartments: userInfo?.rolesInDepartments,
         userID: '',
         type: 'user',
         isExceptMeInMembers: true,
@@ -201,11 +210,10 @@ export const getMembersDaysOffApi = ({
   try {
     const token: Token =  localStorage.getItem('access_token');
     const state = getState();
-    const authState = state?.auth;
-
-    if (!authState || !authState?.extendedUser) {
-      return;
-    }
+    const userInfo = state?.userInfo;
+    const isAdmin = userInfo?.isAdmin;
+    const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+    const couldGetDaysOffOfMember = checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany });
 
     if (!infiniteScroll) {
       await dispatch(updateTimeOffLoadingStatus({
@@ -224,17 +232,20 @@ export const getMembersDaysOffApi = ({
 
     let queryArrayParams = '';
 
-    const {
-      isAdmin,
-      managerCompanyIDs,
-      managerDepartmentIDs,
-    }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
+    if (!isAdmin && couldGetDaysOffOfMember) {
+      const currentCompanyID = userInfo?.currentCompany?._id;
 
-    if (!isAdmin && (managerCompanyIDs?.length || managerDepartmentIDs.length)) {
-      const stringCompanies = managerCompanyIDs.
+      const stringCompanies = [currentCompanyID].
           map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`);
 
-      const stringDepartments = managerDepartmentIDs.
+      const departmentIDs = getIDsOfValidAccesses({
+        objectMap: userInfo?.rolesInDepartments,
+        validAccesses: [Roles.DEPARTMENT_MANAGER],
+      });
+
+      const stringDepartments = userInfo?.rolesInCompany.includes(Roles.COMPANY_MANAGER)
+        ? []
+        : departmentIDs.
           map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`);
 
       queryArrayParams = `?${[...stringCompanies, ...stringDepartments].join('&')}`;
@@ -361,6 +372,10 @@ export const changeStatusOfTimeOff = () => async (dispatch, getState) => {
       loadingOptionName: undefined,
     }));
   } catch (error) {
+    const handleMessage = notificationsType[error?.response?.data?.statusCode]
+    || 'Something went wrong';
+
+    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
     await dispatch(updateTimeOffIndexLoading({
       isLoading: false,
       loadingIndex: undefined,
@@ -371,24 +386,12 @@ export const changeStatusOfTimeOff = () => async (dispatch, getState) => {
 
 export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
-    if (!authState?.access || !authState?.access?.length) {
-      return;
-    }
-
-    const companiesAndIsAdmin = getUserCompanyIDsAndDepartmentIDs({ access: authState.access });
-
-    if (!companiesAndIsAdmin?.companyIDs || !companiesAndIsAdmin?.companyIDs?.length) {
-      return;
-    }
-
-    const companiesParams = companiesAndIsAdmin.companyIDs.
-      map((companyID, index) => `companyID[${index}]=${companyID}`).join('&');
+    const userInfo = getState()?.userInfo;
 
     const token: Token =  localStorage.getItem('access_token');
 
     const getDepartments = await axios.get(
-      `${config.BASE_URL}/departments?${companiesParams}`,
+      `${config.BASE_URL}/departments?companyID[0]=${userInfo?.currentCompany?._id}`,
       {
         method: 'GET',
         headers: {
@@ -487,14 +490,18 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
         },
       });
 
-    const authState = getState()?.auth;
+    const userInfo = getState()?.userInfo;
     const timeOff = res?.data;
-    const {
-      managerCompanyIDs,
-      managerDepartmentIDs,
-    }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
-    const isManager = managerCompanyIDs?.includes(selectedCompany?.companyID ?? '') ||
-      managerDepartmentIDs?.includes(selectedDepartment?.departmentID ?? '');
+    const validRolesInDepartment = checkValidAccess({
+      rolesInDepartments: userInfo?.rolesInDepartments,
+      validAccesses: [Roles.DEPARTMENT_MANAGER],
+      departmentID: selectedDepartment?.departmentID,
+    });
+    const validRolesInCompany = checkValidAccess({
+      rolesInCompany: userInfo?.rolesInCompany,
+      validAccesses: [Roles.COMPANY_MANAGER],
+    });
+    const isManager = validRolesInCompany || validRolesInDepartment;
 
     const myNewTimeOff = {
       isManager,
@@ -504,7 +511,7 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
       endTime:  moment(timeOff?.endTime).format(dateTimeUiFormat),
       status: timeOff?.status,
       reason: timeOff?.reason ?? '',
-      name: `${authState?.userProfile?.lastName ?? ''} ${authState?.userProfile?.firstName ?? ''}`,
+      name: `${userInfo?.profile?.lastName ?? ''} ${userInfo?.profile.firstName ?? ''}`,
       departmentName: selectedDepartment?.name ?? '',
     };
 

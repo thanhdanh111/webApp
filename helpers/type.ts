@@ -1,4 +1,5 @@
 import { VariantType } from 'notistack';
+import { Roles } from 'constants/roles';
 
 export type Token = string | null;
 
@@ -23,8 +24,8 @@ export interface User {
 }
 
 export interface Company {
-  _id?: string;
   companyID?: string;
+  _id?: string;
   photos?: string [];
   description?: string;
   emails?: string [];
@@ -46,7 +47,7 @@ export interface Data {
   companyRole: string;
   departmentRoles: Access[];
   stringPendingRoles: string[];
-  isCompanyManager?: boolean;
+  companyRoleCouldDelete?: boolean;
   companyRoleRender?: string;
 }
 
@@ -57,7 +58,7 @@ export interface Access {
   companyID?: Company | string;
   departmentID?: Department | string;
   departmentName?: string;
-  canDelete?: boolean;
+  canRemoveFromDepartment?: boolean;
 }
 
 interface EditingUserData {
@@ -174,17 +175,17 @@ export interface CheckInCheckOut {
 }
 
 export interface Profile {
-  firstName: string;
-  lastName: string;
-  email: string;
-  profilePhoto: string;
-  status: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  profilePhoto?: string;
+  status?: string;
 }
 
-interface ExtendedUser {
-  _id: string;
-  gender: string;
-  userID: string;
+interface ExtendedProfile {
+  _id?: string;
+  gender?: string;
+  userID?: string;
 }
 
 interface ApiKey {
@@ -195,23 +196,33 @@ interface ApiKey {
 }
 
 interface ExtendedCompany {
-  companyID: Company;
-  slackToken: string;
-  createdBy: string;
-  createdAt: string;
-  updatedAt: string;
-  apiKey: ApiKey;
+  companyID?: Company;
+  slackToken?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  apiKey?: ApiKey;
 }
 
-export interface LoginValue {
-  value: string;
-  userID: string;
-  access: Access[] | [];
-  userProfile: Profile | {};
-  extendedUser: ExtendedUser | {};
-  extendedCompany: ExtendedCompany | {};
-  department: Department | {};
+export interface RolesInDepartments {
+  [departmentID: string]: Roles[];
 }
+
+export interface UserInfo {
+  token: string;
+  userID: string;
+  access: Access[];
+  profile: Profile;
+  extendedProfile: ExtendedProfile;
+  currentCompany: Company;
+  currentExtendedCompany: ExtendedCompany;
+  currentDepartment: Department;
+  rolesInDepartments: RolesInDepartments;
+  rolesInCompany: Roles[];
+  isAdmin: boolean;
+}
+
+export type UserInfoType = UserInfo;
 
 export interface Notification {
   variant: VariantType;

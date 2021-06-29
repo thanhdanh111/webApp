@@ -136,13 +136,12 @@ export const usersReducer = (state = initialState, action) => {
 
 export const getPaginationThunkAction = () => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
+    const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
     const cursor = getState().users?.cursor;
     const userLimit = getState().users?.userLimit;
-    const companyID = authState?.extendedCompany?.companyID?._id;
-    const accountUserID = authState?.extendedUser?.userID;
-    const accessState = getState().access;
+    const accountUserID = userInfo?.userID;
+    const companyID = userInfo?.currentCompany?._id;
 
     if (cursor === 'END' || !token || !companyID) {
       return;
@@ -165,8 +164,8 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
     const listNewUsers = renderData({
       accountUserID,
       users: res?.data?.list,
-      rolesInCompany: accessState?.rolesInCompany,
-      rolesInDepartments: accessState?.rolesInDepartments,
+      rolesInCompany: userInfo?.rolesInCompany,
+      rolesInDepartments: userInfo?.rolesInDepartments,
     });
 
     dispatch(pagination({ listNewUsers, ...res.data }));
@@ -178,11 +177,10 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
 
 export const getSearchAction = (fullName) => async (dispatch, getState) => {
   try {
-    const authState = getState()?.auth;
+    const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
-    const companyID = authState?.extendedCompany?.companyID?._id;
-    const accountUserID = authState?.extendedUser?.userID;
-    const accessState = getState()?.access;
+    const companyID = userInfo?.currentCompany?._id;
+    const accountUserID = userInfo?.userID;
 
     if (!token || !companyID) {
       return;
@@ -207,8 +205,8 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
     const listSearchUsers = renderData({
       accountUserID,
       users: res?.data?.list,
-      rolesInCompany: accessState?.rolesInCompany,
-      rolesInDepartments: accessState?.rolesInDepartments,
+      rolesInCompany: userInfo?.rolesInCompany,
+      rolesInDepartments: userInfo?.rolesInDepartments,
     });
 
     dispatch(search({ listSearchUsers, ...res.data }));
@@ -243,7 +241,7 @@ function createData(
   companyRoleRender,
   departmentRoles: Access[],
   stringPendingRoles: string[],
-  isCompanyManager,
+  companyRoleCouldDelete,
 ): Data {
 
   return {
@@ -254,7 +252,7 @@ function createData(
     companyRole,
     companyRoleRender,
     stringPendingRoles,
-    isCompanyManager,
+    companyRoleCouldDelete,
   };
 }
 
@@ -283,15 +281,17 @@ export const renderData = ({
       rolesRender[roles?.companyRole?.role],
       roles?.departmentRoles || [],
       roles?.stringPendingRoles || [],
-      roles?.companyRole?.accountIsCompanyManager,
+      roles?.companyRole?.companyRoleCouldDelete,
     );
   });
 };
 
 export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
-    const receiverID = authState?.userID;
+    await dispatch(setLoading(true));
+
+    const userInfo = getState()?.userInfo;
+    const receiverID = userInfo?.userID;
     const token = localStorage.getItem('access_token');
     const cursor = getState()?.users?.notifications?.cursor;
     const notificationLimit = getState()?.users?.notificationLimit;

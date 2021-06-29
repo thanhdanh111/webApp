@@ -55,8 +55,10 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
         limit,
         selectedUserID,
       },
-      auth: {
-        extendedCompany,
+      userInfo: {
+        currentCompany: {
+          _id: companyID,
+        },
         userID,
       },
     }: RootState = state;
@@ -69,12 +71,12 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
       requestUser = selectedUserID;
     }
 
-    if (cursor === 'END' || !token || !extendedCompany?.companyID?._id) {
+    if (cursor === 'END' || !token || !companyID) {
       return;
     }
 
     const params = {
-      companyID: extendedCompany?.companyID?._id,
+      companyID,
       fromTime: fromTime.toString(),
       toTime: toTime.toString(),
     };
@@ -95,6 +97,7 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
         Authorization: `Bearer ${token}`,
       },
     });
+
     if (res.data.totalCount === 0) {
       await dispatch(getAllStatistics([]));
 

@@ -18,7 +18,7 @@ export const getRenderingRolesForUsersPage = ({
   const stringPendingRoles: string[] = [];
   let companyRole;
   const departmentRoles: Access[] = [];
-  const accountIsCompanyManager = rolesInCompany?.includes(Roles.COMPANY_MANAGER) && !exceptDeleteMyself;
+  const companyRoleCouldDelete = rolesInCompany?.includes(Roles.COMPANY_MANAGER) && !exceptDeleteMyself;
 
   for (const access of accesses) {
     const isPendingRole = access?.status !== 'ACCEPTED';
@@ -26,7 +26,7 @@ export const getRenderingRolesForUsersPage = ({
 
     if (isCompanyRole) {
       companyRole = {
-        accountIsCompanyManager,
+        companyRoleCouldDelete,
         ...access,
       };
 
@@ -38,17 +38,17 @@ export const getRenderingRolesForUsersPage = ({
     }
 
     const departmentID = access?.departmentID?._id;
-    const accountIsDepartmentManager = rolesInDepartments?.[departmentID]?.includes(Roles.DEPARTMENT_MANAGER);
-    const canDelete = checkOnlyTrueInArray({
+    const departmentRolesCouldDelete = rolesInDepartments?.[departmentID]?.includes(Roles.DEPARTMENT_MANAGER);
+    const canRemoveFromDepartment = checkOnlyTrueInArray({
       conditionsArray: [
         !exceptDeleteMyself,
-        (accountIsCompanyManager ||
-        (accountIsDepartmentManager && access.role !== Roles.DEPARTMENT_MANAGER)),
+        (companyRoleCouldDelete ||
+        (departmentRolesCouldDelete && access.role !== Roles.DEPARTMENT_MANAGER)),
       ],
     });
 
     departmentRoles.push({
-      canDelete,
+      canRemoveFromDepartment,
       ...access,
       departmentID: access?.departmentID?._id,
       departmentName: access?.departmentID?.name,
