@@ -28,9 +28,9 @@ export const createBoardAction = (res: object) => {
   };
 };
 
-export const deleteBoardAction = (res: object) => {
+export const deleteBoardAction = (id: string) => {
   return {
     type: boardsActionType.DELETE_BOARD,
-    payload: res,
+    payload: id,
   };
 };

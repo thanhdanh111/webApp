@@ -2,10 +2,9 @@ import { Card, CardContent, Grid, Typography } from '@material-ui/core';
 import { Board } from 'helpers/type';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { Delete } from '@material-ui/icons';
 import ConfirmDeleteBoard from '../confirm_delete_board/confirm_delete_board';
-import { deleteBoardMidleWare } from 'pages/board/logic/board_reducer';
+import { deleteBoardMiddleWare } from 'pages/board/logic/board_reducer';
 import { useDispatch } from 'react-redux';
 
 interface InitProps {
@@ -23,15 +22,15 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
   const [open, setOpen] = useState(false);
 
   const onPushToPage = () => {
-    void router.push(`${pathname}/${board._id}`);
+    void router.push(`${pathname}/${board?._id}`);
   };
 
   const handleOpenOrClose = () => {
     setOpen(!open);
   };
 
-  const handleDeleteBoard = () => {
-    dispatch(deleteBoardMidleWare);
+  const handleDeleteBoard = (id: string) => {
+    dispatch(deleteBoardMiddleWare(id));
   };
 
   return (
@@ -50,12 +49,12 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
               </span>
             </div>
             <Typography className='name-board'>
-              <Link href={`${pathname}/${board._id}`}>{board.name}</Link>
+              {board?.name}
             </Typography>
           </div>
           <div className='check-box' onClick={() => handleOpenOrClose()}>
             <Delete className='trash-logo'/>
-            <ConfirmDeleteBoard open={open} onClose={handleOpenOrClose} handleDelete={handleDeleteBoard}/>
+            <ConfirmDeleteBoard open={open} onClose={handleOpenOrClose} handleDelete={() => handleDeleteBoard(board._id)}/>
           </div>
         </CardContent>
       </Card>

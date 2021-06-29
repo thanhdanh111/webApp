@@ -13,7 +13,7 @@ import CustomDecision from '../shapes/shape_decision';
 import { initialElements } from './initial_elements';
 import { Box } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { getBoardDetailDataMiddleWare, updateNameFlowChartMiddelWare } from 'pages/board/logic/board_reducer';
+import { getBoardDetailDataMiddleWare, updateNameFlowChartMiddleWare } from 'pages/board/logic/board_reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useDebounce } from 'pages/users/logic/users_reducer';
@@ -42,7 +42,7 @@ const NewBoard: React.FC<BodyProps> = (props) => {
 
   useEffect(() => {
     if (debouncedInputName) {
-      dispatch(updateNameFlowChartMiddelWare(selectedBoard._id, inputName));
+      dispatch(updateNameFlowChartMiddleWare(selectedBoard._id, inputName));
     }
 
     return;
@@ -102,7 +102,7 @@ const NewBoard: React.FC<BodyProps> = (props) => {
             </div>
             <input
              className='input-name'
-             placeholder={selectedBoard.name || 'untitle'}
+             placeholder={selectedBoard.name}
              onChange={onChangeNameFlowChart}
             />
           </div>

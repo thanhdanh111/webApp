@@ -2,7 +2,7 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { BoardsPage } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction } from './board_action';
+import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction } from './board_action';
 import { boardsActionType } from './board_type_action';
 
 export enum NotificationTypes {
@@ -52,10 +52,13 @@ export const boardsReducer = (state = initialState, action) => {
       };
 
     case boardsActionType.DELETE_BOARD:
+      const resolveBoard = state.boards.filter((board) => board._id !== action.payload);
+
       return {
         ...state,
-        selectedBoard: action.payload,
+        boards: resolveBoard,
       };
+
     default:
       return state;
   }
@@ -112,7 +115,7 @@ export const createFlowChartMiddleWare = (router, currentPath) => async (dispatc
     const authState = getState().auth;
     const companyID = authState.extendedCompany?.companyID?._id;
 
-    const nameNewBoardDefault = 'untitle';
+    const nameNewBoardDefault = 'untitled';
 
     if (!token || !companyID) {
 
@@ -142,7 +145,7 @@ export const createFlowChartMiddleWare = (router, currentPath) => async (dispatc
   }
 };
 
-export const updateNameFlowChartMiddelWare = (boardID: string, name: string) => async (dispatch, getState) => {
+export const updateNameFlowChartMiddleWare = (boardID: string, name: string) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
@@ -177,7 +180,7 @@ export const updateNameFlowChartMiddelWare = (boardID: string, name: string) => 
   }
 };
 
-export const deleteBoardMidleWare = (boardID: string) => async (dispatch, getState) => {
+export const deleteBoardMiddleWare = (boardID: string) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const authState = getState().auth;
@@ -199,6 +202,7 @@ export const deleteBoardMidleWare = (boardID: string) => async (dispatch, getSta
       },
     );
     if (res.data) {
+      dispatch(deleteBoardAction(boardID));
       dispatch(pushNewNotifications({ variant: 'success', message: NotificationTypes.succeedDeleteBoard }));
     }
   } catch (error) {

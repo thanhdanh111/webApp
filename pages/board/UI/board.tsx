@@ -44,9 +44,9 @@ const Board: FunctionComponent = () => {
         />
       </div>
       <div className='list-board'>
-        {Array.isArray(listBoards) && listBoards.map((item) => {
+        {Array.isArray(listBoards) && listBoards.map((item, index) => {
           return (
-            <BoardCard key={item._id} board={item}/>
+            <BoardCard key={item?._id ?? index} board={item}/>
           );
         })}
 
