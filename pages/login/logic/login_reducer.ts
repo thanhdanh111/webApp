@@ -11,7 +11,7 @@ import { GetRolesOfLoggedInUser, getRolesOfLoggedInUser } from '../../../helpers
 const initialState: UserInfo = {
   token: '',
   userID: '',
-  accesses: [],
+  access: [],
   profile: {},
   extendedProfile: {},
   currentCompany: {},
@@ -114,7 +114,7 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       rolesInDepartments,
       isAdmin,
     }: GetRolesOfLoggedInUser = getRolesOfLoggedInUser({
-      accesses: res?.data?.access,
+      access: res?.data?.access,
       filterCompanyID:  companyIDsOfDepartmentIDs?.[0] ?? companyIDs?.[0],
     });
 
@@ -123,7 +123,7 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
       rolesInCompany,
       rolesInDepartments,
       token,
-      accesses: data?.access,
+      access: data?.access,
       userID: data?.userID,
       profile: data?.userProfile,
       extendedProfile: data?.extendedUser,
@@ -134,7 +134,7 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
   } catch (error) {
     await dispatch(GetUserData({
       token,
-      accesses: data?.access,
+      access: data?.access,
       userID: data?.userID,
       profile: data?.userProfile,
       extendedProfile: data?.extendedUser,

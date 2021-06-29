@@ -17,7 +17,7 @@ const Auth = ({ children, publicPages }) => {
   const path = window.location.pathname;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const accesses = useSelector((state: RootState) => state?.userInfo?.accesses);
+  const access = useSelector((state: RootState) => state?.userInfo?.access);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,11 +26,11 @@ const Auth = ({ children, publicPages }) => {
 
   useEffect(() => {
     const hasPermission = hasAccessPermission();
-    if (hasPermission || accesses?.length <= 0) {
+    if (hasPermission || access?.length <= 0) {
       return;
     }
     checkAccessUser();
-  }, [accesses]);
+  }, [access]);
 
   const getFCMToken = async () => {
     const fcmToken = await getBrowserToken();
@@ -65,7 +65,7 @@ const Auth = ({ children, publicPages }) => {
   };
 
   const hasAccessPermission = () => {
-    const filteredAccess = accesses?.filter((item) => {
+    const filteredAccess = access?.filter((item) => {
       const isAdmin = item?.role === 'ADMIN';
       const hasPermission = item?.companyID !== null && item?.status === 'ACCEPTED';
       if (hasPermission || isAdmin) {

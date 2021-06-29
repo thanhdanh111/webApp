@@ -10,7 +10,7 @@ const TimeOff = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: RootState) => state?.userInfo);
   const userID = userInfo?.userID;
-  const accesses = userInfo?.accesses;
+  const access = userInfo?.access;
   const {
     optionState,
     ownTimeOffs,
@@ -29,22 +29,22 @@ const TimeOff = () => {
   }: TimeOffValueType = useSelector((state: RootState) => state.timeoff);
 
   useEffect(() => {
-    if (membersTimeOffsLoading || membersTimeOffs.length || !accesses?.length) {
+    if (membersTimeOffsLoading || membersTimeOffs.length || !access?.length) {
 
       return;
     }
 
     dispatch(getMembersDaysOffApi({ userID, limit: 30 }));
-  }, [accesses]);
+  }, [access]);
 
   useEffect(() => {
-    if (ownTimeOffsLoading || !userID || ownTimeOffs.length || !accesses?.length) {
+    if (ownTimeOffsLoading || !userID || ownTimeOffs.length || !access?.length) {
 
       return;
     }
 
     dispatch(getUserDaysOffApi({ userID, limit: 30, cursor: membersTimeOffsCursor }));
-  }, [userID, accesses]);
+  }, [userID, access]);
 
   function fetchUserDaysOffData() {
     dispatch(getUserDaysOffApi({ userID , limit: 30, cursor: ownTimeOffsCursor, infiniteScroll: true }));
