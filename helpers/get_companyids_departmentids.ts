@@ -1,28 +1,22 @@
-import { Roles } from 'constants/roles';
-import { checkOnlyTrueInArray } from './check_only_true';
 import { Access } from './type';
 
 interface GetUserCompanies {
   access: Access[];
-  filterRoles?: string[];
 }
 
 interface GetUserCompanyIDsAndDepartmentIDs {
   companyIDs: string[];
   departmentIDs: string[];
   companyIDsOfDepartmentIDs: string[];
-  isAdmin: boolean;
 }
 
 export type GetUserCompanyIDsAndDepartmentIDsType = GetUserCompanyIDsAndDepartmentIDs;
 
 export const getUserCompanyIDsAndDepartmentIDs = ({
   access,
-  filterRoles,
 }: GetUserCompanies): GetUserCompanyIDsAndDepartmentIDs => {
   if (!access || !access?.length) {
     return {
-      isAdmin: false,
       companyIDs: [],
       departmentIDs: [],
       companyIDsOfDepartmentIDs: [],
@@ -32,7 +26,6 @@ export const getUserCompanyIDsAndDepartmentIDs = ({
   const companyIDs: string[] = [];
   const departmentIDs: string[] = [];
   const companyIDsOfDepartmentIDs: string[] = [];
-  let isAdmin = false;
   const filteredCompanies = { };
   const filteredDepartmentIDs = { };
 
@@ -42,27 +35,6 @@ export const getUserCompanyIDsAndDepartmentIDs = ({
     const filteredCompanyID = (!departmentID && filteredCompanies[companyID] !== undefined);
 
     if (!companyID || filteredCompanyID) {
-      return;
-    }
-
-    const isAdminRole = checkOnlyTrueInArray({
-      conditionsArray: [
-        each?.role,
-        each?.role === Roles.ADMIN,
-      ],
-    });
-
-    if (isAdminRole) {
-      isAdmin = true;
-
-      return;
-    }
-
-    const isNotSuitRole = filterRoles &&
-      filterRoles?.length &&
-      !filterRoles.includes(each?.role ?? '');
-
-    if (isNotSuitRole) {
       return;
     }
 
@@ -84,7 +56,6 @@ export const getUserCompanyIDsAndDepartmentIDs = ({
   });
 
   return {
-    isAdmin,
     companyIDs,
     departmentIDs,
     companyIDsOfDepartmentIDs,
