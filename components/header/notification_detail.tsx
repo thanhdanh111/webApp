@@ -2,13 +2,17 @@ import React, { FunctionComponent, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import {  Button, Container, MenuItem, Typography } from '@material-ui/core';
 import moment from 'moment';
-import { NotificationTypeState } from 'helpers/type';
+import { NotificationTypeState, UserInfoType } from 'helpers/type';
 import UserAvatar from '@components/user_avatar/info_user';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateUnreadNotificationMiddleware } from 'pages/users/logic/users_reducer';
 
-import { isAdminOrManagerUser } from 'helpers/check_role_user';
 import { getEntityName } from 'helpers/check_type_entity_name';
+import { Roles } from 'constants/roles';
+import { checkValidAccess } from 'helpers/check_valid_access';
+import { RootState } from 'redux/reducers_registration';
+
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
 
 const NotificationItemUI: FunctionComponent<NotificationTypeState> = (props: NotificationTypeState) => {
   const [open, setOpen] = useState(false);
@@ -16,12 +20,13 @@ const NotificationItemUI: FunctionComponent<NotificationTypeState> = (props: Not
   const name = props.createdBy && `${props?.createdBy.firstName} ${props?.createdBy.lastName}`;
   const time = moment(props.createdAt).format('DD/MM/YYYY HH:mm');
   const notificationID = props._id;
-
   const read = props.isRead ? 'read' : 'unread';
-  const authState = useSelector((state: RootStateOrAny) => state.auth);
-  const companyID = authState.extendedCompany?.companyID?._id;
-  const departmentID = authState.department?._id;
-  const checkRole = isAdminOrManagerUser(authState.access, companyID, departmentID);
+  const {
+    isAdmin,
+    rolesInCompany,
+  }: UserInfoType =  useSelector((state: RootState) => state.userInfo);
+  const checkRole = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
+
   const handleClickOpen = () => {
     dispatch(updateUnreadNotificationMiddleware(notificationID, true));
     setOpen(true);

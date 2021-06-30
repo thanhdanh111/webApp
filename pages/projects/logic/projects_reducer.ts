@@ -93,7 +93,7 @@ export const projectsReducer = (state = initialState, action) => {
 export const getProjectDataMiddleWare = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const userInfo = getState().userInfo;
+    const userInfo = getState()?.userInfo;
     const companyID = userInfo?.currentCompany?._id;
 
     const res = await axios.get(`${config.BASE_URL}/projects`, {
@@ -179,7 +179,7 @@ export const updateChannelIDMiddeleWare = (projectID: string, channelID: string)
 export const getExtendedCompaniesMiddelWare = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const userInfo = getState().userInfo;
+    const userInfo = getState()?.userInfo;
     const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !companyID) {
@@ -216,7 +216,7 @@ export const getExtendedCompaniesMiddelWare = () => async (dispatch, getState) =
 export const createProjectMiddelWare = (name: string, channelID: string, description: string) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const userInfo = getState().userInfo;
+    const userInfo = getState()?.userInfo;
     const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !companyID || !channelID) {

@@ -130,11 +130,14 @@ export const usersReducer = (state = initialState, action) => {
 
 export const getPaginationThunkAction = () => async (dispatch, getState) => {
   try {
-    const userInfo = getState().userInfo;
+    const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
     const cursor = getState().users?.cursor;
     const userLimit = getState().users?.userLimit;
     const companyID = userInfo?.currentCompany?._id;
+
+    console.log(companyID);
+    
 
     if (cursor === 'END' || !token || !companyID) {
       return;
@@ -147,6 +150,9 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
            Authorization: `Bearer ${token}`,
          },
        });
+
+    
+       console.log(res.data);
 
     if (res.data.totalCount === 0){
       await dispatch(setLoading(true));
@@ -163,7 +169,7 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
 
 export const getSearchAction = (fullName) => async (dispatch, getState) => {
   try {
-    const userInfo = getState().userInfo;
+    const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
     const companyID = userInfo?.currentCompany?._id;
 
@@ -243,7 +249,7 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
     await dispatch(setLoading(true));
 
-    const userInfo = getState().userInfo;
+    const userInfo = getState()?.userInfo;
     const receiverID = userInfo?.userID;
     const token = localStorage.getItem('access_token');
     const cursor = getState()?.users?.notifications?.cursor;

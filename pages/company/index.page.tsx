@@ -10,7 +10,7 @@ import { Avatar, Container, Grid } from '@material-ui/core';
 
 const CompanyPage = () => {
   // const { companyNotifications  }: CompanyStateType  = useSelector((state: RootState) => state.company);
-  const userInfo  = useSelector((state: RootState) => state.userInfo);
+  const userInfo  = useSelector((state: RootState) => state?.userInfo);
   // const dispatch = useDispatch();
   // const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
   const photoNameCompany = userInfo?.currentCompany?.name?.charAt(0);

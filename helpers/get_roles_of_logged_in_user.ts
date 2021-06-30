@@ -2,7 +2,7 @@ import { Access } from './type';
 import { Roles } from '../constants/roles';
 
 interface GetRolesOfCompanies {
-  accesses: Access[];
+  access: Access[];
   filterCompanyID: string;
 }
 
@@ -18,12 +18,12 @@ export interface RolesInDepartments {
 
 export type GetRolesOfLoggedInUser = ReturnRolesOfLoggedInUser;
 
-export const getRolesOfLoggedInUser = ({ accesses, filterCompanyID }: GetRolesOfCompanies) => {
+export const getRolesOfLoggedInUser = ({ access, filterCompanyID }: GetRolesOfCompanies) => {
   let isAdmin = false;
   const rolesInCompany: Roles[] = [];
   const rolesInDepartments: RolesInDepartments = {};
 
-  accesses.forEach((each) => {
+  access.forEach((each) => {
     if (each?.role === Roles.ADMIN) {
       isAdmin = true;
 

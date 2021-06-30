@@ -186,7 +186,7 @@ export interface RolesInDepartments {
 export interface UserInfo {
   token: string;
   userID: string;
-  accesses: Access[];
+  access: Access[];
   profile: Profile;
   extendedProfile: ExtendedProfile;
   currentCompany: Company;

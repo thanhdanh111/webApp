@@ -15,7 +15,7 @@ import BusinessIcon from '@material-ui/icons/Business';
 type Token = string | null;
 
 const DropDown = () => {
-  const userInfo = useSelector((state: RootState) => state.userInfo);
+  const userInfo = useSelector((state: RootState) => state?.userInfo);
   const dispatch = useDispatch();
   const router = useRouter();
 

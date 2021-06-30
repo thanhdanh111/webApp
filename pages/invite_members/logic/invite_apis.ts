@@ -39,10 +39,7 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
 
     await dispatch(inviteLoading({ isLoading: false }));
   } catch (error) {
-    const errorNotification = returnNotification({ type: 'failed' });
-
-    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
-
+    await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.error403 }));
     await dispatch(inviteLoading({ isLoading: false }));
   }
 };

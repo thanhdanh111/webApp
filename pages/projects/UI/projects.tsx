@@ -22,7 +22,7 @@ const Projects: FunctionComponent = () => {
     isAdmin,
     rolesInCompany,
     currentCompany,
-  }: UserInfoType =  useSelector((state: RootState) => state.userInfo);
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
   const companyName = currentCompany?.name;
 

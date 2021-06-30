@@ -11,7 +11,7 @@ import { Typography } from '@material-ui/core';
 const BoardTasks: FunctionComponent = () => {
   const dispatch = useDispatch();
   const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
-  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
+  const userInfo = useSelector((state: RootStateOrAny) => state?.userInfo);
   const loading = taskStatuses.loading;
   const companyID = userInfo?.currentCompany?._id;
   const departmentID = userInfo?.currentDeparment?._id;

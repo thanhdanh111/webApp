@@ -2,7 +2,7 @@ import { Roles } from '../constants/roles';
 import { compareAccesses } from '../helpers/compare_accesses';
 
 interface ObjectMapOfRoles {
-  [key: string]: Roles[];
+  [id: string]: Roles[];
 }
 
 interface GetIDsOfValidAccesses {

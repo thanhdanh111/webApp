@@ -90,7 +90,7 @@ export  const taskStatusesReducer = (state = initialState, action) => {
 export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const userInfo = getState().userInfo;
+    const userInfo = getState()?.userInfo;
     const companyID = userInfo?.currentCompany?._id;
     const departmentID = userInfo?.currentDepartment?._id;
 
@@ -129,7 +129,7 @@ export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
 export const getTasksByUserThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const userInfo = getState().userInfo;
+    const userInfo = getState()?.userInfo;
     const companyID = userInfo?.currentCompany?._id;
     const departmentID = userInfo?.currentDepartment?._id;
     const userID = userInfo?.userID;

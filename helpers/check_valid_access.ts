@@ -20,11 +20,5 @@ export function checkValidAccess({ rolesInCompany, rolesInDepartments, validAcce
     isValid = compareAccesses({ validAccesses, currentAccesses: rolesInDepartments?.[departmentID] });
   }
 
-  if (!departmentID && rolesInDepartments) {
-    const departmentIDs = Object.keys(rolesInDepartments);
-
-    isValid = departmentIDs.some((id) => compareAccesses({ validAccesses, currentAccesses: rolesInDepartments?.[id] }));
-  }
-
   return isValid;
 }
