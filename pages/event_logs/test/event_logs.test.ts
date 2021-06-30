@@ -30,14 +30,17 @@ beforeAll(async () => {
 
 describe('Users Page', () => {
 
-  test('Test UI list users page successfully after login', async () => {
+  test('Test UI event logs page successfully after login', async () => {
     await page.goto('http://localhost:5000/event_logs');
     await page.waitForSelector('.event-container');
+
+    await page.waitForSelector('.issus');
+    await page.waitForSelector('.issus-top');
+    await page.waitForSelector('.issus-bottom');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
   });
-
 });
 
 afterAll(() => {

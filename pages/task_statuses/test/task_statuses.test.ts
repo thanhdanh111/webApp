@@ -32,7 +32,7 @@ beforeAll(async () => {
 });
 
 describe('Home page', () => {
-  test('Test home successfully after login', async () => {
+  test('Test taskStatus successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.board');
 

@@ -52,7 +52,7 @@ const TaskBoardUI = () => {
     ]);
   };
 
-  const changeTaskBoard = (event) => {
+  const changeSelectedTaskBoard = (event) => {
     if (event.target.value === currentTaskBoard._id) {
       return;
     }
@@ -121,7 +121,7 @@ const TaskBoardUI = () => {
     dispatch(createTaskBoardThunkAction(titleTaskBoard, descriptionTaskBoard));
   };
 
-  const modalCreatedTaskBoard = () => {
+  const creatTaskBoardModal = () => {
     return (
       <Dialog
         className='add-task-board-dialog'
@@ -162,10 +162,10 @@ const TaskBoardUI = () => {
       <IconButton className='add-task-board' aria-label='light mode' color='inherit' onClick={handleOpenOrClose}>
         <ViewModuleIcon className='nav-click-up-task-board-icon' />
       </IconButton>
-      {modalCreatedTaskBoard()}
+      {creatTaskBoardModal()}
       <Select
           value={currentTaskBoard?._id}
-          onChange={changeTaskBoard}
+          onChange={changeSelectedTaskBoard}
           className='nav-click-up-task-board-select'
       >
         {(checkArray(taskBoards) && !hasNoData) ? taskBoards.map((item, index) => {

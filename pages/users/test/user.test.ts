@@ -39,7 +39,7 @@ describe('Users Page', () => {
 
     await page.waitForSelector('.btn-expanded');
     await page.click('.btn-expanded');
-    await page.waitFor(5000);
+    await page.waitFor(50000);
 
     const expanded = await page.screenshot();
     expect(expanded).toMatchImageSnapshot();
