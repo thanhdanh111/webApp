@@ -30,7 +30,7 @@ const Users: FunctionComponent = () => {
 
   return (
     <React.Fragment>
-        <ListUsers />
+      <ListUsers />
     </React.Fragment>
   );
 };
