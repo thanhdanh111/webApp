@@ -3,7 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import BaseTable from '@components/table/table';
 import { HeadCell } from 'helpers/type';
-import CustomizedReturnActionComponent from './customized_return_user_detail';
+import CustomizedActionCell from './customized_action_cell';
 import { updateUsersReducer } from 'pages/users/logic/users_actions';
 import { useDispatch } from 'react-redux';
 
@@ -43,9 +43,9 @@ const UserDetail = (props) => {
       length={props?.data?.departmentRoles?.length}
       fetchData={() => 'handled'}
       needStickyHeader={false}
-      CustomizedReturnActionComponent={
+      CustomizedCellsAtLastColumn={
         (funcProps) =>
-        <CustomizedReturnActionComponent
+        <CustomizedActionCell
           {...funcProps}
           userIndex={props?.index}
           userData={props?.data}

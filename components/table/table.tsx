@@ -16,7 +16,7 @@ import { checkStringCondition } from 'helpers/check_string_condtion';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import TableRowBase from './table_row';
 
-interface CustomizedReturnActionComponent {
+interface CustomizedCellsAtLastColumn {
   status?: string;
   itemIndex?: number;
 }
@@ -41,7 +41,7 @@ interface InitialProps {
   needStickyHeader?: boolean;
   fixedHeightInfiniteScroll?: number;
   ComponentDetail?: React.FunctionComponent;
-  CustomizedReturnActionComponent?: React.FunctionComponent<CustomizedReturnActionComponent>;
+  CustomizedCellsAtLastColumn?: React.FunctionComponent<CustomizedCellsAtLastColumn>;
 }
 
 const BaseTable = (props: InitialProps) => {
@@ -72,10 +72,10 @@ const BaseTable = (props: InitialProps) => {
       return;
     }
 
-    if (props?.CustomizedReturnActionComponent) {
-      const ActionComponent = props?.CustomizedReturnActionComponent;
+    if (props?.CustomizedCellsAtLastColumn) {
+      const CellAtLastColumn = props?.CustomizedCellsAtLastColumn;
 
-      return  <ActionComponent status={itemStatus} itemIndex={itemIndex}/>;
+      return  <CellAtLastColumn status={itemStatus} itemIndex={itemIndex}/>;
     }
 
     const notPendingStatus = checkStringCondition({
