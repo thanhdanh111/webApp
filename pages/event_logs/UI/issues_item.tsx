@@ -23,19 +23,21 @@ const IssuesItem: FunctionComponent<IssuesItemType> = (props: InitProps) => {
   const showTime = time.toUTCString();
 
   return (
-    <MenuItem className='issus' onClick={() => onPushToPage(eventLog._id)}>
+    <MenuItem className='issus-item'>
+      <div className='issus-item-div' onClick={() => onPushToPage(eventLog._id)}>
         <Container className='issus-top'>
-            <Checkbox className='issus-check' />
-            <a>
-              {eventLog.exception.type || 'undefined'}
-            </a>
-        </Container>
-        <Container className='issus-bottom'>
-            <div className='value-issus'>
-              <Typography className='issus-item-value'>{eventLog.exception.value}</Typography>
-            </div>
-            <Typography className='issus-item-timestamp'>{showTime}</Typography>
-        </Container>
+              <Checkbox className='issus-check' />
+              <a>
+                {eventLog.exception.type || 'undefined'}
+              </a>
+          </Container>
+          <Container className='issus-bottom'>
+              <div className='value-issus'>
+                <Typography className='issus-item-value'>{eventLog.exception.value}</Typography>
+              </div>
+              <Typography className='issus-item-timestamp'>{showTime}</Typography>
+          </Container>
+      </div>
     </MenuItem>
   );
 };
