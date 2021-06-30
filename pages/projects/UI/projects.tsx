@@ -6,7 +6,11 @@ import { getProjectDataMiddleWare } from '../logic/projects_reducer';
 import { useRouter } from 'next/router';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import ProjectPageUI from 'pages/projects/UI/project';
-import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
+import { UserInfoType } from 'helpers/type';
+import { checkValidAccess } from 'helpers/check_valid_access';
+import { Roles } from 'constants/roles';
+
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
 
 const Projects: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -14,15 +18,13 @@ const Projects: FunctionComponent = () => {
   const listProjects = project.projects;
   const router = useRouter();
   const pathname = router.pathname;
-  const authState = useSelector((state: RootState) => state.auth);
-  const companyName = authState?.extendedCompany?.companyID?.name;
-
   const {
     isAdmin,
-    managerCompanyIDs,
-    managerDepartmentIDs,
-  }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
-  const loadMemberData = isAdmin || managerCompanyIDs?.length > 0 || managerDepartmentIDs?.length > 0;
+    rolesInCompany,
+    currentCompany,
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
+  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
+  const companyName = currentCompany?.name;
 
   useEffect(() => {
     return void fetchDataProject();

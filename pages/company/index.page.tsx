@@ -10,10 +10,10 @@ import { Avatar, Container, Grid } from '@material-ui/core';
 
 const CompanyPage = () => {
   // const { companyNotifications  }: CompanyStateType  = useSelector((state: RootState) => state.company);
-  const authState  = useSelector((state: RootState) => state.auth);
+  const userInfo  = useSelector((state: RootState) => state?.userInfo);
   // const dispatch = useDispatch();
   // const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
-  const photoNameCompany = authState?.extendedCompany?.companyID?.name?.charAt(0);
+  const photoNameCompany = userInfo?.currentCompany?.name?.charAt(0);
   const [img, setImg] = useState(true);
 
   // useEffect(pushNotification, [companyNotifications]);
@@ -39,9 +39,9 @@ const CompanyPage = () => {
     <>
       <Container className='company-page'>
         <Grid className='company-photo' sm={3} xs={12}>
-          { (authState?.extendedCompany?.companyID?.photos?.[0] && img) ?
+          { (userInfo?.currentCompany?.photos?.[0] && img) ?
             <img
-              src={authState.extendedCompany.companyID.photos[0]}
+              src={userInfo?.currentCompany?.photos[0]}
               className='img-company'
               onError={() => setImg(false)}
             /> :

@@ -8,18 +8,21 @@ import { RootState } from 'redux/reducers_registration';
 import { sendSlackCompanyToken } from '../logic/company_apis';
 import { CompanyStateType } from '../logic/company_reducer';
 import { fillingToken } from '../logic/company_actions';
-import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
+import { Roles } from 'constants/roles';
+import { UserInfoType } from 'helpers/type';
+import { checkValidAccess } from 'helpers/check_valid_access';
 
-const ConnectSlackTabUi: FunctionComponent = ({}) => {
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+
+const ConnectSlackTabUi: FunctionComponent = () => {
   const dispatch = useDispatch();
   const { onSendingToken, slackToken }: CompanyStateType = useSelector((state: RootState) => state.company);
-  const authState =  useSelector((state: RootState) => state.auth);
   const {
     isAdmin,
-    managerCompanyIDs,
-    managerDepartmentIDs,
-  }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
-  const loadMemberData = isAdmin || managerCompanyIDs?.length > 0 || managerDepartmentIDs?.length > 0;
+    rolesInCompany,
+    currentExtendedCompany,
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
+  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
 
   function handleSavingChanges() {
     if (!loadMemberData || onSendingToken || !slackToken) {
@@ -45,7 +48,7 @@ const ConnectSlackTabUi: FunctionComponent = ({}) => {
       return 'Sending...';
     }
 
-    if (authState?.extendedCompany?.slackToken) {
+    if (currentExtendedCompany?.slackToken) {
       return 'Update';
     }
 
