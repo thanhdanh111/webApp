@@ -14,7 +14,7 @@ const actions = {
   },
 };
 
-const CustomizedActionCell = (departmentProps) => {
+const CustomizedControlsCell = (departmentProps) => {
   let actionList: string[] = [];
   const currentDepartmentIndex = departmentProps?.itemIndex;
   const [open, setOpen] = useState(false);
@@ -106,4 +106,4 @@ const CustomizedActionCell = (departmentProps) => {
   );
 };
 
-export default CustomizedActionCell;
+export default CustomizedControlsCell;

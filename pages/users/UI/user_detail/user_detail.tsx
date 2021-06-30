@@ -3,7 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import BaseTable from '@components/table/table';
 import { HeadCell } from 'helpers/type';
-import CustomizedActionCell from './customized_action_cell';
+import CustomizedControlsCell from './customized_action_cell';
 import { updateUsersReducer } from 'pages/users/logic/users_actions';
 import { useDispatch } from 'react-redux';
 
@@ -45,7 +45,7 @@ const UserDetail = (props) => {
       needStickyHeader={false}
       CustomizedCellsAtLastColumn={
         (funcProps) =>
-        <CustomizedActionCell
+        <CustomizedControlsCell
           {...funcProps}
           userIndex={props?.index}
           userData={props?.data}
