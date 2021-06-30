@@ -37,6 +37,8 @@ describe('Users Page', () => {
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
 
+    await page.waitForSelector('.table-body');
+    await page.waitForSelector('.checkbox-cell');
     await page.waitForSelector('.btn-expanded');
     await page.click('.btn-expanded');
     await page.waitFor(50000);
