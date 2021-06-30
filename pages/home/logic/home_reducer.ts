@@ -147,9 +147,9 @@ export  const taskStatusesReducer = (state = initialState, action) => {
 export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
+    const departmentID = userInfo?.currentDepartment?._id;
 
     if (!token || !companyID) {
       await dispatch(hideLoaderListUser());
@@ -186,10 +186,10 @@ export const getTaskStatusThunkAction = () => async (dispatch, getState) => {
 export const getTasksByUserThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState?.extendedCompany?.companyID?._id;
-    const departmentID = authState?.department?._id;
-    const userID = authState?.userID;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
+    const departmentID = userInfo?.currentDepartment?._id;
+    const userID = userInfo?.userID;
 
     if (!token || !companyID || !userID) {
       return;

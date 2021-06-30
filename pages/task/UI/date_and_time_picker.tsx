@@ -32,7 +32,7 @@ const DatetimeIconPicker: React.FC<InitProps> = (props) => {
         value={date || moment()}
         onChange={(event) => {
           setDate(event?.toString() || '');
-          props.onChangeDate({ name: props.name, value: event });
+          props.onChangeDate({ name: props?.name, value: event });
         }}
         minDateTime={props.minDateTime || ''}
         renderInput={(propsDate) => (

@@ -32,9 +32,9 @@ const DateIconPicker: React.FC<InitProps> = (props) => {
         value={date}
         onChange={(event) => {
           setDate(event?.toString() || '');
-          props.onChangeDate({ name: props.name, value: event });
+          props.onChangeDate({ name: props?.name, value: event });
         }}
-        minDate={props.minDate || ''}
+        minDate={props?.minDate || ''}
         renderInput={(propsDate) => (
           <TextField className='date-add' variant='outlined' {...propsDate} />
         )}

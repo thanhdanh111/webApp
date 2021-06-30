@@ -54,7 +54,7 @@ enum TypePiority {
 }
 
 const Panel: React.FC = () => {
-  const newTask = useSelector((state: RootStateOrAny) => state.taskStatuses.newTask);
+  const newTask = useSelector((state: RootStateOrAny) => state.taskStatuses?.newTask);
   const dispatch = useDispatch();
 
   const onChoosingValue = (priority) => {
@@ -78,7 +78,7 @@ const Panel: React.FC = () => {
     <Grid
       container
       justify='flex-start'
-      spacing={newTask.startDate ? 1 : 2}
+      spacing={newTask?.startDate ? 1 : 2}
       className='grid-icon'
     >
       <Grid item>
@@ -88,7 +88,7 @@ const Panel: React.FC = () => {
               <Tooltip title='Set Priority' arrow={true} placement='top'>
                   <OutlinedFlagIcon
                     fontSize='small'
-                    className={`icon-add ${TypePiority[newTask.priority || '']}`}
+                    className={`icon-add ${TypePiority[newTask?.priority || '']}`}
                     {...bindTrigger(popupState)}
                   />
               </Tooltip>
@@ -143,9 +143,9 @@ const Panel: React.FC = () => {
           onChangeDate={onChangeDate}
           title='Due Date'
           minDateTime={
-            newTask.startDate
-              ? moment(newTask.startDate) > moment()
-                ? newTask.startDate
+            newTask?.startDate
+              ? moment(newTask?.startDate) > moment()
+                ? newTask?.startDate
                 : moment()
               : moment()
           }

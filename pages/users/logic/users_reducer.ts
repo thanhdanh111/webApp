@@ -130,11 +130,11 @@ export const usersReducer = (state = initialState, action) => {
 
 export const getPaginationThunkAction = () => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
+    const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
     const cursor = getState().users?.cursor;
     const userLimit = getState().users?.userLimit;
-    const companyID = authState?.extendedCompany?.companyID?._id;
+    const companyID = userInfo?.currentCompany?._id;
 
     if (cursor === 'END' || !token || !companyID) {
       return;
@@ -163,9 +163,9 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
 
 export const getSearchAction = (fullName) => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
+    const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
-    const companyID = authState?.extendedCompany?.companyID?._id;
+    const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !companyID) {
       return;
@@ -243,8 +243,8 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
     await dispatch(setLoading(true));
 
-    const authState = getState().auth;
-    const receiverID = authState?.userID;
+    const userInfo = getState()?.userInfo;
+    const receiverID = userInfo?.userID;
     const token = localStorage.getItem('access_token');
     const cursor = getState()?.users?.notifications?.cursor;
     const notificationLimit = getState()?.users?.notificationLimit;

@@ -4,17 +4,18 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import { Task, TaskStatusType } from 'helpers/type';
 import TaskItem from './task_clickup';
-import { LoginValue } from '../../../../helpers/type';
-import { isAdminOrManagerUser } from '../../../../helpers/check_role_user';
+import { UserInfo } from '../../../../helpers/type';
 import { checkArray } from 'helpers/check_array';
 import { useDispatch } from 'react-redux';
 import { setTypeCreateTask } from 'pages/home/logic/home_actions';
 import TaskNew from '../../../task/UI/task_new';
+import { Roles } from 'constants/roles';
+import { checkValidAccess } from 'helpers/check_valid_access';
 
 interface InitProps {
   taskStatus: TaskStatusType;
   listTasks: Task[];
-  user: LoginValue;
+  user: UserInfo;
   companyID: string | '';
   departmentID: string | '';
   showTask: string;
@@ -29,7 +30,18 @@ const TaskStatus = (props: InitProps) => {
   const newTaskRef = useRef<HTMLTitleElement>(null);
 
   const GenerateTasks = () => {
-    if (!isAdminOrManagerUser(user.access, companyID, departmentID) || showTask === 'me') {
+    const haveComanyAccess = checkValidAccess({
+      rolesInCompany: user?.rolesInCompany,
+      validAccesses: [Roles.COMPANY_MANAGER],
+    });
+    const haveDepartmentAccess = checkValidAccess({
+      departmentID,
+      rolesInDepartments: user?.rolesInDepartments,
+      validAccesses: [Roles.DEPARTMENT_MANAGER],
+    });
+    const haveAccesses = user?.isAdmin || haveComanyAccess || haveDepartmentAccess;
+
+    if (!haveAccesses || showTask === 'me') {
       return checkArray(listTasks) && listTasks.map((task) => {
         return (
           <TaskItem key={task?.taskStatusID?._id} {...task}/>
@@ -37,7 +49,7 @@ const TaskStatus = (props: InitProps) => {
       });
     }
 
-    if (isAdminOrManagerUser(user.access, companyID, departmentID) || showTask === 'everyone') {
+    if (haveAccesses || showTask === 'everyone') {
       return checkArray(taskStatus.taskIDs) && taskStatus.taskIDs.map((task) => {
 
         return (

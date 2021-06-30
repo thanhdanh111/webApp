@@ -17,15 +17,15 @@ import { assignUser, unassignUser } from '../../home/logic/home_actions';
 
 const AssignUser: React.FC = () => {
   const dispatch = useDispatch();
-  const authState = useSelector((state: RootStateOrAny) => state.auth);
+  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
   const listUser = useSelector((state: RootStateOrAny) => state.users);
-  const usersAssigned = useSelector((state: RootStateOrAny) => state.taskStatuses.usersAssigned);
+  const usersAssigned = useSelector((state: RootStateOrAny) => state.taskStatuses?.usersAssigned);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
 
   const isAssignUser = (user) => {
     return (
-      usersAssigned.filter((assign) => assign._id === user.userID._id)
+      usersAssigned.filter((assign) => assign?._id === user.userID?._id)
         .length !== 0
     );
   };
@@ -39,10 +39,10 @@ const AssignUser: React.FC = () => {
 
   useEffect(() => {
     dispatch(assignUser({
-      _id: authState.userID,
-      profilePhoto: authState.userProfile.profilePhoto,
+      _id: userInfo?.userID,
+      profilePhoto: userInfo?.profile?.profilePhoto,
       fullName: `
-        ${authState.userProfile.firstName} ${authState.userProfile.lastName}`,
+        ${userInfo?.profile?.firstName} ${userInfo?.profile?.lastName}`,
     }));
     getUser();
   }, []);
@@ -53,14 +53,14 @@ const AssignUser: React.FC = () => {
 
   const updateUsersAssigned = (user) => {
     if (isAssignUser(user)){
-      dispatch(unassignUser(user.userID._id));
+      dispatch(unassignUser(user.userID?._id));
 
       return;
     }
     dispatch(assignUser({
-      _id: user.userID._id,
-      profilePhoto: user.userID.profilePhoto,
-      fullName: `${user.userID.firstName} ${user.userID.lastName}`,
+      _id: user.userID?._id,
+      profilePhoto: user.userID?.profilePhoto,
+      fullName: `${user.userID?.firstName} ${user.userID?.lastName}`,
     }));
   };
 
@@ -70,20 +70,20 @@ const AssignUser: React.FC = () => {
 
   const generateUser = () => {
     const user = debouncedSearchTerm ? listUser.listSearch : listUser.list;
-    const renderUser = user.map((userAccess) => {
+    const renderUser = user?.map((userAccess) => {
       return (
-        <MenuItem key={userAccess?._id} onClick={() => updateUsersAssigned(userAccess)}>
+        <MenuItem key={userAccess._id} onClick={() => updateUsersAssigned(userAccess)}>
           <Box
             display='flex'
             alignItems='center'
             className={isAssignUser(userAccess) ? 'user-accept' : ''}
           >
               <Avatar
-                src={userAccess.userID.profilePhoto}
+                src={userAccess.userID?.profilePhoto}
                 className='avata-popup'
               />
             <span className='name-popup'>
-              {`${userAccess.userID.firstName} ${userAccess.userID.lastName}`}
+              {`${userAccess.userID?.firstName} ${userAccess.userID?.lastName}`}
             </span>
           </Box>
         </MenuItem>
@@ -103,8 +103,8 @@ const AssignUser: React.FC = () => {
             className='group-avatar-task'
             {...bindTrigger(popupState)}
           >
-            {usersAssigned.length > 0 ? (
-              usersAssigned.map((user) => (
+            {usersAssigned?.length > 0 ? (
+              usersAssigned?.map((user) => (
                 <Badge
                   key={user._id}
                   overlap='circle'
@@ -117,7 +117,7 @@ const AssignUser: React.FC = () => {
                 >
                   <Tooltip
                     title={
-                      user._id === authState.userID
+                      user._id === userInfo?.userID
                         ? "I'm online"
                         : user.fullName
                     }
@@ -153,8 +153,8 @@ const AssignUser: React.FC = () => {
                 />
               </Box>
               <InfiniteScroll
-                dataLength={listUser.list.length}
-                hasMore={listUser.list.length < listUser.totalCount}
+                dataLength={listUser?.list?.length}
+                hasMore={listUser?.list?.length < listUser?.totalCount}
                 next={getUser}
                 loader={<DisappearedLoading color={'#67cb48'} />}
                 scrollThreshold={0.8}

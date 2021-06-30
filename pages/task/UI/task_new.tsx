@@ -22,8 +22,8 @@ interface InitProps {
 
 const TaskNew: React.FC<InitProps> = (props) => {
   const dispatch = useDispatch();
-  const newTask = useSelector((state: RootStateOrAny) => state.taskStatuses.newTask);
-  const usersAssigned = useSelector((state: RootStateOrAny) => state.taskStatuses.usersAssigned);
+  const newTask = useSelector((state: RootStateOrAny) => state.taskStatuses?.newTask);
+  const usersAssigned = useSelector((state: RootStateOrAny) => state.taskStatuses?.usersAssigned);
 
   const onChangeTitle = (event) => {
     dispatch(updateNewTask({ ...newTask, title: event.target.value }));
@@ -36,14 +36,14 @@ const TaskNew: React.FC<InitProps> = (props) => {
   };
 
   const addNewTask = () => {
-    if (!newTask.title) {
+    if (!newTask?.title) {
       return;
     }
 
     dispatch(updateNewTask({
       ...newTask,
       taskStatusID: props.taskStatusID,
-      userIDs: usersAssigned.map((user) => user?._id),
+      userIDs: usersAssigned?.map((user) => user._id),
     }));
 
     dispatch(addTaskThunkAction(props.companyID));
@@ -66,7 +66,7 @@ const TaskNew: React.FC<InitProps> = (props) => {
       <Box position='absolute' bottom={10} right={10}>
         <Tooltip
           title={
-            newTask.title
+            newTask?.title
               ? 'Press enter to save (ctrl+enter to open)'
               : 'Please type a task name'
           }
