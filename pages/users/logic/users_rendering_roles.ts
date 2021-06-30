@@ -3,7 +3,14 @@ import { checkArray } from '../../../helpers/check_array';
 import { Roles, rolesRender } from 'constants/roles';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
-const companyRoles = [Roles.COMPANY_MANAGER, Roles.COMPANY_STAFF];
+const companyRoles = {
+  COMPANY_MANAGER: {
+    level: 1,
+  },
+  COMPANY_STAFF: {
+    level: 0,
+  },
+};
 
 export const getRenderingRolesForUsersPage = ({
   accesses,
@@ -22,9 +29,10 @@ export const getRenderingRolesForUsersPage = ({
 
   for (const access of accesses) {
     const isPendingRole = access?.status !== 'ACCEPTED';
-    const isCompanyRole = companyRoles.includes(access?.role ?? '');
+    const notHaveCurrentCompanyRole = !companyRole && companyRoles?.[access?.role] !== undefined;
+    const roleGreaterCurrentRole = companyRoles[access?.role]?.level > companyRoles[companyRole?.role]?.level;
 
-    if (isCompanyRole) {
+    if (notHaveCurrentCompanyRole || roleGreaterCurrentRole) {
       companyRole = {
         companyRoleCouldDelete,
         ...access,
