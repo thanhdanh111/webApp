@@ -41,7 +41,7 @@ interface InitialProps {
   needStickyHeader?: boolean;
   fixedHeightInfiniteScroll?: number;
   ComponentDetail?: React.FunctionComponent;
-  CustomizedCellsAtLastColumn?: React.FunctionComponent<CustomizedCellsAtLastColumn>;
+  CustomizedCellAtLastColumn?: React.FunctionComponent<CustomizedCellsAtLastColumn>;
 }
 
 const BaseTable = (props: InitialProps) => {
@@ -72,8 +72,8 @@ const BaseTable = (props: InitialProps) => {
       return;
     }
 
-    if (props?.CustomizedCellsAtLastColumn) {
-      const CellAtLastColumn = props?.CustomizedCellsAtLastColumn;
+    if (props?.CustomizedCellAtLastColumn) {
+      const CellAtLastColumn = props?.CustomizedCellAtLastColumn;
 
       return  <CellAtLastColumn status={itemStatus} itemIndex={itemIndex}/>;
     }

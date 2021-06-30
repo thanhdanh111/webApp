@@ -43,7 +43,7 @@ const UserDetail = (props) => {
       length={props?.data?.departmentRoles?.length}
       fetchData={() => 'handled'}
       needStickyHeader={false}
-      CustomizedCellsAtLastColumn={
+      CustomizedCellAtLastColumn={
         (funcProps) =>
         <CustomizedControlCell
           {...funcProps}
