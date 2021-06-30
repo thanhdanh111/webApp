@@ -3,7 +3,6 @@ import { checkArray } from 'helpers/check_array';
 import { config } from 'helpers/get_config';
 import { ProjectsPage } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { returnNotification } from './error_notifications';
 import {
   getChannelsByCompany,
   getProject,
@@ -12,6 +11,14 @@ import {
 } from './projects_actions';
 import { projectsActionType } from './projects_type_action';
 
+export enum NotificationTypes {
+  succeedUpdateChannel = 'Update Channel Successfully',
+  succeedCreateProject = 'Create Project Successfully',
+  failedUpdateChannel = 'Failed Update Channel',
+  failedCreateProject = 'Failed Create Project',
+  errorFailed = 'Error data. Please update slack token!',
+  companyTokenNotification = 'You have not registered any companies for workspace',
+}
 const initialState: ProjectsPage = {
   projects: [],
   selectedProject: {
@@ -86,8 +93,8 @@ export const projectsReducer = (state = initialState, action) => {
 export const getProjectDataMiddleWare = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState.extendedCompany?.companyID?._id;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
 
     const res = await axios.get(`${config.BASE_URL}/projects`, {
       headers: {
@@ -120,9 +127,8 @@ export const getProjectDetailData = (detailsProjectID) => async (dispatch) => {
       },
     });
 
-    if (res?.data?.project?.description) {
-      await dispatch(shouldShowDescription(true));
-    }
+    const shouldShowDescriptionCondition = !!res?.data?.project?.description;
+    await dispatch(shouldShowDescription(shouldShowDescriptionCondition));
 
     await dispatch(getProject(res.data));
   } catch (error) {
@@ -136,8 +142,7 @@ export const updateChannelIDMiddeleWare = (projectID: string, channelID: string)
 
     if (!token || !channelID || !projectID) {
 
-      const errorNotification = returnNotification({ type: 'token' });
-      dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.errorFailed }));
 
       return ;
     }
@@ -162,24 +167,24 @@ export const updateChannelIDMiddeleWare = (projectID: string, channelID: string)
     }
 
     if (res.data) {
-      const dataNotification = returnNotification({ type: 'succeedUpdateChannel' });
-      dispatch(pushNewNotifications({ variant: 'success' , message: dataNotification }));
+
+      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }));
     }
   } catch (error) {
-    const dataNotification = returnNotification({ type: 'failedUpdateChannel' });
-    dispatch(pushNewNotifications({ variant: 'error' , message: dataNotification }));
+
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateChannel }));
   }
 };
 
 export const getExtendedCompaniesMiddelWare = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState.extendedCompany?.companyID?._id;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !companyID) {
-      const errorNotification = returnNotification({ type: 'companyTokenNotification' });
-      dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification }));
+
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
 
       return ;
     }
@@ -204,21 +209,19 @@ export const getExtendedCompaniesMiddelWare = () => async (dispatch, getState) =
 
     return;
   } catch (error) {
-    const dataNotification = returnNotification({ type: 'errorFailed' });
-    dispatch(pushNewNotifications({ variant: 'error' , message: dataNotification }));
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.errorFailed }));
   }
 };
 
 export const createProjectMiddelWare = (name: string, channelID: string, description: string) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
-    const authState = getState().auth;
-    const companyID = authState.extendedCompany?.companyID?._id;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !companyID || !channelID) {
 
-      const errorNotification = returnNotification({ type: 'companyTokenNotification' });
-      dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
 
       return ;
     }
@@ -239,13 +242,13 @@ export const createProjectMiddelWare = (name: string, channelID: string, descrip
      );
 
     if (res.data) {
-      const dataNotification = returnNotification({ type: 'succeedCreateProject' });
-      dispatch(pushNewNotifications({ variant: 'success' , message: dataNotification }));
+
+      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }));
     }
 
     return;
   } catch (error) {
-    const dataNotification = returnNotification({ type: 'failedCreateProject' });
-    dispatch(pushNewNotifications({ variant: 'error' , message: dataNotification }));
+
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedCreateProject }));
   }
 };

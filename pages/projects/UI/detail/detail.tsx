@@ -1,14 +1,17 @@
 import SelectOption from '@components/option_select/option_select';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { Avatar } from '@material-ui/core';
-import { getManagerIDs, GetManagerIDsType } from 'helpers/get_manager_ids_of_departments_and_companies';
-import { ProjectsPage } from 'helpers/type';
+import { Avatar, Box } from '@material-ui/core';
+import { Roles } from 'constants/roles';
+import { checkValidAccess } from 'helpers/check_valid_access';
+import { UserInfoType, ProjectsPage } from 'helpers/type';
 import { useRouter } from 'next/router';
 import { setSelectedChannelID } from 'pages/projects/logic/projects_actions';
 import { getExtendedCompaniesMiddelWare, getProjectDetailData, updateChannelIDMiddeleWare } from 'pages/projects/logic/projects_reducer';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
+
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
 
 const ProjectDetail: FunctionComponent = () => {
 
@@ -21,19 +24,18 @@ const ProjectDetail: FunctionComponent = () => {
     shouldShowDescription,
   }: ProjectsPage = useSelector((state: RootState) => state.projects);
   const showDescription = shouldShowDescription ? 'show-description' : 'hide-description';
+  const channelID = selectedProject?.channelID;
 
   const query = router.query;
-  const authState = useSelector((state: RootState) => state.auth);
   const {
     isAdmin,
-    managerCompanyIDs,
-    managerDepartmentIDs,
-  }: GetManagerIDsType = getManagerIDs({ access: authState?.access });
-  const loadMemberData = isAdmin || managerCompanyIDs?.length > 0 || managerDepartmentIDs?.length > 0;
+    rolesInCompany,
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
+  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
 
   useEffect(() => {
     void fetchData();
-  }, []);
+  }, [channelID]);
 
   const fetchData = async() => {
     await Promise.all([
@@ -57,21 +59,18 @@ const ProjectDetail: FunctionComponent = () => {
       return;
     }
     dispatch(updateChannelIDMiddeleWare(selectedProject._id, dataUpdate));
-
   }
 
   return (
-    <div className='detail-project'>
-      <div className='name-team'>
+    <Box className='detail-project'>
+      <div className='all-title-project'>
         <a className='title-project'>
           <Avatar className='avt-title'>{char}</Avatar>
           <div className='name-project' >{selectedProject.name}</div>
         </a>
       </div>
       <div className={`description ${showDescription}`}>
-        <div className='title-des'>
-          Description
-        </div>
+        Description
         <div className='detail-des'>{selectedProject.description}</div>
       </div>
       <div className='detail-project-form'>
@@ -83,18 +82,21 @@ const ProjectDetail: FunctionComponent = () => {
             <SelectOption
               list={channels}
               value={selectedChannelID}
+              required={!selectedChannelID}
               handleChange={changeChannelID}
               disabled={(!loadMemberData) ? true : false}
             />
           </div>
         </div>
+      </div>
+      <div className='btn'>
         <PrimaryButtonUI
           handleClick={() => updateBtn(selectedChannelID)}
           title='Update'
           extendClass={(!loadMemberData) ? 'hide-btn-send' : ''}
         />
       </div>
-    </div>
+    </Box>
   );
 };
 

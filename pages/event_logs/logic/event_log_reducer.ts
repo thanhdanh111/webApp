@@ -40,16 +40,16 @@ export const eventLogsReducer = (state = initialState, action) => {
       const environments = {};
 
       if (checkArray(action.payload.list)) {
-        action.payload.list.map((element) => {
-          if (element.environment) {
-            environments[element.environment] = element.environment;
+        action?.payload?.list?.map((element) => {
+          if (element?.environment) {
+            environments[element.environment] = element?.environment;
           }
 
           eventLogs.push({
-            _id: element._id,
-            exception: element.exception.values[0] || {},
-            createdAt: element.createdAt,
-            breadcrumbs: element.breadcrumbs,
+            _id: element?._id,
+            exception: element?.exception?.values?.[0] || {},
+            createdAt: element?.createdAt,
+            breadcrumbs: element?.breadcrumbs,
           });
 
         });

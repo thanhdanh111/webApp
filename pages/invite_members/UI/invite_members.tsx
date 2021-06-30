@@ -2,11 +2,13 @@ import React, { FunctionComponent } from 'react';
 import { Link } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { backToChooseCompany, updateInviteMembers, updateInviteResultInfo } from '../logic/invite_actions';
+import { backToChooseCompany, updateInviteMembers } from '../logic/invite_actions';
 import { inviteMembersThunkAction } from '../logic/invite_thunk_actions';
-import { InviteResultInfo, InviteStateProps } from '../logic/invite_interface';
+import { InviteStateProps } from '../logic/invite_interface';
 import { InputAndOptionsSelect } from '@components/input_and_options_select/input_and_options_select';
 import { RootState } from 'redux/reducers_registration';
+import { returnNotification } from '../logic/invite_error_notifications';
+import { pushNewNotifications } from 'redux/common/notifications/reducer';
 
 const roles = [
   {
@@ -80,7 +82,6 @@ const InviteMembersUI: FunctionComponent = () => {
   }
 
   function inviteMembersBtn()  {
-    const errorNotifications: InviteResultInfo[] = [];
     const regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
     const inviteMembersData = inviteMembers.filter((member, index) => {
@@ -91,22 +92,14 @@ const InviteMembersUI: FunctionComponent = () => {
       }
 
       if (!validEmail) {
-        errorNotifications.push({
-          status: 'failed',
-          message: 'is not an email',
-          email: member.email,
-          role: member.role,
-        });
+        const dataNotification = returnNotification({ type: 'invalidEmail', email: member.email });
+        dispatch(pushNewNotifications({ variant: 'error' , message: dataNotification['message'] }));
+
+        return;
       }
 
       return !!member.email;
     });
-
-    if (errorNotifications.length > 0) {
-      dispatch(updateInviteResultInfo({ inviteResultInfo: errorNotifications }));
-
-      return;
-    }
 
     dispatch(
       inviteMembersThunkAction({
