@@ -3,7 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import BaseTable from '@components/table/table';
 import { HeadCell } from 'helpers/type';
-import CustomizedControlsCell from './customized_action_cell';
+import CustomizedControlsCell from './customized_control_cell';
 import { updateUsersReducer } from 'pages/users/logic/users_actions';
 import { useDispatch } from 'react-redux';
 
