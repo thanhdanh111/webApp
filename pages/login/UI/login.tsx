@@ -15,7 +15,7 @@ const linkAPILogin = `${config.API_LOGIN}&redirect_uri=${redirectUrl}`;
 const LoginUi: FunctionComponent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
     void logUserIn();
@@ -27,8 +27,6 @@ const LoginUi: FunctionComponent = () => {
     if (localAccess) {
       void router.replace('/home', '/home.html');
 
-      setIsLogin(false);
-
       return;
     }
 
@@ -36,7 +34,6 @@ const LoginUi: FunctionComponent = () => {
     const token = query?.token;
 
     if (!token) {
-      setIsLogin(false);
 
       return;
     }
@@ -49,7 +46,7 @@ const LoginUi: FunctionComponent = () => {
 
     await Promise.resolve(dispatch(GetUserDataThunkAction(accessToken)));
 
-    await router.replace('/home', '/home.html');
+    void router.replace('/home', '/home.html');
 
     setIsLogin(false);
   }
