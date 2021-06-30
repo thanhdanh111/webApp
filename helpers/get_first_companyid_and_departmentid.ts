@@ -18,7 +18,7 @@ export const getFirstCompanyIDAndDepartmentID = ({
   let companyID;
   let departmentID;
 
-  if (checkArray(access)) {
+  if (!checkArray(access)) {
     return {
       companyID,
       departmentID,
@@ -26,7 +26,11 @@ export const getFirstCompanyIDAndDepartmentID = ({
   }
 
   for (const each of access) {
-    if (each?.companyID && !companyID) {
+    if (!each.companyID) {
+      continue;
+    }
+
+    if (!companyID) {
       companyID = each.companyID;
     }
 
