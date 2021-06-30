@@ -29,7 +29,12 @@ export const getRenderingRolesForUsersPage = ({
 
   for (const access of accesses) {
     const isPendingRole = access?.status !== 'ACCEPTED';
-    const notHaveCurrentCompanyRole = !companyRole && companyRoles?.[access?.role] !== undefined;
+    const notHaveCurrentCompanyRole = checkOnlyTrueInArray({
+      conditionsArray: [
+        !companyRole,
+        companyRoles?.[access?.role] !== undefined,
+      ],
+    });
     const roleGreaterThanCurrentRole = companyRoles[access?.role]?.level > companyRoles[companyRole?.role]?.level;
 
     if (notHaveCurrentCompanyRole || roleGreaterThanCurrentRole) {
@@ -37,6 +42,11 @@ export const getRenderingRolesForUsersPage = ({
         companyRoleCouldDelete,
         ...access,
       };
+
+      continue;
+    }
+
+    if (companyRoles?.[access?.role] !== undefined) {
 
       continue;
     }
