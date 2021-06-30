@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { LoginValueType, Token } from 'helpers/type';
+import { UserInfoType, Token } from 'helpers/type';
 import { DocsValueType } from './docs_reducer';
 import { convertToRaw } from 'draft-js';
 import { updateDocs } from './docs_actions';
@@ -282,9 +282,9 @@ export const getDocProjects = ({ companyID }) => async (dispatch) => {
 export const createNewDocProject = ({ projectName }) => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const { extendedCompany }: LoginValueType = getState()?.auth;
+    const { currentCompany }: UserInfoType = getState()?.userInfo;
     const { docProjects, storeProjectsIndice }: DocsValueType = getState()?.docs;
-    const companyID = extendedCompany?.companyID?._id;
+    const companyID = currentCompany?._id;
 
     if (!companyID || !projectName || !token) {
       return;

@@ -39,7 +39,7 @@ const DocsDrawer = () => {
       loading: state?.docs?.loading,
       selectedDocProject: state?.docs?.selectedDocProject,
       selectedPage: state?.docs?.selectedPage,
-      companyID: state?.auth?.extendedCompany?.companyID?._id,
+      companyID: state?.userInfo?.currentCompany?._id,
     };
   }, shallowEqual);
   const router = useRouter();

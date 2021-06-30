@@ -1,4 +1,5 @@
 import { VariantType } from 'notistack';
+import { Roles } from 'constants/roles';
 
 export type Token = string | null;
 
@@ -149,17 +150,17 @@ export interface CheckInCheckOut {
 }
 
 export interface Profile {
-  firstName: string;
-  lastName: string;
-  email: string;
-  profilePhoto: string;
-  status: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  profilePhoto?: string;
+  status?: string;
 }
 
-interface ExtendedUser {
-  _id: string;
-  gender: string;
-  userID: string;
+interface ExtendedProfile {
+  _id?: string;
+  gender?: string;
+  userID?: string;
 }
 
 interface ApiKey {
@@ -178,17 +179,25 @@ interface ExtendedCompany {
   apiKey?: ApiKey;
 }
 
-export interface LoginValue {
-  value: string;
-  userID: string;
-  access: Access[] | [];
-  userProfile: Profile | {};
-  extendedUser: ExtendedUser | {};
-  extendedCompany: ExtendedCompany;
-  department: Department | {};
+export interface RolesInDepartments {
+  [departmentID: string]: Roles[];
 }
 
-export type LoginValueType = LoginValue;
+export interface UserInfo {
+  token: string;
+  userID: string;
+  access: Access[];
+  profile: Profile;
+  extendedProfile: ExtendedProfile;
+  currentCompany: Company;
+  currentExtendedCompany: ExtendedCompany;
+  currentDepartment: Department;
+  rolesInDepartments: RolesInDepartments;
+  rolesInCompany: Roles[];
+  isAdmin: boolean;
+}
+
+export type UserInfoType = UserInfo;
 
 export interface Notification {
   variant: VariantType;

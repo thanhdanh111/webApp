@@ -10,7 +10,7 @@ import { RootState } from 'redux/reducers_registration';
 
 const Layout = ({ children, withoutPaths }) => {
   const path = window.location.pathname;
-  const userID = useSelector((state: RootStateOrAny) => state.auth.userID);
+  const userID = useSelector((state: RootStateOrAny) => state?.userInfo?.userID);
   const notifications = useSelector((state: RootState) => state.newNotifications);
   const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
   const [isDrawerOpen, setOpenDrawer] = useState(false);
@@ -37,15 +37,14 @@ const Layout = ({ children, withoutPaths }) => {
       <Header changeDrawerOpen={changeDrawerOpen} />
       <DrawerUi isDrawerOpen={isDrawerOpen} onChangeDrawerOpen={changeDrawerOpen}/>
       <div className='main-layout--children'>
-        {!userID ? (
-          <div className='main-layout-loading'>
-            <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
-          </div>
-        ) : (
-          <>
-            {children}
-          </>
-        )}
+        {
+          !userID ? (
+            <div className='main-layout-loading'>
+              <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
+            </div>
+          ) :
+          children
+        }
       </div>
     </div>
   );
