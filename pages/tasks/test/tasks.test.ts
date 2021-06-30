@@ -2,10 +2,13 @@ let qs = require('qs');
 let browser;
 let page;
 let viewport;
-const token = process.env.TEST_TOKEN;
 
 const puppeteer = require('puppeteer');
+
+const token = process.env.TEST_TOKEN;
+
 beforeAll(async () => {
+
   try {
     browser = await puppeteer.launch({
       headless: true,
@@ -15,9 +18,9 @@ beforeAll(async () => {
 
     page = await browser.newPage();
 
-    viewport = await page.setViewport({ width: 1920 , height: 835 });
+    viewport = await page.setViewport({ width: 1853 , height: 951 });
 
-    await page.goto('http://localhost:5000/');
+    await page.goto('http://localhost:5000');
 
     await page.evaluate((token) => {
       localStorage.setItem('access_token', token);
@@ -28,18 +31,15 @@ beforeAll(async () => {
   }
 });
 
-describe('EventLogs Page', () => {
-
-  test('Test UI EventLogs page successfully after login', async () => {
-    await page.goto('http://localhost:5000/event_logs');
-    await page.waitForSelector('.event-container');
-
-    await page.waitForSelector('.event-content div');
-    await page.waitFor(5000);
+describe('Home page', () => {
+  test('Test get tasks successfully after login', async () => {
+    await page.goto('http://localhost:5000/home');
+    await page.waitForSelector('.task-status');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
   });
+
 });
 
 afterAll(() => {

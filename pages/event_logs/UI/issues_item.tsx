@@ -12,8 +12,8 @@ type IssuesItemType = InitProps;
 const IssuesItem: FunctionComponent<IssuesItemType> = (props: InitProps) => {
 
   const { eventLog }: InitProps = props;
-  const router = useRouter();
   const time = new Date(eventLog.createdAt);
+  const router = useRouter();
   const pathname = router.pathname;
 
   const onPushToPage = (url: string) => {
