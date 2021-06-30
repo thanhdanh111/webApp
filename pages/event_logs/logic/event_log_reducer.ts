@@ -45,7 +45,7 @@ export const eventLogsReducer = (state = initialState, action) => {
       if (checkArray(action.payload.list)) {
         action?.payload?.list?.map((element) => {
           if (element?.environment) {
-            environments[element.environment] = element?.environment;
+            environments[element?.environment] = element?.environment;
           }
 
           eventLogs.push({
@@ -134,10 +134,10 @@ export const getEventLogsData = () => async (dispatch, getState) => {
     }
 
     const params = {
-      companyIDParam,
-      departmentIDParam,
       fromTime,
       toTime,
+      companyID: companyIDParam,
+      departmentID: departmentIDParam,
       environment: selectedEnv !== 'All' ? selectedEnv : null,
       projectID: selectedProjectID && selectedProjectID !== 'All' ? selectedProjectID : null,
     };

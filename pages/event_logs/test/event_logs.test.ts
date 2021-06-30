@@ -34,7 +34,8 @@ describe('EventLogs Page', () => {
     await page.goto('http://localhost:5000/event_logs');
     await page.waitForSelector('.event-container');
 
-    await page.waitForSelector('.issus-item');
+    await page.waitForSelector('.event-content div');
+    await page.waitFor(5000);
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
