@@ -106,8 +106,8 @@ export const usersReducer = (state = initialState, action) => {
         hasNoData: true,
       };
     case usersAction.UPDATE_NOTIFICATION:
-      const notifications = [...state.notifications.list];
-      const index = notifications.findIndex((notification) => notification._id === action.payload.selectNotification._id);
+      const notifications = [...state.notifications?.list];
+      const index = notifications.findIndex((notification) => notification._id === action.payload.selectNotification?._id);
       notifications[index].isRead = true;
 
       return {
