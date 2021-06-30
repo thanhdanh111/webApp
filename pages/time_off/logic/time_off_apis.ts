@@ -6,6 +6,7 @@ import {
   updateStatusTimeOff, updateTimeOffLoadingStatus,
   updateOnSendingTimeOffRequest, updateTimeOffCompaniesToRequest, updateTimeOffsReducer,
   updateTimeOffRequestReducer,
+  getTimeOffByID,
 } from './time_off_actions';
 import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValue } from './time_off_interface';
 import moment from 'moment';
@@ -526,5 +527,26 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
 
     dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, selectedCompany: undefined, selectedDepartment: undefined }));
     await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
+  }
+};
+
+export const getTimeoffByIDThunkAction = (timeOffID) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      return;
+    }
+    const res = await axios.get(`${config.BASE_URL}/daysOff/${timeOffID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    dispatch(getTimeOffByID(res.data));
+  } catch (error) {
+    throw error;
   }
 };
