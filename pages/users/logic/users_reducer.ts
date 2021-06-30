@@ -136,9 +136,6 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
     const userLimit = getState().users?.userLimit;
     const companyID = userInfo?.currentCompany?._id;
 
-    console.log(companyID);
-    
-
     if (cursor === 'END' || !token || !companyID) {
       return;
     }
@@ -150,9 +147,6 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
            Authorization: `Bearer ${token}`,
          },
        });
-
-    
-       console.log(res.data);
 
     if (res.data.totalCount === 0){
       await dispatch(setLoading(true));
