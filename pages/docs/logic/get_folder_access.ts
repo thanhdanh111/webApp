@@ -33,7 +33,7 @@ interface GetProjectAccess {
   projectAccess: ProjectAccessApi[] | [];
 }
 
-interface ProjectAccessMapOfUsers {
+export interface ProjectAccessMapOfUsers {
   [userID: string]: ProjectAccessMap;
 }
 

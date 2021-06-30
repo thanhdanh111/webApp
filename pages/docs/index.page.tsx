@@ -11,6 +11,7 @@ import { createNewPage, savePage } from './logic/docs_apis';
 import { handleKeyCombination } from './logic/handle_combination_key';
 import { EditorState } from 'draft-js';
 import { DocProject, PageContent } from './logic/docs_reducer';
+import { ShareComponent } from './UI/docs_share_project';
 
 interface DocsPageData {
   needDisplay: boolean;
@@ -106,6 +107,7 @@ const DocsPage = () => {
       needDisplay={needDisplay}
       selectionRect={selectionRect}
     />
+    <ShareComponent />
   </div>;
 };
 

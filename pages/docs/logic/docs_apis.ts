@@ -389,3 +389,36 @@ export const deleteDocProject = ({ projectID }) => async (dispatch, getState) =>
     dispatch(updateDocs({ loading: false }));
   }
 };
+
+export const getFolderAccessOfCurrentProjectID = () => async (dispatch, getState) => {
+  try {
+    const token: Token =  localStorage.getItem('access_token');
+    const selectedProjectID = getState()?.docs?.selectedDocProject?._id;
+
+    if (!selectedProjectID) {
+      return;
+    }
+
+    dispatch(updateDocs({ loading: true }));
+
+    const projectAccess =  await axios.get(`${config.BASE_URL}/folderAccesses?${
+      getIDsParamsForAxios({ ids: [selectedProjectID], fieldName: 'orFolderIDs' })}`,
+      {
+        params: {
+          feature: 'DOCS',
+          limit: 1000,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const projectAccessOfUsers = getProjectAccessOfUsers({ projectAccess: projectAccess?.data?.list });
+
+    dispatch(updateDocs({ loading: false, selectedProjectAccess: projectAccessOfUsers }));
+  } catch (error) {
+    dispatch(updateDocs({ loading: false }));
+  }
+};
