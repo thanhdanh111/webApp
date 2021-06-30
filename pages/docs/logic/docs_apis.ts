@@ -5,6 +5,8 @@ import { DocsValueType } from './docs_reducer';
 import { convertToRaw } from 'draft-js';
 import { updateDocs } from './docs_actions';
 import { getDesiredChildrenIntoDesiredParents } from '../../../helpers/get_desired_children_into_desired_parents';
+import { getProjectAccessOfUsers } from './get_folder_access';
+import { getIDsParamsForAxios } from '../../../helpers/get_ids_params_for_axios';
 
 export const createNewPage = () => async (dispatch, getState) => {
   try {
@@ -183,15 +185,33 @@ export const deletePage = () => async (dispatch, getState) => {
   }
 };
 
-export const getDocProjects = ({ companyID }) => async (dispatch) => {
+export const getDocProjects = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
+    const companyID = getState()?.userInfo?.currentCompany?._id;
+    const accountUserID = getState()?.userInfo?.userID;
 
     if (!companyID) {
       return;
     }
 
     dispatch(updateDocs({ loading: true }));
+
+    const projectAccess =  await axios.get(`${config.BASE_URL}/folderAccesses?${
+      getIDsParamsForAxios({ ids: [accountUserID], fieldName: 'orUserIDs' })}`,
+      {
+        params: {
+          feature: 'DOCS',
+          limit: 1000,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const projectAccessOfUsers = getProjectAccessOfUsers({ projectAccess: projectAccess?.data?.list });
 
     const docPages = await axios.get(`${config.BASE_URL}/docPages`,
       {
@@ -206,17 +226,11 @@ export const getDocProjects = ({ companyID }) => async (dispatch) => {
       },
     );
 
-    if (!docPages?.data?.list?.length) {
-      dispatch(updateDocs({ loading: false }));
-
-      return;
-    }
-
     const docProjects = await axios.get(`${config.BASE_URL}/docProjects`,
       {
         params: {
           companyID,
-          limit: 1000,
+          limit: 200,
         },
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +287,12 @@ export const getDocProjects = ({ companyID }) => async (dispatch) => {
       }
     }
 
-    dispatch(updateDocs({ loading: false, docProjects: projects, storeProjectsIndice: storeNewParentsIndice }));
+    dispatch(updateDocs({
+      loading: false,
+      docProjects: projects,
+      storeProjectsIndice: storeNewParentsIndice,
+      myProjectAccess: projectAccessOfUsers[accountUserID],
+    }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }

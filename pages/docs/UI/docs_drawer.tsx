@@ -19,7 +19,6 @@ interface DocsDrawerData {
   loading: boolean;
   selectedDocProject: DocProject;
   selectedPage: PageContent;
-  companyID: string;
 }
 
 type DocsDrawerDataType = DocsDrawerData;
@@ -31,7 +30,6 @@ const DocsDrawer = () => {
     loading,
     selectedDocProject,
     selectedPage,
-    companyID,
   }: DocsDrawerDataType = useSelector((state: RootState) => {
 
     return {
@@ -39,14 +37,13 @@ const DocsDrawer = () => {
       loading: state?.docs?.loading,
       selectedDocProject: state?.docs?.selectedDocProject,
       selectedPage: state?.docs?.selectedPage,
-      companyID: state?.userInfo?.currentCompany?._id,
     };
   }, shallowEqual);
   const router = useRouter();
 
   useEffect(() => {
-    dispatch(getDocProjects({ companyID }));
-  }, [companyID]);
+    dispatch(getDocProjects());
+  }, []);
 
   function backToHome() {
 

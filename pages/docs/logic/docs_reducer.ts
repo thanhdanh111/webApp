@@ -1,6 +1,7 @@
 import { DocsActionTypes } from './docs_actions';
 import { EditorState } from 'draft-js';
 import { Company } from 'helpers/type';
+import { ProjectAccessMap } from './get_folder_access';
 
 interface DocsValue {
   needDisplay: boolean;
@@ -14,6 +15,8 @@ interface DocsValue {
   selectedPage?: PageContent;
   shouldCallApi: boolean;
   storeProjectsIndice: object;
+  myProjectAccess: ProjectAccessMap;
+  openShare: boolean;
 }
 
 interface CreatedBy {
@@ -58,6 +61,8 @@ const initialState: DocsValue = {
   loading: false,
   shouldCallApi: true,
   storeProjectsIndice: {},
+  myProjectAccess: { },
+  openShare: false,
 };
 
 export type DocsValueType = DocsValue;

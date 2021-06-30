@@ -37,6 +37,10 @@ export function getDesiredChildrenIntoDesiredParents({
   let indexForNewParent = 0;
 
   children.forEach((child) => {
+    if (!child) {
+      return;
+    }
+
     const parentData = returnDesiredData({
       data: child[parentFieldInChild],
       fields: fieldsOfParent,

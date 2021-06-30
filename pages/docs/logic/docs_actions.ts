@@ -1,5 +1,6 @@
 import { EditorState } from 'draft-js';
 import { DocProject, PageContent } from './docs_reducer';
+import { ProjectAccessMap } from './get_folder_access';
 
 export enum DocsActionTypes {
   DisplayToolbar = 'DisplayToolbar',
@@ -47,6 +48,7 @@ interface UpdateDocs {
   storeProjectsIndice?: object;
   needDisplay?: boolean;
   selectionRect?: DOMRect;
+  myProjectAccess?: ProjectAccessMap;
 }
 
 export const updateDocs = (data: UpdateDocs) => {

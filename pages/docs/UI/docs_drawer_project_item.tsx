@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import DocsDrawerPageUI from './docs_drawer_page_item';
 import SideToolbarButton from '@components/my_editor/side_toolbar_button';
 import { deleteDocProject } from '../logic/docs_apis';
+import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 
 const DocsDrawerProjectUI = ({
   project,
@@ -52,6 +53,12 @@ const DocsDrawerProjectUI = ({
         label: 'Delete Project',
         startIcon: <DeleteIcon />,
         function: () => dispatch(deleteDocProject({ projectID: project?._id })),
+      },
+      {
+        type: 'normal',
+        label: 'Share Project',
+        startIcon: <PeopleOutlineIcon />,
+        function: () => { },
       },
     ];
 

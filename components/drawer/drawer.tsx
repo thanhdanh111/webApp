@@ -83,7 +83,6 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
 
   function handleDrawer() {
     const currentPath = window?.location?.pathname;
-
     if (currentPath === '/docs') {
       return <DocsDrawer />;
     }
