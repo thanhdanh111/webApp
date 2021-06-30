@@ -98,7 +98,7 @@ const DropDown = () => {
 
   const InfoCompany = () => {
     const currentCompany = userInfo?.currentCompany;
-    if (!currentCompany?.name || !currentCompany?.emails?.length) {
+    if (!currentCompany?.name) {
       return <div />;
     }
 
@@ -111,7 +111,7 @@ const DropDown = () => {
         </Grid>
         <Grid item xs justify='center'>
           <Typography >{currentCompany.name}</Typography>
-          <Typography >{currentCompany.emails?.[0]}</Typography>
+          {!currentCompany?.emails?.length ? <div /> : <Typography >{currentCompany.emails?.[0]}</Typography>}
         </Grid>
       </Grid>
     );
