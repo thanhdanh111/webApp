@@ -2,7 +2,7 @@ import { Button, Container } from '@material-ui/core';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { getTaskStatusByIDThunkAction } from 'pages/home/logic/home_reducer';
+import { getTimeoffByIDThunkAction } from 'pages/time_off/logic/time_off_apis';
 import { checkValidAccess } from 'helpers/check_valid_access';
 import { Roles } from 'constants/roles';
 
@@ -14,8 +14,8 @@ interface InitialProps {
 const TimeOffNotificationContent: FunctionComponent<InitialProps> = (props: InitialProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const taskStatuses = useSelector((state: RootStateOrAny) => state.taskStatuses);
-  const dayOffsStatus = taskStatuses.taskStatusNotification;
+  const timeOff = useSelector((state: RootStateOrAny) => state.timeoff);
+  const timeOffDetail = timeOff?.timeOffDetail;
   const userInfo = useSelector((state: RootStateOrAny) => state?.userInfo);
   const departmentID = userInfo?.currentDepartment?._id;
   const haveComanyAccess = checkValidAccess({
@@ -30,15 +30,15 @@ const TimeOffNotificationContent: FunctionComponent<InitialProps> = (props: Init
   const checkRole = userInfo?.isAdmin || haveComanyAccess || haveDepartmentAccess;
 
   useEffect(() => {
-    dispatch(getTaskStatusByIDThunkAction(props.targetEntityName, props.daysOffID));
+    dispatch(getTimeoffByIDThunkAction(props?.daysOffID));
   }, []);
 
   const onPushToPage = (path: string) => {
     return router.push(`/${path}`, `/${path}.html`);
   };
-  const startDay = (new Date(Date.parse(dayOffsStatus.startTime))).toLocaleDateString('en-GB');
-  const endDate = (new Date(Date.parse(dayOffsStatus.endTime))).toLocaleDateString('en-GB');
-  const name = dayOffsStatus.createdBy && `${dayOffsStatus.createdBy?.firstName} ${dayOffsStatus?.createdBy.lastName}`;
+  const startDay = (new Date(Date.parse(timeOffDetail?.startTime))).toLocaleDateString('en-GB');
+  const endDate = (new Date(Date.parse(timeOffDetail?.endTime))).toLocaleDateString('en-GB');
+  const name = timeOffDetail?.createdBy && `${timeOffDetail?.createdBy?.firstName} ${timeOffDetail?.createdBy?.lastName}`;
 
   return (
     <Container className='content-detail-notification-dayOff'>
@@ -47,7 +47,7 @@ const TimeOffNotificationContent: FunctionComponent<InitialProps> = (props: Init
       <span className='notification-detail-content-span' > {name} </span> has request a <span className='notification-detail-content-span'> day  Offs </span> from {startDay} to {endDate}
       </div>
       <div className='title-detail-notification-dayOff'>
-        <span>Reason : </span>{dayOffsStatus.reason}
+        <span>Reason : </span>{timeOffDetail?.reason}
       </div>
       { checkRole ?
         <div className='btn-detail-notification-dayOff'>
