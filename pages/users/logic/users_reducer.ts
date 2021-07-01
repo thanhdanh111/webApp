@@ -99,18 +99,23 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         notifications: {
           cursor: cursorNotification,
-          list: [...action.payload.list, ...state.notifications.list],
+          list: [...state.notifications.list, ...action.payload.list],
           totalCount: action.payload.totalCount,
           totalUnread: action.payload.totalUnread,
         },
         hasNoData: true,
       };
     case usersAction.UPDATE_NOTIFICATION:
+      const notifications = [...state.notifications?.list];
+      const index = notifications.findIndex((notification) => notification._id === action.payload.selectNotification?._id);
+      notifications[index].isRead = true;
+
       return {
         ...state,
         selectNotification: action.payload.selectNotification,
         notifications: {
           ...state.notifications,
+          list: [...notifications],
           totalUnread: action.payload.totalUnread,
         },
       };
@@ -130,11 +135,11 @@ export const usersReducer = (state = initialState, action) => {
 
 export const getPaginationThunkAction = () => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
+    const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
     const cursor = getState().users?.cursor;
     const userLimit = getState().users?.userLimit;
-    const companyID = authState?.extendedCompany?.companyID?._id;
+    const companyID = userInfo?.currentCompany?._id;
 
     if (cursor === 'END' || !token || !companyID) {
       return;
@@ -163,9 +168,9 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
 
 export const getSearchAction = (fullName) => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
+    const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
-    const companyID = authState?.extendedCompany?.companyID?._id;
+    const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !companyID) {
       return;
@@ -243,13 +248,15 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
     await dispatch(setLoading(true));
 
-    const authState = getState().auth;
-    const receiverID = authState?.userID;
+    const userInfo = getState()?.userInfo;
+    const receiverID = userInfo?.userID;
     const token = localStorage.getItem('access_token');
     const cursor = getState()?.users?.notifications?.cursor;
     const notificationLimit = getState()?.users?.notificationLimit;
 
     if (!token || !receiverID || cursor === 'END') {
+      await dispatch(setLoading(true));
+
       return;
     }
 
@@ -261,13 +268,17 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
       params: {
         cursor,
         receiverID,
+        sortDirection: 'DESC',
+        sortBy: 'createdAt',
         limit: notificationLimit,
       },
     });
 
     if (!res.data.totalCount || !res.data.list || !res.data.list.length) {
       await dispatch(hasNoNotification());
-      await dispatch(setLoading(false));
+      await dispatch(setLoading(true));
+
+      return;
     }
 
     await dispatch(getNotificationsAction(res.data));

@@ -25,7 +25,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
                     {checkArray(task?.userIDs) ?
                     task?.userIDs?.map((user) => {
                       return (
-                        <Avatar key={user.email} alt={user.firstName} src={user.profilePicture} />
+                        <Avatar key={user.email} alt={user.firstName} src={user.profilePhoto} />
                       );
                     }) : null}
                 </AvatarGroup>

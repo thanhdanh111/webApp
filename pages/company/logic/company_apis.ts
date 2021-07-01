@@ -6,15 +6,15 @@ import { updateCompanyOnSending } from './company_actions';
 import { handleEmptyField } from './company_errors';
 
 const notificationsType = {
-  200: 'Sent your letter successfully',
+  200: 'Sent your token successfully',
   400: 'You have no company right now!',
 };
 
 export const sendSlackCompanyToken = () => async (dispatch, getState) => {
   try {
-    const authState = getState().auth;
-    const companyID = authState?.extendedCompany?.companyID?._id;
-    const slackToken = getState().company?.slackToken;
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
+    const slackToken = getState()?.company?.slackToken;
     const token: Token =  localStorage.getItem('access_token');
 
     if (!token || !companyID || !slackToken?.length) {
