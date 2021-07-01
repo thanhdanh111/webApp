@@ -13,7 +13,7 @@ export interface User {
   _id: string;
   firstName?: string;
   lastName?: string;
-  profilePicture?: string;
+  profilePhoto?: string;
   gender?: string;
   address?: string;
   phoneNumber?: string;
@@ -117,7 +117,7 @@ export interface Task {
   _id?: string;
   companyID?: Company;
   departmentID?: Department;
-  taskStatusID?: TaskStatusType;
+  taskStatusID?: TaskStatus;
   tagIDs?: string[];
   userIDs?: User[];
   title: string;
@@ -131,16 +131,17 @@ export interface Task {
   startDate?: string;
 }
 
-export interface TaskStatusType {
+export interface TaskStatus {
   _id: string;
-  statusID?: string;
   companyID?: Company;
   departmentID?: Department;
-  taskBoardID?: string;
-  title?: string;
+  taskBoardID: string;
+  title: string;
   taskIDs: Task[];
   description?: string;
+  createdBy?: User;
 }
+
 export interface CheckInCheckOut {
   checkInAt?: string;
   checkOutAt?: string;
@@ -231,4 +232,15 @@ export interface ProjectState {
 export interface ChannelIDData {
   _id: string;
   channelID: string;
+}
+
+export interface TaskBoard {
+  _id: string;
+  companyID?: Company | string;
+  departmentID?: Department | string;
+  taskStatusIDs?: string[];
+  title: string;
+  description?: string;
+  updatedBy?: User ;
+  createdBy?: User | string;
 }

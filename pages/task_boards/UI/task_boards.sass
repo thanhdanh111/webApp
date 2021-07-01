@@ -1,0 +1,489 @@
+.board
+  display: grid;
+  background-color: rgb(255, 255, 255);
+  color: rgb(33, 43, 54);
+  overflow: hidden;
+  box-shadow: 0 0 8px 2px #ececec;
+  border-radius: 16px;
+  position: relative;
+  z-index: 0;
+  width: 95%;
+  overflow-x: auto;
+  margin: 23px auto;
+  background: #fff;
+  min-height: 200px;
+
+  .btn-choose
+    border: none
+    box-shadow: none
+    overflow: auto
+    float: right
+    background: #fff
+
+  .nav-click_up
+    align-items: center
+    justify-content: flex-end
+    min-width: max-content
+    position: relative
+    z-index: 3
+    width: auto
+    flex-wrap: wrap
+    margin: 10px 10px
+    min-height: 35px
+    padding: 0 12px 0 0
+    background: #fff
+    border-bottom: 1px solid #e9ebf0
+    display: flex;
+
+    .nav-click-up-search
+      display: flex;
+      width: 50%;
+      margin: 0;
+      align-items: flex-end;
+      float: left;
+      position: absolute;
+      left: 1px;
+
+      .nav-click-up-task-board
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 15px
+        display: flex
+
+        .add-task-board
+          padding: 0 5px
+
+        .nav-click-up-task-board-select
+          width: -webkit-fill-available;
+
+          &:before
+            border-bottom: none
+
+          .MuiInputBase-input
+            width: 87px;
+            font-size: 14px;
+
+    .nav-search
+      width: 15em;
+      left: 13em;
+      float: left;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      border-radius: 15px;
+      padding: 0;
+      margin: 0 0;
+      justify-content: start;
+      flex-wrap: wrap;
+      border: .5px solid #ccc;
+
+      .icon-search
+        transition: all .1s cubic-bezier(.785, .135, .15, .86) 0s
+        order: 1
+        flex-shrink: 0
+        width: 34px
+        height: 14px
+        margin: 0
+        stroke: #bcc0c7
+        cursor: pointer
+        padding: 0 10px
+        position: absolute;
+        left: 7em;
+
+      .nav-input-search
+        transition: all .2s cubic-bezier(.785, .135, .15, .86) 0s
+        font-family: Gotham Pro, Proxima Nova, arial, serif
+        font-weight: 400
+        font-size: 12px
+        line-height: 28px
+        order: 2
+        flex-grow: 1
+        width: 55px
+        height: 28px
+        -webkit-font-smoothing: antialiased
+        color: #343434
+        background: transparent
+        box-shadow: none
+        min-width: 0
+        max-width: none
+        border: none;
+        padding: 15px 0 15px 10px;
+
+        &:focus
+          outline: none;
+
+    .nav-actions
+      display: contents
+      float: right
+      
+      .list-actions
+        display: flex
+        list-style: none
+        padding: 0 20px 0 0
+        margin: 0
+        float: left
+        transform: translateY(5px)
+
+        .item-action
+          display: flex
+          position: relative
+
+          .action
+            display: flex
+            line-height: 1.5
+            vertical-align: middle 
+
+            .action-icon
+              font-size: 1em
+              margin: 0 10px
+              transform: translateY(3px)
+
+            .action-text
+              font-size: 1em
+              color: #7c828d
+
+    .show-task
+      display: contents
+      float: right
+
+      .list-actions
+        list-style: none
+        padding: 0 20px 0 0
+        margin: 0
+        float: right
+        transform: translateY(5px)
+
+        .item-action
+          display: flex
+          position: relative
+
+          .action
+            display: flex
+            line-height: 1.5
+            vertical-align: middle 
+
+          .action-use
+            display: flex
+            vertical-align: middle
+            line-height: 1.2
+            border: none
+            transform: translateY(-1px)
+
+            .btn-assign
+              transform: translateX(10px)
+
+              .btn
+                margin-left: 10px
+                display: contents
+                z-index: 1
+                min-width: auto
+
+                .assign
+                  display: flex
+                  vertical-align: middle
+                  line-height: 1.2
+                  border: none
+                  border-radius: 10px
+                  padding: 0 5px
+                  background: #dfe4e7
+
+                  .icon
+                    font-size: 1em
+                    margin-right: 3px
+                    transform: translateY(3px)
+
+                  .text-per
+                    font-size: 1em
+                    text-transform: initial
+
+                .assign-other
+                  padding: 1px 11px 6px 11px
+                   
+            .btn-assign
+              transform: translateX(10px)
+
+              .btn-show-me
+                z-index: 2
+
+                .assign-me
+                  background: #117bc8
+
+                  .icon-me
+                    color: #fff
+                    font-size: 1em
+
+                  .text-per
+                    color: #fff
+
+                .assign-other
+                  padding: 1px 11px 6px 11px
+                  background: #dfe4e7
+
+              .btn-show-all
+                .assign-me
+                  background: #dfe4e7
+
+                  .icon-me
+                    color: #7c828d
+                    font-size: 1em
+
+                  .text-per
+                    color: #7c828d
+
+                .assign-other
+                  padding: 1px 11px 6px 11px
+                  background: #117bc8
+
+                  .icon-other
+                    color: #fff
+                    font-size: 1em
+
+  .board-tasks
+    display: flex
+    width: 100%
+    overflow-x: auto
+    
+    .task-status
+      position: relative
+      flex-shrink: 0
+      display: flex
+      flex-direction: column
+      width: 270px
+      padding: 0 5px 0 0
+      margin-left: 15px
+      margin-top: 15px
+      min-height: 50px
+      
+      .in-progress
+        border-top: 2px solid rgb(65, 148, 246)
+
+      .closed
+        border-top: 2px solid rgb(107, 201, 80)
+
+      .add-task-text
+        font-size: 1em;
+        padding: 3px 0;
+
+    .add-task
+      display: flex
+      color: #d3d3d3
+      cursor: pointer
+
+      .icon-add-task
+        color: #d3d3d3
+        position: absolute;
+        left: 5px;
+
+      .text-add-task
+        padding-left: 29px;
+
+.request-dialog-content
+  .title-task-board-create
+    margin-bottom: 10px
+
+  .title-required
+    .text-field-form
+      .text-field
+        border-bottom: 1px solid #fff000
+
+    .add-task
+      &:hover
+        color: #50ac55
+        cursor: pointer
+
+        .icon-add-task
+          color: #50ac55
+
+@media screen and ( min-width: 1025px )
+  .board
+    .btn-choose
+      display: none
+ 
+@media screen and ( max-width: 1024px )
+  .board
+    margin: auto
+    top: 20px
+    z-index: 1
+
+    .nav-click_up
+      .nav-actions
+        display: none
+
+      .nav-click-up-search
+        width: 77%
+
+        .nav-click-up-task-board
+          width: 30%
+
+      .show-task
+        .list-actions
+          display: contents
+
+@media screen and ( max-width: 768px )
+  .board
+    padding: 0 0 25px
+    margin: auto
+    top: 20px
+    z-index: 1
+
+    .nav-click_up
+      .nav-click-up-search
+        width: 77%
+
+        .nav-search
+          border: none
+
+          .icon-search
+            left: -1.6em;
+            top: -16px;
+
+          .nav-input-search
+            display: none
+
+        .nav-click-up-task-board
+          width: 23%;
+
+          .add-task-board
+            .nav-click-up-task-board-icon
+              font-size: 14px;
+
+          .nav-click-up-task-board-select
+            .MuiInput-input
+              font-size: 12px;
+              padding: 0;
+              white-space: nowrap;
+              width: 81%;
+
+      .btn-choose
+        padding: 0;
+        font-size: 14px;
+
+        .MuiButton-label
+          padding-left: 39px;
+
+@media screen and ( max-width: 600px )
+  .board
+    padding: 0 0 25px
+    margin: auto
+    top: 20px
+    z-index: 1
+
+    .nav-click_up
+      .nav-click-up-search
+        width: 68%
+
+        .nav-search
+          border: none
+
+          .icon-search
+            left: -1.6em;
+            top: -16px;
+
+          .nav-input-search
+            display: none
+
+        .nav-click-up-task-board
+          width: 40%;
+
+          .add-task-board
+            .nav-click-up-task-board-icon
+              font-size: 14px;
+
+          .nav-click-up-task-board-select
+            .MuiInput-input
+              font-size: 12px;
+              padding: 0;
+              white-space: nowrap;
+              width: 81%;
+
+      .btn-choose
+        padding: 0;
+        font-size: 14px;
+
+        .MuiButton-label
+          padding-left: 39px;
+
+@media screen and ( max-width: 480px )
+  .board
+    padding: 0 0 25px
+    margin: auto
+    top: 20px
+    z-index: 1
+
+    .nav-click_up
+      .nav-click-up-search
+        width: 61%
+
+        .nav-search
+          border: none
+
+          .icon-search
+            left: -2.6em;
+            top: -16px;
+
+          .nav-input-search
+            display: none
+
+        .nav-click-up-task-board
+          width: 50%;
+
+          .add-task-board
+            .nav-click-up-task-board-icon
+              font-size: 14px;
+
+          .nav-click-up-task-board-select
+            .MuiInput-input
+              font-size: 12px;
+              padding: 0;
+              white-space: nowrap;
+              width: 81%;
+
+      .btn-choose
+        padding: 0;
+        font-size: 14px;
+
+        .MuiButton-label
+          padding-left: 39px;
+
+@media screen and ( max-width: 360px )
+  .board
+    width: 95%
+    padding: 0 0 25px
+    margin: auto
+    top: 20px
+    z-index: 1
+
+    .nav-click_up
+      .nav-click-up-search
+        width: 50%
+
+        .nav-search
+          border: none
+
+          .icon-search
+            left: -1.6em;
+            top: -16px;
+
+          .nav-input-search
+            display: none
+
+        .nav-click-up-task-board
+          width: 75%;
+
+          .add-task-board
+            .nav-click-up-task-board-icon
+              font-size: 14px;
+
+          .nav-click-up-task-board-select
+            .MuiInput-input
+              font-size: 12px;
+              padding: 0;
+              white-space: nowrap;
+              width: 81%;
+
+      .btn-choose
+        padding: 0;
+        font-size: 14px;
+
+        .MuiButton-label
+          padding-left: 39px;
