@@ -1,4 +1,4 @@
-import BoardCard from 'pages/board/UI/card_board/board_card';
+import BoardCard from 'pages/board/UI/board_card/board_card';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useEffect } from 'react';
@@ -14,7 +14,7 @@ const Board: FunctionComponent = () => {
   const router = useRouter();
   const pathname = router.pathname;
 
-  const onPushToPage = () => {
+  const handleBtnNewFlowChart = () => {
     try {
       dispatch(createFlowChartMiddleWare(
         router,
@@ -40,7 +40,7 @@ const Board: FunctionComponent = () => {
       <div className='btn-new'>
         <PrimaryButtonUI
           title='+ FlowChart'
-          handleClick={() => onPushToPage()}
+          handleClick={() => handleBtnNewFlowChart()}
         />
       </div>
       <div className='list-board'>

@@ -3,7 +3,7 @@ import { Board } from 'helpers/type';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Delete } from '@material-ui/icons';
-import ConfirmDeleteBoard from '../confirm_delete_board/confirm_delete_board';
+import ConfirmDialogDelete from '../confirm_dialog_delete/confirm_dialog_delete';
 import { deleteBoardMiddleWare } from 'pages/board/logic/board_reducer';
 import { useDispatch } from 'react-redux';
 
@@ -54,7 +54,7 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
           </div>
           <div className='check-box' onClick={() => handleOpenOrClose()}>
             <Delete className='trash-logo'/>
-            <ConfirmDeleteBoard open={open} onClose={handleOpenOrClose} handleDelete={() => handleDeleteBoard(board._id)}/>
+            <ConfirmDialogDelete open={open} onClose={handleOpenOrClose} handleDelete={() => handleDeleteBoard(board._id)}/>
           </div>
         </CardContent>
       </Card>

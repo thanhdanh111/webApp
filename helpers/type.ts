@@ -259,7 +259,7 @@ export interface BoardsPage {
   selectedBoard: Board;
 }
 
-export interface ConnecToData {
+export interface ConnectToData {
   cardID: string;
   text: string;
   arrow: Arrow;
@@ -275,9 +275,9 @@ export interface Card {
   textContent?: string;
   border?: string;
   background?: string;
-  leftTo?: ConnecToData;
-  rightTo?: ConnecToData;
-  bottomTo?: ConnecToData;
-  topTo?: ConnecToData;
+  leftTo?: ConnectToData;
+  rightTo?: ConnectToData;
+  bottomTo?: ConnectToData;
+  topTo?: ConnectToData;
   position?: string;
 }

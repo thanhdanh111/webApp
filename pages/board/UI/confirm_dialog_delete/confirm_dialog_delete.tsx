@@ -10,7 +10,7 @@ interface InitialProps {
   handleDelete?: () => void;
 }
 
-const ConfirmDeleteBoard: FC<InitialProps> = (props: InitialProps) => {
+const ConfirmDialogDelete: FC<InitialProps> = (props: InitialProps) => {
 
   const { onClose, open, handleDelete }: InitialProps = props;
 
@@ -54,4 +54,4 @@ const ConfirmDeleteBoard: FC<InitialProps> = (props: InitialProps) => {
   );
 };
 
-export default ConfirmDeleteBoard;
+export default ConfirmDialogDelete;

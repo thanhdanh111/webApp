@@ -1,11 +1,11 @@
 import { storiesOf } from '@storybook/react';
 import React from 'react';
-import ConfirmDeleteBoard from './confirm_delete_board';
+import ConfirmDialogDelete from './confirm_dialog_delete';
 
 storiesOf('ConfirmDialog Scripts', module).add('ConfirmDialog Scripts', () => {
   return (
     <>
-        <ConfirmDeleteBoard open={false} handleDelete={() => ''} onClose={() => ''} />
+        <ConfirmDialogDelete open={false} handleDelete={() => ''} onClose={() => ''} />
     </>
   );
 });

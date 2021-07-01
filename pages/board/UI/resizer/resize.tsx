@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
-
+import { useEffect, useState, useRef } from 'react';
 import { Direction } from './constants';
 
-const Resizer = ({ onResize }) => {
+const Resizer = ({ onResize, panelRef }) => {
+  const heightRef = useRef(40);
+  const widthRef = useRef(100);
   const [direction, setDirection] = useState('');
   const [mouseDown, setMouseDown] = useState(false);
 
   const handleMouseMove = (event) => {
     if (!direction) return;
-    onResize(direction, event.movementX, event.movementY);
+    onResize(panelRef, heightRef, widthRef, direction, event.movementX, event.movementY);
   };
   useEffect(() => {
 
@@ -38,7 +39,7 @@ const Resizer = ({ onResize }) => {
   };
 
   return(
-    <>
+    <div>
 
       <div className='resizer top-left' onMouseDown={handleMouseDown(Direction.TopLeft)}/>
 
@@ -48,7 +49,7 @@ const Resizer = ({ onResize }) => {
 
       <div className='resizer bottom-left' onMouseDown={handleMouseDown(Direction.BottomLeft)}/>
 
-    </>
+    </div>
   );
 };
 
