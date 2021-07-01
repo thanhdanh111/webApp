@@ -3,7 +3,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { createNewDocProject, getDocProjects, getFolderAccessOfCurrentProjectID } from '../logic/docs_apis';
+import { createNewDocProject, getDocProjects, getFolderAccessOfCurrentProjectID, getUsersInCompanyApi } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
 import { updateDocs } from '../logic/docs_actions';
 import { convertFromRaw, EditorState, CompositeDecorator } from 'draft-js';
@@ -11,11 +11,11 @@ import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
 import DocsDrawerProjectUI from './docs_drawer_project_item';
 import { docsLinkDecorator } from 'pages/docs/UI/decorator_link';
-import { DocProject, PageContent } from '../logic/docs_reducer';
+import { DocProject, DocProjectMap, PageContent } from '../logic/docs_reducer';
 import { docsImageDecorator } from './decorator_image';
 
 interface DocsDrawerData {
-  docProjects: DocProject[];
+  docProjectsMap: DocProjectMap;
   loading: boolean;
   selectedDocProject: DocProject;
   selectedPage: PageContent;
@@ -26,14 +26,14 @@ type DocsDrawerDataType = DocsDrawerData;
 const DocsDrawer = () => {
   const dispatch = useDispatch();
   const {
-    docProjects,
+    docProjectsMap,
     loading,
     selectedDocProject,
     selectedPage,
   }: DocsDrawerDataType = useSelector((state: RootState) => {
 
     return {
-      docProjects: state?.docs?.docProjects,
+      docProjectsMap: state?.docs?.docProjectsMap,
       loading: state?.docs?.loading,
       selectedDocProject: state?.docs?.selectedDocProject,
       selectedPage: state?.docs?.selectedPage,
@@ -43,6 +43,10 @@ const DocsDrawer = () => {
 
   useEffect(() => {
     dispatch(getDocProjects());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getUsersInCompanyApi());
   }, []);
 
   function backToHome() {
@@ -95,18 +99,30 @@ const DocsDrawer = () => {
     handleClose();
   }
 
-  function showListTreeOfDocProjects(project) {
-    const onSelectedProject = !selectedPage?._id &&
+  function showListTreeOfDocProjects() {
+    const listTreeOfDocProjects: JSX.Element[] = [];
+
+    for (const projectID in docProjectsMap) {
+      if (!docProjectsMap[projectID]) {
+
+        continue;
+      }
+
+      const project = docProjectsMap[projectID];
+      const onSelectedProject = !selectedPage?._id &&
       selectedDocProject?._id === project?._id;
 
-    return <DocsDrawerProjectUI
-      key={project?._id}
-      project={project}
-      pages={project?.pages}
-      onClickPage={onClickPage}
-      onClickProject={onClickProject}
-      selected={onSelectedProject}
-    />;
+      listTreeOfDocProjects.push(<DocsDrawerProjectUI
+        key={project?._id}
+        project={project}
+        pages={project?.pages}
+        onClickPage={onClickPage}
+        onClickProject={onClickProject}
+        selected={onSelectedProject}
+      />);
+    }
+
+    return listTreeOfDocProjects;
   }
 
   return (
@@ -122,11 +138,11 @@ const DocsDrawer = () => {
         </div>
       </div>
       <List component='nav'>
-        {docProjects.map(showListTreeOfDocProjects)}
+        {showListTreeOfDocProjects()}
       </List>
       <CreateNewProjectDialog loading={loading} handleCreate={handleCreate}/>
     </>
   );
 };
 
-export default DocsDrawer;
+export default React.memo(DocsDrawer, () => true);

@@ -1,6 +1,6 @@
 import { EditorState } from 'draft-js';
-import { DocProject, PageContent } from './docs_reducer';
-import { ProjectAccessMap, ProjectAccessMapOfUsers } from './get_folder_access';
+import { DocProject, PageContent, UsersInCompanyMap } from './docs_reducer';
+import { ProjectAccessMapOfUsers } from './get_folder_access';
 
 export enum DocsActionTypes {
   DisplayToolbar = 'DisplayToolbar',
@@ -38,19 +38,18 @@ export const updateOnFocusing = ({ currentIndex }: UpdateOnFocusing) => {
 };
 
 interface UpdateDocs {
-  docProjects?: object[];
+  docProjectsMap?: object;
   loading?: boolean;
   selectedDocProject?: DocProject;
   selectedPage?: PageContent;
   title?: string;
   editorState?: EditorState;
   shouldCallApi?: boolean;
-  storeProjectsIndice?: object;
   needDisplay?: boolean;
   selectionRect?: DOMRect;
-  myProjectAccess?: ProjectAccessMap;
   openShare?: boolean;
   selectedProjectAccess?: ProjectAccessMapOfUsers;
+  usersInCompanyMap?: UsersInCompanyMap;
 }
 
 export const updateDocs = (data: UpdateDocs) => {

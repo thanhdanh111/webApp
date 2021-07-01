@@ -7,6 +7,7 @@ import { updateDocs } from './docs_actions';
 import { getDesiredChildrenIntoDesiredParents } from '../../../helpers/get_desired_children_into_desired_parents';
 import { getProjectAccessOfUsers } from './get_folder_access';
 import { getIDsParamsForAxios } from '../../../helpers/get_ids_params_for_axios';
+import { getUsersInCompany } from './get_users_in_company';
 
 export const createNewPage = () => async (dispatch, getState) => {
   try {
@@ -16,8 +17,7 @@ export const createNewPage = () => async (dispatch, getState) => {
       editorState,
       selectedDocProject,
       selectedPage,
-      storeProjectsIndice,
-      docProjects,
+      docProjectsMap,
     }: DocsValueType = getState()?.docs;
     const companyID = selectedDocProject?.companyID?._id ?? selectedDocProject?.companyID;
     const docProjectID = selectedDocProject?._id;
@@ -46,23 +46,15 @@ export const createNewPage = () => async (dispatch, getState) => {
         },
       });
 
-    const projectIndex = storeProjectsIndice[docProjectID];
+    const newProjectsMap = docProjectsMap;
 
-    if (typeof projectIndex !== 'number') {
-      dispatch(updateDocs({ loading: false, shouldCallApi: true }));
-
-      return;
-    }
-
-    const newProjects  = docProjects;
-
-    newProjects?.[projectIndex]?.pages?.push({
+    newProjectsMap?.[docProjectID].pages?.push({
       title: res?.data?.title,
       _id: res?.data?._id,
       pageContent: res?.data?.pageContent,
     });
 
-    dispatch(updateDocs({ loading: false, docProjects: [...newProjects] }));
+    dispatch(updateDocs({ loading: false, docProjectsMap: newProjectsMap }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
@@ -76,8 +68,7 @@ export const savePage = () => async (dispatch, getState) => {
       editorState,
       selectedDocProject,
       selectedPage,
-      storeProjectsIndice,
-      docProjects,
+      docProjectsMap,
     }: DocsValueType = getState()?.docs;
     const docProjectID = selectedDocProject?._id;
     const selectedPageID = selectedPage?._id;
@@ -105,16 +96,8 @@ export const savePage = () => async (dispatch, getState) => {
         },
       });
 
-    const projectIndex = storeProjectsIndice[docProjectID];
-
-    if (typeof projectIndex !== 'number') {
-      dispatch(updateDocs({ loading: false, shouldCallApi: true }));
-
-      return;
-    }
-
-    const newProjects  = docProjects;
-    newProjects[projectIndex].pages = newProjects[projectIndex]?.pages?.map((page) => {
+    const newProjectsMap  = docProjectsMap;
+    newProjectsMap[docProjectID].pages = newProjectsMap[docProjectID]?.pages?.map((page) => {
       if (page?._id === res?.data._id) {
         return {
           pageContent: res?.data?.pageContent,
@@ -127,7 +110,7 @@ export const savePage = () => async (dispatch, getState) => {
       return page;
     });
 
-    dispatch(updateDocs({ loading: false, docProjects: [...newProjects] }));
+    dispatch(updateDocs({ loading: false, docProjectsMap: newProjectsMap }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
@@ -140,8 +123,7 @@ export const deletePage = () => async (dispatch, getState) => {
       title,
       selectedDocProject,
       selectedPage,
-      storeProjectsIndice,
-      docProjects,
+      docProjectsMap,
     }: DocsValueType = getState()?.docs;
     const docProjectID = selectedDocProject?._id;
     const selectedPageID = selectedPage?._id;
@@ -162,16 +144,9 @@ export const deletePage = () => async (dispatch, getState) => {
         },
       });
 
-    const projectIndex = storeProjectsIndice[docProjectID];
+    const newDocProjectsMap = docProjectsMap;
 
-    if (typeof projectIndex !== 'number') {
-      dispatch(updateDocs({ loading: false, shouldCallApi: true }));
-
-      return;
-    }
-
-    const newProjects  = docProjects;
-    newProjects[projectIndex].pages = newProjects[projectIndex]?.pages?.filter((page) => {
+    newDocProjectsMap[docProjectID].pages = newDocProjectsMap[docProjectID]?.pages?.filter((page) => {
       if (page?._id !== selectedPageID) {
         return true;
       }
@@ -179,7 +154,7 @@ export const deletePage = () => async (dispatch, getState) => {
       return false;
     });
 
-    dispatch(updateDocs({ loading: false, docProjects: [...newProjects] }));
+    dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
@@ -189,7 +164,6 @@ export const getDocProjects = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
     const companyID = getState()?.userInfo?.currentCompany?._id;
-    const accountUserID = getState()?.userInfo?.userID;
 
     if (!companyID) {
       return;
@@ -223,9 +197,9 @@ export const getDocProjects = () => async (dispatch, getState) => {
       },
     );
 
-    const projects: object[] = [];
+    const projectsMap: object = { };
 
-    const docPagesIntoDocProjects = getDesiredChildrenIntoDesiredParents({
+    const docPagesIntoDocProjectsMap = getDesiredChildrenIntoDesiredParents({
       children: docPages?.data?.list,
       fieldsOfParent: ['_id', 'title', 'companyID'],
       fieldsOfChild: ['_id', 'title', 'pageContent', 'entityMap'],
@@ -234,47 +208,37 @@ export const getDocProjects = () => async (dispatch, getState) => {
       childName: 'pages',
     });
 
-    const storeNewParentsIndice = docPagesIntoDocProjects.desiredParentsIndice;
-    let newIndex = 0;
-
     if (docProjects?.data?.list?.length) {
 
-      for (const docProject of docProjects?.data?.list) {
+      docProjects?.data?.list?.forEach((docProject) => {
+
         const projectID = docProject?._id;
 
-        if (docPagesIntoDocProjects?.desiredParentsIndice[projectID] !== undefined) {
-          const filteredProjectIndex = docPagesIntoDocProjects?.desiredParentsIndice[projectID];
+        if (docPagesIntoDocProjectsMap[projectID] !== undefined) {
+          projectsMap[projectID] = docPagesIntoDocProjectsMap[projectID];
 
-          projects.push(docPagesIntoDocProjects.desiredParents[filteredProjectIndex]);
-          storeNewParentsIndice[projectID] = newIndex;
-          newIndex = newIndex + 1;
-
-          continue;
+          return;
         }
 
         const invalidProject = !projectID || !docProject?.title || !docProject?.companyID;
 
         if (invalidProject) {
 
-          continue;
+          return;
         }
 
-        storeNewParentsIndice[projectID] = newIndex;
-        newIndex = newIndex + 1;
-
-        projects.push({
+        projectsMap[projectID] = {
           title: docProject.title,
           _id: projectID,
           companyID: docProject.companyID,
           pages: [],
-        });
-      }
+        };
+      });
     }
 
     dispatch(updateDocs({
       loading: false,
-      docProjects: projects,
-      storeProjectsIndice: storeNewParentsIndice,
+      docProjectsMap: projectsMap,
     }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
@@ -285,7 +249,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
   try {
     const token: Token =  localStorage.getItem('access_token');
     const { currentCompany }: UserInfoType = getState()?.userInfo;
-    const { docProjects, storeProjectsIndice }: DocsValueType = getState()?.docs;
+    const { docProjectsMap }: DocsValueType = getState()?.docs;
     const companyID = currentCompany?._id;
 
     if (!companyID || !projectName || !token) {
@@ -317,16 +281,16 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
       return;
     }
 
-    const newDocProject = {
+    const newDocProjectsMap = docProjectsMap;
+
+    newDocProjectsMap[newProjectID] = {
       companyID: newCompanyID,
       _id: newProjectID,
       title: newTitle,
       pages: [],
     };
 
-    storeProjectsIndice[newProjectID] = docProjects.length;
-
-    dispatch(updateDocs({ storeProjectsIndice, loading: false, docProjects: [...docProjects, newDocProject] }));
+    dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
@@ -335,7 +299,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
 export const deleteDocProject = ({ projectID }) => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const { docProjects, storeProjectsIndice }: DocsValueType = getState()?.docs;
+    const { docProjectsMap }: DocsValueType = getState()?.docs;
 
     if (!token || !projectID) {
       return;
@@ -352,22 +316,11 @@ export const deleteDocProject = ({ projectID }) => async (dispatch, getState) =>
         },
       });
 
-    const newStoreProjectsIndice = storeProjectsIndice;
-    let newIndex = 0;
+    const newDocProjectsMap = docProjectsMap;
 
-    const newDocProjects = docProjects.filter((docProject) => {
-      const currentProjectID = docProject?._id ?? '';
-      if (docProject?._id !== projectID) {
-        newStoreProjectsIndice[currentProjectID] = newIndex;
-        newIndex = newIndex + 1;
+    delete newDocProjectsMap[projectID];
 
-        return true;
-      }
-
-      return false;
-    });
-
-    dispatch(updateDocs({ loading: false, docProjects: newDocProjects,  storeProjectsIndice: newStoreProjectsIndice }));
+    dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
@@ -376,13 +329,12 @@ export const deleteDocProject = ({ projectID }) => async (dispatch, getState) =>
 export const getFolderAccessOfCurrentProjectID = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const selectedProjectID = getState()?.docs?.selectedDocProject?._id;
+    const { selectedDocProject }: DocsValueType = getState()?.docs;
+    const selectedProjectID =  selectedDocProject?._id;
 
-    if (!selectedProjectID) {
+    if (!selectedProjectID?.length) {
       return;
     }
-
-    dispatch(updateDocs({ loading: true }));
 
     const projectAccess =  await axios.get(`${config.BASE_URL}/folderAccesses?${
       getIDsParamsForAxios({ ids: [selectedProjectID], fieldName: 'orFolderIDs' })}`,
@@ -400,7 +352,82 @@ export const getFolderAccessOfCurrentProjectID = () => async (dispatch, getState
 
     const projectAccessOfUsers = getProjectAccessOfUsers({ projectAccess: projectAccess?.data?.list });
 
-    dispatch(updateDocs({ loading: false, selectedProjectAccess: projectAccessOfUsers }));
+    dispatch(updateDocs({ selectedProjectAccess: projectAccessOfUsers }));
+  } catch (error) {
+    dispatch(updateDocs({ loading: false }));
+  }
+};
+
+export const getUsersInCompanyApi = () => async (dispatch, getState) => {
+  try {
+    const token: Token =  localStorage.getItem('access_token');
+    const { currentCompany }: UserInfoType = getState()?.userInfo;
+    const companyID = currentCompany?._id;
+
+    if (!token || !companyID) {
+      return;
+    }
+
+    const usersInCompany = await axios.get(`${config.BASE_URL}/userAccesses`,
+      {
+        params: {
+          companyID,
+          limit: 1000,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const usersMap = getUsersInCompany({ users: usersInCompany?.data?.list });
+
+    dispatch(updateDocs({ usersInCompanyMap: usersMap }));
+  } catch (error) {
+    dispatch(updateDocs({ loading: false }));
+  }
+};
+
+const roles = {
+  READ: 'read',
+  WRITE: 'write',
+};
+
+export const shareDocument = ({ role, userID }) => async (dispatch, getState) => {
+  try {
+    const token: Token =  localStorage.getItem('access_token');
+    const { selectedDocProject, usersInCompanyMap }: DocsValueType = getState()?.docs;
+    const selectedProjectID =  selectedDocProject?._id;
+
+    if (!token || !selectedProjectID || roles[role] === undefined) {
+      return;
+    }
+
+    dispatch(updateDocs({ loading: true }));
+
+    const endpoint = roles[role];
+
+    await axios.request(
+      {
+        method: 'POST',
+        url: `${config.BASE_URL}/folderAccesses/​${endpoint}/add`,
+        data: {
+          userID,
+          feature: 'DOCS',
+          folderID: selectedProjectID,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const newSelectedDocProject = selectedDocProject;
+    newSelectedDocProject[userID] = usersInCompanyMap[userID];
+
+    dispatch(updateDocs({ loading: false }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }

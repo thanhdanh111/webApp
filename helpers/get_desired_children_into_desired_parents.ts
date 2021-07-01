@@ -12,9 +12,8 @@ function returnDesiredData({  data, fields }) {
   return newData;
 }
 
-interface GetDesiredChildrenIntoDesiredParents {
-  desiredParents: object[];
-  desiredParentsIndice: object;
+interface DesiredMap {
+  [id: string]: object;
 }
 
 export function getDesiredChildrenIntoDesiredParents({
@@ -24,17 +23,14 @@ export function getDesiredChildrenIntoDesiredParents({
   parentFieldInChild,
   parentFieldID,
   childName,
-}): GetDesiredChildrenIntoDesiredParents {
-  if (!children?.length || !childName) {
+}): DesiredMap {
+  if (!childName) {
     return {
-      desiredParentsIndice: {},
-      desiredParents: [],
+      desiredMap: { },
     };
   }
 
-  const storeParentIndice = {};
-  const parentArray: object[] = [];
-  let indexForNewParent = 0;
+  const desiredMap: DesiredMap = {};
 
   children.forEach((child) => {
     if (!child) {
@@ -56,24 +52,15 @@ export function getDesiredChildrenIntoDesiredParents({
     }
 
     const parentID = child?.[parentFieldInChild]?.[parentFieldID];
-    let indexOfTempParent = storeParentIndice?.[parentID];
+    const parentDataInMap = desiredMap?.[parentID] ?? {
+      ...parentData,
+      [childName]: [],
+    };
 
-    if (typeof indexOfTempParent !== 'number') {
-      storeParentIndice[parentID] = indexForNewParent;
-      indexOfTempParent = indexForNewParent;
+    parentDataInMap[childName].push(childData);
 
-      parentData[childName] = [];
-
-      parentArray[indexForNewParent] = parentData;
-
-      indexForNewParent = indexForNewParent + 1;
-    }
-
-    parentArray?.[indexOfTempParent]?.[childName]?.push(childData);
+    desiredMap[parentID] = parentDataInMap;
   });
 
-  return {
-    desiredParentsIndice: storeParentIndice,
-    desiredParents: parentArray,
-  };
+  return desiredMap;
 }

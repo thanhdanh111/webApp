@@ -1,7 +1,7 @@
 import { DocsActionTypes } from './docs_actions';
 import { EditorState } from 'draft-js';
-import { Company } from 'helpers/type';
-import { ProjectAccessMap, ProjectAccessMapOfUsers } from './get_folder_access';
+import { Company, User } from 'helpers/type';
+import { ProjectAccessMapOfUsers } from './get_folder_access';
 
 interface DocsValue {
   needDisplay: boolean;
@@ -10,14 +10,17 @@ interface DocsValue {
   editorState: EditorState;
   title: string;
   selectedDocProject: DocProject;
-  docProjects: DocProject[];
+  docProjectsMap: DocProjectMap;
   loading: boolean;
   selectedPage?: PageContent;
   shouldCallApi: boolean;
-  storeProjectsIndice: object;
-  myProjectAccess: ProjectAccessMap;
   selectedProjectAccess: ProjectAccessMapOfUsers;
   openShare: boolean;
+  usersInCompanyMap: UsersInCompanyMap;
+}
+
+export interface UsersInCompanyMap {
+  [userID: string]: User;
 }
 
 interface CreatedBy {
@@ -40,6 +43,10 @@ export interface PageContent {
   entityMap?: string;
 }
 
+export interface DocProjectMap {
+  [projectID: string] : DocProject;
+}
+
 export interface DocProject {
   _id?: string;
   title?: string;
@@ -58,13 +65,12 @@ const initialState: DocsValue = {
   title: '',
   selectedPage: {},
   selectedDocProject: {},
-  docProjects: [],
+  docProjectsMap: {},
   loading: false,
   shouldCallApi: true,
-  storeProjectsIndice: {},
-  myProjectAccess: {},
   openShare: false,
   selectedProjectAccess: {},
+  usersInCompanyMap: {},
 };
 
 export type DocsValueType = DocsValue;
