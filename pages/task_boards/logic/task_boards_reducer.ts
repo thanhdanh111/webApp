@@ -90,7 +90,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
 
 const notificationsType = {
   201: 'Created taskBoard to Company successfully',
-  400: 'You have no company right now!',
+  400: 'You have no taskBoard right now!',
 };
 
 export const getTaskStatusByIDThunkAction = (title, taskStatusID) => async (dispatch) => {

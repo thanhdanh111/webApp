@@ -52,11 +52,17 @@ function getTimeOffsByModel(
 
   const isTypeMembers = !!userID && type === 'members';
 
-  data.forEach((timeOff) => {
+  const checkExceptMember = (timeOff) => {
     const invalidApiData = checkTrueInObject(timeOff);
     const exceptMeInMembers = isTypeMembers && userID === timeOff?.createdBy?._id;
 
-    if (invalidApiData || (isExceptMeInMembers && exceptMeInMembers)) {
+    const isValid = !invalidApiData || (isExceptMeInMembers && exceptMeInMembers);
+
+    return isValid;
+  };
+
+  data.forEach((timeOff) => {
+    if (checkExceptMember(timeOff)) {
       return;
     }
 
@@ -110,7 +116,7 @@ export const getUserDaysOffApi = ({
     if (!infiniteScroll) {
       await dispatch(updateTimeOffLoadingStatus({
         loadingStatus: {
-          ownTimeOffsLoading: true,
+          ownTimeOffsLoading: false,
         },
       }));
     }
@@ -209,6 +215,31 @@ export const getMembersDaysOffApi = ({
       }));
     }
 
+    const queryParams = () => {
+      let queryArrayParams = '';
+
+      if (!isAdmin && couldGetDaysOffOfMember) {
+        const currentCompanyID = userInfo?.currentCompany?._id;
+
+        const stringCompanies = [currentCompanyID].
+            map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`);
+
+        const departmentIDs = getIDsOfValidAccesses({
+          objectMap: userInfo?.rolesInDepartments,
+          validAccesses: [Roles.DEPARTMENT_MANAGER],
+        });
+
+        const stringDepartments = userInfo?.rolesInCompany.includes(Roles.COMPANY_MANAGER)
+          ? []
+          : departmentIDs.
+            map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`);
+
+        queryArrayParams = `?${[...stringCompanies, ...stringDepartments].join('&')}`;
+      }
+
+      return queryArrayParams;
+    };
+
     const params = {
       limit,
       cursor,
@@ -216,29 +247,8 @@ export const getMembersDaysOffApi = ({
       sortDirection: 'DESC',
     };
 
-    let queryArrayParams = '';
-
-    if (!isAdmin && couldGetDaysOffOfMember) {
-      const currentCompanyID = userInfo?.currentCompany?._id;
-
-      const stringCompanies = [currentCompanyID].
-          map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`);
-
-      const departmentIDs = getIDsOfValidAccesses({
-        objectMap: userInfo?.rolesInDepartments,
-        validAccesses: [Roles.DEPARTMENT_MANAGER],
-      });
-
-      const stringDepartments = userInfo?.rolesInCompany.includes(Roles.COMPANY_MANAGER)
-        ? []
-        : departmentIDs.
-          map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`);
-
-      queryArrayParams = `?${[...stringCompanies, ...stringDepartments].join('&')}`;
-    }
-
     const getDaysoff = await axios.get(
-      `${config.BASE_URL}/daysoff${queryArrayParams}`,
+      `${config.BASE_URL}/daysoff${queryParams()}`,
       {
         params,
         method: 'GET',
@@ -423,6 +433,8 @@ export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
   }
 };
 
+const messesError = notificationsType[400] || 'Something went wrong';
+
 export const submitTimeOffRequest = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
@@ -430,7 +442,6 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
     const timeOffsState = getState()?.timeoff;
 
     if (timeOffRequestState.onSendingRequest) {
-
       return;
     }
 
@@ -446,7 +457,7 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
     });
 
     if (!haveNeededData) {
-      const handleError = notificationsType[400] || 'Something went wrong';
+      const handleError = messesError;
       await dispatch(pushNewNotifications({ variant: 'error' , message: handleError }));
 
       return;

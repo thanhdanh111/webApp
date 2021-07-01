@@ -39,6 +39,18 @@ const TableContent = (props: InitialProp) => {
     notFoundWarning,
   }: InitialProp = props;
 
+  const emptyData = () => {
+    if (emptyState) {
+      return (
+        <div className='empty-state'>
+          <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
+        </div>
+      );
+    }
+
+    return;
+  };
+
   return (
     <TableContainer className='table-list'>
         <InfiniteScroll
@@ -75,10 +87,10 @@ const TableContent = (props: InitialProp) => {
           )}
         </Table>
         </InfiniteScroll>
+          {emptyData}
           {
-            emptyState &&
-            <div className='empty-state'>
-              <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
+            loading && <div style={{ marginTop: '150px', marginBottom: '150px', display: 'flex', justifyContent: 'center' }}>
+              <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
             </div>
           }
       </TableContainer>
