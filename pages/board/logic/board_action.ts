@@ -34,3 +34,10 @@ export const deleteBoardAction = (id: string) => {
     payload: id,
   };
 };
+
+export const setCurrentBoard = (res: object) => {
+  return {
+    type: boardsActionType.SET_CURRENT_BOARD,
+    payload: res,
+  };
+};

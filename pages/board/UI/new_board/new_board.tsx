@@ -12,7 +12,7 @@ import ReactFlow, {
 import CustomDecision from '../shapes/shape_decision';
 import { initialElements } from './initial_elements';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { getBoardDetailDataMiddleWare, updateNameFlowChartMiddleWare } from 'pages/board/logic/board_reducer';
+import { updateNameFlowChartMiddleWare } from 'pages/board/logic/board_reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useDebounce } from 'pages/users/logic/users_reducer';
@@ -20,9 +20,6 @@ import CustomProcess from '../shapes/shape_process';
 import AvatarFlowChart from './avatar_flowchart';
 import ListOptionCard from './list_option_card';
 
-interface BodyProps {
-  idBoard?: string | string[];
-}
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
 };
@@ -32,7 +29,7 @@ const nodeTypes = {
   decision: CustomDecision,
 };
 
-const NewBoard: React.FC<BodyProps> = (props) => {
+const NewBoard = () => {
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
   const selectedBoard = useSelector((state: RootState) => state.boards.selectedBoard);
@@ -48,14 +45,6 @@ const NewBoard: React.FC<BodyProps> = (props) => {
 
     return;
   }, [debouncedInputName]);
-
-  useEffect(() => {
-    fetchDataProject();
-  }, []);
-
-  const fetchDataProject = () => {
-    dispatch(getBoardDetailDataMiddleWare(props.idBoard));
-  };
 
   const onChangeNameFlowChart = (event) => {
     setInputName(event.target.value);
