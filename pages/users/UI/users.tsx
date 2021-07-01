@@ -15,6 +15,7 @@ import { Data } from '../../../helpers/type';
 import SearchIcon from '@material-ui/icons/Search';
 import { RootState } from 'redux/reducers_registration';
 import UserDetail from './user_detail/user_detail';
+import { checkArray } from 'helpers/check_array';
 
 const ListUsers: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -36,10 +37,10 @@ const ListUsers: FunctionComponent = () => {
     fetchDataUsers();
   }, []);
 
-  const usersList = users && users.list && Array.isArray(users.list)
+  const usersList = users && checkArray(users.list)
     ? renderData(users.list) : [];
 
-  const usersListSearch: Data[] = users && users.listSearch && Array.isArray(users.listSearch)
+  const usersListSearch: Data[] = users && checkArray(users.listSearch)
   ? renderData(users.listSearch) : [];
 
   const fetchDataUsers = () => {

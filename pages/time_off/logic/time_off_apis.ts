@@ -6,6 +6,7 @@ import {
   updateStatusTimeOff, updateTimeOffLoadingStatus,
   updateOnSendingTimeOffRequest, updateTimeOffCompaniesToRequest, updateTimeOffsReducer,
   updateTimeOffRequestReducer,
+  getTimeOffByID,
 } from './time_off_actions';
 import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValue } from './time_off_interface';
 import moment from 'moment';
@@ -16,28 +17,13 @@ import { dateTimeUiFormat } from 'constants/date_time_ui_format';
 import { checkValidAccess } from 'helpers/check_valid_access';
 import { Roles } from 'constants/roles';
 import { getIDsOfValidAccesses } from 'helpers/get_ids_of_valid_accesses';
+import { checkTrueInObject } from 'helpers/check_true_object';
 
 const notificationsType = {
   201: 'Sent your letter successfully',
   401: 'Something went wrong with your account',
   403: 'You cannot use this functionality',
 };
-
-function isInvalidTimeOffApiData(timeOff) {
-  if (!timeOff) {
-    return true;
-  }
-
-  const hasCompanyName = timeOff?.companyID?.name;
-  const hasStartTime = timeOff?.startTime;
-  const hasEndTime = timeOff?.endTime;
-  const hasId = timeOff?._id;
-  const hasStatus = timeOff?.status;
-  const hasName = timeOff?.createdBy?.firstName || timeOff?.createdBy?.lastName;
-  const invalidApiData =  !hasCompanyName || !hasStartTime || !hasEndTime || !hasId || !hasStatus || !hasName;
-
-  return invalidApiData;
-}
 
 interface GetTimeOffsByModel {
   userID?: string;
@@ -67,10 +53,10 @@ function getTimeOffsByModel(
   const isTypeMembers = !!userID && type === 'members';
 
   data.forEach((timeOff) => {
-    const invalidApiData = isInvalidTimeOffApiData(timeOff);
+    const invalidApiData = checkTrueInObject(timeOff);
     const exceptMeInMembers = isTypeMembers && userID === timeOff?.createdBy?._id;
 
-    if (invalidApiData || (isExceptMeInMembers && exceptMeInMembers)) {
+    if (!invalidApiData || (isExceptMeInMembers && exceptMeInMembers)) {
       return;
     }
 
@@ -526,5 +512,26 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
 
     dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, selectedCompany: undefined, selectedDepartment: undefined }));
     await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
+  }
+};
+
+export const getTimeoffByIDThunkAction = (timeOffID) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      return;
+    }
+    const res = await axios.get(`${config.BASE_URL}/daysOff/${timeOffID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    dispatch(getTimeOffByID(res.data));
+  } catch (error) {
+    throw error;
   }
 };

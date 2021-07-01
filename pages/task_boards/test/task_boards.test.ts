@@ -34,15 +34,24 @@ beforeAll(async () => {
 describe('Home page', () => {
   test('Test home successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
-    await page.waitForSelector('.home-page');
-
     await page.waitForSelector('.board');
-    await page.waitForSelector('.board-tasks');
-    await page.waitForSelector('.task-status');
-    await page.waitFor(5000);
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
+
+    await page.waitForSelector('.add-task-board');
+    await page.click('.add-task-board');
+
+    await page.waitForSelector('.add-task-board-dialog');
+
+    const createTaskBoard = await page.screenshot();
+    expect(createTaskBoard).toMatchImageSnapshot();
+
+    await page.waitForSelector('.nav-click-up-task-board-select');
+    await page.click('.nav-click-up-task-board-select');
+
+    const showTaskBoards = await page.screenshot();
+    expect(showTaskBoards).toMatchImageSnapshot();
   });
 
 });

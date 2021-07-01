@@ -99,18 +99,23 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         notifications: {
           cursor: cursorNotification,
-          list: [...action.payload.list, ...state.notifications.list],
+          list: [...state.notifications.list, ...action.payload.list],
           totalCount: action.payload.totalCount,
           totalUnread: action.payload.totalUnread,
         },
         hasNoData: true,
       };
     case usersAction.UPDATE_NOTIFICATION:
+      const notifications = [...state.notifications?.list];
+      const index = notifications.findIndex((notification) => notification._id === action.payload.selectNotification?._id);
+      notifications[index].isRead = true;
+
       return {
         ...state,
         selectNotification: action.payload.selectNotification,
         notifications: {
           ...state.notifications,
+          list: [...notifications],
           totalUnread: action.payload.totalUnread,
         },
       };
@@ -250,6 +255,8 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
     const notificationLimit = getState()?.users?.notificationLimit;
 
     if (!token || !receiverID || cursor === 'END') {
+      await dispatch(setLoading(true));
+
       return;
     }
 
@@ -261,13 +268,17 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
       params: {
         cursor,
         receiverID,
+        sortDirection: 'DESC',
+        sortBy: 'createdAt',
         limit: notificationLimit,
       },
     });
 
-    if (!res.data.totalCount || !res.data.list || !res.data.list.length) {
+    if (!res.data.totalCount) {
       await dispatch(hasNoNotification());
-      await dispatch(setLoading(false));
+      await dispatch(setLoading(true));
+
+      return;
     }
 
     await dispatch(getNotificationsAction(res.data));

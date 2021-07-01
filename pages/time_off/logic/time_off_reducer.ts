@@ -18,6 +18,7 @@ const initialState: TimeOffValue = {
   notFoundAnyOwnTimeOffs: false,
   onConfirm: false,
   onSelectTimeOffData: {},
+  timeOffDetail: {},
 };
 
 function updateStatusTimeOffReducer({ action, state }) {
@@ -39,6 +40,7 @@ function updateStatusTimeOffReducer({ action, state }) {
   return newState;
 }
 
+// tslint:disable-next-line: cyclomatic-complexity
 const timeOffReducer = (state = initialState, action) => {
 
   switch (action.type) {
@@ -94,6 +96,12 @@ const timeOffReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.data,
+      };
+    case TimeOffActionTypes.getTimeOffByID:
+
+      return {
+        ...state,
+        timeOffDetail: action.data,
       };
     default:
       return state;
