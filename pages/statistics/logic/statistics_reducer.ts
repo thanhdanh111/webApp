@@ -64,16 +64,7 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
     }: RootState = state;
     const toTime = new Date();
     const fromTime = new Date(toTime.getTime() - limit * 1000 * 60 * 60 * 24);
-    let requestUser = '';
-    if (isGetMe) {
-      requestUser = userID;
-    } else if (selectedUserID) {
-      requestUser = selectedUserID;
-    }
-
-    if (cursor === 'END' || !token || !companyID) {
-      return;
-    }
+    const requestUser = isGetMe ? userID : selectedUserID;
 
     const params = {
       companyID,
@@ -81,7 +72,7 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
       toTime: toTime.toString(),
     };
 
-    if (cursor) {
+    if (cursor !== 'END' && cursor) {
       params['cursor'] = cursor;
     }
 

@@ -36,6 +36,7 @@ const initialState: TaskBoardsType = {
   filteringTaskByUser: false,
 };
 
+// tslint:disable-next-line: cyclomatic-complexity
 export  const taskBoardsReducer = (state = initialState, action) => {
   switch (action.type) {
     case taskBoardsActionType.SET_LOADING:

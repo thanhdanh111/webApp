@@ -48,10 +48,6 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
   let res;
 
   try {
-    if (!token) {
-      return;
-    }
-
     res = await axios.get(`${config.BASE_URL}/users/me`, {
       method: 'GET',
       headers: {

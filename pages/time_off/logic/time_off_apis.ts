@@ -56,7 +56,7 @@ function getTimeOffsByModel(
     const invalidApiData = checkTrueInObject(timeOff);
     const exceptMeInMembers = isTypeMembers && userID === timeOff?.createdBy?._id;
 
-    if (!invalidApiData || (isExceptMeInMembers && exceptMeInMembers)) {
+    if (invalidApiData || (isExceptMeInMembers && exceptMeInMembers)) {
       return;
     }
 
