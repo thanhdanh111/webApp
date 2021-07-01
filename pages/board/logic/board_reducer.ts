@@ -2,7 +2,7 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { BoardsPage } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction, setCurrentBoard } from './board_action';
+import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction } from './board_action';
 import { boardsActionType } from './board_type_action';
 
 export enum NotificationTypes {
@@ -59,11 +59,6 @@ export const boardsReducer = (state = initialState, action) => {
         boards: resolveBoard,
       };
 
-    case boardsActionType.SET_CURRENT_BOARD:
-      return {
-        ...state,
-        selectedBoard: action.payload,
-      };
     default:
       return state;
   }
@@ -212,32 +207,5 @@ export const deleteBoardMiddleWare = (boardID: string) => async (dispatch, getSt
     }
   } catch (error) {
     dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedDeleteBoard }));
-  }
-};
-
-export const fetchBoardContentByBoardId = (detailsBoardID) => async (dispatch, getState) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
-
-    if (!token || !companyID || !detailsBoardID) {
-
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
-
-      return ;
-    }
-
-    const res = await axios.get(`${config.BASE_URL}/boards/${detailsBoardID}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    await dispatch(setCurrentBoard(res.data));
-
-  } catch (error) {
-    throw error;
   }
 };
