@@ -1,3 +1,4 @@
+import { SetTasksToTaskStatus } from 'helpers/type';
 import { taskBoardsActionType } from './task_board_action_type';
 
 export const setFilterTaskByUserAction = (res: boolean) => {
@@ -55,5 +56,12 @@ export const createdTaskStatus = (data: object) => {
   return {
     data,
     type: taskBoardsActionType.CREATE_TASK_STATUS,
+  };
+};
+
+export const setTasksToTaskStatus = (data: SetTasksToTaskStatus) => {
+  return {
+    data,
+    type: taskBoardsActionType.SET_TASKS_TO_TASK_STATUS,
   };
 };
