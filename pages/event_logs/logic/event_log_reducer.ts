@@ -5,6 +5,9 @@ import { eventLogsAction } from './event_log_type_action';
 import { getEventLog, getEventLogs,  hasNoEventLogs,  hideLoader, showLoader } from './event_log_action';
 import { checkArray } from 'helpers/check_array';
 import moment from 'moment';
+import { Roles } from 'constants/roles';
+import { Token } from 'helpers/type';
+import { checkValidAccess } from 'helpers/check_valid_access';
 
 const initialState: EventLogPage = {
   projects: [],
@@ -42,7 +45,7 @@ export const eventLogsReducer = (state = initialState, action) => {
       if (checkArray(action.payload.list)) {
         action?.payload?.list?.map((element) => {
           if (element?.environment) {
-            environments[element.environment] = element?.environment;
+            environments[element?.environment] = element?.environment;
           }
 
           eventLogs.push({
@@ -102,18 +105,39 @@ export const eventLogsReducer = (state = initialState, action) => {
 
 export const getEventLogsData = () => async (dispatch, getState) => {
   try {
+    const userInfo = getState()?.userInfo;
+    const token: Token = localStorage.getItem('access_token');
+    const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
+    const haveAccess = checkValidAccess({
+      validAccesses,
+      rolesInCompany: userInfo?.rolesInCompany,
+      rolesInDepartments: userInfo?.rolesInDepartments,
+      departmentID: userInfo?.currentDepartment?._id,
+    });
+    const isAdmin = userInfo?.isAdmin;
 
-    const token = localStorage.getItem('access_token');
-
-    const state = getState();
-
-    const { selectedTime, selectedEnv, selectedProjectID }: EventLogPage = state.eventLogs;
+    const { selectedTime, selectedEnv, selectedProjectID }: EventLogPage = getState()?.eventLogs;
     const fromTime = new Date();
     const toTime = Number.isInteger(selectedTime) ? new Date(fromTime.getTime() - selectedTime * 1000 * 60 * 60 * 24) : null;
+    let companyIDParam = '';
+    let departmentIDParam = '';
+
+    if (isAdmin || haveAccess) {
+      companyIDParam = userInfo?.currentCompany?._id;
+      departmentIDParam = userInfo?.currentDepartment?._id;
+    }
+
+    if (!companyIDParam) {
+      await dispatch(hasNoEventLogs());
+
+      return;
+    }
 
     const params = {
       fromTime,
       toTime,
+      companyID: companyIDParam,
+      departmentID: departmentIDParam,
       environment: selectedEnv !== 'All' ? selectedEnv : null,
       projectID: selectedProjectID && selectedProjectID !== 'All' ? selectedProjectID : null,
     };
