@@ -114,7 +114,7 @@ export interface MenuItem {
 }
 
 export interface Task {
-  _id?: string;
+  _id: string;
   companyID?: Company;
   departmentID?: Department;
   taskStatusID?: TaskStatus;
@@ -234,6 +234,37 @@ export interface ChannelIDData {
   channelID: string;
 }
 
+export interface Tag {
+  tagId: string;
+  title: string;
+  workspaceId: string;
+  description?: string;
+  createdBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+interface UpdateTaskData {
+  taskStatusId?: string;
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  priority?: string;
+  tags?: Tag[];
+  createdBy?: string;
+  createdAt?: Date;
+  isHover?: boolean;
+}
+
+export interface UpdateTaskToTaskStatus {
+  taskId: string;
+  taskStatusId: string;
+  data: UpdateTaskData;
+}
+export interface SetTasksToTaskStatus {
+  taskStatusId: string;
+  tasks: Task[];
+}
 export interface TaskBoard {
   _id: string;
   companyID?: Company | string;

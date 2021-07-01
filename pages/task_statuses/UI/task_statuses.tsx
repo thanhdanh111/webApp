@@ -6,6 +6,7 @@ import TasksUI from '../../tasks/UI/tasks';
 import { RootStateOrAny,  useDispatch,  useSelector } from 'react-redux';
 import {  getTaskStatusThunkAction, TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
 import { DisappearedLoading } from 'react-loadingg';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 import TaskNew from 'pages/tasks/UI/task_new';
@@ -61,45 +62,75 @@ const TaskStatusUI = (props: InitProps) => {
 
     return (
       <>
-        <div className={`status ${style}`}>
-          <Container className='status-left'>
-              <Typography className='name-status' ref={newTaskRef}>{taskStatus[taskStatusID]?.title}</Typography>
-              <Typography className='quality-task'>{taskIDs?.length}</Typography>
-          </Container>
-          <Container className='status-right'>
-              <Link className='actions-status more-actions'><MoreHorizIcon/></Link>
-              <Link
-                className='actions-status add-action'
-                onClick={() => dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''))}
-              >
-                  <AddIcon />
-              </Link>
-          </Container>
-        </div>
-        <div className='status-task-list'>
-        {
-          currentTaskStatus === taskStatus[taskStatusID]?._id &&
-           <TaskNew companyID={taskStatus[taskStatusID]?.companyID?._id || ''} taskStatusID={taskStatus[taskStatusID]?._id} />
-        }
-          {taskIDs?.map((task) => (
-            <TasksUI key={task?._id} task={task}/>
-          ))}
-
-{
-          currentTaskStatus !== taskStatus[taskStatusID]?._id &&
+      <Droppable droppableId={taskStatus[taskStatusID]?._id} type='TASK_STATUS'>
+        {(provided) => (
           <div
-            className='add-task'
-            onClick={() => {
-              dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''));
-              scrollInput();
-            }}
+            className='task-status'
+            ref={provided.innerRef}
+            {...provided.droppableProps}
           >
-            <Link className='icon-add-task'><AddIcon /></Link>
-            <Typography component='span' className='text-add-task'>NEW TASK</Typography>
+            <div className={`status ${style}`}>
+              <Container className='status-left'>
+                  <Typography className='name-status' ref={newTaskRef}>{taskStatus[taskStatusID]?.title}</Typography>
+                  <Typography className='quality-task'>{taskIDs?.length}</Typography>
+              </Container>
+              <Container className='status-right'>
+                  <Link className='actions-status more-actions'><MoreHorizIcon/></Link>
+                  <Link
+                    className='actions-status add-action'
+                    onClick={() => dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''))}
+                  >
+                    <AddIcon />
+                  </Link>
+              </Container>
+            </div>
+            <div className='status-task-list'>
+              {
+                currentTaskStatus === taskStatus[taskStatusID]?._id &&
+                <TaskNew
+                  companyID={taskStatus[taskStatusID]?.companyID?._id || ''}
+                  taskStatusID={taskStatus[taskStatusID]?._id}
+                />
+              }
+              {taskIDs?.map((task, index) => {
+                return (
+                  <Draggable
+                    key={task?._id}
+                    draggableId={task?._id}
+                    index={index}
+                  >
+                    {(provideTask) => {
+                      return (
+                        <div
+                          ref={provideTask.innerRef}
+                          {...provideTask.draggableProps}
+                          {...provideTask.dragHandleProps}
+                        >
+                          <TasksUI key={task._id} task={task}/>
+                        </div>
+                      );
+                    }}
+                  </Draggable>
+                );
+              })}
+              {
+                currentTaskStatus !== taskStatus[taskStatusID]?._id &&
+                  <div
+                    className='add-task'
+                    onClick={() => {
+                      dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''));
+                      scrollInput();
+                    }}
+                  >
+                  <Link className='icon-add-task'><AddIcon /></Link>
+                  <Typography component='span' className='text-add-task'>NEW TASK</Typography>
+                  </div>
+                }
+            </div>
           </div>
-        }
-        </div>
-      </>
+        )}
+      </Droppable>
+    </>
     );
   };
 
