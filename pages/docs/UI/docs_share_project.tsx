@@ -11,7 +11,6 @@ import { updateDocs } from '../logic/docs_actions';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { ProjectAccessMapOfUsers } from '../logic/get_folder_access';
 import UserAvatar from '../../../components/user_avatar/info_user';
-import { getFolderAccessOfCurrentProjectID } from '../logic/docs_apis';
 
 interface ShareComponentData {
   loading: boolean;
@@ -40,26 +39,31 @@ export const ShareComponent = () => {
     };
   }, shallowEqual);
 
-  useEffect(() => {
-    dispatch(getFolderAccessOfCurrentProjectID());
-  }, []);
-
   function handleClose() {
     dispatch(updateDocs({ openShare: false }));
   }
 
   function renderUsersSharedWith() {
     const usersRender: JSX.Element[] = [];
+    const selectedProjectID = selectedProject?._id ?? '';
 
     for (const userID in selectedProjectAccess) {
       if (!userID) {
         continue;
       }
-      const userProfile = selectedProjectAccess[userID];
+      const userProfile = selectedProjectAccess?.[userID]?.[selectedProjectID]?.ownerInfo;
+
+      if (!userProfile) {
+
+        continue;
+      }
 
       usersRender.push(
         <div key={userID} className='users-shared-with'>
           <UserAvatar user={userProfile}  style='notification-img'/>
+          <Typography style={{ marginLeft: '20px' }}>
+            {`${userProfile?.lastName} ${userProfile.firstName}`}
+          </Typography>
         </div>,
       );
     }
@@ -91,8 +95,8 @@ export const ShareComponent = () => {
             </IconButton>
           </div>
         </DialogTitle>
-        <DialogContent style={{ flexDirection: 'column' }}>
-          <Typography variant='body1' style={{ fontWeight: 600 }}>
+        <DialogContent>
+          <Typography variant='body2' style={{ fontWeight: 600 }}>
             Invite
           </Typography>
           <div className='share-project'>
@@ -109,12 +113,11 @@ export const ShareComponent = () => {
               title='Share'
               handleClick={() => {}}
             />
-            <Typography variant='body1' style={{ fontWeight: 600 }}>
+          </div>
+            <Typography variant='body2' style={{ fontWeight: 600, margin: '10px 0' }}>
               SHARED WITH
             </Typography>
-            {renderUsersSharedWith()}
-
-          </div>
+          {renderUsersSharedWith()}
         </DialogContent>
       </Dialog>
     </div>

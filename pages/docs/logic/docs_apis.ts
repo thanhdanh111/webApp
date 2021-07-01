@@ -197,22 +197,6 @@ export const getDocProjects = () => async (dispatch, getState) => {
 
     dispatch(updateDocs({ loading: true }));
 
-    const projectAccess =  await axios.get(`${config.BASE_URL}/folderAccesses?${
-      getIDsParamsForAxios({ ids: [accountUserID], fieldName: 'orUserIDs' })}`,
-      {
-        params: {
-          feature: 'DOCS',
-          limit: 1000,
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    const projectAccessOfUsers = getProjectAccessOfUsers({ projectAccess: projectAccess?.data?.list });
-
     const docPages = await axios.get(`${config.BASE_URL}/docPages`,
       {
         params: {
@@ -291,7 +275,6 @@ export const getDocProjects = () => async (dispatch, getState) => {
       loading: false,
       docProjects: projects,
       storeProjectsIndice: storeNewParentsIndice,
-      myProjectAccess: projectAccessOfUsers[accountUserID],
     }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
