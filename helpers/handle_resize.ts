@@ -1,8 +1,5 @@
 import { Direction } from '../pages/board/UI/resizer/constants';
 
-// const panelRef = useRef<HTMLDivElement>(null);
-// const heightRef = useRef(100);
-// const widthRef = useRef(100);
 export const handleResize = (
   panelRef,
   heightRef,
