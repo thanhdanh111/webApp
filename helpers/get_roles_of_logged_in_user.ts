@@ -18,6 +18,14 @@ export interface RolesInDepartments {
 
 export type GetRolesOfLoggedInUser = ReturnRolesOfLoggedInUser;
 
+const checkAccessWithFilterCompany = (access: Access, filterCompanyID: string) => {
+  if (!access?.companyID || !access?.role || filterCompanyID !== access?.companyID) {
+    return false;
+  }
+
+  return true;
+};
+
 export const getRolesOfLoggedInUser = ({ access, filterCompanyID }: GetRolesOfCompanies) => {
   let isAdmin = false;
   const rolesInCompany: Roles[] = [];
@@ -30,25 +38,23 @@ export const getRolesOfLoggedInUser = ({ access, filterCompanyID }: GetRolesOfCo
       return;
     }
 
-    if (
-      !each?.companyID ||
-      !each?.role ||
-      filterCompanyID !== each?.companyID
-    ) {
+    if (!checkAccessWithFilterCompany(each, filterCompanyID)) {
       return;
     }
 
+    rolesInCompany.push(each.role as Roles);
+
     const departmentID = each?.departmentID as string;
 
-    if (departmentID && rolesInDepartments[departmentID] === undefined) {
+    if (!departmentID) {
+      return;
+    }
+
+    if (rolesInDepartments[departmentID] === undefined) {
       rolesInDepartments[departmentID] = [];
     }
 
-    if (departmentID) {
-      rolesInDepartments[departmentID].push(each.role as Roles);
-    }
-
-    rolesInCompany.push(each.role as Roles);
+    rolesInDepartments[departmentID].push(each.role as Roles);
   });
 
   return {

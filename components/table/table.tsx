@@ -1,20 +1,9 @@
 import {
-    Table,
-    TableBody,
-    TableContainer,
-    Button,
-    CircularProgress,
-    Typography,
+    Paper,
 } from '@material-ui/core';
 import React from 'react';
-import HeadTable from './head_table';
 import { HeadCell } from '../../helpers/type';
-import { checkArray } from 'helpers/check_array';
-import { DisappearedLoading } from 'react-loadingg';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { checkStringCondition } from 'helpers/check_string_condtion';
-import { checkOnlyTrueInArray } from 'helpers/check_only_true';
-import TableRowBase from './table_row';
+import TableContent from './table_content';
 
 interface CustomizedCellsAtLastColumn {
   status?: string;
@@ -57,124 +46,32 @@ const BaseTable = (props: InitialProps) => {
     needStickyHeader = true,
   }: InitialProps = props;
   const emptyState = !loading && !data?.length && notFoundAnyData;
-  function actionDefaultFunc({ itemIndex, action  }) {
-
-    return { itemIndex, action };
-  }
-
-  const renderAction = ({
-    actionList,
-    itemIndex,
-    itemStatus,
-    isManager,
-  }) => {
-    if (!actionList?.length) {
-      return;
-    }
-
-    if (props?.CustomizedCellAtLastColumn) {
-      const CellAtLastColumn = props?.CustomizedCellAtLastColumn;
-
-      return  <CellAtLastColumn status={itemStatus} itemIndex={itemIndex}/>;
-    }
-
-    const notPendingStatus = checkStringCondition({
-      variable: itemStatus,
-      notEqualCondition: 'PENDING',
-    });
-
-    if (itemStatus && (notPendingStatus || !isManager)) {
-      return <div />;
-    }
-
-    const equalLoadingStateName = checkStringCondition({
-      variable: loadingStateName,
-      equalCondition: baseTableName,
-    });
-    const loadingActionAtIndex = checkOnlyTrueInArray({
-      conditionsArray: [
-        equalLoadingStateName,
-        indexLoading,
-        loadingStateName,
-        typeof loadingIndex === 'number',
-        loadingIndex === itemIndex,
-      ],
-    });
-
-    if (loadingActionAtIndex) {
-      return <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <CircularProgress disableShrink  style={{ width: '30px', height: '30px' }} />
-      </div>;
-    }
-
-    return (
-      <div className='list-action'>
-        {actionList.map((action, index) => {
-          const colorButton = (action.toUpperCase() === 'DELETE' || action.toUpperCase() === redButtonName) ? 'redButton' : '';
-          const func = actionFunc?.[action] ?? actionDefaultFunc;
-
-          return (
-            <div className='action-item' key={index}>
-              <Button
-                variant='contained'
-                color='secondary'
-                className={`${colorButton} action`}
-                onClick={() => func({  itemIndex, baseTableName, timeOffID: data?.[itemIndex]?.['id'] })}
-              >
-                {action}
-              </Button>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
 
   return (
-    <div className='table-paper'>
-      <TableContainer className='table-list'>
-        <InfiniteScroll
-          dataLength={data.length}
-          hasMore={data.length < length}
-          next={fetchData}
-          loader={<div />}
-          scrollThreshold={0.7}
-          height={fixedHeightInfiniteScroll}
-        >
-        <Table stickyHeader={needStickyHeader} aria-label='sticky table' className='table-content' >
-          <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
-          { !loading &&  (checkArray(data) &&
-          <TableBody className='table-body'>
-          {
-            data.map((item, index) => {
-
-              return (
-                <TableRowBase
-                  key={index}
-                  hadExpandableRows={hadExpandableRows}
-                  headCells={headCells}
-                  needCheckBox={needCheckBox}
-                  renderAction={renderAction}
-                  item={item}
-                  actions={actions}
-                  index={index}
-                  ComponentDetail={ComponentDetail}
-                />
-              );
-            })
-          }
-          </TableBody>
-        )}
-        </Table>
-        </InfiniteScroll>
-
-      </TableContainer>
-      {
-        emptyState &&
-        <Typography color='textSecondary' className='empty-state-table--text'>{notFoundWarning}</Typography>
-      }
-      {loading && <DisappearedLoading color={'#67cb48'} />}
-    </div>
+    <Paper className='table-paper'>
+      <TableContent
+        data={data}
+        length={length}
+        loading={loading}
+        emptyState={emptyState}
+        fetchData={fetchData}
+        headCells={headCells}
+        hadExpandableRows={hadExpandableRows}
+        needCheckBox={needCheckBox}
+        actions={actions}
+        ComponentDetail={ComponentDetail}
+        notFoundWarning={notFoundWarning}
+        fixedHeightInfiniteScroll={fixedHeightInfiniteScroll}
+        needStickyHeader={needStickyHeader}
+        redButtonName={redButtonName}
+        actionFunc={actionFunc}
+        baseTableName={baseTableName}
+        loadingIndex={loadingIndex}
+        loadingStateName={loadingStateName}
+        indexLoading={indexLoading}
+        CustomizedCellAtLastColumn={props.CustomizedCellAtLastColumn}
+      />
+    </Paper>
   );
 };
 

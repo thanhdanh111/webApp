@@ -17,28 +17,13 @@ import { dateTimeUiFormat } from 'constants/date_time_ui_format';
 import { checkValidAccess } from 'helpers/check_valid_access';
 import { Roles } from 'constants/roles';
 import { getIDsOfValidAccesses } from 'helpers/get_ids_of_valid_accesses';
+import { checkTrueInObject } from 'helpers/check_true_object';
 
 const notificationsType = {
   201: 'Sent your letter successfully',
   401: 'Something went wrong with your account',
   403: 'You cannot use this functionality',
 };
-
-function isInvalidTimeOffApiData(timeOff) {
-  if (!timeOff) {
-    return true;
-  }
-
-  const hasCompanyName = timeOff?.companyID?.name;
-  const hasStartTime = timeOff?.startTime;
-  const hasEndTime = timeOff?.endTime;
-  const hasId = timeOff?._id;
-  const hasStatus = timeOff?.status;
-  const hasName = timeOff?.createdBy?.firstName || timeOff?.createdBy?.lastName;
-  const invalidApiData =  !hasCompanyName || !hasStartTime || !hasEndTime || !hasId || !hasStatus || !hasName;
-
-  return invalidApiData;
-}
 
 interface GetTimeOffsByModel {
   userID?: string;
@@ -67,11 +52,17 @@ function getTimeOffsByModel(
 
   const isTypeMembers = !!userID && type === 'members';
 
-  data.forEach((timeOff) => {
-    const invalidApiData = isInvalidTimeOffApiData(timeOff);
+  const checkExceptMember = (timeOff) => {
+    const invalidApiData = checkTrueInObject(timeOff);
     const exceptMeInMembers = isTypeMembers && userID === timeOff?.createdBy?._id;
 
-    if (invalidApiData || (isExceptMeInMembers && exceptMeInMembers)) {
+    const isValid = !invalidApiData || (isExceptMeInMembers && exceptMeInMembers);
+
+    return isValid;
+  };
+
+  data.forEach((timeOff) => {
+    if (checkExceptMember(timeOff)) {
       return;
     }
 
@@ -125,7 +116,7 @@ export const getUserDaysOffApi = ({
     if (!infiniteScroll) {
       await dispatch(updateTimeOffLoadingStatus({
         loadingStatus: {
-          ownTimeOffsLoading: true,
+          ownTimeOffsLoading: false,
         },
       }));
     }
@@ -224,6 +215,31 @@ export const getMembersDaysOffApi = ({
       }));
     }
 
+    const queryParams = () => {
+      let queryArrayParams = '';
+
+      if (!isAdmin && couldGetDaysOffOfMember) {
+        const currentCompanyID = userInfo?.currentCompany?._id;
+
+        const stringCompanies = [currentCompanyID].
+            map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`);
+
+        const departmentIDs = getIDsOfValidAccesses({
+          objectMap: userInfo?.rolesInDepartments,
+          validAccesses: [Roles.DEPARTMENT_MANAGER],
+        });
+
+        const stringDepartments = userInfo?.rolesInCompany.includes(Roles.COMPANY_MANAGER)
+          ? []
+          : departmentIDs.
+            map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`);
+
+        queryArrayParams = `?${[...stringCompanies, ...stringDepartments].join('&')}`;
+      }
+
+      return queryArrayParams;
+    };
+
     const params = {
       limit,
       cursor,
@@ -231,29 +247,8 @@ export const getMembersDaysOffApi = ({
       sortDirection: 'DESC',
     };
 
-    let queryArrayParams = '';
-
-    if (!isAdmin && couldGetDaysOffOfMember) {
-      const currentCompanyID = userInfo?.currentCompany?._id;
-
-      const stringCompanies = [currentCompanyID].
-          map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`);
-
-      const departmentIDs = getIDsOfValidAccesses({
-        objectMap: userInfo?.rolesInDepartments,
-        validAccesses: [Roles.DEPARTMENT_MANAGER],
-      });
-
-      const stringDepartments = userInfo?.rolesInCompany.includes(Roles.COMPANY_MANAGER)
-        ? []
-        : departmentIDs.
-          map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`);
-
-      queryArrayParams = `?${[...stringCompanies, ...stringDepartments].join('&')}`;
-    }
-
     const getDaysoff = await axios.get(
-      `${config.BASE_URL}/daysoff${queryArrayParams}`,
+      `${config.BASE_URL}/daysoff${queryParams()}`,
       {
         params,
         method: 'GET',
@@ -438,6 +433,8 @@ export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
   }
 };
 
+const messesError = notificationsType[400] || 'Something went wrong';
+
 export const submitTimeOffRequest = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
@@ -445,7 +442,6 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
     const timeOffsState = getState()?.timeoff;
 
     if (timeOffRequestState.onSendingRequest) {
-
       return;
     }
 
@@ -461,7 +457,7 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
     });
 
     if (!haveNeededData) {
-      const handleError = notificationsType[400] || 'Something went wrong';
+      const handleError = messesError;
       await dispatch(pushNewNotifications({ variant: 'error' , message: handleError }));
 
       return;

@@ -168,9 +168,8 @@ const BoardTasks: FunctionComponent = () => {
             </DragDropContext>
             <div className='add-task task-status'>
               <div className='status'>
-                {isAddStatus &&
-                  addTaskStatusUI()}
-                {!isAddStatus &&
+                {isAddStatus ?
+                  addTaskStatusUI() :
                   <Typography component='span' className='add-task-text'  onClick={() => setIsAddStatus(true)}>
                     NEW STATUS
                   </Typography>

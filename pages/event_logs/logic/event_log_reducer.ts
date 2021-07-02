@@ -2,9 +2,10 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { EventLogPage, EventLogState } from './event_log_interface';
 import { eventLogsAction } from './event_log_type_action';
-import { getEventLog, getEventLogs,  hasNoEventLogs,  hideLoader, showLoader } from './event_log_action';
+import { getEventLog, getEventLogs,  hasNoEventLogs,  hideLoader } from './event_log_action';
 import { checkArray } from 'helpers/check_array';
 import moment from 'moment';
+import { getLastDay } from 'helpers/get_last_date';
 import { Roles } from 'constants/roles';
 import { Token } from 'helpers/type';
 import { checkValidAccess } from 'helpers/check_valid_access';
@@ -36,6 +37,7 @@ const initialState: EventLogPage = {
 
 const dateTimeUiFormat = 'DD/MM/YYYY HH:mm';
 
+// tslint:disable-next-line: cyclomatic-complexity
 export const eventLogsReducer = (state = initialState, action) => {
   switch (action.type) {
     case eventLogsAction.GET_EVENT_LOGS:
@@ -115,10 +117,10 @@ export const getEventLogsData = () => async (dispatch, getState) => {
       departmentID: userInfo?.currentDepartment?._id,
     });
     const isAdmin = userInfo?.isAdmin;
-
     const { selectedTime, selectedEnv, selectedProjectID }: EventLogPage = getState()?.eventLogs;
     const fromTime = new Date();
-    const toTime = Number.isInteger(selectedTime) ? new Date(fromTime.getTime() - selectedTime * 1000 * 60 * 60 * 24) : null;
+    const toTime = getLastDay(selectedTime);
+
     let companyIDParam = '';
     let departmentIDParam = '';
 
@@ -127,20 +129,24 @@ export const getEventLogsData = () => async (dispatch, getState) => {
       departmentIDParam = userInfo?.currentDepartment?._id;
     }
 
-    if (!companyIDParam) {
-      await dispatch(hasNoEventLogs());
+    const getParams = async () => {
+      if (!companyIDParam) {
+        await dispatch(hasNoEventLogs());
 
-      return;
-    }
+        return;
+      }
 
-    const params = {
-      fromTime,
-      toTime,
-      companyID: companyIDParam,
-      departmentID: departmentIDParam,
-      environment: selectedEnv !== 'All' ? selectedEnv : null,
-      projectID: selectedProjectID && selectedProjectID !== 'All' ? selectedProjectID : null,
+      return {
+        fromTime,
+        toTime,
+        companyID: companyIDParam,
+        departmentID: departmentIDParam,
+        environment: selectedEnv !== 'All' ? selectedEnv : null,
+        projectID: selectedProjectID && selectedProjectID !== 'All' ? selectedProjectID : null,
+      };
     };
+
+    const params = await getParams();
 
     const res = await axios.get(`${config.BASE_URL}/eventLogs`, {
       params,
@@ -150,8 +156,9 @@ export const getEventLogsData = () => async (dispatch, getState) => {
       },
     });
 
-    if (!res.data.totalCount) {
+    if (!res?.data?.totalCount) {
       await dispatch(hasNoEventLogs());
+      await dispatch(hideLoader());
 
       return;
     }
@@ -171,8 +178,6 @@ export const getEventLogData = (eventLogsId) => async (dispatch) => {
       return;
     }
 
-    await dispatch(showLoader());
-
     const res = await axios.get(`${config.BASE_URL}/eventLogs/${eventLogsId}`, {
       headers: {
         'Content-Type': 'application/json',
@@ -180,8 +185,9 @@ export const getEventLogData = (eventLogsId) => async (dispatch) => {
       },
     });
 
-    if (!res?.data && !!res?.data?.length) {
+    if (!res?.data) {
       await dispatch(hasNoEventLogs());
+      await dispatch(hideLoader());
 
       return;
     }

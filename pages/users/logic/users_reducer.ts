@@ -293,7 +293,6 @@ export const renderData = ({
 
 export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
-    await dispatch(setLoading(true));
 
     const userInfo = getState()?.userInfo;
     const receiverID = userInfo?.userID;
@@ -321,7 +320,7 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
       },
     });
 
-    if (!res.data.totalCount || !res.data.list || !res.data.list.length) {
+    if (!res.data.totalCount) {
       await dispatch(hasNoNotification());
       await dispatch(setLoading(false));
 
