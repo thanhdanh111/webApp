@@ -8,14 +8,14 @@ import {
   getSearchAction,
   useDebounce,
   getPaginationThunkAction,
-  renderData,
 } from '../logic/users_reducer';
 import BaseTable from '@components/table/table';
-import { Data } from '../../../helpers/type';
 import SearchIcon from '@material-ui/icons/Search';
 import { RootState } from 'redux/reducers_registration';
 import UserDetail from './user_detail/user_detail';
-import { checkArray } from 'helpers/check_array';
+import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
+import { updateUsersReducer } from '../logic/users_actions';
+import { removeUserFromCompany, removeUserFromDepartment } from '../logic/users_apis';
 
 const ListUsers: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -37,12 +37,6 @@ const ListUsers: FunctionComponent = () => {
     fetchDataUsers();
   }, []);
 
-  const usersList = users && checkArray(users.list)
-    ? renderData(users.list) : [];
-
-  const usersListSearch: Data[] = users && checkArray(users.listSearch)
-  ? renderData(users.listSearch) : [];
-
   const fetchDataUsers = () => {
     dispatch(getPaginationThunkAction());
   };
@@ -53,11 +47,44 @@ const ListUsers: FunctionComponent = () => {
 
   const getData = () => {
     if (debouncedSearchTerm) {
-      return usersListSearch;
+      return users?.listSearch ?? [];
     }
 
-    return usersList;
+    return users?.list ?? [];
   };
+
+  function cancelDelete() {
+    dispatch(updateUsersReducer({
+      onRemovingUser: false,
+      editingUserInfo: {
+        ...users?.editingUserInfo,
+        id: '',
+      },
+    }));
+  }
+
+  function agreeToRemoveUser() {
+    const removeFromWhere = users?.editingUserInfo?.removeUserFrom;
+
+    if (removeFromWhere === 'company') {
+      dispatch(removeUserFromCompany({ onSearch: !!debouncedSearchTerm }));
+
+      return;
+    }
+
+    dispatch(removeUserFromDepartment({ onSearch: !!debouncedSearchTerm }));
+  }
+
+  function handleWarningTitle(removeFromWhere) {
+    switch (removeFromWhere) {
+      case 'department':
+        return `REMOVE ${users?.editingUserInfo?.userName} from department ${users?.editingUserInfo?.editingDepartmentRole?.departmentName ?? ''}?`;
+      case 'company':
+        return `REMOVE ${users?.editingUserInfo?.userName} from company ${users?.editingUserInfo?.editingCompany?.name ?? ''}?`;
+      default:
+        return 'Are you sure you want to CONTINUE?';
+    }
+  }
 
   return (
         <div className='users'>
@@ -80,17 +107,28 @@ const ListUsers: FunctionComponent = () => {
                     <BaseTable
                       headCells={headCells}
                       data={getData()}
+                      fixedHeightInfiniteScroll={500}
                       length={users?.totalCount}
                       loading={loading}
                       actions={actionList}
                       fetchData={fetchDataUsers}
                       needCheckBox={false}
                       hadExpandableRows={true}
+                      redButtonName='delete'
                       ComponentDetail={UserDetail}
                     />
                   </div>
                 </div>
             </Container>
+          <ConfirmDialog
+            loading={users?.isLoading}
+            warning={handleWarningTitle(users?.editingUserInfo?.removeUserFrom)}
+            onOpen={users?.onRemovingUser}
+            handleClose={cancelDelete}
+            handleNo={cancelDelete}
+            handleYes={agreeToRemoveUser}
+            status='REMOVE'
+          />
         </div>
   );
 };

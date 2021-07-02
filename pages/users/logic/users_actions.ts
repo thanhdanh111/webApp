@@ -47,3 +47,10 @@ export const updateUnreadNotifications = (res: object) => {
     payload: res,
   };
 };
+
+export const updateUsersReducer = (data) => {
+  return {
+    data,
+    type: usersAction.UPDATE_USERS_REDUCER,
+  };
+};
