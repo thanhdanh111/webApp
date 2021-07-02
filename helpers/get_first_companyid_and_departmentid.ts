@@ -1,3 +1,4 @@
+import { checkArray } from './check_array';
 import { Access } from './type';
 
 interface GetUserCompanies {
@@ -17,7 +18,7 @@ export const getFirstCompanyIDAndDepartmentID = ({
   let companyID;
   let departmentID;
 
-  if (!access || !access?.length) {
+  if (!checkArray(access)) {
     return {
       companyID,
       departmentID,
@@ -25,11 +26,15 @@ export const getFirstCompanyIDAndDepartmentID = ({
   }
 
   for (const each of access) {
-    if (each?.companyID && !companyID) {
+    if (!each.companyID) {
+      continue;
+    }
+
+    if (!companyID) {
       companyID = each.companyID;
     }
 
-    if (each?.companyID && each?.departmentID) {
+    if (each?.departmentID) {
       companyID = each?.companyID;
       departmentID = each?.departmentID;
 
