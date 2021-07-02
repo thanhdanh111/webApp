@@ -1,5 +1,5 @@
 import { taskBoardsActionType } from './task_board_action_type';
-import { TaskBoard, TaskStatus } from '../../../helpers/type';
+import { Task, TaskBoard, TaskStatus } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import {
@@ -10,8 +10,10 @@ import {
   setSelectedTaskBoard,
   getTaskStatus,
   createdTaskStatus,
+  setTasksToTaskStatus,
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
+import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
 
 export interface TaskBoardsType {
   loading: boolean;
@@ -35,6 +37,33 @@ const initialState: TaskBoardsType = {
   onSendingRequest: false,
   filteringTaskByUser: false,
 };
+
+interface UpdateTaskStatus {
+  taskStatusID: string;
+  tasks: Task[];
+}
+
+let updatedTaskStatuses: { [key: string]: TaskStatus } = {};
+
+interface UpdateTask {
+  taskStatusID: string;
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  estimateDate?: string;
+  timeTracked?: string;
+  priority?: string;
+  tagIDs?: string[];
+  newIndex?: number;
+}
+
+interface IUpdateTask {
+  taskID: string;
+  data: UpdateTask;
+  sourceTaskStatusID: string;
+  destinationTasks: Task[];
+  sourceTasks: Task[];
+}
 
 // tslint:disable-next-line: cyclomatic-complexity
 export  const taskBoardsReducer = (state = initialState, action) => {
@@ -82,6 +111,28 @@ export  const taskBoardsReducer = (state = initialState, action) => {
           taskStatusIDs: [...(state.currentTaskBoard?.taskStatusIDs as string[]), action.data?._id],
         },
         taskStatus: { ...state.taskStatus, ...newTAskStatus },
+      };
+    case taskBoardsActionType.SET_TASKS_TO_TASK_STATUS:
+
+      updatedTaskStatuses = state.taskStatus;
+
+      let taskStatusUpdated = updatedTaskStatuses[action.data.taskStatusId];
+
+      if (taskStatusUpdated) {
+        taskStatusUpdated = {
+          ...taskStatusUpdated,
+          taskIDs: action?.data.tasks,
+        };
+
+        updatedTaskStatuses = {
+          ...updatedTaskStatuses,
+          [action.data.taskStatusId]: taskStatusUpdated,
+        };
+      }
+
+      return {
+        ...state,
+        taskStatus: updatedTaskStatuses,
       };
     default:
       return state;
@@ -259,5 +310,82 @@ export const createTaskStatusThunkAction = (title) => async (dispatch, getState)
     const notification = notificationsType[error?.response?.status] || 'Something went wrong';
     await dispatch(setLoading(false));
     await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
+  }
+};
+
+export const updateTaskStatusById = ({ taskStatusID, tasks }: UpdateTaskStatus) => async (dispatch) => {
+  try {
+    const localAccess = localStorage.getItem('access_token');
+    if (!localAccess || !taskStatusID) {
+      return;
+    }
+    const taskIDs = tasks.map((each) => each._id);
+
+    dispatch(setTasksToTaskStatus({
+      tasks,
+      taskStatusId: taskStatusID,
+    }));
+
+    const res = await axios({
+      data: {
+        taskIDs,
+      },
+      url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localAccess}`,
+      },
+      method: 'PUT',
+    });
+
+    const notification = notificationsType[res.status];
+    await dispatch(setLoading(false));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: notification }));
+  } catch (error) {
+    const errorNotification = returnNotification({ type: 'failed' });
+    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+  }
+};
+
+export const updateTaskById = ({
+  taskID,
+  data,
+  sourceTaskStatusID,
+  sourceTasks,
+  destinationTasks,
+}: IUpdateTask) => async (dispatch, getState) => {
+  try {
+    const localAccess = localStorage.getItem('access_token');
+    const companyID = getState().userInfo.currentCompany._id;
+
+    if (!localAccess || !companyID || !taskID) {
+      return;
+    }
+
+    dispatch(setTasksToTaskStatus({
+      taskStatusId: sourceTaskStatusID,
+      tasks: sourceTasks,
+    }));
+    dispatch(setTasksToTaskStatus({
+      taskStatusId: data.taskStatusID,
+      tasks: destinationTasks,
+    }));
+
+    const res = await axios({
+      data,
+      url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localAccess}`,
+      },
+      method: 'PUT',
+    });
+
+    const notification = notificationsType[res.status];
+    await dispatch(setLoading(false));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: notification }));
+  } catch (error) {
+    const errorNotification = returnNotification({ type: 'failed' });
+    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
   }
 };

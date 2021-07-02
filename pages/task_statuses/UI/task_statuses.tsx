@@ -6,6 +6,7 @@ import TasksUI from '../../tasks/UI/tasks';
 import { RootStateOrAny,  useDispatch,  useSelector } from 'react-redux';
 import {  getTaskStatusThunkAction, TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
 import { DisappearedLoading } from 'react-loadingg';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 
@@ -47,26 +48,54 @@ const TaskStatusUI = (props: InitProps) => {
 
     return (
       <>
-        <div className={`status ${style}`}>
-          <Container className='status-left'>
-              <Typography className='name-status'>{taskStatus[taskStatusID]?.title}</Typography>
-              <Typography className='quality-task'>{taskIDs?.length}</Typography>
-          </Container>
-          <Container className='status-right'>
-              <Link className='actions-status more-actions'><MoreHorizIcon/></Link>
-              <Link className='actions-status add-action'><AddIcon /></Link>
-          </Container>
-        </div>
-        <div className='status-task-list'>
-          {taskIDs?.map((task) => (
-            <TasksUI key={task._id} task={task}/>
-          ))}
-          <div className='task-status add-task'>
-            <Link className='icon-add-task'><AddIcon/></Link>
-            <Typography component='span' className='text-add-task'>NEW TASK</Typography>
+      <Droppable droppableId={taskStatus[taskStatusID]?._id} type='TASK_STATUS'>
+        {(provided) => (
+          <div
+            className='task-status'
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            <div className={`status ${style}`}>
+              <Container className='status-left'>
+                  <Typography className='name-status'>{taskStatus[taskStatusID]?.title}</Typography>
+                  <Typography className='quality-task'>{taskIDs?.length}</Typography>
+              </Container>
+              <Container className='status-right'>
+                  <Link className='actions-status more-actions'><MoreHorizIcon/></Link>
+                  <Link className='actions-status add-action'><AddIcon /></Link>
+              </Container>
+            </div>
+            <div className='status-task-list'>
+              {taskIDs?.map((task, index) => {
+                return (
+                  <Draggable
+                    key={task?._id}
+                    draggableId={task?._id}
+                    index={index}
+                  >
+                    {(provideTask) => {
+                      return (
+                        <div
+                          ref={provideTask.innerRef}
+                          {...provideTask.draggableProps}
+                          {...provideTask.dragHandleProps}
+                        >
+                          <TasksUI key={task._id} task={task}/>
+                        </div>
+                      );
+                    }}
+                  </Draggable>
+                );
+              })}
+              <div className='task-status add-task'>
+                <Link className='icon-add-task'><AddIcon/></Link>
+                <Typography component='span' className='text-add-task'>NEW TASK</Typography>
+              </div>
+            </div>
           </div>
-        </div>
-      </>
+        )}
+      </Droppable>
+    </>
     );
   };
 
