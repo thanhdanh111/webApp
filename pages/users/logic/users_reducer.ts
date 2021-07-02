@@ -246,7 +246,6 @@ export const renderData = (users: UserAccess[]) => {
 
 export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
-    await dispatch(setLoading(true));
 
     const userInfo = getState()?.userInfo;
     const receiverID = userInfo?.userID;
@@ -276,13 +275,13 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
 
     if (!res.data.totalCount) {
       await dispatch(hasNoNotification());
-      await dispatch(setLoading(true));
+      await dispatch(setLoading(false));
 
       return;
     }
 
     await dispatch(getNotificationsAction(res.data));
-    await dispatch(setLoading(true));
+    await dispatch(setLoading(false));
   } catch (error) {
     throw error;
   }
