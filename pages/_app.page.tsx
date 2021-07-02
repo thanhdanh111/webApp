@@ -76,7 +76,7 @@ function myApp({ Component, pageProps, store }) {
             }}
             maxSnack={100}
           >
-            <Auth publicPages={publicPages}>
+            <Auth publicPages={publicPages} >
               <Layout withoutPaths={withoutLayoutPaths}>
                 <Component {...pageProps} />
               </Layout>

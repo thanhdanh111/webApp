@@ -44,17 +44,39 @@ export interface Data {
   id: string;
   user: UserAccess;
   userName: string;
-  departments: string[];
-  activeRoles: string[];
-  pendingRoles: string[];
+  companyRole: string;
+  departmentRoles: Access[];
+  stringPendingRoles: string[];
+  companyRoleCouldDelete?: boolean;
+  companyRoleRender?: string;
 }
 
 export interface Access {
   _id: string;
   role: string;
   status: string;
-  companyID?: string | undefined;
-  departmentID?: string | undefined;
+  companyID?: Company | string;
+  departmentID?: Department | string;
+  departmentName?: string;
+  canRemoveFromDepartment?: boolean;
+}
+
+interface EditingUserData {
+  accesses?: Access[];
+  companyID?: Company;
+  companyIDAndUserID?: string;
+  departmentID?: Department[];
+  userID?: User;
+  _id?: object;
+}
+
+export interface EditingUserInfo {
+  userData?: EditingUserData;
+  userIndex?: number;
+  removeUserFrom?: string;
+  editingDepartment?: object;
+  editingCompany?: object;
+  userName?: string;
 }
 
 export interface NotificationTypeState {
@@ -76,7 +98,7 @@ export interface UserAccess {
   _id: string;
   userID: User;
   accesses: Access[];
-  departmentID: Department[] ;
+  departmentID: Department[];
 }
 
 export interface NotificationsData {
@@ -88,8 +110,8 @@ export interface NotificationsData {
 
 export interface UsersData {
   cursor: string;
-  list: UserAccess[];
-  listSearch: UserAccess[];
+  list: Data[];
+  listSearch: Data[];
   notifications: NotificationsData;
   hasNoData: boolean;
   totalCount: number;
@@ -98,6 +120,9 @@ export interface UsersData {
   userLimit: number;
   notificationLimit: number;
   selectNotification: NotificationTypeState;
+  editingUserInfo: EditingUserInfo;
+  onRemovingUser: boolean;
+  isLoading: boolean;
 }
 
 export interface ParamGetUser {

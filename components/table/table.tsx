@@ -2,7 +2,6 @@ import {
     Table,
     TableBody,
     TableContainer,
-    Paper,
     Button,
     CircularProgress,
     Typography,
@@ -16,6 +15,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { checkStringCondition } from 'helpers/check_string_condtion';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import TableRowBase from './table_row';
+
+interface CustomizedCellsAtLastColumn {
+  status?: string;
+  itemIndex?: number;
+}
 
 interface InitialProps {
   headCells: HeadCell[];
@@ -33,10 +37,11 @@ interface InitialProps {
   indexLoading?: boolean;
   notFoundAnyData?: boolean;
   notFoundWarning?: string;
-  individualActions?: string[];
-  individualActionsRender?: object;
   hadExpandableRows?: boolean;
+  needStickyHeader?: boolean;
+  fixedHeightInfiniteScroll?: number;
   ComponentDetail?: React.FunctionComponent;
+  CustomizedCellAtLastColumn?: React.FunctionComponent<CustomizedCellsAtLastColumn>;
 }
 
 const BaseTable = (props: InitialProps) => {
@@ -47,9 +52,9 @@ const BaseTable = (props: InitialProps) => {
     actionFunc, baseTableName,
     loadingIndex, loadingStateName, indexLoading,
     notFoundAnyData = false,
-    notFoundWarning, individualActions,
-    hadExpandableRows = false,
-    ComponentDetail,
+    notFoundWarning, hadExpandableRows = false,
+    ComponentDetail, fixedHeightInfiniteScroll,
+    needStickyHeader = true,
   }: InitialProps = props;
   const emptyState = !loading && !data?.length && notFoundAnyData;
   function actionDefaultFunc({ itemIndex, action  }) {
@@ -57,10 +62,20 @@ const BaseTable = (props: InitialProps) => {
     return { itemIndex, action };
   }
 
-  const renderAction = ({ actionList, itemIndex, itemStatus, isManager }) => {
-
-    if (!checkArray(actionList)) {
+  const renderAction = ({
+    actionList,
+    itemIndex,
+    itemStatus,
+    isManager,
+  }) => {
+    if (!actionList?.length) {
       return;
+    }
+
+    if (props?.CustomizedCellAtLastColumn) {
+      const CellAtLastColumn = props?.CustomizedCellAtLastColumn;
+
+      return  <CellAtLastColumn status={itemStatus} itemIndex={itemIndex}/>;
     }
 
     const notPendingStatus = checkStringCondition({
@@ -68,7 +83,7 @@ const BaseTable = (props: InitialProps) => {
       notEqualCondition: 'PENDING',
     });
 
-    if (notPendingStatus || !isManager) {
+    if (itemStatus && (notPendingStatus || !isManager)) {
       return <div />;
     }
 
@@ -93,17 +108,13 @@ const BaseTable = (props: InitialProps) => {
     }
 
     return (
-      <ul className='list-action'>
+      <div className='list-action'>
         {actionList.map((action, index) => {
-          if (individualActions?.length && individualActions.includes(action)) {
-            return <div />;
-          }
-
           const colorButton = (action.toUpperCase() === 'DELETE' || action.toUpperCase() === redButtonName) ? 'redButton' : '';
           const func = actionFunc?.[action] ?? actionDefaultFunc;
 
           return (
-            <li className='action-item' key={index}>
+            <div className='action-item' key={index}>
               <Button
                 variant='contained'
                 color='secondary'
@@ -112,15 +123,15 @@ const BaseTable = (props: InitialProps) => {
               >
                 {action}
               </Button>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
     );
   };
 
   return (
-    <Paper className='table-paper'>
+    <div className='table-paper'>
       <TableContainer className='table-list'>
         <InfiniteScroll
           dataLength={data.length}
@@ -128,44 +139,42 @@ const BaseTable = (props: InitialProps) => {
           next={fetchData}
           loader={<div />}
           scrollThreshold={0.7}
-          height={(emptyState || loading) ? 0 : 500}
+          height={fixedHeightInfiniteScroll}
         >
-        <Table stickyHeader aria-label='sticky table' className='table-content' >
+        <Table stickyHeader={needStickyHeader} aria-label='sticky table' className='table-content' >
           <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
           { !loading &&  (checkArray(data) &&
           <TableBody className='table-body'>
-                {data.map((item, index) => {
-                  return (
-                    <TableRowBase
-                      key={index}
-                      hadExpandableRows={hadExpandableRows}
-                      headCells={headCells}
-                      needCheckBox={needCheckBox}
-                      renderAction={renderAction}
-                      item={item}
-                      actions={actions}
-                      index={index}
-                      ComponentDetail={ComponentDetail}
-                    />
-                  );
-                })}
+          {
+            data.map((item, index) => {
+
+              return (
+                <TableRowBase
+                  key={index}
+                  hadExpandableRows={hadExpandableRows}
+                  headCells={headCells}
+                  needCheckBox={needCheckBox}
+                  renderAction={renderAction}
+                  item={item}
+                  actions={actions}
+                  index={index}
+                  ComponentDetail={ComponentDetail}
+                />
+              );
+            })
+          }
           </TableBody>
         )}
         </Table>
         </InfiniteScroll>
-          {
-            emptyState &&
-            <div className='empty-state'>
-              <Typography color='textSecondary' className='empty-state--text'>{notFoundWarning}</Typography>
-            </div>
-          }
-          {
-            loading && <div style={{ marginTop: '150px', marginBottom: '150px', display: 'flex', justifyContent: 'center' }}>
-              <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
-            </div>
-          }
+
       </TableContainer>
-    </Paper>
+      {
+        emptyState &&
+        <Typography color='textSecondary' className='empty-state-table--text'>{notFoundWarning}</Typography>
+      }
+      {loading && <DisappearedLoading color={'#67cb48'} />}
+    </div>
   );
 };
 

@@ -4,6 +4,6 @@ import { BodyTable } from './body_table';
 
 storiesOf('BaseTable', module).add('BaseTable', () => {
   return (
-  <BodyTable key=''  />
+    <BodyTable  />
   );
 });

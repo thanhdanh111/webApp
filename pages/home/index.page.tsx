@@ -3,9 +3,9 @@ import HomeUI from './UI/home';
 
 const Board = () => {
   return (
-        <div className='home-page'>
-          <HomeUI />
-        </div>
+    <div className='home-page'>
+      <HomeUI />
+    </div>
   );
 };
 

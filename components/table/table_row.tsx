@@ -20,6 +20,8 @@ interface RenderActionInput {
 
 interface ComponentDetailProps {
   data?: object;
+  renderAction?: (data: RenderActionInput) => JSX.Element | undefined;
+  index?: number;
 }
 interface InitialProps {
   headCells: HeadCell[];
@@ -44,6 +46,7 @@ const TableRowBase = (props: InitialProps) => {
     ComponentDetail,
   }: InitialProps = props;
   const [open, setOpen] = React.useState(false);
+
   const tableCellContent = (content) => {
     if (Array.isArray(content)) {
       return (
@@ -124,7 +127,7 @@ const TableRowBase = (props: InitialProps) => {
           <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
               <Collapse in={open} timeout='auto' unmountOnExit>
-                {ComponentDetail && <ComponentDetail data={item} />}
+                {ComponentDetail && <ComponentDetail index={index} data={item} renderAction={renderAction}/>}
               </Collapse>
             </TableCell>
           </TableRow>

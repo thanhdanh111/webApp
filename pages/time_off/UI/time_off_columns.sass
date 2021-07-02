@@ -25,6 +25,9 @@
   .MuiDataGrid-cell
     border-style: none
 
+  .table-paper
+    position: relative
+
 
 .time-off-columns--container > .own-time-off-column
   box-shadow: rgba(145, 158, 171, 0.24) 0 0 2px 0, rgba(145, 158, 171, 0.24) 0 16px 32px -4px
@@ -49,5 +52,9 @@
   .cell-title
     padding-left: 8px !important
 
-  .cell-contain
-    padding-left: 8px !important
+    &:last-child
+      text-align: center
+
+  .list-action
+    display: flex
+    justify-content: center
