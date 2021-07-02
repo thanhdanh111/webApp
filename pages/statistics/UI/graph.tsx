@@ -21,6 +21,7 @@ const Graph: React.FunctionComponent<GraphProps> = (props) => {
   const limit = statistics.limit;
   const userID = statistics.selectedUserID;
   const { getMe, isAdmin }: GraphProps = props;
+
   useEffect(() => {
     void fetchCheckinData();
   }, [limit, userID, getMe]);

@@ -1,4 +1,7 @@
 .table-paper
+  padding-bottom: 20px
+  position: relative
+
   .table-list
     .table-content
       .table-users
@@ -12,7 +15,7 @@
             font-weight: bold
             color: rgb(99, 115, 129)
             font-size: 0.875rem    
-            padding: 1rem
+            padding: 12px
 
             .checkbox-header
               padding: 0
@@ -36,7 +39,9 @@
             vertical-align: inherit
             color: rgb(33, 43, 73)
             border-bottom: none
-            padding: 1rem
+            padding: 12px
+            align-items: center
+
 
             .cell-list 
               margin: auto
@@ -64,9 +69,13 @@
           height: 84px
 
           .cell-contain
+
+            &:last-child
+              text-align: center
+
             .list-action 
               display: flex
-              text-align: left
+              text-align: center
               list-style: none
               margin-left: 5px
               margin-right: 5px
@@ -74,14 +83,13 @@
 
               .action-item
                 border: none
-                margin: 0 8px    
                 transform: translateX(-10px)
                 opacity: 0.9
 
                 .action
                   font-weight: 600
                   font-size: 12px
-                  margin: 1px
+                  margin: 5px
                   border-radius: 0.5rem
                   text-transform: uppercase
 

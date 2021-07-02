@@ -11,22 +11,12 @@ const UserLinkMenu = () => {
                     <ul className='link-list-ul'>
                         <li className='link-item item-first'>
                             <div className='item'>
-                                <a href='/home' className='link'>Home</a>
+                                <a className='link'>General</a>
                             </div>
                         </li>
                         <li className='link-item'>
                             <div className='item'>
-                                <a href='/manager' className='link'>Management</a>
-                            </div>
-                        </li>
-                        <li className='link-item'>
-                            <div className='item'>
-                                <a href='/user' className='link'>User</a>
-                            </div>
-                        </li>
-                        <li className='link-item'>
-                            <div className='item'>
-                                <a href='/users' className='link'>List</a>
+                                <a href='/users' className='link'>Users</a>
                             </div>
                         </li>
                     </ul>
