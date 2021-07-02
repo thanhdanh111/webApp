@@ -1,0 +1,58 @@
+.task-item
+  margin: 15px 0 6px 6px
+  background: #fff
+  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .06)
+  cursor: pointer
+  position: relative
+  border: 1px solid #fff
+  border-radius: 4px
+  display: flex
+  padding: 7px 10px 2px
+  min-width: 0
+  flex-grow: 1
+  flex-direction: column
+  min-height: max-content
+
+  .text-board
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    display: flex
+    align-items: center
+    margin: 0 0 7px
+    font-family: Gotham Pro, Proxima Nova, arial, serif
+    font-weight: 100
+    font-size: 10px
+    line-height: 1.2
+    color: #544d61
+
+  .task-title
+    text-align: center
+    display: flex
+    align-items: flex-start
+    cursor: pointer
+    width: 100%
+    margin-bottom: 5px
+    position: relative
+    justify-content: space-between
+    flex-direction: row
+
+    .task-name
+      font-size: 1.1em
+      cursor: pointer
+      margin-bottom: 5px
+      margin: 0
+      padding: 0
+      border: none
+      vertical-align: baseline
+      position: relative
+      text-align: left
+      color: #212b36
+      width: 200px
+
+  .footer-task
+    .task-id
+      transition: color .2s cubic-bezier(.785, .135, .15, .86) 0s
+      font: 400 10px/1 Gotham Pro, Proxima Nova, arial, serif
+      padding: 2px 0
+      color: #777

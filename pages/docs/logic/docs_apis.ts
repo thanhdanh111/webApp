@@ -5,7 +5,7 @@ import { DocsValueType } from './docs_reducer';
 import { convertToRaw } from 'draft-js';
 import { updateDocs } from './docs_actions';
 import { getDesiredChildrenIntoDesiredParents } from '../../../helpers/get_desired_children_into_desired_parents';
-import { getProjectAccessOfUsers } from './get_folder_access';
+import { DocsRole, getProjectAccessOfUsers } from './get_folder_access';
 import { getIDsParamsForAxios } from '../../../helpers/get_ids_params_for_axios';
 import { getUsersInCompany } from './get_users_in_company';
 
@@ -248,8 +248,8 @@ export const getDocProjects = () => async (dispatch, getState) => {
 export const createNewDocProject = ({ projectName }) => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const { currentCompany }: UserInfoType = getState()?.userInfo;
-    const { docProjectsMap }: DocsValueType = getState()?.docs;
+    const { currentCompany, userID }: UserInfoType = getState()?.userInfo;
+    const { docProjectsMap, projectAccessOfUsers, usersInCompanyMap }: DocsValueType = getState()?.docs;
     const companyID = currentCompany?._id;
 
     if (!companyID || !projectName || !token) {
@@ -290,7 +290,19 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
       pages: [],
     };
 
-    dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }));
+    const accessForNewDocProject = {
+      ownerInfo: usersInCompanyMap[userID],
+      roles: [DocsRole.WRITE, DocsRole.READ],
+      accessInPages: {},
+    };
+
+    const accessOfUser = projectAccessOfUsers?.[userID] ?? { };
+
+    accessOfUser[newProjectID] = accessForNewDocProject;
+
+    projectAccessOfUsers[userID] = accessOfUser;
+
+    dispatch(updateDocs({ projectAccessOfUsers, loading: false, docProjectsMap: newDocProjectsMap }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }

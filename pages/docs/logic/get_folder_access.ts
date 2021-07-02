@@ -1,7 +1,7 @@
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { User } from 'helpers/type';
 
-enum Role {
+export enum DocsRole {
   READ = 'READ',
   WRITE = 'WRITE',
 }
@@ -11,16 +11,16 @@ interface ProjectAccessApi {
   _id?: string;
   userID?: User;
   folderID?: string;
-  role?: Role;
+  role?: DocsRole;
   feature?: string;
 }
 
 interface AccessInPages {
-  [pageID: string]: Role[];
+  [pageID: string]: DocsRole[];
 }
 
 interface ProjectAccess {
-  roles: Role[];
+  roles: DocsRole[];
   accessInPages: AccessInPages;
   ownerInfo: User;
 }

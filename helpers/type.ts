@@ -13,7 +13,7 @@ export interface User {
   _id: string;
   firstName?: string;
   lastName?: string;
-  profilePicture?: string;
+  profilePhoto?: string;
   gender?: string;
   address?: string;
   phoneNumber?: string;
@@ -44,17 +44,39 @@ export interface Data {
   id: string;
   user: UserAccess;
   userName: string;
-  departments: string[];
-  activeRoles: string[];
-  pendingRoles: string[];
+  companyRole: string;
+  departmentRoles: Access[];
+  stringPendingRoles: string[];
+  companyRoleCouldDelete?: boolean;
+  companyRoleRender?: string;
 }
 
 export interface Access {
   _id: string;
   role: string;
   status: string;
-  companyID?: string | undefined;
-  departmentID?: string | undefined;
+  companyID?: Company | string;
+  departmentID?: Department | string;
+  departmentName?: string;
+  canRemoveFromDepartment?: boolean;
+}
+
+interface EditingUserData {
+  accesses?: Access[];
+  companyID?: Company;
+  companyIDAndUserID?: string;
+  departmentID?: Department[];
+  userID?: User;
+  _id?: object;
+}
+
+export interface EditingUserInfo {
+  userData?: EditingUserData;
+  userIndex?: number;
+  removeUserFrom?: string;
+  editingDepartment?: object;
+  editingCompany?: object;
+  userName?: string;
 }
 
 export interface NotificationTypeState {
@@ -76,7 +98,7 @@ export interface UserAccess {
   _id: string;
   userID: User;
   accesses: Access[];
-  departmentID: Department[] ;
+  departmentID: Department[];
 }
 
 export interface NotificationsData {
@@ -88,8 +110,8 @@ export interface NotificationsData {
 
 export interface UsersData {
   cursor: string;
-  list: UserAccess[];
-  listSearch: UserAccess[];
+  list: Data[];
+  listSearch: Data[];
   notifications: NotificationsData;
   hasNoData: boolean;
   totalCount: number;
@@ -98,6 +120,9 @@ export interface UsersData {
   userLimit: number;
   notificationLimit: number;
   selectNotification: NotificationTypeState;
+  editingUserInfo: EditingUserInfo;
+  onRemovingUser: boolean;
+  isLoading: boolean;
 }
 
 export interface ParamGetUser {
@@ -116,30 +141,31 @@ export interface MenuItem {
 export interface Task {
   _id: string;
   companyID: Company;
-  departmentID: Department;
-  taskStatusID: TaskStatusType;
-  tagIDs: string[];
-  userIDs: User[];
+  departmentID?: Department;
+  taskStatusID: TaskStatus;
+  tagIDs?: string[];
+  userIDs?: User[];
   title: string;
-  description: string;
-  attachments: string[];
-  dueDate: string;
-  estimateTime: string;
-  timeTracked: string;
-  priority: string;
-  logs: string[];
+  description?: string;
+  attachments?: string[];
+  dueDate?: string;
+  estimateTime?: string;
+  timeTracked?: string;
+  priority?: string;
+  logs?: string[];
 }
 
-export interface TaskStatusType {
+export interface TaskStatus {
   _id: string;
-  statusID?: string;
   companyID?: Company;
   departmentID?: Department;
-  taskBoardID?: string;
-  title?: string;
+  taskBoardID: string;
+  title: string;
   taskIDs: Task[];
   description?: string;
+  createdBy?: User;
 }
+
 export interface CheckInCheckOut {
   checkInAt?: string;
   checkOutAt?: string;
@@ -230,4 +256,46 @@ export interface ProjectState {
 export interface ChannelIDData {
   _id: string;
   channelID: string;
+}
+
+export interface Tag {
+  tagId: string;
+  title: string;
+  workspaceId: string;
+  description?: string;
+  createdBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+interface UpdateTaskData {
+  taskStatusId?: string;
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  priority?: string;
+  tags?: Tag[];
+  createdBy?: string;
+  createdAt?: Date;
+  isHover?: boolean;
+}
+
+export interface UpdateTaskToTaskStatus {
+  taskId: string;
+  taskStatusId: string;
+  data: UpdateTaskData;
+}
+export interface SetTasksToTaskStatus {
+  taskStatusId: string;
+  tasks: Task[];
+}
+export interface TaskBoard {
+  _id: string;
+  companyID?: Company | string;
+  departmentID?: Department | string;
+  taskStatusIDs?: string[];
+  title: string;
+  description?: string;
+  updatedBy?: User ;
+  createdBy?: User | string;
 }

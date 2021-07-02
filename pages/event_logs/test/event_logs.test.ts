@@ -28,16 +28,18 @@ beforeAll(async () => {
   }
 });
 
-describe('Users Page', () => {
+describe('EventLogs Page', () => {
 
-  test('Test UI list users page successfully after login', async () => {
+  test('Test UI EventLogs page successfully after login', async () => {
     await page.goto('http://localhost:5000/event_logs');
     await page.waitForSelector('.event-container');
+
+    await page.waitForSelector('.event-content div');
+    await page.waitFor(5000);
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
   });
-
 });
 
 afterAll(() => {

@@ -13,6 +13,7 @@ import { getNotificationFCM } from 'pages/users/logic/users_actions';
 import { GetUserDataThunkAction } from 'pages/login/logic/login_reducer';
 
 type Token = string | null;
+
 const Auth = ({ children, publicPages }) => {
   const path = window.location.pathname;
   const router = useRouter();
@@ -29,6 +30,7 @@ const Auth = ({ children, publicPages }) => {
     if (hasPermission || access?.length <= 0) {
       return;
     }
+
     checkAccessUser();
   }, [access]);
 
@@ -76,7 +78,7 @@ const Auth = ({ children, publicPages }) => {
       return false;
     });
 
-    if (filteredAccess.length <= 0) {
+    if (filteredAccess?.length <= 0) {
       return false;
     }
 
@@ -85,6 +87,7 @@ const Auth = ({ children, publicPages }) => {
 
   const checkAccessUser = () => {
     if (publicPages.includes(path)) {
+
       return;
     }
 
@@ -95,7 +98,7 @@ const Auth = ({ children, publicPages }) => {
     const token: Token =  localStorage.getItem('access_token');
 
     if (!token && path !== '/login') {
-      await router.push('/login', '/login.html');
+      void router.push('/login', '/login.html');
       setLoading(false);
 
       return;
@@ -116,7 +119,7 @@ const Auth = ({ children, publicPages }) => {
 
   return (
     <>
-        {children}
+      {children}
     </>
   );
 };

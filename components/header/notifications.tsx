@@ -69,7 +69,7 @@ const NotificationsUI = () => {
             hasMore={notifications.list.length < notifications.totalCount}
             next={fetchData}
             loader={<DisappearedLoading color={'#67cb48'}/>}
-            scrollThreshold={0.5}
+            scrollThreshold={0.8}
             height={500}
           >
             {generatedData()}
