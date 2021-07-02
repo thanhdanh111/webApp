@@ -10,9 +10,9 @@ export const checkTrueInObject = (object: object) => {
   }
 
   const isValid = keyOfObject.every((each) => {
-    if (typeof object[each] === 'object') {
-      return checkTrueInObject(object[each]);
-    }
+    // if (typeof object[each] === 'object') {
+    //   return checkTrueInObject(object[each]);
+    // }
 
     return object[each] ? true : false;
   });

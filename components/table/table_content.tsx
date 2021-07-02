@@ -63,31 +63,28 @@ const TableContent = (props: InitialProp) => {
         >
         <Table stickyHeader aria-label='sticky table' className='table-content' >
           <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
-          { !loading &&  checkArray(data) ?
-            <TableBody className='table-body'>
-              {data.map((item, index) => {
-                return (
-                  <TableRowBase
-                    key={index}
-                    hadExpandableRows={hadExpandableRows}
-                    headCells={headCells}
-                    needCheckBox={needCheckBox}
-                    renderAction={renderAction}
-                    item={item}
-                    actions={actions}
-                    index={index}
-                    ComponentDetail={ComponentDetail}
-                  />
-                );
-              })}
-            </TableBody> : (
-            <div style={{ marginTop: '150px', marginBottom: '150px', display: 'flex', justifyContent: 'center' }}>
-              <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>
-            </div>
-          )}
+          { !loading &&  (checkArray(data) &&
+          <TableBody className='table-body'>
+                {data.map((item, index) => {
+                  return (
+                    <TableRowBase
+                      key={index}
+                      hadExpandableRows={hadExpandableRows}
+                      headCells={headCells}
+                      needCheckBox={needCheckBox}
+                      renderAction={renderAction}
+                      item={item}
+                      actions={actions}
+                      index={index}
+                      ComponentDetail={ComponentDetail}
+                    />
+                  );
+                })}
+          </TableBody>
+        )}
         </Table>
         </InfiniteScroll>
-          {emptyData}
+          {emptyData()}
           {
             loading && <div style={{ marginTop: '150px', marginBottom: '150px', display: 'flex', justifyContent: 'center' }}>
               <DisappearedLoading color={'#67cb48'} style={{ height: '100px' }}/>

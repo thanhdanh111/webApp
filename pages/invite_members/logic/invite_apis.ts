@@ -6,7 +6,7 @@ import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from './invite_error_notifications';
 import { Roles } from 'constants/roles';
 import { checkValidAccess } from 'helpers/check_valid_access';
-
+import { checkArray } from 'helpers/check_array';
 type Token = string | null;
 export enum NotificationTypes{
   error403 = 'You don\'t have permission to invite',
@@ -14,9 +14,7 @@ export enum NotificationTypes{
 export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (dispatch) => {
   try {
     await dispatch(inviteLoading({ isLoading: true }));
-
     const token: Token =  localStorage.getItem('access_token');
-
     const res = await axios({
       url: `${config.BASE_URL}/companies/${companyID}/members/invite`,
       headers: {
@@ -28,7 +26,6 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
         inviteMembersData: inviteMembers,
       },
     });
-
     if (res?.data || res?.data?.length) {
       await Promise.all(res.data.map((info) => {
         const errorNotification = returnNotification({ type: info?.status, email: info?.email, message: info?.errorMessage });
@@ -36,15 +33,13 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
         return dispatch(pushNewNotifications({ variant: errorNotification['status'] , message: errorNotification['message'] }));
       }));
     }
-
     await dispatch(inviteLoading({ isLoading: false }));
   } catch (error) {
     await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.error403 }));
     await dispatch(inviteLoading({ isLoading: false }));
   }
 };
-
-export const getUserCompaniesApi = () => async (dispatch, getState) => {
+export const getDepartmentsOfCompany = () => async (dispatch, getState) => {
   try {
     await dispatch(inviteLoading({ isLoading: true }));
     const userInfo = getState()?.userInfo;
@@ -53,11 +48,9 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
     const haveAccess = checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany });
     const isAdmin = userInfo?.isAdmin;
     let companiesParams = '';
-
     if (!isAdmin && haveAccess) {
       const companies: string[] = [userInfo?.currentCompany?._id];
-
-      companiesParams = companies.map((companyID, index) => `companyID[${index}]=${companyID}`).join('&');
+      companiesParams = companies.map((companyID: string, index) => `companyID[${index}]=${companyID}`).join('&');
     }
 
     if (!isAdmin && !companiesParams?.length) {
@@ -65,8 +58,7 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
 
       return;
     }
-
-    const getDepartments = await axios.get(
+    const departments = await axios.get(
       `${config.BASE_URL}/departments?${companiesParams}`,
       {
         method: 'GET',
@@ -77,9 +69,27 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
       },
     );
 
-    const noData = !getDepartments?.data?.list || !getDepartments?.data?.list?.length;
+    await dispatch(getUserCompaniesApi(departments?.data?.list));
+  } catch (error) {
+    throw error;
+  }
+};
 
-    if (noData) {
+const checkValidCompanyOfDepartment = (department) => {
+  const invalidCompany =
+    !department?.companyID ||
+    !department?.companyID?._id ||
+    !department?.companyID?.name;
+  const invalidDepartment = !department?.name || !department?._id;
+
+  const isValid = invalidCompany || invalidDepartment;
+
+  return isValid;
+};
+
+export const getUserCompaniesApi = (departments) => async (dispatch) => {
+  try {
+    if (!checkArray(departments)) {
       await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
 
       return;
@@ -88,25 +98,18 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
     const storeAvailCompaniesIndice = { };
     const availCompanies: AvailInviteCompanies[] = [];
     let indexForNewTempCompany = 0;
+    departments.forEach((availDepartment) => {
+      const inValid = checkValidCompanyOfDepartment(availDepartment);
 
-    getDepartments.data.list.forEach((availDepartment) => {
-      const invalidCompany =
-        !availDepartment?.companyID ||
-        !availDepartment?.companyID?._id ||
-        !availDepartment?.companyID?.name;
-      const invalidDeparment = !availDepartment?.name || !availDepartment?._id;
-
-      if (invalidCompany || invalidDeparment) {
+      if (inValid) {
         return;
       }
 
       const companyID = availDepartment?.companyID?._id ?? availDepartment?.companyID;
       let indexOfTempCompany = storeAvailCompaniesIndice[companyID];
-
       if (typeof indexOfTempCompany !== 'number') {
         storeAvailCompaniesIndice[companyID] = indexForNewTempCompany;
         indexOfTempCompany = indexForNewTempCompany;
-
         availCompanies[indexForNewTempCompany] = {
           companyID,
           name: availDepartment?.companyID?.name,
@@ -117,12 +120,9 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
             },
           ],
         };
-
         indexForNewTempCompany = indexForNewTempCompany + 1;
       }
-
       let departmentsOfCompany =  availCompanies[indexOfTempCompany]['departments'];
-
       departmentsOfCompany = [
         ...departmentsOfCompany,
         {
@@ -130,13 +130,10 @@ export const getUserCompaniesApi = () => async (dispatch, getState) => {
           name: availDepartment.name,
         },
       ];
-
       availCompanies[indexOfTempCompany]['departments'] = departmentsOfCompany;
     });
-
     await dispatch(updateInviteCompanies({ availCompanies, isLoading: false }));
   } catch (error) {
-
     await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.error403 }));
     await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
   }

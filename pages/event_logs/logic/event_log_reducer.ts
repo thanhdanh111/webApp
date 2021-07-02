@@ -117,10 +117,10 @@ export const getEventLogsData = () => async (dispatch, getState) => {
       departmentID: userInfo?.currentDepartment?._id,
     });
     const isAdmin = userInfo?.isAdmin;
-
     const { selectedTime, selectedEnv, selectedProjectID }: EventLogPage = getState()?.eventLogs;
     const fromTime = new Date();
     const toTime = getLastDay(selectedTime);
+
     let companyIDParam = '';
     let departmentIDParam = '';
 
@@ -129,20 +129,24 @@ export const getEventLogsData = () => async (dispatch, getState) => {
       departmentIDParam = userInfo?.currentDepartment?._id;
     }
 
-    if (!companyIDParam) {
-      await dispatch(hasNoEventLogs());
+    const getParams = async () => {
+      if (!companyIDParam) {
+        await dispatch(hasNoEventLogs());
 
-      return;
-    }
+        return;
+      }
 
-    const params = {
-      fromTime,
-      toTime,
-      companyID: companyIDParam,
-      departmentID: departmentIDParam,
-      environment: selectedEnv !== 'All' ? selectedEnv : null,
-      projectID: selectedProjectID && selectedProjectID !== 'All' ? selectedProjectID : null,
+      return {
+        fromTime,
+        toTime,
+        companyID: companyIDParam,
+        departmentID: departmentIDParam,
+        environment: selectedEnv !== 'All' ? selectedEnv : null,
+        projectID: selectedProjectID && selectedProjectID !== 'All' ? selectedProjectID : null,
+      };
     };
+
+    const params = await getParams();
 
     const res = await axios.get(`${config.BASE_URL}/eventLogs`, {
       params,

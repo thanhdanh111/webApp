@@ -65,31 +65,38 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
     const toTime = new Date();
     const fromTime = new Date(toTime.getTime() - limit * 1000 * 60 * 60 * 24);
     let requestUser = '';
-    if (isGetMe) {
-      requestUser = userID;
-    }
-
-    if (selectedUserID) {
-      requestUser = selectedUserID;
-    }
 
     if (cursor === 'END') {
       return;
     }
 
-    const params = {
-      companyID,
-      fromTime: fromTime.toString(),
-      toTime: toTime.toString(),
+    const getParams = () => {
+      if (isGetMe) {
+        requestUser = userID;
+      }
+
+      if (selectedUserID) {
+        requestUser = selectedUserID;
+      }
+
+      const param = {
+        companyID,
+        fromTime: fromTime.toString(),
+        toTime: toTime.toString(),
+      };
+
+      if (cursor) {
+        param['cursor'] = cursor;
+      }
+
+      if (requestUser) {
+        param['userID'] = requestUser;
+      }
+
+      return param;
     };
 
-    if (cursor) {
-      params['cursor'] = cursor;
-    }
-
-    if (requestUser) {
-      params['userID'] = requestUser;
-    }
+    const params = getParams();
 
     const res =
     await axios.get(`${config.BASE_URL}/checkinAndCheckouts`, {
