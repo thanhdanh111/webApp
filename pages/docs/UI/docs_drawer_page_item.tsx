@@ -10,6 +10,8 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { deletePage } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
 import { PageContent } from '../logic/docs_reducer';
+import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import { updateDocs } from '../logic/docs_actions';
 
 interface DocsDrawerPageData {
   selectedPage: PageContent;
@@ -34,6 +36,12 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
         label: 'Delete',
         startIcon: <DeleteIcon />,
         function: () => dispatch(deletePage()),
+      },
+      {
+        type: 'normal',
+        label: 'Share',
+        startIcon: <PeopleOutlineIcon />,
+        function: () => dispatch(updateDocs({ openShare: true })),
       },
     ];
 

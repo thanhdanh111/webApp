@@ -18,6 +18,7 @@ interface MyEditor {
   handleOnChangeLineStyle?: (action, contentState) => void;
   onClickSideToolbar?: (props) => void;
   onMoveBlockAction?: (action) => void;
+  readOnly: boolean;
 }
 
 const MyEditor: FunctionComponent<MyEditor> = ({
@@ -26,6 +27,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
   handleOnChangeLineStyle,
   onClickSideToolbar,
   onMoveBlockAction,
+  readOnly,
 }) => {
 
   function handleOnChange(newEditorState) {
@@ -34,6 +36,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
 
   return <Editor
     stripPastedStyles={true}
+    readOnly={readOnly}
     placeholder='Write something'
     customStyleMap={customStyleMapDraftjs}
     handlePastedText={(text, html, state) => handlePastedText({ text, html, state, handleOnChange })}

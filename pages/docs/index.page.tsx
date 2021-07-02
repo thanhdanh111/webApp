@@ -12,6 +12,7 @@ import { handleKeyCombination } from './logic/handle_combination_key';
 import { EditorState } from 'draft-js';
 import { DocProject, PageContent } from './logic/docs_reducer';
 import { ShareComponent } from './UI/docs_share_project';
+import { DocsRole, ProjectAccessMapOfUsers } from './logic/get_folder_access';
 
 interface DocsPageData {
   needDisplay: boolean;
@@ -21,6 +22,8 @@ interface DocsPageData {
   loading: boolean;
   selectedPage: PageContent;
   selectedProject: DocProject;
+  projectAccessOfUsers: ProjectAccessMapOfUsers;
+  accountUserID: string;
 }
 
 type DocsPageDataType = DocsPageData;
@@ -35,6 +38,8 @@ const DocsPage = () => {
     loading,
     selectedPage,
     selectedProject,
+    projectAccessOfUsers,
+    accountUserID,
   }: DocsPageDataType = useSelector((state: RootState) => {
 
     return {
@@ -45,10 +50,13 @@ const DocsPage = () => {
       loading: state?.docs?.loading,
       selectedPage: state?.docs?.selectedPage,
       selectedProject: state?.docs?.selectedDocProject,
+      accountUserID: state?.userInfo?.userID,
+      projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
     };
   }, shallowEqual);
   const onEditPage = !!selectedPage?._id || !!selectedPage?.title;
-  const cannotClickButton = loading || !title?.length || !selectedProject._id;
+  const readOnly = !checkHavePermissionToEdit();
+  const cannotClickButton = loading || !title?.length || !selectedProject._id || readOnly;
 
   function onClickOptionInToolbar(action) {
     if (!action) {
@@ -78,6 +86,25 @@ const DocsPage = () => {
     dispatch(createNewPage());
   }
 
+  function checkHavePermissionToEdit() {
+    const selectedProjectID = selectedProject?._id ?? '';
+    const selectedPageID = selectedPage?._id;
+
+    const rolesInProject = projectAccessOfUsers?.[accountUserID]?.[selectedProjectID]?.roles ?? [];
+    let haveWritePermission = rolesInProject.includes(DocsRole.WRITE);
+
+    if (selectedPageID && !haveWritePermission) {
+      haveWritePermission = projectAccessOfUsers?.
+                                [accountUserID]?.
+                                [selectedProjectID]?.
+                                accessInPages?.
+                                [selectedPageID]?.
+                                includes(DocsRole.WRITE);
+    }
+
+    return haveWritePermission;
+  }
+
   return <div
     className='docs-page'
     onKeyDown={(e) => handleKeyCombination(e, onEditPage, dispatch)}
@@ -99,8 +126,9 @@ const DocsPage = () => {
       multiline={false}
       autoFocus
       required={true}
+      disabled={readOnly}
     />
-    <EditorView />
+    <EditorView readOnly={readOnly} />
     <InlineToolbar
       editorState={editorState}
       onClickOption={onClickOptionInToolbar}

@@ -16,7 +16,11 @@ interface EditorViewData {
 
 type EditorViewDataType = EditorViewData;
 
-const EditorView: FunctionComponent = () => {
+interface EditorView {
+  readOnly: boolean;
+}
+
+const EditorView: FunctionComponent<EditorView> = ({ readOnly }) => {
   const dispatch = useDispatch();
   const {
     editorState,
@@ -26,7 +30,6 @@ const EditorView: FunctionComponent = () => {
     return {
       editorState: state?.docs?.editorState,
       needDisplay: state?.docs?.needDisplay,
-      typingWord: state?.docs?.typingWord,
     };
   }, shallowEqual);
 
@@ -76,6 +79,7 @@ const EditorView: FunctionComponent = () => {
       dispatch,
       editorState,
     })}
+    readOnly={readOnly}
     key='editor-view'
     handleChangeEditorState={handleChangeEditorState}
     editorState={editorState ?? EditorState.createEmpty(decorator)}

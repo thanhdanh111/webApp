@@ -23,7 +23,7 @@ export interface UsersInCompanyMap {
   [userID: string]: User;
 }
 
-interface CreatedBy {
+export interface CreatedBy {
   status?: string;
   lastAccessAt?: string;
   createdAt?: string;
@@ -41,6 +41,7 @@ export interface PageContent {
   title?: string;
   _id?: string;
   entityMap?: string;
+  createdBy?: CreatedBy;
 }
 
 export interface DocProjectMap {
@@ -50,7 +51,7 @@ export interface DocProjectMap {
 export interface DocProject {
   _id?: string;
   title?: string;
-  createdBy?: CreatedBy;
+  createdBy?: CreatedBy | string;
   companyID?: Company;
   departmentID?: string;
   userIDs?: string[];

@@ -11,7 +11,7 @@ import { updateDocs } from '../logic/docs_actions';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import UserAvatar from '../../../components/user_avatar/info_user';
 import { shareDocument } from '../logic/docs_apis';
-import { ProjectAccessMapOfUsers } from '../logic/get_folder_access';
+import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access';
 
 interface ShareComponentData {
   loading: boolean;
@@ -53,6 +53,7 @@ export const ShareComponent = () => {
     loading,
     projectAccessOfUsers,
     accountUserID,
+    selectedPage,
   }: ShareComponentDataType = useSelector((state: RootState) => {
 
     return {
@@ -130,14 +131,36 @@ export const ShareComponent = () => {
     dispatch(shareDocument({ role, userID }));
   }
 
+  function renderRolesOfUser(isOwner, rolesOfUser) {
+    if (isOwner) {
+      return <div className='users-shared-with--owner'>Owner</div>;
+    }
+
+    return rolesOfUser?.length ?  <Select
+      style={{ width: '100px' }}
+      native
+      disableUnderline
+      className='users-shared-with--select'
+    >
+      {
+        rolesOfUser.map((role) => <option key={role}>
+          {defaultRoles[role].name}
+        </option>)
+      }
+    </Select> : <div />;
+  }
+
   function renderUsersSharedWith() {
     const usersRender: JSX.Element[] = [];
     const selectedProjectID = selectedProject?._id ?? '';
+    const selectedPageID = selectedPage?._id;
 
     for (const userID in projectAccessOfUsers) {
       if (!userID) {
         continue;
       }
+
+      let isOwner = (selectedProject?.createdBy?.['_id'] ?? selectedProject?.createdBy)  === userID;
       const userProfile = projectAccessOfUsers?.[userID]?.[selectedProjectID]?.ownerInfo;
 
       if (!userProfile) {
@@ -145,7 +168,16 @@ export const ShareComponent = () => {
         continue;
       }
 
-      const rolesOfUser = projectAccessOfUsers?.[userID]?.[selectedProjectID]?.roles;
+      let rolesOfUser = projectAccessOfUsers?.[userID]?.[selectedProjectID]?.roles;
+      const haveNoWritePermissionInFolder = !rolesOfUser?.includes(DocsRole.WRITE);
+
+      if (selectedPageID && haveNoWritePermissionInFolder) {
+        rolesOfUser = projectAccessOfUsers?.[userID]?.[selectedProjectID]?.accessInPages?.[selectedPageID] ?? ['READ'];
+      }
+
+      if (selectedPageID) {
+        isOwner = selectedPage?.createdBy?._id === userID;
+      }
 
       usersRender.push(
         <div key={userID} className='users-shared-with'>
@@ -153,18 +185,7 @@ export const ShareComponent = () => {
           <Typography className='users-shared-with--name' style={{ marginLeft: '20px' }}>
             {`${userProfile?.lastName} ${userProfile.firstName}`}
           </Typography>
-          <Select
-            style={{ width: '100px' }}
-            native
-            disableUnderline
-            className='users-shared-with--select'
-          >
-            {
-              rolesOfUser.map((role) => <option key={role}>
-                {defaultRoles[role].name}
-              </option>)
-            }
-          </Select>
+          {renderRolesOfUser(isOwner, rolesOfUser)}
         </div>,
       );
     }
@@ -185,7 +206,7 @@ export const ShareComponent = () => {
         <DialogTitle>
           <div>
             <Typography style={{ fontWeight: 600 }} variant='subtitle1' color='primary' >
-              {`Share ${selectedProject?.title}`}
+              {`Share ${selectedPage?.title ?? selectedProject?.title}`}
             </Typography>
             <IconButton
               onClick={() => handleClose()}

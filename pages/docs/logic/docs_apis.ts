@@ -12,6 +12,7 @@ import { getUsersInCompany } from './get_users_in_company';
 export const createNewPage = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
+    const { userID }: UserInfoType = getState()?.userInfo;
     const {
       title,
       editorState,
@@ -48,10 +49,14 @@ export const createNewPage = () => async (dispatch, getState) => {
 
     const newProjectsMap = docProjectsMap;
 
-    newProjectsMap?.[docProjectID].pages?.push({
+    newProjectsMap?.[docProjectID]?.pages?.push({
       title: res?.data?.title,
       _id: res?.data?._id,
       pageContent: res?.data?.pageContent,
+      entityMap: res?.data?.entityMap,
+      createdBy: {
+        _id: userID,
+      },
     });
 
     dispatch(updateDocs({ loading: false, docProjectsMap: newProjectsMap }));
@@ -197,12 +202,10 @@ export const getDocProjects = () => async (dispatch, getState) => {
       },
     );
 
-    const projectsMap: object = { };
-
     const docPagesIntoDocProjectsMap = getDesiredChildrenIntoDesiredParents({
       children: docPages?.data?.list,
-      fieldsOfParent: ['_id', 'title', 'companyID'],
-      fieldsOfChild: ['_id', 'title', 'pageContent', 'entityMap'],
+      fieldsOfParent: ['_id', 'title', 'companyID', 'createdBy'],
+      fieldsOfChild: ['_id', 'title', 'pageContent', 'entityMap', 'createdBy'],
       parentFieldID: '_id',
       parentFieldInChild: 'docProjectID',
       childName: 'pages',
@@ -211,11 +214,14 @@ export const getDocProjects = () => async (dispatch, getState) => {
     if (docProjects?.data?.list?.length) {
 
       docProjects?.data?.list?.forEach((docProject) => {
+        if (!docProject) {
+
+          return;
+        }
 
         const projectID = docProject?._id;
 
         if (docPagesIntoDocProjectsMap[projectID] !== undefined) {
-          projectsMap[projectID] = docPagesIntoDocProjectsMap[projectID];
 
           return;
         }
@@ -227,18 +233,19 @@ export const getDocProjects = () => async (dispatch, getState) => {
           return;
         }
 
-        projectsMap[projectID] = {
+        docPagesIntoDocProjectsMap[projectID] = {
           title: docProject.title,
           _id: projectID,
           companyID: docProject.companyID,
           pages: [],
+          createdBy: docProject.createdBy,
         };
       });
     }
 
     dispatch(updateDocs({
       loading: false,
-      docProjectsMap: projectsMap,
+      docProjectsMap: docPagesIntoDocProjectsMap,
     }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
@@ -288,6 +295,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
       _id: newProjectID,
       title: newTitle,
       pages: [],
+      createdBy: userID,
     };
 
     const accessForNewDocProject = {
@@ -404,8 +412,9 @@ const roles = {
 export const shareDocument = ({ role, userID }) => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const { selectedDocProject, usersInCompanyMap, projectAccessOfUsers }: DocsValueType = getState()?.docs;
+    const { selectedDocProject, usersInCompanyMap, projectAccessOfUsers, selectedPage }: DocsValueType = getState()?.docs;
     const selectedProjectID =  selectedDocProject?._id;
+    const selectedPageID = selectedPage?._id;
 
     if (!token || !selectedProjectID || roles[role] === undefined) {
       return;
@@ -423,6 +432,7 @@ export const shareDocument = ({ role, userID }) => async (dispatch, getState) =>
           userID,
           feature: 'DOCS',
           folderID: selectedProjectID,
+          pageID: selectedPageID ?? null,
         },
         headers: {
           'Content-Type': 'application/json',

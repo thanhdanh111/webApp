@@ -42,16 +42,14 @@ const DocsDrawer = () => {
   const router = useRouter();
 
   useEffect(() => {
-    dispatch(getDocProjects());
+    void initData();
   }, []);
 
-  useEffect(() => {
-    dispatch(getUsersInCompanyApi());
-  }, []);
-
-  useEffect(() => {
+  async function initData() {
+    await Promise.resolve(dispatch(getDocProjects()));
     dispatch(getFolderAccessOfProjectIDs());
-  }, []);
+    dispatch(getUsersInCompanyApi());
+  }
 
   function backToHome() {
 
@@ -69,6 +67,7 @@ const DocsDrawer = () => {
       selectedPage: {},
       editorState: EditorState.createEmpty(decorator),
       title: '',
+      needDisplay: false,
     }));
   }
 
@@ -89,6 +88,7 @@ const DocsDrawer = () => {
       selectedDocProject: props?.project,
       selectedPage: props?.page,
       title: props?.page?.title,
+      needDisplay: false,
     }));
   }
 
