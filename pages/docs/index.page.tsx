@@ -2,7 +2,7 @@ import React from 'react';
 import EditorView from './UI/editor_view';
 import InlineToolbar from '../../components/inline_toolbar/inline_toolbar';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { updateDocs, updateSingleEditorState } from './logic/docs_actions';
+import { updateDocs } from './logic/docs_actions';
 import { RootState } from 'redux/reducers_registration';
 import { handleToolbarActions } from './logic/docs_inline_toolbar_actions';
 import { Input } from '@material-ui/core';
@@ -55,7 +55,7 @@ const DocsPage = () => {
       return;
     }
 
-    dispatch(updateSingleEditorState({
+    dispatch(updateDocs({
       editorState: handleToolbarActions(editorState, action),
     }));
   }

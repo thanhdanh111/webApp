@@ -1,7 +1,7 @@
 import { blockStyles, inlineStyles } from 'constants/toolbar_docs';
 import { RichUtils, EditorState, convertFromRaw, SelectionState, convertToRaw } from 'draft-js';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
-import { updateSingleEditorState } from './docs_actions';
+import { updateDocs } from './docs_actions';
 
 export function handleSideToolbarActions(editorState, action) {
   if (!editorState) {
@@ -101,7 +101,7 @@ export function onMoveBlockAction({ action, editorState, dispatch }) {
     hasFocus: true,
   });
 
-  dispatch(updateSingleEditorState({
+  dispatch(updateDocs({
     editorState: EditorState.forceSelection(newEditorState, updatedSelection),
   }));
 }

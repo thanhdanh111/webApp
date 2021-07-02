@@ -19,25 +19,26 @@ interface ShareComponentData {
   selectedProject: DocProject;
   openShare: boolean;
   usersInCompanyMap: UsersInCompanyMap;
-  selectedProjectAccess: ProjectAccessMapOfUsers;
+  projectAccessOfUsers: ProjectAccessMapOfUsers;
+  accountUserID: string;
 }
 
 type ShareComponentDataType = ShareComponentData;
 
-const roles = [
-  {
+const defaultRoles = {
+  NONE: {
     role: '',
     name: 'None',
   },
-  {
+  WRITE: {
     role: 'WRITE',
     name: 'Can write',
   },
-  {
+  READ: {
     role: 'READ',
     name: 'Can read',
   },
-];
+};
 
 export const ShareComponent = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,8 @@ export const ShareComponent = () => {
     openShare,
     usersInCompanyMap,
     loading,
-    selectedProjectAccess,
+    projectAccessOfUsers,
+    accountUserID,
   }: ShareComponentDataType = useSelector((state: RootState) => {
 
     return {
@@ -59,7 +61,8 @@ export const ShareComponent = () => {
       selectedPage: state?.docs?.selectedPage,
       selectedProject: state?.docs?.selectedDocProject,
       openShare: state?.docs?.openShare,
-      selectedProjectAccess: state?.docs?.selectedProjectAccess,
+      projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
+      accountUserID: state?.userInfo?.userID,
     };
   }, shallowEqual);
 
@@ -75,7 +78,7 @@ export const ShareComponent = () => {
     ];
 
     for (const userID in usersInCompanyMap) {
-      if (!userID) {
+      if (!userID || userID === accountUserID) {
         continue;
       }
 
@@ -99,12 +102,21 @@ export const ShareComponent = () => {
   }
 
   function renderRolesToShare() {
+    const rolesToSelect: JSX.Element[] = [];
 
-    return roles.map((role) =>
-      <option key={role.role} value={role.role}>
-        {role.name}
-      </option>,
-    );
+    for (const role in defaultRoles) {
+      if (!role) {
+        continue;
+      }
+
+      rolesToSelect.push(
+        <option value={defaultRoles[role].role}>
+          {defaultRoles[role].name}
+        </option>,
+      );
+    }
+
+    return rolesToSelect;
   }
 
   function onClickShare() {
@@ -122,23 +134,37 @@ export const ShareComponent = () => {
     const usersRender: JSX.Element[] = [];
     const selectedProjectID = selectedProject?._id ?? '';
 
-    for (const userID in selectedProjectAccess) {
+    for (const userID in projectAccessOfUsers) {
       if (!userID) {
         continue;
       }
-      const userProfile = selectedProjectAccess?.[userID]?.[selectedProjectID]?.ownerInfo;
+      const userProfile = projectAccessOfUsers?.[userID]?.[selectedProjectID]?.ownerInfo;
 
       if (!userProfile) {
 
         continue;
       }
 
+      const rolesOfUser = projectAccessOfUsers?.[userID]?.[selectedProjectID]?.roles;
+
       usersRender.push(
         <div key={userID} className='users-shared-with'>
           <UserAvatar user={userProfile}  style='notification-img'/>
-          <Typography style={{ marginLeft: '20px' }}>
+          <Typography className='users-shared-with--name' style={{ marginLeft: '20px' }}>
             {`${userProfile?.lastName} ${userProfile.firstName}`}
           </Typography>
+          <Select
+            style={{ width: '100px' }}
+            native
+            disableUnderline
+            className='users-shared-with--select'
+          >
+            {
+              rolesOfUser.map((role) => <option key={role}>
+                {defaultRoles[role].name}
+              </option>)
+            }
+          </Select>
         </div>,
       );
     }

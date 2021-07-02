@@ -3,7 +3,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { createNewDocProject, getDocProjects, getFolderAccessOfCurrentProjectID, getUsersInCompanyApi } from '../logic/docs_apis';
+import { createNewDocProject, getDocProjects, getFolderAccessOfProjectIDs, getUsersInCompanyApi } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
 import { updateDocs } from '../logic/docs_actions';
 import { convertFromRaw, EditorState, CompositeDecorator } from 'draft-js';
@@ -49,6 +49,10 @@ const DocsDrawer = () => {
     dispatch(getUsersInCompanyApi());
   }, []);
 
+  useEffect(() => {
+    dispatch(getFolderAccessOfProjectIDs());
+  }, []);
+
   function backToHome() {
 
     void router.push('/home');
@@ -59,8 +63,6 @@ const DocsDrawer = () => {
       docsLinkDecorator,
       docsImageDecorator,
     ]);
-
-    dispatch(getFolderAccessOfCurrentProjectID());
 
     dispatch(updateDocs({
       selectedDocProject: project,

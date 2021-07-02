@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import MyEditor from '@components/my_editor/my_editor';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { updateSingleEditorState } from '../logic/docs_actions';
+import { updateDocs } from '../logic/docs_actions';
 import { RootState } from 'redux/reducers_registration';
 import { SelectionState, EditorState, CompositeDecorator } from 'draft-js';
 import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions';
@@ -44,7 +44,7 @@ const EditorView: FunctionComponent = () => {
       hasFocus: true,
     });
 
-    dispatch(updateSingleEditorState({
+    dispatch(updateDocs({
       needDisplay: false,
       editorState: EditorState.forceSelection(editorState, updatedSelection),
     }));
@@ -59,7 +59,7 @@ const EditorView: FunctionComponent = () => {
       return;
     }
 
-    dispatch(updateSingleEditorState({
+    dispatch(updateDocs({
       editorState: handleSideToolbarActions(editorState, action),
     }));
   }

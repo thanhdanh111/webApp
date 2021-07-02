@@ -326,18 +326,13 @@ export const deleteDocProject = ({ projectID }) => async (dispatch, getState) =>
   }
 };
 
-export const getFolderAccessOfCurrentProjectID = () => async (dispatch, getState) => {
+export const getFolderAccessOfProjectIDs = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const { selectedDocProject }: DocsValueType = getState()?.docs;
-    const selectedProjectID =  selectedDocProject?._id;
-
-    if (!selectedProjectID?.length) {
-      return;
-    }
+    const { docProjectsMap }: DocsValueType = getState()?.docs;
 
     const projectAccess =  await axios.get(`${config.BASE_URL}/folderAccesses?${
-      getIDsParamsForAxios({ ids: [selectedProjectID], fieldName: 'orFolderIDs' })}`,
+      getIDsParamsForAxios({ ids: Object.keys(docProjectsMap), fieldName: 'orFolderIDs' })}`,
       {
         params: {
           feature: 'DOCS',
@@ -352,7 +347,7 @@ export const getFolderAccessOfCurrentProjectID = () => async (dispatch, getState
 
     const projectAccessOfUsers = getProjectAccessOfUsers({ projectAccess: projectAccess?.data?.list });
 
-    dispatch(updateDocs({ selectedProjectAccess: projectAccessOfUsers }));
+    dispatch(updateDocs({ projectAccessOfUsers }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
@@ -397,7 +392,7 @@ const roles = {
 export const shareDocument = ({ role, userID }) => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
-    const { selectedDocProject, usersInCompanyMap }: DocsValueType = getState()?.docs;
+    const { selectedDocProject, usersInCompanyMap, projectAccessOfUsers }: DocsValueType = getState()?.docs;
     const selectedProjectID =  selectedDocProject?._id;
 
     if (!token || !selectedProjectID || roles[role] === undefined) {
@@ -411,7 +406,7 @@ export const shareDocument = ({ role, userID }) => async (dispatch, getState) =>
     await axios.request(
       {
         method: 'POST',
-        url: `${config.BASE_URL}/folderAccesses/​${endpoint}/add`,
+        url: `${config.BASE_URL}/folderAccesses/${endpoint}/add`,
         data: {
           userID,
           feature: 'DOCS',
@@ -424,10 +419,21 @@ export const shareDocument = ({ role, userID }) => async (dispatch, getState) =>
       },
     );
 
-    const newSelectedDocProject = selectedDocProject;
-    newSelectedDocProject[userID] = usersInCompanyMap[userID];
+    const accessInProjectID = projectAccessOfUsers?.[userID]?.[selectedProjectID] ?? {
+      ownerInfo: usersInCompanyMap[userID],
+      roles: [],
+      accessInPages: {},
+    };
 
-    dispatch(updateDocs({ loading: false }));
+    accessInProjectID?.roles?.push(role);
+
+    const accessOfUser = projectAccessOfUsers?.[userID] ?? { };
+
+    accessOfUser[selectedProjectID] = accessInProjectID;
+
+    projectAccessOfUsers[userID] = accessOfUser;
+
+    dispatch(updateDocs({ projectAccessOfUsers, loading: false  }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }

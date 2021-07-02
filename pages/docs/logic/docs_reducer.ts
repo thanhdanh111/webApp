@@ -14,7 +14,7 @@ interface DocsValue {
   loading: boolean;
   selectedPage?: PageContent;
   shouldCallApi: boolean;
-  selectedProjectAccess: ProjectAccessMapOfUsers;
+  projectAccessOfUsers: ProjectAccessMapOfUsers;
   openShare: boolean;
   usersInCompanyMap: UsersInCompanyMap;
 }
@@ -69,54 +69,21 @@ const initialState: DocsValue = {
   loading: false,
   shouldCallApi: true,
   openShare: false,
-  selectedProjectAccess: {},
+  projectAccessOfUsers: {},
   usersInCompanyMap: {},
 };
 
 export type DocsValueType = DocsValue;
 
-const updateSingleEditorState = ({ needDisplay, state, editorState }) => {
-  if (!state || !editorState) {
-    return state;
-  }
-
-  if (typeof needDisplay === 'boolean') {
-    state.needDisplay = needDisplay;
-  }
-
-  return {
-    ...state,
-    editorState,
-  };
-};
-
 const docsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case DocsActionTypes.DisplayToolbar:
-      return {
-        ...state,
-        ...action.data,
-      };
-    case DocsActionTypes.OnFocusElement:
-      return {
-        ...state,
-        ...action.data,
-      };
     case DocsActionTypes.UpdateDocs:
       return {
         ...state,
         ...action.data,
       };
-    case DocsActionTypes.UpdateSingleEditorState:
-
-      return updateSingleEditorState({
-        state,
-        ...action.data,
-      });
     default:
-      return {
-        ...state,
-      };
+      return state;
   }
 };
 
