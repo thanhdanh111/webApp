@@ -123,7 +123,6 @@ const BoardTasks: FunctionComponent = () => {
 
     const newSourceTasks = movedData[source.droppableId] as Task[];
     destinationTasks = movedData[destination.droppableId] as Task[];
-
     dispatch(updateTaskById({
       destinationTasks,
       taskID: sourceTasks[source.index]?._id,

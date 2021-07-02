@@ -268,6 +268,7 @@
     .add-task
       display: flex
       color: #d3d3d3
+      cursor: pointer
       margin-top: 30px;
 
       .icon-add-task
@@ -286,6 +287,14 @@
     .text-field-form
       .text-field
         border-bottom: 1px solid #fff000
+
+    .add-task
+      &:hover
+        color: #50ac55
+        cursor: pointer
+
+        .icon-add-task
+          color: #50ac55
 
 @media screen and ( min-width: 1025px )
   .board

@@ -32,6 +32,7 @@ describe('Users Page', () => {
 
   test('Test UI list users page successfully after login', async () => {
     await page.goto('http://localhost:5000/users');
+    await page.waitFor(50000);
     await page.waitForSelector('.users');
 
     const image = await page.screenshot();
@@ -41,7 +42,7 @@ describe('Users Page', () => {
     await page.waitForSelector('.checkbox-cell');
     await page.waitForSelector('.btn-expanded');
     await page.click('.btn-expanded');
-    await page.waitFor(50000);
+    await page.waitFor(5000);
 
     const expanded = await page.screenshot();
     expect(expanded).toMatchImageSnapshot();
