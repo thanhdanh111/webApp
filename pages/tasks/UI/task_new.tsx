@@ -1,19 +1,13 @@
-import {
-  Box,
-  Button,
-  InputBase,
-  Link,
-} from '@material-ui/core';
+import { Box, Button, InputBase } from '@material-ui/core';
 import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import Tooltip from '@material-ui/core/Tooltip';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import Panel from './panel_task_clickup';
-import AssignUser from './assign_user_clickup';
+import Panel from './panel_task';
+import AssignUser from './assign_user';
 import { setTypeCreateTask, updateNewTask } from 'pages/task_boards/logic/task_boards_action';
 import { addTaskThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
+import DirectNewTask from './direct_new_task';
 
 interface InitProps {
   taskStatusID: string;
@@ -31,7 +25,6 @@ const TaskNew: React.FC<InitProps> = (props) => {
     if (event.keyCode !== 13) {
       return;
     }
-
     addNewTask();
   };
 
@@ -39,7 +32,6 @@ const TaskNew: React.FC<InitProps> = (props) => {
     if (!newTask?.title) {
       return;
     }
-
     dispatch(updateNewTask({
       ...newTask,
       taskStatusID: props.taskStatusID,
@@ -84,31 +76,7 @@ const TaskNew: React.FC<InitProps> = (props) => {
           </Button>
         </Tooltip>
       </Box>
-      <Box
-        position='absolute'
-        bottom={0}
-        top={0}
-        right={-10}
-        display='flex'
-        flexDirection='column'
-        alignItems='center'
-        justifyContent='center'
-        fontSize={3}
-        className='direct-add'
-      >
-        <Box className='box-direct'>
-          <div>
-            <Link className='actions-status'>
-              <ArrowUpwardIcon className='icon-direct' fontSize='small' />
-            </Link>
-          </div>
-          <div>
-            <Link className='actions-status'>
-              <ArrowDownwardIcon className='icon-direct' fontSize='small' />
-            </Link>
-          </div>
-        </Box>
-      </Box>
+      <DirectNewTask/>
     </Box>
   );
 };

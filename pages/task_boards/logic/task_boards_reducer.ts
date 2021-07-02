@@ -16,10 +16,10 @@ import {
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
 
-interface UserAssigned {
+export interface UserAssigned {
   _id: string;
   profilePhoto: string;
-  fullname: string;
+  fullName: string;
 }
 export interface TaskBoardsType {
   loading: boolean;
