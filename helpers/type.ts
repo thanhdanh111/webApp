@@ -140,19 +140,20 @@ export interface MenuItem {
 
 export interface Task {
   _id: string;
-  companyID: Company;
+  companyID?: Company;
   departmentID?: Department;
-  taskStatusID: TaskStatus;
+  taskStatusID?: TaskStatus;
   tagIDs?: string[];
   userIDs?: User[];
   title: string;
   description?: string;
   attachments?: string[];
   dueDate?: string;
-  estimateTime?: string;
+  estimateDate?: string;
   timeTracked?: string;
   priority?: string;
   logs?: string[];
+  startDate?: string;
 }
 
 export interface TaskStatus {
