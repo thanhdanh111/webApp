@@ -34,3 +34,21 @@ export const deleteBoardAction = (id: string) => {
     payload: id,
   };
 };
+
+export const showLoaderListEventLogs = () => {
+  return {
+    type: boardsActionType.SHOW_LOADER_LIST,
+  };
+};
+
+export const hideLoaderListEventLogs = () => {
+  return {
+    type: boardsActionType.HIDE_LOADER_LIST,
+  };
+};
+
+export const hasNoBoards = () => {
+  return {
+    type: boardsActionType.HAS_NO_DATA,
+  };
+};

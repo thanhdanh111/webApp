@@ -284,6 +284,8 @@ export interface Board {
 export interface BoardsPage {
   boards: Board[];
   selectedBoard: Board;
+  loading: boolean;
+  hasNoBoards: boolean;
 }
 
 export interface ConnectToData {

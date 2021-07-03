@@ -2,8 +2,9 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { BoardsPage } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction } from './board_action';
+import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction, hasNoBoards } from './board_action';
 import { boardsActionType } from './board_type_action';
+import { hideLoader } from 'pages/event_logs/logic/event_log_action';
 
 export enum NotificationTypes {
   succeedCreateFlowChart = 'Create FlowChart Successfully',
@@ -23,8 +24,11 @@ const initialState: BoardsPage = {
     companyID: '',
     projectID: '',
   },
+  loading: true,
+  hasNoBoards: false,
 };
 
+// tslint:disable-next-line: cyclomatic-complexity
 export const boardsReducer = (state = initialState, action) => {
   switch (action.type) {
     case boardsActionType.GET_LIST_BOARDS:
@@ -59,6 +63,22 @@ export const boardsReducer = (state = initialState, action) => {
         boards: resolveBoard,
       };
 
+    case boardsActionType.SHOW_LOADER_LIST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case boardsActionType.HIDE_LOADER_LIST:
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case boardsActionType.HAS_NO_DATA:
+      return {
+        ...state,
+        hasNoBoards: true,
+      };
     default:
       return state;
   }
@@ -81,7 +101,13 @@ export const getBoardDataMiddleWare = () => async (dispatch, getState) => {
       },
     });
 
+    if (!res?.data?.totalCount) {
+      await dispatch(hasNoBoards());
+      await dispatch(hideLoader());
+    }
+
     await dispatch(getBoardAction(res.data));
+    await dispatch(hideLoader());
 
   } catch (error) {
     throw error;
