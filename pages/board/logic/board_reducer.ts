@@ -2,7 +2,7 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import { BoardsPage } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction } from './board_action';
+import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction, updateCards } from './board_action';
 import { boardsActionType } from './board_type_action';
 
 export enum NotificationTypes {
@@ -24,6 +24,18 @@ const initialState: BoardsPage = {
     projectID: '',
   },
 };
+const initialState: CardsValue = {
+  selectionReact: undefined,
+  shape: '',
+  selectedBoard: {},
+  selectedCard: {},
+  shouldCallApi: true,
+  openShare: false,
+  needDisplay: false,
+
+};
+
+export type CardsValueType = CardsValue;
 
 export const boardsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -207,5 +219,61 @@ export const deleteBoardMiddleWare = (boardID: string) => async (dispatch, getSt
     }
   } catch (error) {
     dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedDeleteBoard }));
+  }
+};
+
+export const createNewCard = () => async (dispatch, getState) => {
+
+  try {
+    const token = localStorage.getItem('access_token');
+    const  {
+      shape,
+      selectedBoard,
+      selectedCard,
+    }: boardsValueType = getState()?.cards;
+    const companyID = selectedBoard?.companyID?._id ?? selectedBoard?.companyID;
+    const boardID = selectedBoard?._id;
+
+    if (!token || !companyID || !boardID || !shape || !selectedCard._id) {
+
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+
+      return ;
+    }
+
+    dispatch(updateCards({ loading: true }));
+
+    const rawBlocks = convertToRaw(editorState?.getCurrentContent());
+    const res = await axios.post(`${config.BASE_URL}/boards/${boardID}/cards`,
+      {
+        shape,
+        companyID,
+        leftTo: rawBlocks?.blocks,
+        rightTo: rawBlocks.blocks,
+        bottomTo: rawBlocks.blocks,
+        topTo: rawBlocks.blocks,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const newBoardsMap = boardsMap;
+
+    newBoardsMap?.[boardID].cards?.push({
+      shape: res?.data?.shape,
+      _id: res?.data?._id,
+      leftTo: res?.data?.leftTo,
+      rightTo: res?.data?.rightTo,
+      bottomTo: res?.data?.bottomTo,
+      topTo: res?.data?.topTo,
+    });
+
+    dispatch(updateCards({ loading: false, boardsMap: newBoardsMap }));
+  } catch (error) {
+    dispatch(updateCards({ loading: false }));
   }
 };

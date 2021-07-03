@@ -1,4 +1,6 @@
 import { boardsActionType } from './board_type_action';
+import { Board, Card } from 'helpers/type';
+import { Shape } from '@material-ui/core/styles/shape';
 
 export const getBoardAction = (res: object) => {
   return {
@@ -32,5 +34,22 @@ export const deleteBoardAction = (id: string) => {
   return {
     type: boardsActionType.DELETE_BOARD,
     payload: id,
+  };
+};
+
+interface UpdateCards {
+  selectedBoard?: Board;
+  selectedCard?: Card;
+  shape?: Shape;
+  shouldCallApi?: boolean;
+  openShare?: boolean;
+  needDisplay?: boolean;
+  selectionRect?: DOMRect;
+
+}
+export const updateCards = (data: UpdateCards) => {
+  return {
+    data,
+    type: boardsActionType.UPDATE_CARDS,
   };
 };

@@ -53,7 +53,7 @@ const NewBoard = () => {
   const addShapeProcess = () => {
     setElements((element) => element.concat({
       id: (element.length + 1).toString(),
-      position: { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight },
+      position: { x: Math.random() * window.innerWidth - 100, y: Math.random() * window.innerHeight },
       type: 'process',
     }));
   };
@@ -61,7 +61,7 @@ const NewBoard = () => {
   const addShapeDecision = () => {
     setElements((element) => element.concat({
       id: (element.length + 1).toString(),
-      position: { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight },
+      position: { x: Math.random() * window.innerWidth - 100, y: Math.random() * window.innerHeight },
       type: 'decision',
     }));
   };
@@ -99,14 +99,14 @@ const NewBoard = () => {
           connectionLineStyle={{ stroke: '#af00e7', strokeWidth: 2 }}
           connectionLineType={ConnectionLineType.SmoothStep}
           snapToGrid={true}
-          snapGrid={[16, 16]}
+          snapGrid={[13, 13]}
           onElementsRemove={onElementsRemove}
           nodeTypes={nodeTypes}
           onEdgeUpdate={onEdgeUpdate}
         >
           <Background
             className='back-ground'
-            gap={16}
+            gap={13}
           />
           <MiniMap
             nodeColor={(n) => {
