@@ -2,7 +2,6 @@ import { Avatar, Card, CardContent, Grid, Tooltip, Button } from '@material-ui/c
 import React from 'react';
 import { useRouter } from 'next/router';
 import { ProjectState } from 'helpers/type';
-import Link from 'next/link';
 interface InitProps {
   project: ProjectState;
 }
@@ -13,11 +12,16 @@ const ProjectPageUI: React.FunctionComponent<BodyProps> = (props: InitProps) => 
   const { project }: InitProps = props;
   const char = project?.name?.charAt(0);
   const router = useRouter();
+  const pathname = router.pathname;
+
   const onPushToPage = (url: string) => {
     void router.push(`/${url}`, `/${url}.html`);
   };
 
-  const pathname = router.pathname;
+  const onPushToDetail = () => {
+    void router.push({ pathname: `${pathname}/detail`, query: { id: project._id } });
+
+  };
 
   return (
     <Grid item xs={12} sm={3} className='project-card'>
@@ -25,10 +29,8 @@ const ProjectPageUI: React.FunctionComponent<BodyProps> = (props: InitProps) => 
         <CardContent className='card-header'>
           <div className='link-name-project'>
             <Avatar className='icon-sentry'>{char}</Avatar>
-            <div className='text-nodejs'>
-              <Link href={`${pathname}/${project._id}`}>
+            <div className='text-nodejs' onClick={onPushToDetail}>
                 {project.name}
-              </Link>
             </div>
           </div>
           <div className='summary-links'>
