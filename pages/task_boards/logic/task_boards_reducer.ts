@@ -12,6 +12,7 @@ import {
   createdTaskStatus,
   addTask,
   setTasksToTaskStatus,
+  deletedTaskStatus,
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
@@ -190,6 +191,17 @@ export  const taskBoardsReducer = (state = initialState, action) => {
       return {
         ...state,
         taskStatus: updatedTaskStatuses,
+      };
+    case taskBoardsActionType.DELETE_TASK_STATUS:
+      const deleteStatusID = action?.payload;
+      const status = delete state.taskStatus?.[deleteStatusID];
+
+      // tslint:disable-next-line:no-console
+      console.log(status);
+
+      return {
+        ...state,
+        // taskStatus: status,
       };
     default:
       return state;
@@ -474,5 +486,37 @@ export const updateTaskById = ({
   } catch (error) {
     const errorNotification = returnNotification({ type: 'failed' });
     await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+  }
+};
+
+export const deletedTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    if (!token || !taskStatusID) {
+      return;
+    }
+
+    const res = await axios({
+      url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'DELETE',
+    });
+
+    if (!res.data) {
+      await dispatch(pushNewNotifications({ variant: 'error' , message: 'delete status unsuccess!' }));
+
+      return;
+    }
+
+    await dispatch(deletedTaskStatus(taskStatusID));
+    await dispatch(pushNewNotifications({ variant: 'error' , message: 'delete status successfully!' }));
+  } catch (error) {
+    const notification = notificationsType[error?.response?.status] || 'Something went wrong';
+    await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
+
   }
 };

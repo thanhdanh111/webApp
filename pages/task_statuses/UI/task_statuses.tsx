@@ -1,6 +1,5 @@
 import { Container, Link, Typography } from '@material-ui/core';
 import React, { useEffect, useRef } from 'react';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import TasksUI from '../../tasks/UI/tasks';
 import { RootStateOrAny,  useDispatch,  useSelector } from 'react-redux';
@@ -11,6 +10,7 @@ import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 import TaskNew from 'pages/tasks/UI/task_new';
 import { setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
+import ActionTaskStatusUI from './action_task_station';
 
 interface InitProps {
   taskStatusID: string;
@@ -75,7 +75,7 @@ const TaskStatusUI = (props: InitProps) => {
                   <Typography className='quality-task'>{taskIDs?.length}</Typography>
               </Container>
               <Container className='status-right'>
-                  <Link className='actions-status more-actions'><MoreHorizIcon/></Link>
+                  <ActionTaskStatusUI taskStatusID={taskStatusID} />
                   <Link
                     className='actions-status add-action'
                     onClick={() => dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''))}

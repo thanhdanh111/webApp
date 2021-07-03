@@ -100,3 +100,10 @@ export const setTasksToTaskStatus = (data: SetTasksToTaskStatus) => {
     type: taskBoardsActionType.SET_TASKS_TO_TASK_STATUS,
   };
 };
+
+export const deletedTaskStatus = (taskStatusID) => {
+  return {
+    type: taskBoardsActionType.DELETE_TASK_STATUS,
+    payload: taskStatusID,
+  };
+};
