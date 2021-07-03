@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { BoardsPage } from 'helpers/type';
+import { BoardsPage, Card } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction, updateCards } from './board_action';
 import { boardsActionType } from './board_type_action';
@@ -14,7 +14,10 @@ export enum NotificationTypes {
   succeedDeleteBoard = 'Delete FlowChart Successfully',
   failedDeleteBoard = 'Failed Delete FlowChart',
 }
-
+export enum Shape {
+  PROCESS = 'PROCESS',
+  DECISION = 'DECISION',
+}
 const initialState: BoardsPage = {
   boards: [],
   selectedBoard: {
@@ -23,19 +26,28 @@ const initialState: BoardsPage = {
     companyID: '',
     projectID: '',
   },
+  cards: [],
+  selectedCard: {
+    _id: '',
+    boardID: '',
+    companyID: '',
+    textContent: '',
+    shape: Shape.PROCESS,
+  },
 };
-const initialState: CardsValue = {
-  selectionReact: undefined,
-  shape: '',
-  selectedBoard: {},
-  selectedCard: {},
-  shouldCallApi: true,
-  openShare: false,
-  needDisplay: false,
+// const initialState: Card = {
+//   selectionReact: undefined,
+//   textContent: '',
+//   shape: '',
+//   selectedBoard: {},
+//   selectedCard: {},
+//   shouldCallApi: true,
+//   openShare: false,
+//   needDisplay: false,
 
-};
+// };
 
-export type CardsValueType = CardsValue;
+export type CardsValueType = Card;
 
 export const boardsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -227,6 +239,7 @@ export const createNewCard = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const  {
+      textContent,
       shape,
       selectedBoard,
       selectedCard,
@@ -241,11 +254,12 @@ export const createNewCard = () => async (dispatch, getState) => {
       return ;
     }
 
-    dispatch(updateCards({ loading: true }));
+    dispatch(updateCards());
 
     const rawBlocks = convertToRaw(editorState?.getCurrentContent());
     const res = await axios.post(`${config.BASE_URL}/boards/${boardID}/cards`,
       {
+        textContent,
         shape,
         companyID,
         leftTo: rawBlocks?.blocks,
@@ -264,6 +278,7 @@ export const createNewCard = () => async (dispatch, getState) => {
     const newBoardsMap = boardsMap;
 
     newBoardsMap?.[boardID].cards?.push({
+      textContent: res?.data.textContent,
       shape: res?.data?.shape,
       _id: res?.data?._id,
       leftTo: res?.data?.leftTo,

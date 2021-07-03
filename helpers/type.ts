@@ -258,6 +258,8 @@ export interface Board {
 export interface BoardsPage {
   boards: Board[];
   selectedBoard: Board;
+  cards: Card[];
+  selectedCard: Card;
 }
 
 export interface ConnectToData {

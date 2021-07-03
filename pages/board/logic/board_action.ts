@@ -40,6 +40,7 @@ export const deleteBoardAction = (id: string) => {
 interface UpdateCards {
   selectedBoard?: Board;
   selectedCard?: Card;
+  textContent?: string;
   shape?: Shape;
   shouldCallApi?: boolean;
   openShare?: boolean;
