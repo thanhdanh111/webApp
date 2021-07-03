@@ -1,5 +1,5 @@
 import { Button, Menu, MenuItem, Typography, Avatar, Grid, Divider } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Logout } from 'pages/login/logic/login_actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -12,26 +12,10 @@ import UserAvatar from '@components/user_avatar/info_user';
 import { deleteBrowserToken } from 'helpers/fcm';
 import BusinessIcon from '@material-ui/icons/Business';
 
-type Token = string | null;
-
 const DropDown = () => {
   const userInfo = useSelector((state: RootState) => state?.userInfo);
   const dispatch = useDispatch();
   const router = useRouter();
-
-  useEffect(() => {
-    let token: Token = window.location.search;
-    if (!token && typeof localStorage !== 'undefined') {
-      token = localStorage.getItem('access_token');
-    }
-    if (!token) {
-      onPushToPage('login');
-
-      return;
-    }
-    const accessToken = token.replace('?token=', '');
-    localStorage.setItem('access_token', accessToken);
-  }, []);
 
   async function logUserOut() {
     dispatch(Logout());
@@ -99,7 +83,7 @@ const DropDown = () => {
 
   const InfoCompany = () => {
     const currentCompany = userInfo?.currentCompany;
-    if (!currentCompany?.name || !currentCompany?.emails?.length) {
+    if (!currentCompany?.name) {
       return <div />;
     }
 
@@ -112,7 +96,7 @@ const DropDown = () => {
         </Grid>
         <Grid item xs justify='center'>
           <Typography >{currentCompany.name}</Typography>
-          <Typography >{currentCompany.emails?.[0]}</Typography>
+          {!currentCompany?.emails?.length ? <div /> : <Typography >{currentCompany.emails?.[0]}</Typography>}
         </Grid>
       </Grid>
     );

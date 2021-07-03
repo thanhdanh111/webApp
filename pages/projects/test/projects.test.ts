@@ -59,7 +59,7 @@ describe('Projects page', () => {
     await page.waitForSelector('.projects');
 
     await page.waitForSelector('.text-nodejs');
-    await page.click('.text-nodejs > a');
+    await page.click('.text-nodejs');
 
     await page.waitForSelector('.name-project');
 

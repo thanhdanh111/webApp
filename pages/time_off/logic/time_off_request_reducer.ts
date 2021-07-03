@@ -16,6 +16,7 @@ const initialTimeOffRequestState: TimeOffRequestValue = {
   timeOffRequestNotifications: [],
 };
 
+// tslint:disable-next-line: cyclomatic-complexity
 const timeOffRequestReducer = (state = initialTimeOffRequestState, action) => {
   switch (action.type) {
     case TimeOffRequestActionTypes.UpdateTimeOffCompaniesToRequest:

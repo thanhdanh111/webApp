@@ -175,7 +175,7 @@ export const updateNameFlowChartMiddleWare = (boardID: string, name: string) => 
     const userInfo = getState()?.userInfo;
     const companyID = userInfo?.currentCompany?._id;
 
-    if (!token || !companyID || !name || !boardID) {
+    if (!companyID || !name || !boardID) {
 
       dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
 
@@ -247,7 +247,7 @@ export const createNewCard = () => async (dispatch, getState) => {
     const companyID = selectedBoard?.companyID?._id ?? selectedBoard?.companyID;
     const boardID = selectedBoard?._id;
 
-    if (!token || !companyID || !boardID || !shape || !selectedCard._id) {
+    if (!companyID || !boardID || !shape || !selectedCard._id) {
 
       dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
 

@@ -1,21 +1,19 @@
 import axios from 'axios';
 import { search, setLoading, pagination, hasNoNotification, getNotificationsAction, updateUnreadNotifications } from './users_actions';
-import { UsersData, HeadCell, ParamGetUser, Data, UserAccess } from '../../../helpers/type';
+import { UsersData, HeadCell, ParamGetUser, Data, UserAccess, Access } from '../../../helpers/type';
 import { config } from 'helpers/get_config';
 import { useEffect, useState } from 'react';
-import { getDepartmentsName } from '../../../helpers/get_department_name';
-import { getRole } from '../../../helpers/get_role';
 import { usersAction } from './users_type_action';
+import { rolesRender } from 'constants/roles';
+import { getRenderingRolesForUsersPage } from './users_rendering_roles';
 
 export const headCells: HeadCell[] = [
-  { id: 'userName', numeric: false, disablePadding: true, label: 'UserName' },
-  { id: 'departments', numeric: false, disablePadding: true, label: 'Departments' },
-  { id: 'activeRoles', numeric: false, disablePadding: true, label: 'ActiveRoles' },
-  { id: 'pendingRoles', numeric: false, disablePadding: true, label: 'PendingRoles' },
-  { id: 'action', numeric: false, disablePadding: true, label: 'Action' },
+  { id: 'userName', numeric: false, disablePadding: true, label: 'User Name' },
+  { id: 'companyRoleRender', numeric: false, disablePadding: true, label: 'Company Role' },
+  { id: 'stringPendingRoles', numeric: false, disablePadding: true, label: 'Pending Roles' },
 ];
 
-export const actionList: string[] = ['Edit', 'Delete'];
+export const actionList: string[] = [];
 
 const initialState: UsersData = {
   cursor: '',
@@ -31,7 +29,7 @@ const initialState: UsersData = {
   loadingList: true,
   totalCount: 0,
   status: 'string',
-  userLimit: 5,
+  userLimit: 10,
   notificationLimit: 10,
   selectNotification: {
     _id: '',
@@ -46,6 +44,9 @@ const initialState: UsersData = {
     companyID: '',
     targetID: '',
   },
+  editingUserInfo: {},
+  onRemovingUser: false,
+  isLoading: false,
 };
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -57,10 +58,10 @@ export const usersReducer = (state = initialState, action) => {
         loadingList: action.payload,
       };
     case usersAction.PAGINATION:
-      const listUser = [...state.list, ...action.payload.list];
       let cursor = action.payload.cursor;
+      const listNewUsers = action.payload.listNewUsers;
 
-      if (listUser >= action.payload.totalCount) {
+      if (listNewUsers?.length >= action.payload.totalCount) {
         cursor = 'END';
       }
 
@@ -68,7 +69,7 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         cursor,
         totalCount: action.payload.totalCount,
-        list: [...state.list, ...action.payload.list],
+        list: [...state.list, ...listNewUsers],
       };
     case usersAction.SEARCH:
       let newCursor = action.payload.cursor;
@@ -80,7 +81,7 @@ export const usersReducer = (state = initialState, action) => {
         ...state,
         cursor: newCursor,
         totalCount: action.payload.totalCount,
-        listSearch: action.payload.list,
+        listSearch: action.payload.listSearchUsers,
       };
     case usersAction.HAS_NO_NOTIFICATION:
       return {
@@ -128,6 +129,11 @@ export const usersReducer = (state = initialState, action) => {
           totalCount: state.notifications.totalCount + 1,
         },
       };
+    case usersAction.UPDATE_USERS_REDUCER:
+      return {
+        ...state,
+        ...action.data,
+      };
     default:
       return state;
   }
@@ -139,6 +145,7 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
     const token = localStorage.getItem('access_token');
     const cursor = getState().users?.cursor;
     const userLimit = getState().users?.userLimit;
+    const accountUserID = userInfo?.userID;
     const companyID = userInfo?.currentCompany?._id;
 
     if (cursor === 'END' || !token || !companyID) {
@@ -154,15 +161,22 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
        });
 
     if (res.data.totalCount === 0){
-      await dispatch(setLoading(true));
+      dispatch(setLoading(true));
 
       return;
     }
 
-    await dispatch(pagination(res.data));
-    await dispatch(setLoading(false));
+    const listNewUsers = renderData({
+      accountUserID,
+      users: res?.data?.list,
+      rolesInCompany: userInfo?.rolesInCompany,
+      rolesInDepartments: userInfo?.rolesInDepartments,
+    });
+
+    dispatch(pagination({ listNewUsers, ...res.data }));
+    dispatch(setLoading(false));
   } catch (error) {
-    throw error;
+    dispatch(setLoading(false));
   }
 };
 
@@ -171,10 +185,13 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
     const userInfo = getState()?.userInfo;
     const token = localStorage.getItem('access_token');
     const companyID = userInfo?.currentCompany?._id;
+    const accountUserID = userInfo?.userID;
 
     if (!token || !companyID) {
       return;
     }
+
+    dispatch(setLoading(true));
 
     const params: ParamGetUser = {
       companyID,
@@ -190,10 +207,17 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
        },
      });
 
-    await dispatch(search(res.data));
-    await dispatch(setLoading(false));
+    const listSearchUsers = renderData({
+      accountUserID,
+      users: res?.data?.list,
+      rolesInCompany: userInfo?.rolesInCompany,
+      rolesInDepartments: userInfo?.rolesInDepartments,
+    });
+
+    dispatch(search({ listSearchUsers, ...res.data }));
+    dispatch(setLoading(false));
   } catch (error) {
-    throw error;
+    dispatch(setLoading(false));
   }
 };
 
@@ -218,35 +242,57 @@ function createData(
   id: string,
   userName: string,
   user: UserAccess,
-  departments: string[],
-  activeRoles: string[],
-  pendingRoles: string[],
+  companyRole: string,
+  companyRoleRender,
+  departmentRoles: Access[],
+  stringPendingRoles: string[],
+  companyRoleCouldDelete,
 ): Data {
-  return { id, userName, user, departments, activeRoles, pendingRoles };
+
+  return {
+    id,
+    userName,
+    user,
+    departmentRoles,
+    companyRole,
+    companyRoleRender,
+    stringPendingRoles,
+    companyRoleCouldDelete,
+  };
 }
 
-export const renderData = (users: UserAccess[]) => {
-  return users.map((each: UserAccess) => {
-    const departments = getDepartmentsName(each.departmentID);
-    const roles = getRole(each.accesses);
-    const fullName = `${each.userID.firstName} ${each.userID.lastName}`;
-    const id = each.userID._id;
-    const user = each;
+export const renderData = ({
+  users,
+  accountUserID,
+  rolesInCompany,
+  rolesInDepartments,
+}) => {
+  return users.map((user: UserAccess) => {
+    const exceptDeleteMyself = accountUserID === user.userID._id;
+    const roles = getRenderingRolesForUsersPage({
+      exceptDeleteMyself,
+      rolesInCompany,
+      rolesInDepartments,
+      accesses: user.accesses,
+    });
+    const fullName = user?.userID?.status === 'INACTIVE' ? 'Inactive User' : `${user.userID.firstName} ${user.userID.lastName}`;
+    const id = user._id;
 
     return createData(
       id,
       fullName,
       user,
-      departments || [],
-      roles?.activeRoles || [],
-      roles?.pendingRoles || [],
+      roles?.companyRole?.role,
+      rolesRender[roles?.companyRole?.role],
+      roles?.departmentRoles || [],
+      roles?.stringPendingRoles || [],
+      roles?.companyRole?.companyRoleCouldDelete,
     );
   });
 };
 
 export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
-    await dispatch(setLoading(true));
 
     const userInfo = getState()?.userInfo;
     const receiverID = userInfo?.userID;
@@ -274,17 +320,17 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
       },
     });
 
-    if (!res.data.totalCount || !res.data.list || !res.data.list.length) {
+    if (!res.data.totalCount) {
       await dispatch(hasNoNotification());
-      await dispatch(setLoading(true));
+      await dispatch(setLoading(false));
 
       return;
     }
 
     await dispatch(getNotificationsAction(res.data));
-    await dispatch(setLoading(true));
+    await dispatch(setLoading(false));
   } catch (error) {
-    throw error;
+    await dispatch(setLoading(false));
   }
 };
 

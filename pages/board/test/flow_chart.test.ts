@@ -30,6 +30,7 @@ beforeAll(async () => {
 
 describe('Board Page', () => {
 
+<<<<<<< HEAD:pages/board/test/flow_chart.test.ts
   test('Test UI list board page successfully after login', async () => {
     await page.goto('http://localhost:5000/board');
     await page.waitForSelector('.flowchart');
@@ -49,6 +50,21 @@ describe('Board Page', () => {
 
     const createFlowChart = await page.screenshot();
     expect(createFlowChart).toMatchImageSnapshot();
+=======
+  test('Test UI list users page successfully after login', async () => {
+    await page.goto('http://localhost:5000/users');
+    await page.waitFor(50000);
+    await page.waitForSelector('.users');
+
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
+    await page.waitForSelector('.table-content');
+    await page.waitForSelector('.table-body');
+    await page.waitForSelector('.checkbox-cell');
+    await page.waitForSelector('.btn-expanded');
+    await page.click('.btn-expanded');
+    await page.waitFor(5000);
+>>>>>>> 9377e61644e38e8c5b053ce25ccc10de9eb83330:pages/users/test/user.test.ts
 
   });
 
