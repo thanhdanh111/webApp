@@ -481,7 +481,7 @@ export const deletedTaskThunkAction = (taskID: Task) => async (dispatch, getStat
   try {
     const token = localStorage.getItem('access_token');
     const userInfo = getState()?.userInfo;
-    const taskStatuses = getState()?.taskBoards?.taskStatus;
+    const taskStatuses: { [key: string]: TaskStatus } = getState()?.taskBoards?.taskStatus;
     const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !taskID || !companyID) {
@@ -498,7 +498,7 @@ export const deletedTaskThunkAction = (taskID: Task) => async (dispatch, getStat
     });
 
     const listTasks: Task[] =
-    taskStatuses[taskID?.taskStatusID?._id].taskIDs.filter((item) => item?._id !== taskID?._id);
+    taskStatuses[taskID?.taskStatusID?._id ?? '']?.taskIDs?.filter((item) => item?._id !== taskID?._id);
     const taskStatus = taskID?.taskStatusID?._id as string;
 
     await dispatch(updateTaskStatusById({ taskStatusID: taskStatus, tasks: listTasks }));
