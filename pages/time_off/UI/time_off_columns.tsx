@@ -6,7 +6,7 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { updateOnConfirmDialog, updateOptionState } from '../logic/time_off_actions';
 import BaseTable from '@components/table/table';
 import { HeadCell } from 'helpers/type';
-import { ConfirmDialog } from './confirm_dialog';
+import { ConfirmDialog } from '../../../components/confirm_dialog/confirm_dialog';
 import { RootState } from 'redux/reducers_registration';
 import { TimeOffValueType } from '../logic/time_off_interface';
 import { changeStatusOfTimeOff } from '../logic/time_off_apis';
@@ -23,7 +23,7 @@ export const headCells: HeadCell[] = [
   { id: 'action', numeric: false, disablePadding: true, label: 'Action' },
 ];
 
-export const actionList: string[] = ['accept', 'reject', 'cancel'];
+export const actionList: string[] = ['accept', 'reject'];
 
 export const individualActions: string[] = ['cancel'];
 
@@ -105,8 +105,8 @@ const TimeOffColumns = ({
           fetchData={fetchData}
           redButtonName='REJECT'
           actionFunc={actionFunc}
+          fixedHeightInfiniteScroll={500}
           baseTableName={name}
-          individualActions={individualActions}
           loadingIndex={loadingIndex}
           loadingStateName={loadingOptionStateName}
           indexLoading={indexLoading}

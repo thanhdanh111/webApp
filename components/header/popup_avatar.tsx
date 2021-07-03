@@ -11,8 +11,7 @@ import { RootState } from 'redux/reducers_registration';
 import UserAvatar from '@components/user_avatar/info_user';
 import { deleteBrowserToken } from 'helpers/fcm';
 import BusinessIcon from '@material-ui/icons/Business';
-
-type Token = string | null;
+import { Token } from 'helpers/type';
 
 const DropDown = () => {
   const userInfo = useSelector((state: RootState) => state?.userInfo);
@@ -99,7 +98,7 @@ const DropDown = () => {
 
   const InfoCompany = () => {
     const currentCompany = userInfo?.currentCompany;
-    if (!currentCompany?.name || !currentCompany?.emails?.length) {
+    if (!currentCompany?.name) {
       return <div />;
     }
 
@@ -112,7 +111,7 @@ const DropDown = () => {
         </Grid>
         <Grid item xs justify='center'>
           <Typography >{currentCompany.name}</Typography>
-          <Typography >{currentCompany.emails?.[0]}</Typography>
+          {!currentCompany?.emails?.length ? <div /> : <Typography >{currentCompany.emails?.[0]}</Typography>}
         </Grid>
       </Grid>
     );

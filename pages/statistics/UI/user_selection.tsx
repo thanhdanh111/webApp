@@ -1,9 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import {
-  getPaginationThunkAction,
-  renderData,
-} from '../../users/logic/users_reducer';
+import { getPaginationThunkAction } from '../../users/logic/users_reducer';
 import { Data } from '../../../helpers/type';
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { setUserID } from '../logic/statistics_actions';
@@ -17,9 +14,6 @@ const UserSelection: FunctionComponent = () => {
   useEffect(() => {
     fetchDataUsers();
   }, []);
-
-  const usersList = users && users.list && Array.isArray(users.list)
-    ? renderData(users.list) : [];
 
   const fetchDataUsers = () => {
     dispatch(getPaginationThunkAction());
@@ -63,7 +57,7 @@ const UserSelection: FunctionComponent = () => {
         onChange={handleChange}
         className='select-list-user'
       >
-        {getOptions(usersList)}
+        {getOptions(users?.list)}
         {getMore(cursor)}
         <MenuItem value='all users' className='select-item'>All</MenuItem>
       </Select>

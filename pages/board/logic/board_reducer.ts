@@ -151,7 +151,7 @@ export const updateNameFlowChartMiddleWare = (boardID: string, name: string) => 
     const userInfo = getState()?.userInfo;
     const companyID = userInfo?.currentCompany?._id;
 
-    if (!token || !companyID || !name || !boardID) {
+    if (!companyID || !name || !boardID) {
 
       dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
 

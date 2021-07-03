@@ -2,10 +2,10 @@ import { Box, Button, Container, Grid, Link, Typography } from '@material-ui/cor
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { config } from 'helpers/get_config';
-import { GetUserDataThunkAction } from '../logic/login_reducer';
 import * as qs from 'query-string';
 import { useRouter } from 'next/router';
 import { DisappearedLoading } from 'react-loadingg';
+import { GetUserDataThunkAction } from '../logic/login_reducer';
 const redirectUrl = `${config.BASE_URL}/auth/google/callback&state=${config.STATE}`
   .split(':')
   .join('%3A')
@@ -25,8 +25,7 @@ const LoginUi: FunctionComponent = () => {
     const localAccess = localStorage.getItem('access_token');
 
     if (localAccess) {
-      await router.replace('/home', '/home.html');
-      setIsLogin(false);
+      void router.replace('/home', '/home.html');
 
       return;
     }
@@ -47,7 +46,7 @@ const LoginUi: FunctionComponent = () => {
 
     await Promise.resolve(dispatch(GetUserDataThunkAction(accessToken)));
 
-    await router.replace('/home', '/home.html');
+    void router.replace('/home', '/home.html');
 
     setIsLogin(false);
   }

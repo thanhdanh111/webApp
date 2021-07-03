@@ -14,6 +14,8 @@ import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import Auth from '../components/auth/auth';
 import Layout from '@components/pages_layout/pages_layout';
+import { LocalizationProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
 
 if (['production'].includes(config.ENV)) {
   Sentry.init({
@@ -59,6 +61,7 @@ function myApp({ Component, pageProps, store }) {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={DateFnsUtils}>
         <NoSsr>
           <SnackbarProvider
             ref={notistackRef}
@@ -73,13 +76,14 @@ function myApp({ Component, pageProps, store }) {
             }}
             maxSnack={100}
           >
-            <Auth publicPages={publicPages}>
+            <Auth publicPages={publicPages} >
               <Layout withoutPaths={withoutLayoutPaths}>
                 <Component {...pageProps} />
               </Layout>
             </Auth>
           </SnackbarProvider>
         </NoSsr>
+        </LocalizationProvider>
       </ThemeProvider>
     </Provider>
   );

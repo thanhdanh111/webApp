@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import InviteMembersUI from './UI/invite_members';
 import ChooseCompaniesUI from './UI/choose_companies';
-import { getUserCompaniesApi } from './logic/invite_apis';
+import { getDepartmentsOfCompany } from './logic/invite_apis';
 import { InviteStateProps } from './logic/invite_interface';
 import { RootState } from 'redux/reducers_registration';
 
@@ -45,12 +45,13 @@ const InviteMembersPage: FunctionComponent = () => {
     currentPage,
     inviteCompany,
   }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
+  const access = useSelector((state: RootState) => state?.userInfo?.access);
 
   const dispatch = useDispatch();
 
   useEffect(()  =>  {
-    dispatch(getUserCompaniesApi());
-  }, []);
+    dispatch(getDepartmentsOfCompany());
+  }, [access]);
 
   return (
     <>

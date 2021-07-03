@@ -10,8 +10,11 @@ interface ConfirmDialog {
   handleClose: () => void;
   handleYes?: () => void;
   handleNo?: () => void;
-  status: string;
+  status?: string;
   onOpen: boolean;
+  title?: string;
+  warning?: string;
+  loading?: boolean;
 }
 
 enum Action {
@@ -19,11 +22,20 @@ enum Action {
   REJECTED = 'REJECT',
   CONTINUE = 'CONTINUE',
   CANCEL = 'CANCEL',
+  REMOVE = 'REMOVE',
 }
 
 type ConfirmDialogType = ConfirmDialog;
 
-export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({ onOpen, status, handleClose, handleYes }) => {
+export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({
+  onOpen,
+  status = 'CONTINUE',
+  handleClose,
+  handleYes,
+  title,
+  warning,
+  loading = false,
+}) => {
 
   return (
       <Dialog
@@ -35,7 +47,7 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({ onOpen, st
         <DialogTitle>
           <div>
             <Typography style={{ fontWeight: 600 }} variant='subtitle1' color='primary' >
-              Confirm
+              {title ?? 'Confirm'}
             </Typography>
             <IconButton
               onClick={handleClose}
@@ -48,14 +60,23 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({ onOpen, st
         </DialogTitle>
         <DialogContent>
           <Typography variant='h6' gutterBottom>
-              {`Are you sure you want to ${Action[status]}?`}
+              {warning ?? `Are you sure you want to ${Action[status]}?`}
           </Typography>
         </DialogContent>
         <DialogActions className='confirm-dialog-actions'>
-          <Button className='confirm-dialog--yes-btn' onClick={handleYes} autoFocus>
+          <Button
+            disabled={loading}
+            className={loading ? '' : 'confirm-dialog--yes-btn'}
+            onClick={handleYes}
+            autoFocus
+          >
             <DoneIcon />
           </Button>
-          <Button onClick={handleClose} className='confirm-dialog--no-btn'>
+          <Button
+            disabled={loading}
+            onClick={handleClose}
+            className={loading ? '' : 'confirm-dialog--no-btn'}
+          >
             <CloseIcon />
           </Button>
         </DialogActions>

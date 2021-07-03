@@ -20,13 +20,7 @@ export const getDepartmentsIntoCompanies = ({ departments }) => {
   let indexForNewTempCompany = 0;
 
   departments.forEach((department) => {
-    const invalidCompany =
-      !department?.companyID ||
-      !department?.companyID?._id ||
-      !department?.companyID?.name;
-    const invalidDeparment = !department?.name || !department?._id;
-
-    if (invalidCompany || invalidDeparment) {
+    if (!department || !department?.companyID) {
       return;
     }
 
