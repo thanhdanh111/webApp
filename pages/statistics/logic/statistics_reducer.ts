@@ -76,7 +76,7 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
       }
 
       if (selectedUserID) {
-        requestUser = selectedUserID;
+        requestUser = selectedUserID?.userID;
       }
 
       const param = {
