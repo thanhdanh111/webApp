@@ -19,10 +19,11 @@ const actions = {
 
 interface InitialProps {
   taskStatusID: string;
+  setRenameStatus: () => void;
 }
 
 const ActionTaskStatusUI = (props: InitialProps) => {
-  const { taskStatusID }: InitialProps = props;
+  const { taskStatusID, setRenameStatus }: InitialProps = props;
   const [open, setOpen] = useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const dispatch = useDispatch();
@@ -36,11 +37,13 @@ const ActionTaskStatusUI = (props: InitialProps) => {
     dispatch(deletedTaskStatusThunkAction(taskStatusID));
   };
 
+  // const setRenameStatus = () => {
+  //   dispatch(setRenamingStatus(true));
+  // };
+
   const actionFunc = {
     delete: handleRemoveStatus,
-    rename: () => {
-      //
-    },
+    rename: setRenameStatus,
   };
 
   function handleReturnActionsList(action, index) {

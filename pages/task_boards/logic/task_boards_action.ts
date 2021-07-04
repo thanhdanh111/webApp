@@ -1,4 +1,4 @@
-import { SetTasksToTaskStatus } from 'helpers/type';
+import { SetTasksToTaskStatus, TaskStatus } from 'helpers/type';
 import { taskBoardsActionType } from './task_board_action_type';
 
 export const setFilterTaskByUserAction = (res: boolean) => {
@@ -105,5 +105,19 @@ export const deletedTaskStatus = (taskStatusID) => {
   return {
     type: taskBoardsActionType.DELETE_TASK_STATUS,
     payload: taskStatusID,
+  };
+};
+
+export const renameTaskStatus = (taskStatus: TaskStatus) => {
+  return {
+    type: taskBoardsActionType.RENAME_TASK_STATUS,
+    payload: taskStatus,
+  };
+};
+
+export const setRenamingStatus = (renaming: boolean) => {
+  return {
+    type: taskBoardsActionType.SET_RENAMING,
+    payload: renaming,
   };
 };

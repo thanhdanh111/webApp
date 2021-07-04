@@ -9,8 +9,9 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 import TaskNew from 'pages/tasks/UI/task_new';
-import { setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
-import ActionTaskStatusUI from './action_task_station';
+import { setRenamingStatus, setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
+import ActionTaskStatusUI from './action_task_status';
+import RenameStatusUI from './ui_rename_task_status';
 
 interface InitProps {
   taskStatusID: string;
@@ -23,6 +24,7 @@ const TaskStatusUI = (props: InitProps) => {
     taskStatus,
     loading,
     currentTaskStatus,
+    renaming,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const { userID }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const dispatch = useDispatch();
@@ -60,6 +62,10 @@ const TaskStatusUI = (props: InitProps) => {
       newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
+    const setRenameStatus = () => {
+      dispatch(setRenamingStatus(true));
+    };
+
     return (
       <>
       <Droppable droppableId={taskStatus[taskStatusID]?._id} type='TASK_STATUS'>
@@ -71,11 +77,17 @@ const TaskStatusUI = (props: InitProps) => {
           >
             <div className={`status ${style}`}>
               <Container className='status-left'>
-                  <Typography className='name-status' ref={newTaskRef}>{taskStatus[taskStatusID]?.title}</Typography>
-                  <Typography className='quality-task'>{taskIDs?.length}</Typography>
+                  {/* <Typography className='name-status' ref={newTaskRef}>{taskStatus[taskStatusID]?.title}</Typography> */}
+                  <RenameStatusUI
+                    taskStatusID={taskStatus[taskStatusID]}
+                    renaming={renaming}
+                  />
               </Container>
               <Container className='status-right'>
-                  <ActionTaskStatusUI taskStatusID={taskStatusID} />
+                  <ActionTaskStatusUI
+                    taskStatusID={taskStatusID}
+                    setRenameStatus={setRenameStatus}
+                  />
                   <Link
                     className='actions-status add-action'
                     onClick={() => dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''))}
