@@ -37,10 +37,6 @@ const ActionTaskStatusUI = (props: InitialProps) => {
     dispatch(deletedTaskStatusThunkAction(taskStatusID));
   };
 
-  // const setRenameStatus = () => {
-  //   dispatch(setRenamingStatus(true));
-  // };
-
   const actionFunc = {
     delete: handleRemoveStatus,
     rename: setRenameStatus,
@@ -51,6 +47,7 @@ const ActionTaskStatusUI = (props: InitialProps) => {
       onClick={() => actionFunc?.[action]?.()}
       component='div'
       key={`action-in-users-page-${index}`}
+      className={`${action}-status-menu-item`}
     >
       <ListItemIcon style={{ minWidth: '30px' }}>
         {actions[action]?.icon}
@@ -74,10 +71,11 @@ const ActionTaskStatusUI = (props: InitialProps) => {
         aria-controls={open ? 'menu-list-grow' : undefined}
         aria-haspopup='true'
         onClick={handleToggle}
+        className='action-status-btn'
       >
         <MoreHorizIcon />
       </IconButton>
-      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition >
+      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition className='popper-action-status' >
         {({ TransitionProps }) => (
           <Grow
             {...TransitionProps}

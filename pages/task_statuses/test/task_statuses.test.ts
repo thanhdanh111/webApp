@@ -52,6 +52,25 @@ describe('Home page', () => {
 
     const addStatus = await page.screenshot();
     expect(addStatus).toMatchImageSnapshot();
+
+    await page.waitForSelector('.action-status-btn');
+    await page.click('.action-status-btn');
+
+    await page.waitForSelector('.popper-action-status');
+    await page.waitFor(5000);
+
+    const actionStatus = await page.screenshot();
+    expect(actionStatus).toMatchImageSnapshot();
+
+    await page.click('.rename-status-menu-item');
+
+    await page.waitForSelector('.add-status-input');
+    await page.waitFor(5000);
+
+    const actionRetitleStatus = await page.screenshot();
+    expect(actionRetitleStatus).toMatchImageSnapshot();
+
+
   });
 
 });

@@ -114,10 +114,3 @@ export const renameTaskStatus = (taskStatus: TaskStatus) => {
     payload: taskStatus,
   };
 };
-
-export const setRenamingStatus = (renaming: boolean) => {
-  return {
-    type: taskBoardsActionType.SET_RENAMING,
-    payload: renaming,
-  };
-};

@@ -194,41 +194,33 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         taskStatus: updatedTaskStatuses,
       };
     case taskBoardsActionType.DELETE_TASK_STATUS:
-      const deleteStatusID = action?.payload;
-      const status = delete state.taskStatus?.[deleteStatusID];
-
-      // tslint:disable-next-line:no-console
-      console.log(status);
-
-      return {
-        ...state,
-        // taskStatus: status,
-      };
-    case taskBoardsActionType.RENAME_TASK_STATUS:
       updatedTaskStatuses = state.taskStatus;
+      const deleteStatusID = action?.payload;
+      const status = delete updatedTaskStatuses?.[deleteStatusID];
 
-      let taskStatusRename = updatedTaskStatuses[action.payload?._id];
-
-      if (taskStatusRename) {
-        taskStatusRename = {
-          ...taskStatusRename,
-          title: action?.payload?.title,
-        };
-
-        updatedTaskStatuses = {
-          ...updatedTaskStatuses,
-          [action.payload?._id]: taskStatusRename,
-        };
+      if (!status) {
+        return;
       }
+
+      const updateStatusInTaskBoard = state?.currentTaskBoard?.taskStatusIDs?.filter((statusID) => statusID !== deleteStatusID);
 
       return {
         ...state,
         taskStatus: updatedTaskStatuses,
+        currentTaskBoard: {
+          ...state.currentTaskBoard,
+          taskStatusIDs: updateStatusInTaskBoard,
+        },
       };
-    case taskBoardsActionType.SET_RENAMING:
+    case taskBoardsActionType.RENAME_TASK_STATUS:
+      updatedTaskStatuses = {
+        ...updatedTaskStatuses,
+        [action.payload?._id]: action.payload,
+      };
+
       return {
         ...state,
-        renaming: action?.payload,
+        taskStatus: updatedTaskStatuses,
       };
     default:
       return state;
@@ -540,7 +532,7 @@ export const deletedTaskStatusThunkAction = (taskStatusID) => async (dispatch) =
     }
 
     await dispatch(deletedTaskStatus(taskStatusID));
-    await dispatch(pushNewNotifications({ variant: 'error' , message: 'delete status successfully!' }));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'delete status successfully!' }));
   } catch (error) {
     const notification = notificationsType[error?.response?.status] || 'Something went wrong';
     await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
@@ -568,7 +560,7 @@ export const renameTaskStatusThunkAction = (rename: string, taskStatusID) => asy
     });
 
     await dispatch(renameTaskStatus(res.data));
-    await dispatch(pushNewNotifications({ variant: 'error' , message: 'rename status successfully!' }));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'rename status successfully!' }));
   } catch (error) {
     const notification = notificationsType[error?.response?.status] || 'Something went wrong';
     await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));

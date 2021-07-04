@@ -1,5 +1,5 @@
 import { Container, Link, Typography } from '@material-ui/core';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import TasksUI from '../../tasks/UI/tasks';
 import { RootStateOrAny,  useDispatch,  useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 import TaskNew from 'pages/tasks/UI/task_new';
-import { setRenamingStatus, setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
+import { setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
 import ActionTaskStatusUI from './action_task_status';
 import RenameStatusUI from './ui_rename_task_status';
 
@@ -24,16 +24,20 @@ const TaskStatusUI = (props: InitProps) => {
     taskStatus,
     loading,
     currentTaskStatus,
-    renaming,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const { userID }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const dispatch = useDispatch();
   const newTaskRef = useRef<HTMLTitleElement>(null);
   const style = taskStatus && taskStatus[taskStatusID]?.title?.split(' ').join('-').toLowerCase();
+  const [retitling, setRetitling] = useState(false);
 
   useEffect(() => {
     dispatch(getTaskStatusThunkAction(taskStatusID));
   }, []);
+
+  const setRetitleStatus = () => {
+    setRetitling(!retitling);
+  };
 
   const TaskStatusContent = () => {
     let taskIDs = taskStatus[taskStatusID]?.taskIDs;
@@ -62,10 +66,6 @@ const TaskStatusUI = (props: InitProps) => {
       newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
-    const setRenameStatus = () => {
-      dispatch(setRenamingStatus(true));
-    };
-
     return (
       <>
       <Droppable droppableId={taskStatus[taskStatusID]?._id} type='TASK_STATUS'>
@@ -77,16 +77,16 @@ const TaskStatusUI = (props: InitProps) => {
           >
             <div className={`status ${style}`}>
               <Container className='status-left'>
-                  {/* <Typography className='name-status' ref={newTaskRef}>{taskStatus[taskStatusID]?.title}</Typography> */}
                   <RenameStatusUI
                     taskStatusID={taskStatus[taskStatusID]}
-                    renaming={renaming}
+                    renaming={retitling}
+                    setRetitleStatus={setRetitleStatus}
                   />
               </Container>
               <Container className='status-right'>
                   <ActionTaskStatusUI
                     taskStatusID={taskStatusID}
-                    setRenameStatus={setRenameStatus}
+                    setRenameStatus={setRetitleStatus}
                   />
                   <Link
                     className='actions-status add-action'
