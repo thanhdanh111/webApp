@@ -8,13 +8,6 @@ export const setFilterTaskByUserAction = (res: boolean) => {
   };
 };
 
-export const getTasksStatusByID = (res: object) => {
-  return {
-    type: taskBoardsActionType.GET_TASK_STATUS_BY_ID,
-    payload: res,
-  };
-};
-
 export const getTaskStatus = (res: object) => {
   return {
     type: taskBoardsActionType.GET_TASK_STATUS,

@@ -45,6 +45,15 @@ describe('Home page', () => {
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
+
+    await page.waitForSelector('.footer-task');
+    await page.waitForSelector('.delete-task');
+    await page.click('.delete-task');
+    await page.waitFor(5000);
+
+    const deletedTaskImage = await page.screenshot();
+    expect(deletedTaskImage).toMatchImageSnapshot();
+
   });
 
 });

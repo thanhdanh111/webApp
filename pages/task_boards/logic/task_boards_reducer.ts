@@ -4,7 +4,6 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import {
   setLoading,
-  getTasksStatusByID,
   getTaskBoard,
   createdTaskBoard,
   setSelectedTaskBoard,
@@ -199,35 +198,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
 const notificationsType = {
   201: 'Created taskBoard to Company successfully',
   400: 'You have no taskBoard right now!',
-};
-
-export const getTaskStatusByIDThunkAction = (title, taskStatusID) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem('access_token');
-
-    if (!token || !taskStatusID) {
-      return;
-    }
-    // title is targetEntityName
-    const res = await axios.get(`${config.BASE_URL}/${title}/${taskStatusID}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-    if (!res.data) {
-      await dispatch(setLoading(false));
-
-      return;
-    }
-
-    await dispatch(getTasksStatusByID(res.data));
-    await dispatch(setLoading(false));
-  } catch (error) {
-    throw error;
-  }
 };
 
 export const getTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
