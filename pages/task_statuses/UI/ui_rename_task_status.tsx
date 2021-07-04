@@ -9,7 +9,7 @@ import { TaskStatus } from 'helpers/type';
 interface InitialProps {
   taskStatusID: TaskStatus;
   renaming?: boolean;
-  setRetitleStatus?: () => void;
+  setRetitleStatus: () => void;
 }
 
 const RenameStatusUI = (props: InitialProps) => {
@@ -18,9 +18,12 @@ const RenameStatusUI = (props: InitialProps) => {
     renaming,
     setRetitleStatus,
   }: InitialProps = props;
+
   const newTaskRef = useRef<HTMLTitleElement>(null);
-  const [retitle, setRetitle] = useState(taskStatusID?.title);
   const dispatch = useDispatch();
+
+  const [retitle, setRetitle] = useState('');
+  const [isChange, setIsChange] = useState(false);
 
   if (!renaming) {
     return (
@@ -32,17 +35,42 @@ const RenameStatusUI = (props: InitialProps) => {
   }
 
   const submitReTitleTaskStatus = () => {
+    if (retitle === taskStatusID?.title) {
+      return;
+    }
+
     dispatch(renameTaskStatusThunkAction(retitle, taskStatusID?._id));
+  };
+
+  const getDefaultValue = () => {
+    if (isChange) {
+      return retitle;
+    }
+
+    return taskStatusID?.title;
+  };
+
+  const handleChangeTitle = (event) => {
+    setRetitle(event.target.value);
+
+    setIsChange(true);
+  };
+
+  const handleCloseChange = () => {
+    setRetitleStatus();
+
+    setIsChange(false);
   };
 
   return (
     <div className='rename-status'>
       <input
+        type='text'
+        value={getDefaultValue()}
         className='add-status-input'
-        placeholder={taskStatusID?.title}
-        onChange={(event) => setRetitle(event.target.value)}
+        onChange={handleChangeTitle}
       />
-      <div className='close-create-status' onClick={setRetitleStatus}>
+      <div className='close-create-status' onClick={handleCloseChange}>
         <CloseIcon className='close-create-status-icon' />
       </div>
       <div className='submit-create-status' onClick={submitReTitleTaskStatus} >
