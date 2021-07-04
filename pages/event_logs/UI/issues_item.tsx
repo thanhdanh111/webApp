@@ -17,7 +17,7 @@ const IssuesItem: FunctionComponent<IssuesItemType> = (props: InitProps) => {
   const pathname = router.pathname;
 
   const onPushToPage = (url: string) => {
-    void router.push(`${pathname}/${url}`);
+    void router.push({ pathname: `${pathname}/detail`, query: { id: url } });
   };
 
   const showTime = time.toUTCString();
