@@ -497,9 +497,9 @@ export const deletedTaskThunkAction = (taskID: Task) => async (dispatch, getStat
       method: 'DELETE',
     });
 
-    const listTasks: Task[] =
-    taskStatuses[taskID?.taskStatusID?._id ?? '']?.taskIDs?.filter((item) => item?._id !== taskID?._id);
-    const taskStatus = taskID?.taskStatusID?._id as string;
+    const taskStatus = taskID?.taskStatusID as string;
+    const listTasks: Task[] = taskStatus ?
+    taskStatuses[taskStatus]?.taskIDs?.filter((item) => item?._id !== taskID?._id) : [];
 
     await dispatch(updateTaskStatusById({ taskStatusID: taskStatus, tasks: listTasks }));
     await dispatch(setLoading(false));
