@@ -4,7 +4,6 @@ import axios from 'axios';
 import { config } from 'helpers/get_config';
 import {
   setLoading,
-  getTasksStatusByID,
   getTaskBoard,
   createdTaskBoard,
   setSelectedTaskBoard,
@@ -34,7 +33,7 @@ export interface TaskBoardsType {
   currentTaskStatus: string;
   newTask: Task;
   usersAssigned: UserAssigned[];
-  renaming?: boolean;
+  templateTitleStatus?: string;
 }
 
 export enum NotificationTypes {
@@ -56,7 +55,7 @@ const initialState: TaskBoardsType = {
   currentTaskStatus: '',
   newTask: { title: '', _id: '' },
   usersAssigned: [],
-  renaming: false,
+  templateTitleStatus: '',
 };
 
 interface UpdateTaskStatus {
@@ -212,6 +211,11 @@ export  const taskBoardsReducer = (state = initialState, action) => {
           taskStatusIDs: updateStatusInTaskBoard,
         },
       };
+    case taskBoardsActionType.SET_TEMPLATE_TITLE_STATUS:
+      return {
+        ...state,
+        templateTitleStatus: action?.payload,
+      };
     case taskBoardsActionType.RENAME_TASK_STATUS:
       updatedTaskStatuses = {
         ...updatedTaskStatuses,
@@ -230,35 +234,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
 const notificationsType = {
   201: 'Created taskBoard to Company successfully',
   400: 'You have no taskBoard right now!',
-};
-
-export const getTaskStatusByIDThunkAction = (title, taskStatusID) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem('access_token');
-
-    if (!token || !taskStatusID) {
-      return;
-    }
-    // title is targetEntityName
-    const res = await axios.get(`${config.BASE_URL}/${title}/${taskStatusID}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-    if (!res.data) {
-      await dispatch(setLoading(false));
-
-      return;
-    }
-
-    await dispatch(getTasksStatusByID(res.data));
-    await dispatch(setLoading(false));
-  } catch (error) {
-    throw error;
-  }
 };
 
 export const getTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
@@ -539,18 +514,19 @@ export const deletedTaskStatusThunkAction = (taskStatusID) => async (dispatch) =
   }
 };
 
-export const renameTaskStatusThunkAction = (rename: string, taskStatusID) => async (dispatch) => {
+export const renameTaskStatusThunkAction = (taskStatusID) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
+    const reTitleStatus = getState().taskBoards.templateTitleStatus;
 
-    if (!token || !rename || !taskStatusID) {
+    if (!token || !reTitleStatus?.length || !taskStatusID) {
       return;
     }
 
     const res = await axios({
       url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
       data: {
-        title: rename,
+        title: reTitleStatus,
       },
       headers: {
         'Content-Type': 'application/json',

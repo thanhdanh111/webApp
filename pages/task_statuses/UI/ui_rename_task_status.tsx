@@ -1,10 +1,12 @@
 import { Typography } from '@material-ui/core';
-import { renameTaskStatusThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
-import React, { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { renameTaskStatusThunkAction,  TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import { TaskStatus } from 'helpers/type';
+import { setTemplateTitleStatus } from 'pages/task_boards/logic/task_boards_action';
+import { RootState } from 'redux/reducers_registration';
 
 interface InitialProps {
   taskStatusID: TaskStatus;
@@ -18,12 +20,13 @@ const RenameStatusUI = (props: InitialProps) => {
     renaming,
     setRetitleStatus,
   }: InitialProps = props;
-
+  const { templateTitleStatus }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
   const newTaskRef = useRef<HTMLTitleElement>(null);
   const dispatch = useDispatch();
 
-  const [retitle, setRetitle] = useState('');
-  const [isChange, setIsChange] = useState(false);
+  useEffect(() => {
+    dispatch(setTemplateTitleStatus(taskStatusID?.title));
+  }, [taskStatusID]);
 
   if (!renaming) {
     return (
@@ -35,38 +38,27 @@ const RenameStatusUI = (props: InitialProps) => {
   }
 
   const submitReTitleTaskStatus = () => {
-    if (retitle === taskStatusID?.title) {
-      return;
-    }
-
-    dispatch(renameTaskStatusThunkAction(retitle, taskStatusID?._id));
-  };
-
-  const getDefaultValue = () => {
-    if (isChange) {
-      return retitle;
-    }
-
-    return taskStatusID?.title;
+    dispatch(renameTaskStatusThunkAction(taskStatusID?._id));
   };
 
   const handleChangeTitle = (event) => {
-    setRetitle(event.target.value);
+    if (templateTitleStatus === event?.target?.value) {
+      return;
+    }
 
-    setIsChange(true);
+    dispatch(setTemplateTitleStatus(event.target.value));
   };
 
   const handleCloseChange = () => {
     setRetitleStatus();
-
-    setIsChange(false);
+    dispatch(setTemplateTitleStatus(taskStatusID?.title));
   };
 
   return (
     <div className='rename-status'>
       <input
         type='text'
-        value={getDefaultValue()}
+        value={templateTitleStatus}
         className='add-status-input'
         onChange={handleChangeTitle}
       />

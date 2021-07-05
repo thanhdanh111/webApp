@@ -114,3 +114,10 @@ export const renameTaskStatus = (taskStatus: TaskStatus) => {
     payload: taskStatus,
   };
 };
+
+export const setTemplateTitleStatus = (templateTitleStatus: string) => {
+  return {
+    type: taskBoardsActionType.SET_TEMPLATE_TITLE_STATUS,
+    payload: templateTitleStatus,
+  };
+};
