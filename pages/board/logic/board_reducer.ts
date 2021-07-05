@@ -1,9 +1,13 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { BoardsPage, Card } from 'helpers/type';
+import { BoardsPage, CardPositionData } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { createBoardAction, getBoardAction, setBoard, updateNameFlowChartAction, deleteBoardAction, updateCards } from './board_action';
+import {
+  createBoardAction,
+  getBoardAction,
+  setBoard, updateNameFlowChartAction, deleteBoardAction, createCardAction, getDataListCardAction } from './board_action';
 import { boardsActionType } from './board_type_action';
+import { checkArray } from 'helpers/check_array';
 
 export enum NotificationTypes {
   succeedCreateFlowChart = 'Create FlowChart Successfully',
@@ -18,6 +22,9 @@ export enum Shape {
   PROCESS = 'PROCESS',
   DECISION = 'DECISION',
 }
+enum Arrow {
+  OUT_LINE = 'OUT_LINE',
+}
 const initialState: BoardsPage = {
   boards: [],
   selectedBoard: {
@@ -27,28 +34,41 @@ const initialState: BoardsPage = {
     projectID: '',
   },
   cards: [],
-  selectedCard: {
+  tempCard: {
     _id: '',
     boardID: '',
     companyID: '',
     textContent: '',
     shape: Shape.PROCESS,
+    position: {
+      x: 110,
+      y: 110,
+    },
+    leftTo: {
+      cardID: '',
+      text: '',
+      arrow: Arrow.OUT_LINE,
+    },
+    rightTo: {
+      cardID: '',
+      text: '',
+      arrow: Arrow.OUT_LINE,
+    },
+    bottomTo: {
+      cardID: '',
+      text: '',
+      arrow: Arrow.OUT_LINE,
+    },
+    topTo: {
+      cardID: '',
+      text: '',
+      arrow: Arrow.OUT_LINE,
+    },
   },
+  type: Shape.PROCESS,
 };
-// const initialState: Card = {
-//   selectionReact: undefined,
-//   textContent: '',
-//   shape: '',
-//   selectedBoard: {},
-//   selectedCard: {},
-//   shouldCallApi: true,
-//   openShare: false,
-//   needDisplay: false,
 
-// };
-
-export type CardsValueType = Card;
-
+// tslint:disable-next-line: cyclomatic-complexity
 export const boardsReducer = (state = initialState, action) => {
   switch (action.type) {
     case boardsActionType.GET_LIST_BOARDS:
@@ -83,6 +103,30 @@ export const boardsReducer = (state = initialState, action) => {
         boards: resolveBoard,
       };
 
+    case boardsActionType.CREATE_CARD:
+      return {
+        ...state,
+        tempCard: action.payload,
+      };
+
+    case boardsActionType.GET_DATA_LIST_CARD:
+      const listCards = {};
+
+      if (checkArray(action.payload.list)) {
+        action.payload.list.map((element) => {
+          if (element.cards) {
+            listCards[element.cards] = element.cards;
+          }
+
+          return;
+        });
+      }
+
+      return {
+        ...state,
+        listCards,
+        cards: action.payload.list,
+      };
     default:
       return state;
   }
@@ -234,38 +278,28 @@ export const deleteBoardMiddleWare = (boardID: string) => async (dispatch, getSt
   }
 };
 
-export const createNewCard = () => async (dispatch, getState) => {
+export const createNewCard = (shape: Shape, position: CardPositionData) => async (dispatch, getState) => {
 
   try {
     const token = localStorage.getItem('access_token');
-    const  {
-      textContent,
-      shape,
-      selectedBoard,
-      selectedCard,
-    }: boardsValueType = getState()?.cards;
-    const companyID = selectedBoard?.companyID?._id ?? selectedBoard?.companyID;
+    const { selectedBoard }: BoardsPage = getState()?.boards;
     const boardID = selectedBoard?._id;
 
-    if (!companyID || !boardID || !shape || !selectedCard._id) {
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
+
+    if (!companyID || !boardID) {
 
       dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
 
       return ;
     }
 
-    dispatch(updateCards());
-
-    const rawBlocks = convertToRaw(editorState?.getCurrentContent());
     const res = await axios.post(`${config.BASE_URL}/boards/${boardID}/cards`,
       {
-        textContent,
-        shape,
         companyID,
-        leftTo: rawBlocks?.blocks,
-        rightTo: rawBlocks.blocks,
-        bottomTo: rawBlocks.blocks,
-        topTo: rawBlocks.blocks,
+        shape,
+        position,
       },
       {
         headers: {
@@ -275,20 +309,26 @@ export const createNewCard = () => async (dispatch, getState) => {
       },
     );
 
-    const newBoardsMap = boardsMap;
+    dispatch(createCardAction(res.data));
+  } catch (error) {
+    throw error;
+  }
+};
 
-    newBoardsMap?.[boardID].cards?.push({
-      textContent: res?.data.textContent,
-      shape: res?.data?.shape,
-      _id: res?.data?._id,
-      leftTo: res?.data?.leftTo,
-      rightTo: res?.data?.rightTo,
-      bottomTo: res?.data?.bottomTo,
-      topTo: res?.data?.topTo,
+export const getDataListCard = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    const res = await axios.get(`${config.BASE_URL}/cards`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    dispatch(updateCards({ loading: false, boardsMap: newBoardsMap }));
+    await dispatch(getDataListCardAction(res.data));
   } catch (error) {
-    dispatch(updateCards({ loading: false }));
+    throw error;
   }
+
 };

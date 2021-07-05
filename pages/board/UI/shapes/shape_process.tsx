@@ -2,9 +2,14 @@ import React, { useState, useRef } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import Resizer from '../resizer/resize';
 import { handleResize } from '../../../../helpers/handle_resize';
+import { RootState } from 'redux/reducers_registration';
+import { useSelector } from 'react-redux';
 const CustomProcess = () => {
   const panelRef = useRef<HTMLDivElement>(null);
   const [focus, setFocus] = useState<boolean>(false);
+
+  const tempCard = useSelector((state: RootState) => state.boards.tempCard);
+  // const [source, setSource] = useState('');
 
   return (
     <div
@@ -25,23 +30,33 @@ const CustomProcess = () => {
         <Handle
           type='source'
           position={Position.Right}
-          id='handle-process-right'
+          id={`rightTo-${tempCard._id}`}
+          // onConnect={(params) => console.log('handle onConnect', params)}
+          // isValidConnection={(connection) => {
+          //   return connection.target === 'some-id';
+          // }}
         />
 
         <Handle
           type='target'
           position={Position.Left}
-          id='handle-process-left'
+          id={`leftTo-${tempCard._id}`}
+          // onConnect={() => setSource(true)}
+          // isValidConnection={(connection) => connection.source === 'some-id'}
         />
         <Handle
           type='target'
           position={Position.Top}
-          id='handle-process-top'
+          id={`topTo-${tempCard._id}`}
+          // onConnect={(params) => console.log('handle onConnect top', params)}
+          // isValidConnection={(connection) => connection.source === 'some-id'}
         />
         <Handle
           type='source'
           position={Position.Bottom}
-          id='handle-process-bottom'
+          id={`bottomTo-${tempCard._id}`}
+          // onConnect={(params) => console.log('handle onConnect bottom', params)}
+          // isValidConnection={(connection) => connection.target === 'some-id'}
         />
       </div>
     </div>

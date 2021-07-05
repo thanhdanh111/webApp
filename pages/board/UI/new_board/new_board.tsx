@@ -12,7 +12,7 @@ import ReactFlow, {
 import CustomDecision from '../shapes/shape_decision';
 import { initialElements } from './initial_elements';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { updateNameFlowChartMiddleWare } from 'pages/board/logic/board_reducer';
+import { updateNameFlowChartMiddleWare, createNewCard, Shape, getDataListCard } from 'pages/board/logic/board_reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useDebounce } from 'pages/users/logic/users_reducer';
@@ -25,15 +25,17 @@ const onLoad = (reactFlowInstance) => {
 };
 
 const nodeTypes = {
-  process: CustomProcess,
-  decision: CustomDecision,
+  PROCESS: CustomProcess,
+  DECISION: CustomDecision,
 };
 
 const NewBoard = () => {
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
   const selectedBoard = useSelector((state: RootState) => state.boards.selectedBoard);
-
+  const tempCard = useSelector((state: RootState) => state.boards.tempCard);
+  const dataList = useSelector((state: RootState) => state.boards.cards);
+  // const listCards = dataList.cards;
   const [inputName, setInputName] = useState('');
 
   const debouncedInputName = useDebounce(inputName, 1000);
@@ -46,25 +48,45 @@ const NewBoard = () => {
     return;
   }, [debouncedInputName]);
 
+  useEffect(() => {
+    dispatch(getDataListCard());
+  }, []);
+
+  useEffect(() => {
+    if (!dataList) {
+      return;
+    }
+
+    return dataList.forEach((element) => setElements(element));
+
+  }, [dataList]);
+// console.log('dataList', dataList);
   const onChangeNameFlowChart = (event) => {
     setInputName(event.target.value);
   };
 
-  const addShapeProcess = () => {
-    setElements((element) => element.concat({
-      id: (element.length + 1).toString(),
-      position: { x: Math.random() * window.innerWidth - 100, y: Math.random() * window.innerHeight },
-      type: 'process',
-    }));
-  };
+  function addShape(type: Shape) {
+    dispatch(createNewCard(type, tempCard.position));
+  }
+  // const addShapeProcess = () => {
+  //   createCardAction()
+  //   setElements((element) => element.concat({
+  //     // id: (element.length + 1).toString(),
+  //     id: selectedCard._id,
+  //     position: { x: Math.random() * window.innerWidth - 100, y: Math.random() * window.innerHeight },
+  //     type: 'process',
+  //     // source: '',
+  //     // target: '',
+  //   }));
+  // };
 
-  const addShapeDecision = () => {
-    setElements((element) => element.concat({
-      id: (element.length + 1).toString(),
-      position: { x: Math.random() * window.innerWidth - 100, y: Math.random() * window.innerHeight },
-      type: 'decision',
-    }));
-  };
+  // const addShapeDecision = () => {
+  //   setElements((element) => element.concat({
+  //     id: (element.length + 1).toString(),
+  //     position: { x: Math.random() * window.innerWidth - 100, y: Math.random() * window.innerHeight },
+  //     type: 'decision',
+  //   }));
+  // };
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));
 
@@ -72,6 +94,7 @@ const NewBoard = () => {
     setElements((els) => updateEdge(oldEdge, newConnection, els));
 
   const onConnect = (params) => setElements((els) => addEdge({ ...params, arrowHeadType: ArrowHeadType.ArrowClosed }, els));
+  // const onConnectStart = (params) => setOnConnectStart(() => console.log('onConnect start', params));
 
   return (
     <Fragment>
@@ -96,6 +119,7 @@ const NewBoard = () => {
           elements={elements}
           onLoad={onLoad}
           onConnect={onConnect}
+          // onConnectStart={onConnectStart}
           connectionLineStyle={{ stroke: '#af00e7', strokeWidth: 2 }}
           connectionLineType={ConnectionLineType.SmoothStep}
           snapToGrid={true}
@@ -118,8 +142,7 @@ const NewBoard = () => {
           />
           <Controls />
           <ListOptionCard
-            onClickAddProcess={addShapeProcess}
-            onClickAddDecision={addShapeDecision}
+            onClickAdd={addShape}
           />
         </ReactFlow>
       </div>

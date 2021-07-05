@@ -285,13 +285,20 @@ export interface BoardsPage {
   boards: Board[];
   selectedBoard: Board;
   cards: Card[];
-  selectedCard: Card;
+  // tempCards: Card[];
+  tempCard: Card;
+  type: Shape;
 }
 
 export interface ConnectToData {
   cardID: string;
   text: string;
   arrow: Arrow;
+}
+
+export interface CardPositionData {
+  x: number;
+  y: number;
 }
 
 export interface Card {
@@ -308,7 +315,7 @@ export interface Card {
   rightTo?: ConnectToData;
   bottomTo?: ConnectToData;
   topTo?: ConnectToData;
-  position?: string;
+  position?: 	CardPositionData;
 }
 
 export interface Tag {
