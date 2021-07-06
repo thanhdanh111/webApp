@@ -10,16 +10,13 @@ import { User } from 'helpers/type';
 interface InitialProps {
   usersAssigned: User[];
   handleAssign: (user) => void;
+  sizes: string;
 }
 
 const AssignUser: React.FC<InitialProps> = (props) => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
-  const { usersAssigned, handleAssign }: InitialProps = props;
-
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
+  const { usersAssigned, handleAssign, sizes }: InitialProps = props;
 
   const getUser = () => {
     dispatch(getPaginationThunkAction());
@@ -30,7 +27,7 @@ const AssignUser: React.FC<InitialProps> = (props) => {
       {(popupState) => (
         <div>
           <div {...bindTrigger(popupState)}>
-          <GroupUserAssigned currentUser={userInfo} usersAssigned={usersAssigned}/>
+          <GroupUserAssigned currentUser={userInfo} usersAssigned={usersAssigned} sizes={sizes} />
           </div>
           <Menu
             {...bindMenu(popupState)}

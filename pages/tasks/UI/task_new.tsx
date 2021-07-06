@@ -70,13 +70,13 @@ const TaskNew: React.FC<InitProps> = (props) => {
   return (
     <Box className='task-add' position='relative'>
       <Box display='flex' flexDirection='row' alignItems='center'>
-          <CloseIcon onClick={() => dispatch(setTypeCreateTask(''))} className='icon-add close-icon'/>
-          <InputBase
-            placeholder="Task name or type '/' for commands"
-            name='title'
-            onKeyUp={onChangeTitle}
-          />
-        <AssignUser usersAssigned={usersAssigned} handleAssign={handleAssign}/>
+        <CloseIcon onClick={() => dispatch(setTypeCreateTask(''))} className='icon-add close-icon'/>
+        <InputBase
+          placeholder="Task name or type '/' for commands"
+          name='title'
+          onKeyUp={onChangeTitle}
+        />
+        <AssignUser usersAssigned={usersAssigned} handleAssign={handleAssign} sizes='assigned-user-avatar'/>
       </Box>
       <Box display='flex' px={2} pb={'10px'} mt={'25px'} fontWeight={100}>
         <Panel/>

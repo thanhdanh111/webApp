@@ -7,11 +7,11 @@ import { User, UserInfo } from 'helpers/type';
 interface InitProps {
   currentUser: UserInfo;
   usersAssigned: User[];
+  sizes: string;
 }
 
 const GroupUserAssigned: React.FC<InitProps> = (props) => {
-  const { usersAssigned, currentUser }: InitProps = props;
-  const fullName = `${currentUser?.profile?.firstName} ${currentUser?.profile?.lastName}`;
+  const { usersAssigned, currentUser, sizes }: InitProps = props;
 
   return (
     <AvatarGroup
@@ -20,33 +20,36 @@ const GroupUserAssigned: React.FC<InitProps> = (props) => {
       className='group-avatar-task'
     >
       {usersAssigned?.length > 0 ? (
-        usersAssigned?.map((user) => (
-          <Badge
-            key={user._id}
-            overlap='circle'
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            variant='dot'
-            className='badge-task'
-          >
-            <Tooltip
-              title={
-                user._id === currentUser?.userID ? "I'm online" : fullName
-              }
-              arrow={true}
-              placement='top'
+        usersAssigned?.map((user) => {
+          const fullName = `${user?.firstName} ${user?.lastName}`;
+
+          return (
+            <Badge
+              key={user._id}
+              overlap='circle'
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              variant='dot'
+              className='badge-task'
             >
-              <Avatar
-                className='avata-task'
-                src={user.profilePhoto}
-                sizes='20px'
-              />
-            </Tooltip>
-          </Badge>
-        ))
-      ) : (
+              <Tooltip
+                title={
+                  user?._id === currentUser?.userID ? "I'm online" : fullName
+                }
+                arrow={true}
+                placement='top'
+              >
+                <Avatar
+                  className={`avata-task ${sizes}`}
+                  src={user.profilePhoto}
+                />
+              </Tooltip>
+            </Badge>
+
+          );
+        })) : (
         <Tooltip title='Assign' arrow={true} placement='top'>
           <PersonAddIcon className='no-user-assign' />
         </Tooltip>

@@ -38,7 +38,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
             <div className='task-title'>
                 <Typography component='span' className='task-name'>{taskName}</Typography>
                 {task?.userIDs?.length &&
-                  <AssignUser usersAssigned={task?.userIDs} handleAssign={handleAssign}/>}
+                  <AssignUser usersAssigned={task?.userIDs} handleAssign={handleAssign} sizes='assigned-user-avatar'/>}
             </div>
             <div className='footer-task'>
               <Typography className='task-id'>{`#${taskID}`}</Typography>
