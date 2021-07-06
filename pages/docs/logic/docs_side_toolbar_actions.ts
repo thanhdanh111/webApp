@@ -1,6 +1,7 @@
 import { blockStyles, inlineStyles } from 'constants/toolbar_docs';
 import { RichUtils, EditorState, convertFromRaw, SelectionState, convertToRaw } from 'draft-js';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { checkTrueInArray } from 'helpers/check_true_in_array';
 import { updateDocs } from './docs_actions';
 
 export function handleSideToolbarActions(editorState, action) {
@@ -39,7 +40,14 @@ function afterMovingPosition(shifttingIndex, onSelectBlockKey , blocks, entityMa
     const blockKey = block.key;
     let switchBlock;
 
-    if (typeof shiftedIndex === 'number' && shiftedIndex === index) continue;
+    const passedShiftedIndex = checkOnlyTrueInArray({
+      conditionsArray: [
+        shiftedIndex !== undefined,
+        shiftedIndex === index,
+      ],
+    });
+
+    if (passedShiftedIndex) continue;
 
     newBlocks.push(block as never);
 
@@ -54,7 +62,14 @@ function afterMovingPosition(shifttingIndex, onSelectBlockKey , blocks, entityMa
     newBlocks[index] = switchBlock as never;
   }
 
-  if (!newBlocks?.length || newBlocks.length !== blocks.length) return;
+  const movingBlocksSuccess = checkTrueInArray({
+    conditionsArray: [
+      !newBlocks?.length,
+      newBlocks.length !== blocks.length,
+    ],
+  });
+
+  if (movingBlocksSuccess) return;
 
   return convertFromRaw({ entityMap, blocks: newBlocks });
 }
@@ -93,7 +108,7 @@ export function onMoveBlockAction({ action, editorState, dispatch }) {
 
   if (!canContinue) return;
 
-  const newEditorState = EditorState.push(editorState, newContentState);
+  const newEditorState = EditorState.push(editorState, newContentState, 'move-block');
   const newSelection = SelectionState.createEmpty(onSelectBlockKey);
   const updatedSelection = newSelection.merge({
     focusKey: onSelectBlockKey,

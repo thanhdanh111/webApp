@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ParagraphStyleSideToolbarBtn from './paragraph_style_toolbar_btn';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
 const blockRenderMap = Immutable.Map({
   'unordered-list-item': {
@@ -198,8 +199,14 @@ const IndexElement = (props) => {
     const blockKey = block[0];
 
     const blockType = contentBlock.getType();
+    const nextOrderedBlock = checkOnlyTrueInArray({
+      conditionsArray: [
+        blockKey !== currentKey,
+        blockType === 'ordered-list-item',
+      ],
+    });
 
-    if (blockKey !== currentKey && blockType === 'ordered-list-item') {
+    if (nextOrderedBlock) {
       orderNumber = orderNumber + 1;
 
       continue;

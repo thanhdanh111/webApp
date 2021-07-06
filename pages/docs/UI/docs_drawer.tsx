@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { createNewDocProject, getDocProjects, getFolderAccessOfProjectIDs, getUsersInCompanyApi } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
-import { updateDocs } from '../logic/docs_actions';
+import { updateDocsInDrawer } from '../logic/docs_actions';
 import { convertFromRaw, EditorState, CompositeDecorator } from 'draft-js';
 import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
@@ -62,7 +62,7 @@ const DocsDrawer = () => {
       docsImageDecorator,
     ]);
 
-    dispatch(updateDocs({
+    dispatch(updateDocsInDrawer({
       selectedDocProject: project,
       selectedPage: {},
       editorState: EditorState.createEmpty(decorator),
@@ -80,7 +80,7 @@ const DocsDrawer = () => {
       docsImageDecorator,
     ]);
 
-    dispatch(updateDocs({
+    dispatch(updateDocsInDrawer({
       editorState: EditorState.createWithContent(
         newContentState,
         decorator,

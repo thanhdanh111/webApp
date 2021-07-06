@@ -8,6 +8,7 @@ import { getDesiredChildrenIntoDesiredParents } from '../../../helpers/get_desir
 import { DocsRole, getProjectAccessOfUsers } from './get_folder_access';
 import { getIDsParamsForAxios } from '../../../helpers/get_ids_params_for_axios';
 import { getUsersInCompany } from './get_users_in_company';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
 export const createNewPage = () => async (dispatch, getState) => {
   try {
@@ -258,8 +259,15 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
     const { currentCompany, userID }: UserInfoType = getState()?.userInfo;
     const { docProjectsMap, projectAccessOfUsers, usersInCompanyMap }: DocsValueType = getState()?.docs;
     const companyID = currentCompany?._id;
+    const validData = checkOnlyTrueInArray({
+      conditionsArray: [
+        !!companyID?.length,
+        !!projectName?.length,
+        !!token?.length,
+      ],
+    });
 
-    if (!companyID || !projectName || !token) {
+    if (!validData) {
       return;
     }
 
@@ -281,8 +289,15 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
     const newCompanyID = res?.data?.companyID;
     const newProjectID = res?.data?._id;
     const newTitle = res?.data?.title;
+    const validNewData = checkOnlyTrueInArray({
+      conditionsArray: [
+        !!newCompanyID?.length,
+        !!newProjectID?.length,
+        !!newTitle?.length,
+      ],
+    });
 
-    if (!newCompanyID || !newProjectID || !newTitle) {
+    if (!validNewData) {
       dispatch(updateDocs({ loading: false }));
 
       return;
@@ -458,5 +473,59 @@ export const shareDocument = ({ role, userID }) => async (dispatch, getState) =>
     dispatch(updateDocs({ projectAccessOfUsers, loading: false  }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
+  }
+};
+
+export const autoSavePage = ({ timestamp, editorState, projectID, selectedPageID  }) => async (dispatch, getState) => {
+  try {
+    const token: Token =  localStorage.getItem('access_token');
+    const {
+      title,
+      docProjectsMap,
+    }: DocsValueType = getState()?.docs;
+
+    if (!title || !projectID || !selectedPageID) {
+      dispatch(updateDocs({ autoSaving: false }));
+
+      return;
+    }
+
+    const rawBlocks = convertToRaw(editorState?.getCurrentContent());
+
+    const res = await axios.put(
+      `${config.BASE_URL}/docProjects/${projectID}/docPages/${selectedPageID}`,
+      {
+        title,
+        pageContent: rawBlocks?.blocks,
+        entityMap: Object.values(rawBlocks.entityMap),
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+    const newProjectsMap  = docProjectsMap;
+    newProjectsMap[projectID].pages = newProjectsMap[projectID]?.pages?.map((page) => {
+      if (page?._id === res?.data._id) {
+        return {
+          pageContent: res?.data?.pageContent,
+          title: res?.data?.title,
+          _id: res?.data?._id,
+          entityMap: res?.data?.entityMap,
+        };
+      }
+
+      return page;
+    });
+
+    dispatch(updateDocs({
+      docProjectsMap: newProjectsMap,
+      autoSaving: false,
+      lastUpdateEditTimestamp: timestamp,
+    }));
+  } catch (error) {
+    dispatch(updateDocs({ autoSaving: false }));
   }
 };

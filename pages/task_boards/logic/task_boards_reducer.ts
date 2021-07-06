@@ -10,11 +10,17 @@ import {
   setSelectedTaskBoard,
   getTaskStatus,
   createdTaskStatus,
+  addTask,
   setTasksToTaskStatus,
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
 
+export interface UserAssigned {
+  _id: string;
+  profilePhoto: string;
+  fullName: string;
+}
 export interface TaskBoardsType {
   loading: boolean;
   taskStatus: { [key: string]: TaskStatus };
@@ -23,6 +29,14 @@ export interface TaskBoardsType {
   hasNoData: boolean;
   onSendingRequest: boolean;
   filteringTaskByUser: boolean;
+  currentTaskStatus: string;
+  newTask: Task;
+  usersAssigned: UserAssigned[];
+}
+
+export enum NotificationTypes {
+  failCreateTask = 'Failed Create Task',
+  succeedCreateTask = 'Create Task Successfully',
 }
 
 const initialState: TaskBoardsType = {
@@ -36,6 +50,9 @@ const initialState: TaskBoardsType = {
   hasNoData: false,
   onSendingRequest: false,
   filteringTaskByUser: false,
+  currentTaskStatus: '',
+  newTask: { title: '', _id: '' },
+  usersAssigned: [],
 };
 
 interface UpdateTaskStatus {
@@ -93,6 +110,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
       };
     case taskBoardsActionType.GET_TASK_BOARD:
       return {
+        ...state,
         taskBoards: action?.data?.list,
       };
     case taskBoardsActionType.CREATE_TASK_BOARD:
@@ -112,6 +130,45 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         },
         taskStatus: { ...state.taskStatus, ...newTAskStatus },
       };
+    case taskBoardsActionType.ADD_TASK:
+      const taskStatusTemp = { ...state.taskStatus };
+      taskStatusTemp[action.payload.taskStatusID]?.taskIDs.unshift(action.payload);
+
+      return {
+        ...state,
+        taskStatus: { ...taskStatusTemp },
+        currentTaskStatus: '',
+        usersAssigned: [],
+      };
+
+    case taskBoardsActionType.SET_TYPE_CREATE_TASK:
+      if (state.currentTaskStatus === action.payload){
+        return { ...state };
+      }
+
+      return {
+        ...state,
+        currentTaskStatus: action.payload,
+        newTask: { title: '' },
+        usersAssigned: [],
+      };
+    case taskBoardsActionType.UPDATE_NEW_TASK:
+      return {
+        ...state,
+        newTask: { ...action.payload },
+      };
+    case taskBoardsActionType.ASSIGN_USER:
+
+      return {
+        ...state,
+        usersAssigned: [...state.usersAssigned, action.payload],
+      };
+    case taskBoardsActionType.UNASSIGN_USER:
+      return {
+        ...state,
+        usersAssigned: state.usersAssigned.filter((user) => action.payload !== user._id),
+      };
+
     case taskBoardsActionType.SET_TASKS_TO_TASK_STATUS:
 
       updatedTaskStatuses = state.taskStatus;
@@ -141,7 +198,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
 
 const notificationsType = {
   201: 'Created taskBoard to Company successfully',
-  400: 'You have no company right now!',
+  400: 'You have no taskBoard right now!',
 };
 
 export const getTaskStatusByIDThunkAction = (title, taskStatusID) => async (dispatch) => {
@@ -310,6 +367,36 @@ export const createTaskStatusThunkAction = (title) => async (dispatch, getState)
     const notification = notificationsType[error?.response?.status] || 'Something went wrong';
     await dispatch(setLoading(false));
     await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
+  }
+};
+
+export const addTaskThunkAction = (companyID) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    if (!token || !companyID) {
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failCreateTask }));
+
+      return;
+    }
+    const res = await axios.post(`${config.BASE_URL}/companies/${companyID}/tasks`,
+    getState().taskBoards.newTask,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    dispatch(addTask(res.data));
+    dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateTask }));
+  } catch (error) {
+    dispatch(
+      pushNewNotifications({
+        variant: 'error',
+        message:
+          error?.response?.data?.message || NotificationTypes.failCreateTask,
+      }),
+    );
+    throw error;
   }
 };
 

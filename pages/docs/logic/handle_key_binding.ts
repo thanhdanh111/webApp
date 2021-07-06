@@ -1,4 +1,6 @@
 import { getDefaultKeyBinding } from 'draft-js';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { checkTrueInArray } from 'helpers/check_true_in_array';
 
 export function handleKeyBinding({ state, event }) {
   if (event?.code === 'Enter' && event?.keyCode === 13) {
@@ -20,12 +22,18 @@ function handleEnter(state, event) {
     return getDefaultKeyBinding(event);
   }
 
-  const beforeOnSelectHaveText =
-    blockBeforeOnSelectBlock.getLength() ||
-    blockOnSelect?.getLength();
-  const bothHaveSameType =
-    blockBeforeOnSelectBlock.getType() === 'code-block' &&
-    onSelectBlockType === 'code-block';
+  const beforeOnSelectHaveText = checkTrueInArray({
+    conditionsArray: [
+      blockBeforeOnSelectBlock.getLength(),
+      blockOnSelect?.getLength(),
+    ],
+  });
+  const bothHaveSameType = checkOnlyTrueInArray({
+    conditionsArray: [
+      blockBeforeOnSelectBlock.getType() === 'code-block',
+      onSelectBlockType === 'code-block',
+    ],
+  });
 
   if (!beforeOnSelectHaveText && bothHaveSameType) {
     return 'normalized-code-block';

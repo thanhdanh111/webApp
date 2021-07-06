@@ -34,6 +34,7 @@ const initialState: ProjectsPage = {
   shouldShowDescription: false,
 };
 
+// tslint:disable-next-line: cyclomatic-complexity
 export const projectsReducer = (state = initialState, action) => {
   switch (action.type) {
     case projectsActionType.GET_LIST_PROJECTS:
@@ -140,7 +141,7 @@ export const updateChannelIDMiddeleWare = (projectID: string, channelID: string)
   try {
     const token = localStorage.getItem('access_token');
 
-    if (!token || !channelID || !projectID) {
+    if (!channelID || !projectID) {
 
       dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.errorFailed }));
 

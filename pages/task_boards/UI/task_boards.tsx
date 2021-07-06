@@ -123,7 +123,6 @@ const BoardTasks: FunctionComponent = () => {
 
     const newSourceTasks = movedData[source.droppableId] as Task[];
     destinationTasks = movedData[destination.droppableId] as Task[];
-
     dispatch(updateTaskById({
       destinationTasks,
       taskID: sourceTasks[source.index]?._id,
@@ -169,9 +168,8 @@ const BoardTasks: FunctionComponent = () => {
             </DragDropContext>
             <div className='add-task task-status'>
               <div className='status'>
-                {isAddStatus &&
-                  addTaskStatusUI()}
-                {!isAddStatus &&
+                {isAddStatus ?
+                  addTaskStatusUI() :
                   <Typography component='span' className='add-task-text'  onClick={() => setIsAddStatus(true)}>
                     NEW STATUS
                   </Typography>

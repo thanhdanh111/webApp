@@ -4,9 +4,17 @@ import {
   convertFromRaw,
 } from 'draft-js';
 import { urlRegex } from 'constants/docs_regex';
+import { checkTrueInArray } from 'helpers/check_true_in_array';
 
 export default function handlePastedText({ html, state, handleOnChange, text }) {
-  if (!state || !handleOnChange) {
+  const invalidData = checkTrueInArray({
+    conditionsArray: [
+      !state,
+      !handleOnChange,
+    ],
+  });
+
+  if (invalidData) {
 
     return true;
   }

@@ -38,7 +38,7 @@ describe('Users Page', () => {
     await page.waitForSelector('.request-time-off-btn')
     await page.click('.request-time-off-btn');
     await page.waitForSelector('.request-dialog-content')
-    await page.waitFor(5000)
+    await page.waitFor(5000);
     const requestDialogContent = await page.screenshot();
 
     expect(timeOffPage).toMatchImageSnapshot();

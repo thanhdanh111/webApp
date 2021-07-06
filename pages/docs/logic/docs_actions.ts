@@ -4,6 +4,7 @@ import { ProjectAccessMapOfUsers } from './get_folder_access';
 
 export enum DocsActionTypes {
   UpdateDocs = 'UpdateDocs',
+  UpdateDocsInDrawer = 'UpdateDocsInDrawer',
 }
 
 interface UpdateDocs {
@@ -13,7 +14,8 @@ interface UpdateDocs {
   selectedPage?: PageContent;
   title?: string;
   editorState?: EditorState;
-  shouldCallApi?: boolean;
+  lastUpdateEditTimestamp?: number;
+  autoSaving?: boolean;
   needDisplay?: boolean;
   selectionRect?: DOMRect;
   openShare?: boolean;
@@ -25,5 +27,12 @@ export const updateDocs = (data: UpdateDocs) => {
   return {
     data,
     type: DocsActionTypes.UpdateDocs,
+  };
+};
+
+export const updateDocsInDrawer = (data: UpdateDocs) => {
+  return {
+    data,
+    type: DocsActionTypes.UpdateDocsInDrawer,
   };
 };

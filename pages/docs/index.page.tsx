@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import EditorView from './UI/editor_view';
 import InlineToolbar from '../../components/inline_toolbar/inline_toolbar';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
@@ -7,12 +7,13 @@ import { RootState } from 'redux/reducers_registration';
 import { handleToolbarActions } from './logic/docs_inline_toolbar_actions';
 import { Input } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { createNewPage, savePage } from './logic/docs_apis';
+import { autoSavePage, createNewPage, savePage, shareDocument } from './logic/docs_apis';
 import { handleKeyCombination } from './logic/handle_combination_key';
 import { EditorState } from 'draft-js';
-import { DocProject, PageContent } from './logic/docs_reducer';
-import { ShareComponent } from './UI/docs_share_project';
+import { DocProject, PageContent, UsersInCompanyMap } from './logic/docs_reducer';
+import { SharePermission } from '../../components/share_permission/share_permission';
 import { DocsRole, ProjectAccessMapOfUsers } from './logic/get_folder_access';
+import { checkTrueInArray } from 'helpers/check_true_in_array';
 
 interface DocsPageData {
   needDisplay: boolean;
@@ -24,9 +25,17 @@ interface DocsPageData {
   selectedProject: DocProject;
   projectAccessOfUsers: ProjectAccessMapOfUsers;
   accountUserID: string;
+  openShare: boolean;
+  usersInCompanyMap: UsersInCompanyMap;
+  autoSaving: boolean;
+  editTimestamp: number;
+  lastUpdateEditTimestamp: number;
+
 }
 
 type DocsPageDataType = DocsPageData;
+
+const docsAutoSaveTimeOut = 10000;
 
 const DocsPage = () => {
   const dispatch = useDispatch();
@@ -40,6 +49,11 @@ const DocsPage = () => {
     selectedProject,
     projectAccessOfUsers,
     accountUserID,
+    openShare,
+    usersInCompanyMap,
+    editTimestamp,
+    autoSaving,
+    lastUpdateEditTimestamp,
   }: DocsPageDataType = useSelector((state: RootState) => {
 
     return {
@@ -52,11 +66,49 @@ const DocsPage = () => {
       selectedProject: state?.docs?.selectedDocProject,
       accountUserID: state?.userInfo?.userID,
       projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
+      openShare: state?.docs?.openShare,
+      usersInCompanyMap: state?.docs?.usersInCompanyMap,
+      editTimestamp: state?.docs?.editTimestamp,
+      autoSaving: state?.docs?.autoSaving,
+      lastUpdateEditTimestamp:  state?.docs?.lastUpdateEditTimestamp,
     };
   }, shallowEqual);
   const onEditPage = !!selectedPage?._id || !!selectedPage?.title;
   const readOnly = !checkHavePermissionToEdit();
-  const cannotClickButton = loading || !title?.length || !selectedProject._id || readOnly;
+  const cannotClickButton = checkTrueInArray({
+    conditionsArray: [
+      loading,
+      !title?.length,
+      !selectedProject._id,
+      readOnly,
+    ],
+  });
+
+  useMemo(() => {
+    const shouldNotSave = checkTrueInArray({
+      conditionsArray: [
+        readOnly,
+        !onEditPage,
+        editTimestamp === lastUpdateEditTimestamp,
+        autoSaving,
+      ],
+    });
+
+    if (shouldNotSave) {
+
+      return;
+    }
+
+    dispatch(updateDocs({ autoSaving: true }));
+
+    const docProjectID = selectedProject?._id;
+    const selectedPageID = selectedPage?._id;
+
+    setTimeout((timestamp, state, projectID, pageID) => {
+      dispatch(autoSavePage({ timestamp, projectID, editorState: state, selectedPageID: pageID }));
+    }, docsAutoSaveTimeOut, editTimestamp, editorState, docProjectID, selectedPageID);
+
+  }, [editTimestamp, lastUpdateEditTimestamp]);
 
   function onClickOptionInToolbar(action) {
     if (!action) {
@@ -105,6 +157,14 @@ const DocsPage = () => {
     return haveWritePermission;
   }
 
+  function onClickShare(role, userID) {
+    if (!role?.length || !userID?.length) {
+      return;
+    }
+
+    dispatch(shareDocument({ role, userID }));
+  }
+
   return <div
     className='docs-page'
     onKeyDown={(e) => handleKeyCombination(e, onEditPage, dispatch)}
@@ -135,7 +195,16 @@ const DocsPage = () => {
       needDisplay={needDisplay}
       selectionRect={selectionRect}
     />
-    <ShareComponent />
+    <SharePermission
+      selectedProject={selectedProject}
+      openShare={openShare}
+      usersInCompanyMap={usersInCompanyMap}
+      loading={loading}
+      projectAccessOfUsers={projectAccessOfUsers}
+      accountUserID={accountUserID}
+      selectedPage={selectedPage}
+      handleShare={onClickShare}
+    />
   </div>;
 };
 

@@ -1,23 +1,13 @@
-export default function handleStyleForCodeBlock(contentBlock, editorState) {
-  let classNameOverride = 'block-wrapper custom-code-block';
-  const defaultClassName = 'block-wrapper custom-code-block';
-  if (!contentBlock || !editorState) {
-    return classNameOverride;
-  }
+import { checkTrueInArray } from 'helpers/check_true_in_array';
 
-  const currentContent = editorState.getCurrentContent();
-  const currentKey = contentBlock.getKey();
-
-  if (!currentKey || !currentContent) {
-    return classNameOverride;
-  }
-
+function getClassNameOfCodeBlock(currentContent, currentKey, classNameOverride, defaultClassName) {
   const beforeKey = currentContent?.getKeyBefore(currentKey);
+  let codeClassName = classNameOverride;
 
   const beforeBlockType = currentContent?.getBlockForKey(beforeKey)?.getType();
 
   if (beforeBlockType !== 'code-block') {
-    classNameOverride = `${defaultClassName} first-code-block`;
+    codeClassName = `${defaultClassName} first-code-block`;
   }
 
   const afterKey = currentContent?.getKeyAfter(currentKey);
@@ -25,12 +15,42 @@ export default function handleStyleForCodeBlock(contentBlock, editorState) {
   const afterBlockType = currentContent?.getBlockForKey(afterKey)?.getType();
 
   if (afterBlockType !== 'code-block') {
-    classNameOverride = `${defaultClassName} last-code-block`;
+    codeClassName = `${defaultClassName} last-code-block`;
   }
 
   if (afterBlockType !== 'code-block' && beforeBlockType !== 'code-block') {
-    classNameOverride = `${defaultClassName} initial-code-block`;
+    codeClassName = `${defaultClassName} initial-code-block`;
   }
 
-  return classNameOverride;
+  return codeClassName;
+}
+
+export default function handleStyleForCodeBlock(contentBlock, editorState) {
+  const classNameOverride = 'block-wrapper custom-code-block';
+  const defaultClassName = 'block-wrapper custom-code-block';
+  const invalidDataToHandle = checkTrueInArray({
+    conditionsArray: [
+      !contentBlock,
+      !editorState,
+    ],
+  });
+
+  if (invalidDataToHandle) {
+    return classNameOverride;
+  }
+
+  const currentContent = editorState.getCurrentContent();
+  const currentKey = contentBlock.getKey();
+  const invalidCurrentData = checkTrueInArray({
+    conditionsArray: [
+      !currentKey,
+      !currentContent,
+    ],
+  });
+
+  if (invalidCurrentData) {
+    return classNameOverride;
+  }
+
+  return getClassNameOfCodeBlock(currentContent, currentKey, classNameOverride, defaultClassName);
 }

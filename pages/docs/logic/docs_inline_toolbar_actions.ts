@@ -1,5 +1,6 @@
 import { blockStyles, inlineStyles } from 'constants/toolbar_docs';
 import { RichUtils, EditorState } from 'draft-js';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { updateDocs } from './docs_actions';
 
 export function handleToolbarActions(editorState, action) {
@@ -34,19 +35,23 @@ export function showUpToolbarAndUpdateState(newEditorState, needDisplay, dispatc
   const selection = window.getSelection();
   const selectedText = selection?.toString();
   const haveOtherToolbar =  !!document.getElementById('sideToolbar');
-  const invalidSelection = !selectedText?.length ||
-    typeof selectedText !== 'string' ||
-    selection?.type === 'Caret' ||
-    !newEditorState.getCurrentContent().hasText() ||
-    haveOtherToolbar;
+  const validSelection = checkOnlyTrueInArray({
+    conditionsArray: [
+      selectedText?.length,
+      typeof selectedText === 'string',
+      selection?.type !== 'Caret',
+      newEditorState?.getCurrentContent()?.hasText(),
+      !haveOtherToolbar,
+    ],
+  });
 
-  if (invalidSelection && !needDisplay) {
+  if (!validSelection && !needDisplay) {
     dispatch(updateDocs({ editorState: newEditorState }));
 
     return;
   }
 
-  if (invalidSelection) {
+  if (!validSelection) {
     dispatch(updateDocs({ needDisplay: false, editorState: newEditorState }));
 
     return;
@@ -54,5 +59,9 @@ export function showUpToolbarAndUpdateState(newEditorState, needDisplay, dispatc
   const getRange  = selection?.getRangeAt(0);
   const newSelectionRect = getRange?.getBoundingClientRect();
 
-  dispatch(updateDocs({ selectionRect: newSelectionRect, needDisplay: true,  editorState: newEditorState }));
+  dispatch(updateDocs({
+    selectionRect: newSelectionRect,
+    needDisplay: true,
+    editorState: newEditorState,
+  }));
 }

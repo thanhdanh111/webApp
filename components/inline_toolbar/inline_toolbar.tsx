@@ -70,12 +70,4 @@ const InlineToolbar = ({
   </Fade>;
 };
 
-function areEqual(prevState, nextState) {
-  const sameSelectionRect = prevState?.selectionRect?.top === nextState?.selectionRect?.top ||
-    prevState?.selectionRect?.left === nextState?.selectionRect?.left;
-  const sameNeedDisplay = prevState?.needDisplay === nextState?.needDisplay;
-
-  return sameSelectionRect && sameNeedDisplay;
-}
-
-export default React.memo(InlineToolbar, areEqual);
+export default InlineToolbar;

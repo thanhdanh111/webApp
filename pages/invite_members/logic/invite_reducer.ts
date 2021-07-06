@@ -19,6 +19,7 @@ const initialState: InviteValue = {
   hasNoCompanies: false,
 };
 
+// tslint:disable-next-line: cyclomatic-complexity
 const inviteReducer = (state = initialState, action) => {
   switch (action.type) {
     case InviteActionTypes.updateInviteMembers:

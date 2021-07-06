@@ -23,6 +23,25 @@ const StatisticsUi: FunctionComponent<BodyProps> = () => {
   const isAdmin = userInfo?.isAdmin || checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany });
   const [getMe, setGetMe] = useState(true);
 
+  const renderUIByAdmin = () => {
+    if (!isAdmin) {
+      return;
+    }
+
+    return (
+      <IconButton
+        onClick={() => setGetMe(false)}
+        name='members'
+        disabled={!getMe}
+        disableRipple
+        disableFocusRipple
+        size='medium'
+      >
+        <PeopleAltIcon className='statistics-body-options-icon' fontSize='large' name='members' color={!getMe ? 'secondary' : 'primary'} />
+      </IconButton>
+    );
+  };
+
   return (
     <div className='statistics-page'>
       <div className='statistics-header'>
@@ -59,18 +78,7 @@ const StatisticsUi: FunctionComponent<BodyProps> = () => {
               >
                 <PersonIcon className='statistics-body-options-icon' fontSize='large' name='me' color={getMe ? 'secondary' : 'primary'} />
               </IconButton>
-              {isAdmin && (
-                <IconButton
-                  onClick={() => setGetMe(false)}
-                  name='members'
-                  disabled={!getMe}
-                  disableRipple
-                  disableFocusRipple
-                  size='medium'
-                >
-                  <PeopleAltIcon className='statistics-body-options-icon' fontSize='large' name='members' color={!getMe ? 'secondary' : 'primary'} />
-                </IconButton>
-              )}
+              {renderUIByAdmin()}
             </div>
             <Grid container justify='center' >
               <Grid item xs={12} >

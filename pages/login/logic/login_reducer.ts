@@ -43,11 +43,62 @@ export const userInfo = (state = initialState, action) => {
   }
 };
 
+const GetCurrentCompanyAndDepartmentInfo = async (token, companyID, departmentID) => {
+  if (!companyID) {
+    return;
+  }
+
+  const extendedCompany = await axios.get(`${config.BASE_URL}/extendedCompanies/${companyID}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const validCompany = checkOnlyTrueInArray({
+    conditionsArray: [
+      !!extendedCompany?.data?.companyID?.name,
+      !!extendedCompany?.data?.companyID?._id,
+    ],
+  });
+
+  if (!departmentID) {
+    return {
+      extendedCompany,
+      validCompany,
+    };
+  }
+
+  const department = await axios.get(`${config.BASE_URL}/companies/${companyID}/departments/${departmentID}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const validDepartment = checkOnlyTrueInArray({
+    conditionsArray: [
+      !!department?.data?.name,
+      !!department?.data?._id,
+    ],
+  });
+
+  return {
+    validCompany,
+    extendedCompany,
+    validDepartment,
+    department,
+  };
+
+};
+
 export const GetUserDataThunkAction = (token) => async (dispatch) => {
   let data;
   let res;
-
   try {
+
     if (!token) {
       return;
     }
@@ -67,43 +118,10 @@ export const GetUserDataThunkAction = (token) => async (dispatch) => {
 
     data = res.data;
 
-    if (companyID) {
-      const extendedCompany = await axios.get(`${config.BASE_URL}/extendedCompanies/${companyID}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const isValid = await GetCurrentCompanyAndDepartmentInfo(token, companyID, departmentID);
 
-      const validCompany = checkOnlyTrueInArray({
-        conditionsArray: [
-          !!extendedCompany?.data?.companyID?.name,
-          !!extendedCompany?.data?.companyID?._id,
-        ],
-      });
-
-      data.currentExtendedCompany = validCompany ? extendedCompany.data : {};
-    }
-
-    if (departmentID) {
-      const department = await axios.get(`${config.BASE_URL}/companies/${companyID}/departments/${departmentID}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const validDepartment = checkOnlyTrueInArray({
-        conditionsArray: [
-          !!department?.data?.name,
-          !!department?.data?._id,
-        ],
-      });
-
-      data.currentDepartment = validDepartment ? department.data : {};
-    }
+    data.currentExtendedCompany = isValid?.validCompany ? isValid?.extendedCompany.data : {};
+    data.currentDepartment = isValid?.validDepartment ? isValid?.department?.data : {};
 
     const {
       rolesInCompany,

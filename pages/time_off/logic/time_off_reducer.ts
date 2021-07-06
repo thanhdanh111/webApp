@@ -40,6 +40,7 @@ function updateStatusTimeOffReducer({ action, state }) {
   return newState;
 }
 
+// tslint:disable-next-line: cyclomatic-complexity
 const timeOffReducer = (state = initialState, action) => {
 
   switch (action.type) {

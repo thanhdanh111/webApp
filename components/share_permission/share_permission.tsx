@@ -4,14 +4,12 @@ import {
   DialogContent, DialogTitle, IconButton,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { DocProject, PageContent, UsersInCompanyMap } from '../logic/docs_reducer';
-import { RootState } from 'redux/reducers_registration';
-import { updateDocs } from '../logic/docs_actions';
+import { useDispatch } from 'react-redux';
+import { DocProject, PageContent, UsersInCompanyMap } from '../../pages/docs/logic/docs_reducer';
+import { updateDocs } from '../../pages/docs/logic/docs_actions';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import UserAvatar from '../../../components/user_avatar/info_user';
-import { shareDocument } from '../logic/docs_apis';
-import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access';
+import UserAvatar from '../user_avatar/info_user';
+import { DocsRole, ProjectAccessMapOfUsers } from '../../pages/docs/logic/get_folder_access';
 
 interface ShareComponentData {
   loading: boolean;
@@ -21,9 +19,8 @@ interface ShareComponentData {
   usersInCompanyMap: UsersInCompanyMap;
   projectAccessOfUsers: ProjectAccessMapOfUsers;
   accountUserID: string;
+  handleShare: (role, userID) => void;
 }
-
-type ShareComponentDataType = ShareComponentData;
 
 const defaultRoles = {
   NONE: {
@@ -40,32 +37,21 @@ const defaultRoles = {
   },
 };
 
-export const ShareComponent = () => {
+export const SharePermission = ({
+  selectedProject,
+  openShare,
+  usersInCompanyMap,
+  loading,
+  projectAccessOfUsers,
+  accountUserID,
+  selectedPage,
+  handleShare,
+}: ShareComponentData) => {
   const dispatch = useDispatch();
   const [selectedShare, setSelectedShare] = useState({
     role: '',
     userID: '',
   });
-  const {
-    selectedProject,
-    openShare,
-    usersInCompanyMap,
-    loading,
-    projectAccessOfUsers,
-    accountUserID,
-    selectedPage,
-  }: ShareComponentDataType = useSelector((state: RootState) => {
-
-    return {
-      usersInCompanyMap: state?.docs?.usersInCompanyMap,
-      loading: state?.docs?.loading,
-      selectedPage: state?.docs?.selectedPage,
-      selectedProject: state?.docs?.selectedDocProject,
-      openShare: state?.docs?.openShare,
-      projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
-      accountUserID: state?.userInfo?.userID,
-    };
-  }, shallowEqual);
 
   function handleClose() {
     dispatch(updateDocs({ openShare: false }));
@@ -111,7 +97,7 @@ export const ShareComponent = () => {
       }
 
       rolesToSelect.push(
-        <option value={defaultRoles[role].role}>
+        <option key={defaultRoles[role].role} value={defaultRoles[role].role}>
           {defaultRoles[role].name}
         </option>,
       );
@@ -120,20 +106,16 @@ export const ShareComponent = () => {
     return rolesToSelect;
   }
 
-  function onClickShare() {
-    const role = selectedShare?.role;
-    const userID = selectedShare?.userID;
+  function renderRolesOfUser(currentUserID, rolesOfUser) {
+    let isOwner = (selectedProject?.createdBy?.['_id'] ?? selectedProject?.createdBy)  === currentUserID;
+    const selectedPageID = selectedPage?._id;
 
-    if (!role?.length || !userID?.length) {
-      return;
-    }
-
-    dispatch(shareDocument({ role, userID }));
-  }
-
-  function renderRolesOfUser(isOwner, rolesOfUser) {
     if (isOwner) {
       return <div className='users-shared-with--owner'>Owner</div>;
+    }
+
+    if (selectedPageID) {
+      isOwner = selectedPage?.createdBy?._id === currentUserID;
     }
 
     return rolesOfUser?.length ?  <Select
@@ -160,7 +142,6 @@ export const ShareComponent = () => {
         continue;
       }
 
-      let isOwner = (selectedProject?.createdBy?.['_id'] ?? selectedProject?.createdBy)  === userID;
       const userProfile = projectAccessOfUsers?.[userID]?.[selectedProjectID]?.ownerInfo;
 
       if (!userProfile) {
@@ -175,17 +156,13 @@ export const ShareComponent = () => {
         rolesOfUser = projectAccessOfUsers?.[userID]?.[selectedProjectID]?.accessInPages?.[selectedPageID] ?? ['READ'];
       }
 
-      if (selectedPageID) {
-        isOwner = selectedPage?.createdBy?._id === userID;
-      }
-
       usersRender.push(
         <div key={userID} className='users-shared-with'>
           <UserAvatar user={userProfile}  style='notification-img'/>
           <Typography className='users-shared-with--name' style={{ marginLeft: '20px' }}>
             {`${userProfile?.lastName} ${userProfile.firstName}`}
           </Typography>
-          {renderRolesOfUser(isOwner, rolesOfUser)}
+          {renderRolesOfUser(userID, rolesOfUser)}
         </div>,
       );
     }
@@ -246,7 +223,7 @@ export const ShareComponent = () => {
             </Select>
             <PrimaryButtonUI
               title='Share'
-              handleClick={() => onClickShare()}
+              handleClick={() => handleShare(selectedShare?.role, selectedShare?.userID)}
               disabled={loading}
             />
           </div>
