@@ -1,7 +1,5 @@
 import { Avatar, Box, MenuItem } from '@material-ui/core';
 import { UserAccess } from 'helpers/type';
-// import { assignUser, unassignUser } from 'pages/task_boards/logic/task_boards_action';
-// import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 
 interface InitProps {
   userAccess: UserAccess;
