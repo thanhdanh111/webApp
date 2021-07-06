@@ -110,22 +110,9 @@ export const boardsReducer = (state = initialState, action) => {
       };
 
     case boardsActionType.GET_DATA_LIST_CARD:
-      const listCards = {};
-
-      if (checkArray(action.payload.list)) {
-        action.payload.list.map((element) => {
-          if (element.cards) {
-            listCards[element.cards] = element.cards;
-          }
-
-          return;
-        });
-      }
-
       return {
         ...state,
-        listCards,
-        cards: action.payload.list,
+        cards: action.payload,
       };
     default:
       return state;
@@ -278,7 +265,7 @@ export const deleteBoardMiddleWare = (boardID: string) => async (dispatch, getSt
   }
 };
 
-export const createNewCard = (shape: Shape, position: CardPositionData) => async (dispatch, getState) => {
+export const createNewCard = (shape, position: CardPositionData) => async (dispatch, getState) => {
 
   try {
     const token = localStorage.getItem('access_token');
@@ -300,6 +287,7 @@ export const createNewCard = (shape: Shape, position: CardPositionData) => async
         companyID,
         shape,
         position,
+        boardID,
       },
       {
         headers: {
@@ -326,7 +314,26 @@ export const getDataListCard = () => async (dispatch) => {
       },
     });
 
-    await dispatch(getDataListCardAction(res.data));
+    if (checkArray(res.data.list)) {
+      const cards = res.data.list.map((card) => {
+        return {
+          _id: card._id,
+          boardID: card.boardID,
+          companyID: card.companyID,
+          textContent: card.textContent,
+          shape: card.Shape,
+          position: {
+            x: Math.random() * window.innerHeight - 100,
+            y: Math.random() * window.innerHeight,
+          },
+        };
+      });
+      await dispatch(getDataListCardAction(cards));
+    }
+
+    // console.log('res.data.list', res.data.list);
+
+    return;
   } catch (error) {
     throw error;
   }

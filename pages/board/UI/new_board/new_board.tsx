@@ -12,13 +12,12 @@ import ReactFlow, {
 import CustomDecision from '../shapes/shape_decision';
 import { initialElements } from './initial_elements';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { updateNameFlowChartMiddleWare, createNewCard, Shape, getDataListCard } from 'pages/board/logic/board_reducer';
+import { createNewCard, getDataListCard } from 'pages/board/logic/board_reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
-import { useDebounce } from 'pages/users/logic/users_reducer';
 import CustomProcess from '../shapes/shape_process';
-import AvatarFlowChart from './avatar_flowchart';
 import ListOptionCard from './list_option_card';
+import HeaderContentBoard from './header_content_board';
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
@@ -32,22 +31,10 @@ const nodeTypes = {
 const NewBoard = () => {
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
-  const selectedBoard = useSelector((state: RootState) => state.boards.selectedBoard);
   const tempCard = useSelector((state: RootState) => state.boards.tempCard);
   const dataList = useSelector((state: RootState) => state.boards.cards);
-  // const listCards = dataList.cards;
-  const [inputName, setInputName] = useState('');
-
-  const debouncedInputName = useDebounce(inputName, 1000);
-
-  useEffect(() => {
-    if (debouncedInputName) {
-      dispatch(updateNameFlowChartMiddleWare(selectedBoard._id, inputName));
-    }
-
-    return;
-  }, [debouncedInputName]);
-
+  // const listCards = dataList.cards.list;
+  // console.log('dataList', dataList);
   useEffect(() => {
     dispatch(getDataListCard());
   }, []);
@@ -57,17 +44,34 @@ const NewBoard = () => {
       return;
     }
 
-    return dataList.forEach((element) => setElements(element));
+    const list = dataList.map((each) => {
+      return {
+        id: each._id,
+        position: {
+          x: Math.random() * window.innerWidth - 100,
+          y: Math.random() * window.innerHeight,
+        },
+        type: each.shape,
+        data: {
+          label: each.textContent,
+        },
+      };
 
+    });
+
+    setElements(list);
   }, [dataList]);
-// console.log('dataList', dataList);
-  const onChangeNameFlowChart = (event) => {
-    setInputName(event.target.value);
-  };
 
-  function addShape(type: Shape) {
+  function addShape(type: string) {
+    // const test = nodeTypes[type];
+     // console.log(type, typeof type);
+    // dispatch(createNewCard(type.toLowerCase(), tempCard.position));
     dispatch(createNewCard(type, tempCard.position));
   }
+  // console.log('tempCard', tempCard);
+  // console.log('dataList', dataList);
+  // console.log('elements', elements);
+
   // const addShapeProcess = () => {
   //   createCardAction()
   //   setElements((element) => element.concat({
@@ -101,14 +105,7 @@ const NewBoard = () => {
       <div className='style-page'>
         <div className='header-flowchart'>
           <div className='create-name-flowchart'>
-            <div className='avt-flowchart'>
-              <AvatarFlowChart />
-            </div>
-            <input
-              className='input-name'
-              placeholder={selectedBoard.name}
-              onChange={onChangeNameFlowChart}
-            />
+            <HeaderContentBoard />
           </div>
           <PrimaryButtonUI
             title='Save'

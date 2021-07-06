@@ -2,7 +2,7 @@ import { Elements } from 'react-flow-renderer';
 export const initialElements: Elements = [
   // {
   //   id: '1' ,
-  //   type: 'process',
+  //   type: 'PROCESS',
   //   position: { x: 250, y: 0 },
   // },
   // {
