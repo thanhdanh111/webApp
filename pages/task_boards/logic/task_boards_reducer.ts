@@ -217,10 +217,12 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         templateTitleStatus: action?.payload,
       };
     case taskBoardsActionType.RENAME_TASK_STATUS:
-      updatedTaskStatuses = {
-        ...updatedTaskStatuses,
-        [action.payload?._id]: action.payload,
-      };
+      if (action.payload?._id) {
+        updatedTaskStatuses = {
+          ...updatedTaskStatuses,
+          [action.payload?._id]: action.payload,
+        };
+      }
 
       return {
         ...state,

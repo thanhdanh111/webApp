@@ -40,6 +40,7 @@ describe('Home page', () => {
     await page.waitForSelector('.add-task');
     await page.waitFor(5000);
     await page.click('.add-task');
+    await page.waitForSelector('.task-add');
     await page.waitFor(5000);
 
     const image = await page.screenshot();
