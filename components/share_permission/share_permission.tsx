@@ -79,7 +79,7 @@ export const SharePermission = ({
       }
 
       usersToShare.push(
-        <option value={userID}>
+        <option key={userID} value={userID}>
           {`${lastName} ${firstName}`}
         </option>,
       );

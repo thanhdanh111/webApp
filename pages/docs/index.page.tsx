@@ -30,7 +30,6 @@ interface DocsPageData {
   autoSaving: boolean;
   editTimestamp: number;
   lastUpdateEditTimestamp: number;
-
 }
 
 type DocsPageDataType = DocsPageData;

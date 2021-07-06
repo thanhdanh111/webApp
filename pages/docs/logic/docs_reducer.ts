@@ -81,7 +81,7 @@ const initialState: DocsValue = {
 
 export type DocsValueType = DocsValue;
 
-function unfocusCurrentBlock(oldState, newState) {
+function notChangeFocusOfEditorState(oldState, newState) {
   const oldSelection = oldState?.getSelection();
   const newSelection = newState?.getSelection();
 
@@ -95,13 +95,16 @@ function unfocusCurrentBlock(oldState, newState) {
   const oldFocus = oldSelection?.getHasFocus();
   const newFocus = newSelection?.getHasFocus();
 
-  return oldBlockKey === newBlockKey && oldFocus !== newFocus;
+  return oldBlockKey === newBlockKey && oldFocus === newFocus;
 }
 
 const docsReducer = (state = initialState, action) => {
   switch (action.type) {
     case DocsActionTypes.UpdateDocs:
-      if (!checkEmptyObject(action?.data?.editorState) && !unfocusCurrentBlock(state?.editorState, action?.data?.editorState)) {
+      if (
+        !checkEmptyObject(action?.data?.editorState) &&
+        notChangeFocusOfEditorState(state?.editorState, action?.data?.editorState)
+      ) {
         const timestamp = new Date().getTime();
 
         state.editTimestamp = timestamp;
