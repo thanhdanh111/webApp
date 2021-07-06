@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import Resizer from '../resizer/resize';
 import { handleResize } from '../../../../helpers/handle_resize';
+import SvgProcess from '@components/svg/svg_process';
 const CustomProcess = () => {
   const panelRef = useRef<HTMLDivElement>(null);
   const [focus, setFocus] = useState<boolean>(false);
@@ -18,9 +19,7 @@ const CustomProcess = () => {
         <Resizer panelRef={panelRef} onResize={handleResize}  />
       </div>
       <input title='text' placeholder='Add Text' className='text-input' />
-      <svg width='100%' height='100%' viewBox='0 0 80 40' preserveAspectRatio='none' fill='#ffffff' className='process-svg'>
-        <rect height='40' width='135' />
-      </svg>
+      <SvgProcess />
       <div className='handle'>
         <Handle
           type='source'

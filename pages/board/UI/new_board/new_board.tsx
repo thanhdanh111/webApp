@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useDebounce } from 'pages/users/logic/users_reducer';
 import CustomProcess from '../shapes/shape_process';
-import AvatarFlowChart from './avatar_flowchart';
 import ListOptionCard from './list_option_card';
 
 const onLoad = (reactFlowInstance) => {
@@ -78,9 +77,6 @@ const NewBoard = () => {
       <div className='style-page'>
         <div className='header-flowchart'>
           <div className='create-name-flowchart'>
-            <div className='avt-flowchart'>
-              <AvatarFlowChart />
-            </div>
             <input
               className='input-name'
               placeholder={selectedBoard.name}

@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import Resizer from '../resizer/resize';
 import { handleResize } from '../../../../helpers/handle_resize';
+import SvgDecision from '@components/svg/svg_decision';
 
 const CustomDecision = () => {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -22,9 +23,7 @@ const CustomDecision = () => {
       </div>
 
       <input id='input' placeholder='Add Text' className='input-decision' />
-      <svg width='100%' height='100%' viewBox='0 0 1200 1200' preserveAspectRatio='none' className='decision' fill='#ffffff'>
-        <path id='my' className='rhombus' d='M600 0 L0 600 L600 1200 L1200 600z' />
-      </svg>
+      <SvgDecision />
       <Handle
         id='handel-decision-right'
         type='source'
