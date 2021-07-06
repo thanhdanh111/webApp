@@ -100,3 +100,10 @@ export const setTasksToTaskStatus = (data: SetTasksToTaskStatus) => {
     type: taskBoardsActionType.SET_TASKS_TO_TASK_STATUS,
   };
 };
+
+export const updateUserAssigned = (res: object) => {
+  return {
+    type: taskBoardsActionType.UPDATE_USER_ASSIGN_FOR_TASK,
+    payload: res,
+  };
+};

@@ -2,15 +2,16 @@ import AvatarGroup from '@material-ui/lab/AvatarGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { Avatar, Badge } from '@material-ui/core';
-import { UserInfo } from 'helpers/type';
-import { RootStateOrAny, useSelector } from 'react-redux';
+import { User, UserInfo } from 'helpers/type';
 
 interface InitProps {
-  userInfo: UserInfo;
+  currentUser: UserInfo;
+  usersAssigned: User[];
 }
 
 const GroupUserAssigned: React.FC<InitProps> = (props) => {
-  const usersAssigned = useSelector((state: RootStateOrAny) => state.taskBoards?.usersAssigned);
+  const { usersAssigned, currentUser }: InitProps = props;
+  const fullName = `${currentUser?.profile?.firstName} ${currentUser?.profile?.lastName}`;
 
   return (
     <AvatarGroup
@@ -32,7 +33,7 @@ const GroupUserAssigned: React.FC<InitProps> = (props) => {
           >
             <Tooltip
               title={
-                user._id === props.userInfo?.userID ? "I'm online" : user.fullName
+                user._id === currentUser?.userID ? "I'm online" : fullName
               }
               arrow={true}
               placement='top'

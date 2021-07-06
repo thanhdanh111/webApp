@@ -6,9 +6,12 @@ import { DisappearedLoading } from 'react-loadingg';
 import { getSearchAction, useDebounce } from 'pages/users/logic/users_reducer';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import UserItem from './user_item_popup';
+import { User } from 'helpers/type';
 
 interface InitProps {
   getUser: () => void;
+  usersAssigned: User[];
+  handleAssign: (user) => void;
 }
 
 const AssignUserPopup: React.FC<InitProps> = (props) => {
@@ -16,6 +19,7 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
   const users = useSelector((state: RootStateOrAny) => state.users);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
+  const { getUser, handleAssign, usersAssigned }: InitProps = props;
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -29,8 +33,19 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
 
   const generateUser = () => {
     const user = debouncedSearchTerm ? users.listSearch : users.list;
-    const renderUser = user?.map((userAccess) => {
-      return <UserItem key={userAccess._id}  userAccess={userAccess}/>;
+
+    const renderUser = user?.map((each) => {
+      const isAssignUser = usersAssigned.filter((assign) => assign?._id === each?.user?.userID?._id)
+      .length !== 0;
+
+      return (
+        <UserItem
+          key={each?.user?._id}
+          userAccess={each?.user}
+          handleAssign={() => handleAssign(each?.user)}
+          isAssign={isAssignUser}
+        />
+      );
     });
 
     return renderUser;
@@ -50,7 +65,7 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
     <InfiniteScroll
       dataLength={users?.list?.length}
       hasMore={users?.list?.length < users?.totalCount}
-      next={props.getUser}
+      next={getUser}
       loader={<DisappearedLoading color={'#67cb48'} />}
       scrollThreshold={0.8}
       height={200}
