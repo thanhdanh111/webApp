@@ -49,7 +49,7 @@ const NewBoard = () => {
     setInputName(event.target.value);
   };
 
-  const addShapeProcess = () => {
+  const addShape = () => {
     setElements((element) => element.concat({
       id: (element.length + 1).toString(),
       position: { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight },
@@ -57,13 +57,6 @@ const NewBoard = () => {
     }));
   };
 
-  const addShapeDecision = () => {
-    setElements((element) => element.concat({
-      id: (element.length + 1).toString(),
-      position: { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight },
-      type: 'decision',
-    }));
-  };
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));
 
@@ -114,8 +107,7 @@ const NewBoard = () => {
           />
           <Controls />
           <ListOptionCard
-            onClickAddProcess={addShapeProcess}
-            onClickAddDecision={addShapeDecision}
+            onClickAdd={addShape}
           />
         </ReactFlow>
       </div>

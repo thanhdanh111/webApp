@@ -4,19 +4,19 @@ import SvgOptionProcess from '@components/svg/svg_option_process';
 import SvgOptionDecision from '@components/svg/svg_option_decision';
 
 interface InitialProps {
-  onClickAddProcess: () => void;
-  onClickAddDecision: () => void;
+  onClickAdd: () => void;
+
 }
 
 const ListOptionCard: FC<InitialProps> = (props: InitialProps) => {
 
-  const { onClickAddProcess, onClickAddDecision }: InitialProps = props;
+  const { onClickAdd }: InitialProps = props;
 
   return (
     <div className='card-shape-all'>
       <Box className='card-shape'>
-        <SvgOptionProcess onClickAdd={onClickAddProcess}/>
-        <SvgOptionDecision onClickAdd={onClickAddDecision} />
+        <SvgOptionProcess onClickAdd={onClickAdd}/>
+        <SvgOptionDecision onClickAdd={onClickAdd} />
       </Box>
     </div>
   );
