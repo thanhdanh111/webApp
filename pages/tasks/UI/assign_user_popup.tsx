@@ -10,7 +10,7 @@ import { User } from 'helpers/type';
 
 interface InitProps {
   getUser: () => void;
-  usersAssigned: User[];
+  usersAssigned?: User[];
   handleAssign: (user) => void;
 }
 
@@ -35,7 +35,7 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
     const user = debouncedSearchTerm ? users.listSearch : users.list;
 
     const renderUser = user?.map((each) => {
-      const isAssignUser = usersAssigned.filter((assign) => assign?._id === each?.user?.userID?._id)
+      const isAssignUser = usersAssigned?.filter((assign) => assign?._id === each?.user?.userID?._id)
       .length !== 0;
 
       return (

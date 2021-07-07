@@ -7,7 +7,7 @@ import AssignUserPopup from './assign_user_popup';
 import { User } from 'helpers/type';
 
 interface InitialProps {
-  usersAssigned: User[];
+  usersAssigned?: User[];
   handleAssign: (user) => void;
   sizes: string;
 }

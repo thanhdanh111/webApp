@@ -509,7 +509,7 @@ export const updateAssignUserThunkAction = (
     const localAccess = localStorage.getItem('access_token');
     const companyID = getState().userInfo.currentCompany._id;
 
-    if (!assignUserIDs?.length || !companyID || !taskID) {
+    if (!companyID || !taskID) {
       return;
     }
 
