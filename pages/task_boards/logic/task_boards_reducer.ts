@@ -11,6 +11,8 @@ import {
   createdTaskStatus,
   addTask,
   setTasksToTaskStatus,
+  deletedTaskStatus,
+  renameTaskStatus,
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
@@ -31,6 +33,7 @@ export interface TaskBoardsType {
   currentTaskStatus: string;
   newTask: Task;
   usersAssigned: UserAssigned[];
+  templateTitleStatus?: string;
 }
 
 export enum NotificationTypes {
@@ -52,6 +55,7 @@ const initialState: TaskBoardsType = {
   currentTaskStatus: '',
   newTask: { title: '', _id: '' },
   usersAssigned: [],
+  templateTitleStatus: '',
 };
 
 interface UpdateTaskStatus {
@@ -139,7 +143,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         currentTaskStatus: '',
         usersAssigned: [],
       };
-
     case taskBoardsActionType.SET_TYPE_CREATE_TASK:
       if (state.currentTaskStatus === action.payload){
         return { ...state };
@@ -167,7 +170,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         ...state,
         usersAssigned: state.usersAssigned.filter((user) => action.payload !== user._id),
       };
-
     case taskBoardsActionType.SET_TASKS_TO_TASK_STATUS:
 
       updatedTaskStatuses = state.taskStatus;
@@ -183,6 +185,42 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         updatedTaskStatuses = {
           ...updatedTaskStatuses,
           [action.data.taskStatusId]: taskStatusUpdated,
+        };
+      }
+
+      return {
+        ...state,
+        taskStatus: updatedTaskStatuses,
+      };
+    case taskBoardsActionType.DELETE_TASK_STATUS:
+      updatedTaskStatuses = state.taskStatus;
+      const deleteStatusID = action?.payload;
+      const status = delete updatedTaskStatuses?.[deleteStatusID];
+
+      if (!status) {
+        return;
+      }
+
+      const updateStatusInTaskBoard = state?.currentTaskBoard?.taskStatusIDs?.filter((statusID) => statusID !== deleteStatusID);
+
+      return {
+        ...state,
+        taskStatus: updatedTaskStatuses,
+        currentTaskBoard: {
+          ...state.currentTaskBoard,
+          taskStatusIDs: updateStatusInTaskBoard,
+        },
+      };
+    case taskBoardsActionType.SET_TEMPLATE_TITLE_STATUS:
+      return {
+        ...state,
+        templateTitleStatus: action?.payload,
+      };
+    case taskBoardsActionType.RENAME_TASK_STATUS:
+      if (action.payload?._id) {
+        updatedTaskStatuses = {
+          ...updatedTaskStatuses,
+          [action.payload?._id]: action.payload,
         };
       }
 
@@ -444,6 +482,66 @@ export const updateTaskById = ({
   } catch (error) {
     const errorNotification = returnNotification({ type: 'failed' });
     await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+  }
+};
+
+export const deletedTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    if (!token || !taskStatusID) {
+      return;
+    }
+
+    const res = await axios({
+      url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'DELETE',
+    });
+
+    if (!res.data) {
+      await dispatch(pushNewNotifications({ variant: 'error' , message: 'delete status unsuccess!' }));
+
+      return;
+    }
+
+    await dispatch(deletedTaskStatus(taskStatusID));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'delete status successfully!' }));
+  } catch (error) {
+    const notification = notificationsType[error?.response?.status] || 'Something went wrong';
+    await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
+  }
+};
+
+export const renameTaskStatusThunkAction = (taskStatusID) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const reTitleStatus = getState().taskBoards.templateTitleStatus;
+
+    if (!token || !reTitleStatus?.length || !taskStatusID) {
+      return;
+    }
+
+    const res = await axios({
+      url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      data: {
+        title: reTitleStatus,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'PUT',
+    });
+
+    await dispatch(renameTaskStatus(res.data));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'rename status successfully!' }));
+  } catch (error) {
+    const notification = notificationsType[error?.response?.status] || 'Something went wrong';
+    await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
   }
 };
 

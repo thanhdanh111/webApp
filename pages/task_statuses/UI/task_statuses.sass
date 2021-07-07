@@ -17,7 +17,6 @@
     flex-shrink: 0
     margin-right: 10px
     margin-bottom: 9px
-    padding: 14px 10px 12px
     margin: 6px 0 6px 6px
     border-radius: 3px
     background: #fff
@@ -31,8 +30,6 @@
       align-items: center
       user-select: none
       position: relative
-      min-width:  fit-content
-      padding: 0
       white-space: nowrap
       overflow: hidden
       text-overflow: ellipsis
@@ -43,6 +40,7 @@
       margin: 0
       color: #544d61
       text-transform: uppercase
+      padding: 0 10px;
 
       .name-status
         font-size: 1em
@@ -54,11 +52,46 @@
         border-radius: 50%
         font-size: 0.8em
 
+      .rename-status
+        display: flex;
+        border: .2px solid #5faf40;
+        padding: 3px;
+
+        .add-status-input
+          font-size: 13px;
+          padding: 2px;
+          border-radius: 5px;
+          border: none;
+          color: #3a3a3a;
+          width: 85%;
+          white-space: nowrap;
+
+          &:focus
+            outline: none
+
+        .close-create-status
+          .close-create-status-icon
+            font-size: 18px;
+            color: #ccc;
+
+            &:hover
+              color: #ca3131
+              cursor: pointer
+
+        .submit-create-status
+          .submit-create-status-icon
+            font-size: 17px;
+            color: #ccc;
+
+            &:hover
+              color: #00ab55
+              cursor: pointer
+
     .status-right
-      justify-content: space-between
-      margin-left: 15px
-      padding: 0
-      text-align: right
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0;
 
     .no-add-status
       background: #fff;
@@ -106,3 +139,7 @@
       flex-direction: column
       padding-bottom: 100px
       cursor: grab
+
+.add-task
+  .status
+    padding: 10px 10px 12px;
