@@ -36,6 +36,8 @@ describe('Home page', () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.board');
     await page.waitForSelector('.status');
+    await page.waitFor(5000);
+    await page.waitForSelector('.status-left');
 
     const status = await page.screenshot();
     expect(status).toMatchImageSnapshot();
@@ -45,6 +47,8 @@ describe('Home page', () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.board');
     await page.waitForSelector('.status');
+    await page.waitFor(5000);
+    await page.waitForSelector('.status-left');
 
     await page.waitForSelector('.add-task-text');
     await page.click('.add-task-text');
@@ -65,8 +69,10 @@ describe('Home page', () => {
     await page.waitForSelector('.popper-action-status');
     await page.waitFor(5000);
 
-    const actionStatus = await page.screenshot();
-    expect(actionStatus).toMatchImageSnapshot();
+    await page.waitForSelector('.rename-status-menu-item');
+
+    const actionRetitleStatus = await page.screenshot();
+    expect(actionRetitleStatus).toMatchImageSnapshot();
   });
 
   test('Test actions taskStatus successfully after login', async () => {
