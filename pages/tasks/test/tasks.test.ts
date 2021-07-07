@@ -37,6 +37,20 @@ describe('Home page', () => {
     await page.waitForSelector('.board');
     await page.waitForSelector('.board-tasks');
     await page.waitForSelector('.task-status');
+
+    await page.waitForSelector('.add-task');
+    await page.waitFor(5000);
+
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot();
+
+  });
+  test('Test add tasks successfully after login', async () => {
+    await page.goto('http://localhost:5000/home');
+    await page.waitForSelector('.board');
+    await page.waitForSelector('.board-tasks');
+    await page.waitForSelector('.task-status');
+
     await page.waitForSelector('.add-task');
     await page.waitFor(5000);
     await page.click('.add-task');
@@ -45,6 +59,14 @@ describe('Home page', () => {
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
+
+  });
+
+  test('Test delete tasks successfully after login', async () => {
+    await page.goto('http://localhost:5000/home');
+    await page.waitForSelector('.board');
+    await page.waitForSelector('.board-tasks');
+    await page.waitForSelector('.task-status');
 
     await page.waitForSelector('.footer-task');
     await page.waitForSelector('.delete-task');
@@ -55,7 +77,6 @@ describe('Home page', () => {
     expect(deletedTaskImage).toMatchImageSnapshot();
 
   });
-
 });
 
 afterAll(() => {
