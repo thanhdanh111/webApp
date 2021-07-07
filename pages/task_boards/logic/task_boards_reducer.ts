@@ -544,3 +544,37 @@ export const renameTaskStatusThunkAction = (taskStatusID) => async (dispatch, ge
     await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
   }
 };
+
+export const deletedTaskThunkAction = (taskID: Task) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const userInfo = getState()?.userInfo;
+    const taskStatuses: { [key: string]: TaskStatus } = getState()?.taskBoards?.taskStatus;
+    const companyID = userInfo?.currentCompany?._id;
+
+    if (!token || !taskID || !companyID) {
+      return;
+    }
+
+    await axios({
+      url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID?._id}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'DELETE',
+    });
+
+    const taskStatus = taskID?.taskStatusID as string;
+    const listTasks: Task[] = taskStatus ?
+    taskStatuses[taskStatus]?.taskIDs?.filter((item) => item?._id !== taskID?._id) : [];
+
+    await dispatch(updateTaskStatusById({ taskStatusID: taskStatus, tasks: listTasks }));
+    await dispatch(setLoading(false));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'Deleted task by taskID successfully!' }));
+  } catch (error) {
+    const errorNotification = returnNotification({ type: 'failed' });
+    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+
+  }
+};
