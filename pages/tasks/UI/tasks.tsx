@@ -20,7 +20,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
   const handleAssign = (user) => {
 
     let userAssigns = task?.userIDs?.map((each) => each._id) as string[];
-    const checkAssignedOfUser = checkAssigned(task?.userIDs, user?.userID?._id);
+    const checkAssignedOfUser = checkAssigned(userAssigns, user?.userID?._id);
 
     if (checkAssignedOfUser) {
       const removedUsers = userAssigns.filter((assignedUser) => user.userID._id !== assignedUser);
