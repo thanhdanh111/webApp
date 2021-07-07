@@ -11,6 +11,7 @@ export default function editorBlockRenderer({
   handleOnChangeLineStyle,
   onClickSideToolbar,
   onMoveBlockAction,
+  readOnly,
 }) {
   const type = contentBlock.getType();
 
@@ -21,6 +22,7 @@ export default function editorBlockRenderer({
         handleOnChangeLineStyle,
         onClickSideToolbar,
         onMoveBlockAction,
+        readOnly,
       },
     };
   }
@@ -32,6 +34,7 @@ export default function editorBlockRenderer({
         handleOnChangeLineStyle,
         onClickSideToolbar,
         onMoveBlockAction,
+        readOnly,
       },
     };
   }
@@ -43,6 +46,7 @@ export default function editorBlockRenderer({
         handleOnChangeLineStyle,
         onClickSideToolbar,
         onMoveBlockAction,
+        readOnly,
       },
     };
   }
@@ -55,6 +59,7 @@ export default function editorBlockRenderer({
         handleOnChangeLineStyle,
         onClickSideToolbar,
         onMoveBlockAction,
+        readOnly,
       },
     };
   }
@@ -65,6 +70,7 @@ export default function editorBlockRenderer({
       handleOnChangeLineStyle,
       onClickSideToolbar,
       onMoveBlockAction,
+      readOnly,
     },
   };
 }

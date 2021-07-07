@@ -12,29 +12,47 @@ import { RootState } from 'redux/reducers_registration';
 import { PageContent } from '../logic/docs_reducer';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import { updateDocs } from '../logic/docs_actions';
+import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access';
 
 interface DocsDrawerPageData {
   selectedPage: PageContent;
+  projectAccessOfUsers: ProjectAccessMapOfUsers;
+  accountUserID: string;
 }
 
 type DocsDrawerPageDataType = DocsDrawerPageData;
 
 const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
   const dispatch = useDispatch();
-  const { selectedPage }: DocsDrawerPageDataType = useSelector((state: RootState) => {
+  const {
+    selectedPage,
+    projectAccessOfUsers,
+    accountUserID,
+  }: DocsDrawerPageDataType = useSelector((state: RootState) => {
 
     return {
       selectedPage: state?.docs?.selectedPage,
+      projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
+      accountUserID: state?.userInfo?.userID,
     };
   }, shallowEqual);
 
   function sildePageDrawerToolbarActions() {
+    const projectID = project?._id ?? '';
+    const pageID = page?._id ?? '';
+    let rolesInPage = projectAccessOfUsers?.[accountUserID]?.[projectID]?.accessInPages?.[pageID] ?? [];
+    const isOwner = (page?.createdBy?._id ?? page?.createdBy) === accountUserID;
+
+    if (isOwner) {
+      rolesInPage = [DocsRole.WRITE, DocsRole.READ];
+    }
 
     const sideToolbarActions = [
       {
         type: 'normal',
         label: 'Delete',
         startIcon: <DeleteIcon />,
+        disabled: !rolesInPage.includes(DocsRole.WRITE),
         function: () => dispatch(deletePage()),
       },
       {

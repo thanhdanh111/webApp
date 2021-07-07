@@ -11,6 +11,7 @@ interface RenderAction {
   label?: string;
   startIcont?: JSX.Element;
   component?: JSX.Element;
+  disabled?: boolean;
 }
 
 interface SideToolbarButton {
@@ -54,6 +55,7 @@ const SideToolbarButton: FunctionComponent<SideToolbarButton> = ({
       component='div'
       key={`menu-item-index-${index}`}
       onClick={action?.function}
+      disabled={action?.disabled ?? false}
     >
       <ListItemIcon className='side-toolbar--menu-icon'>
         {action?.startIcon}

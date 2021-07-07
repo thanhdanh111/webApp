@@ -23,11 +23,13 @@ const blockRenderMap = Immutable.Map({
   },
 });
 
-function sildeTextToolbarActions({ onMoveBlockAction, handleOnChangeLineStyle }) {
+function sildeTextToolbarActions({ onMoveBlockAction, handleOnChangeLineStyle, readOnly }) {
   const sideToolbarActions = [
     {
       type: 'component',
+      disabled: readOnly,
       component: <ParagraphStyleSideToolbarBtn
+        readOnly={readOnly}
         key='menu-item-index-0'
         handleOnChangeLineStyle={handleOnChangeLineStyle}
       />,
@@ -35,12 +37,14 @@ function sildeTextToolbarActions({ onMoveBlockAction, handleOnChangeLineStyle })
     {
       type: 'normal',
       label: 'Move Up',
+      disabled: readOnly,
       startIcon: <ArrowUpwardIcon />,
       function: () => onMoveBlockAction('UP'),
     },
     {
       type: 'normal',
       label: 'Move Down',
+      disabled: readOnly,
       startIcon: <ArrowDownwardIcon />,
       function: () => onMoveBlockAction('DOWN'),
     },
@@ -66,6 +70,7 @@ export const UnstyledBlockCustom = (props) => {
         sildeTextToolbarActions({
           onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
           handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+          readOnly: props?.blockProps?.readOnly,
         })
       }
     />,
@@ -86,6 +91,7 @@ export const CodeBlockCustom = (props) => React.createElement(
       sildeTextToolbarActions({
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+        readOnly: props?.blockProps?.readOnly,
       })
     }
   />,
@@ -114,6 +120,7 @@ export const UnorderedListItemCustom = (props) => React.createElement(
       sildeTextToolbarActions({
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+        readOnly: props?.blockProps?.readOnly,
       })
     }
   />,
@@ -133,6 +140,7 @@ export const OrderedListItemCustom = (props) => React.createElement(
       sildeTextToolbarActions({
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+        readOnly: props?.blockProps?.readOnly,
       })
     }
   />,
@@ -161,6 +169,7 @@ export const MediaBlockComponent = (props) =>  {
         sildeTextToolbarActions({
           onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
           handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+          readOnly: props?.blockProps?.readOnly,
         })
       }
     />,

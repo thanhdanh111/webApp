@@ -9,6 +9,7 @@ import { DocsRole, getProjectAccessOfUsers } from './get_folder_access';
 import { getIDsParamsForAxios } from '../../../helpers/get_ids_params_for_axios';
 import { getUsersInCompany } from './get_users_in_company';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { checkTrueInArray } from 'helpers/check_true_in_array';
 
 export const createNewPage = () => async (dispatch, getState) => {
   try {
@@ -22,9 +23,18 @@ export const createNewPage = () => async (dispatch, getState) => {
       docProjectsMap,
     }: DocsValueType = getState()?.docs;
     const companyID = selectedDocProject?.companyID?._id ?? selectedDocProject?.companyID;
-    const docProjectID = selectedDocProject?._id;
+    const docProjectID = selectedDocProject?._id ?? '';
 
-    if (!title || !docProjectID || selectedPage?._id || !token) {
+    const invalidData = checkTrueInArray({
+      conditionsArray: [
+        !title,
+        !docProjectID,
+        selectedPage?._id,
+        !token,
+      ],
+    });
+
+    if (invalidData) {
 
       return;
     }
@@ -49,8 +59,16 @@ export const createNewPage = () => async (dispatch, getState) => {
       });
 
     const newProjectsMap = docProjectsMap;
+    const pageID = res?.data?._id;
+    const pagesInProject = newProjectsMap?.[docProjectID]?.pages;
 
-    newProjectsMap?.[docProjectID]?.pages?.push({
+    if (!pagesInProject) {
+      dispatch(updateDocs({ loading: false }));
+
+      return;
+    }
+
+    pagesInProject[pageID] = {
       title: res?.data?.title,
       _id: res?.data?._id,
       pageContent: res?.data?.pageContent,
@@ -58,7 +76,7 @@ export const createNewPage = () => async (dispatch, getState) => {
       createdBy: {
         _id: userID,
       },
-    });
+    };
 
     dispatch(updateDocs({ loading: false, docProjectsMap: newProjectsMap }));
   } catch (error) {
@@ -102,19 +120,23 @@ export const savePage = () => async (dispatch, getState) => {
         },
       });
 
-    const newProjectsMap  = docProjectsMap;
-    newProjectsMap[docProjectID].pages = newProjectsMap[docProjectID]?.pages?.map((page) => {
-      if (page?._id === res?.data._id) {
-        return {
-          pageContent: res?.data?.pageContent,
-          title: res?.data?.title,
-          _id: res?.data?._id,
-          entityMap: res?.data?.entityMap,
-        };
-      }
+    const newProjectsMap = docProjectsMap;
+    const pageID = res?.data?._id;
+    const pagesInProject = newProjectsMap?.[docProjectID]?.pages;
 
-      return page;
-    });
+    if (!pagesInProject) {
+      dispatch(updateDocs({ loading: false }));
+
+      return;
+    }
+
+    pagesInProject[pageID] = {
+      title: res?.data?.title,
+      _id: res?.data?._id,
+      pageContent: res?.data?.pageContent,
+      entityMap: res?.data?.entityMap,
+      createdBy: res?.data?.createdBy,
+    };
 
     dispatch(updateDocs({ loading: false, docProjectsMap: newProjectsMap }));
   } catch (error) {
@@ -152,13 +174,7 @@ export const deletePage = () => async (dispatch, getState) => {
 
     const newDocProjectsMap = docProjectsMap;
 
-    newDocProjectsMap[docProjectID].pages = newDocProjectsMap[docProjectID]?.pages?.filter((page) => {
-      if (page?._id !== selectedPageID) {
-        return true;
-      }
-
-      return false;
-    });
+    delete newDocProjectsMap[docProjectID]?.pages?.[selectedPageID];
 
     dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }));
   } catch (error) {
@@ -208,6 +224,7 @@ export const getDocProjects = () => async (dispatch, getState) => {
       fieldsOfParent: ['_id', 'title', 'companyID', 'createdBy'],
       fieldsOfChild: ['_id', 'title', 'pageContent', 'entityMap', 'createdBy'],
       parentFieldID: '_id',
+      childFieldID: '_id',
       parentFieldInChild: 'docProjectID',
       childName: 'pages',
     });
@@ -238,7 +255,7 @@ export const getDocProjects = () => async (dispatch, getState) => {
           title: docProject.title,
           _id: projectID,
           companyID: docProject.companyID,
-          pages: [],
+          pages: {},
           createdBy: docProject.createdBy,
         };
       });
@@ -309,7 +326,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
       companyID: newCompanyID,
       _id: newProjectID,
       title: newTitle,
-      pages: [],
+      pages: {},
       createdBy: userID,
     };
 
@@ -476,28 +493,37 @@ export const shareDocument = ({ role, userID }) => async (dispatch, getState) =>
   }
 };
 
-export const autoSavePage = ({ timestamp, editorState, projectID, selectedPageID  }) => async (dispatch, getState) => {
+export const autoSavePage = ({ timestamp, projectID, selectedPageID  }) => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
     const {
       title,
       docProjectsMap,
     }: DocsValueType = getState()?.docs;
+    const page = docProjectsMap?.[projectID]?.pages?.[selectedPageID];
+    const invalidData = checkTrueInArray({
+      conditionsArray: [
+        !title,
+        !projectID,
+        !selectedPageID,
+        !page,
+        !page?.title,
+        !page?.pageContent,
+      ],
+    });
 
-    if (!title || !projectID || !selectedPageID) {
+    if (invalidData) {
       dispatch(updateDocs({ autoSaving: false }));
 
       return;
     }
 
-    const rawBlocks = convertToRaw(editorState?.getCurrentContent());
-
-    const res = await axios.put(
+    await axios.put(
       `${config.BASE_URL}/docProjects/${projectID}/docPages/${selectedPageID}`,
       {
-        title,
-        pageContent: rawBlocks?.blocks,
-        entityMap: Object.values(rawBlocks.entityMap),
+        title: page?.title ?? null,
+        pageContent: JSON.parse(page?.pageContent as string) ?? [],
+        entityMap: JSON.parse(page?.pageContent as string) ?? [],
       },
       {
         headers: {
@@ -506,25 +532,7 @@ export const autoSavePage = ({ timestamp, editorState, projectID, selectedPageID
         },
       });
 
-    const newProjectsMap  = docProjectsMap;
-    newProjectsMap[projectID].pages = newProjectsMap[projectID]?.pages?.map((page) => {
-      if (page?._id === res?.data._id) {
-        return {
-          pageContent: res?.data?.pageContent,
-          title: res?.data?.title,
-          _id: res?.data?._id,
-          entityMap: res?.data?.entityMap,
-        };
-      }
-
-      return page;
-    });
-
-    dispatch(updateDocs({
-      docProjectsMap: newProjectsMap,
-      autoSaving: false,
-      lastUpdateEditTimestamp: timestamp,
-    }));
+    dispatch(updateDocs({ autoSaving: false, lastUpdateEditTimestamp: timestamp }));
   } catch (error) {
     dispatch(updateDocs({ autoSaving: false }));
   }

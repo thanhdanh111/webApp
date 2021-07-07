@@ -9,8 +9,8 @@ import { Input } from '@material-ui/core';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { autoSavePage, createNewPage, savePage, shareDocument } from './logic/docs_apis';
 import { handleKeyCombination } from './logic/handle_combination_key';
-import { EditorState } from 'draft-js';
-import { DocProject, PageContent, UsersInCompanyMap } from './logic/docs_reducer';
+import { EditorState, convertToRaw } from 'draft-js';
+import { DocProject, DocProjectMap, PageContent, UsersInCompanyMap } from './logic/docs_reducer';
 import { SharePermission } from '../../components/share_permission/share_permission';
 import { DocsRole, ProjectAccessMapOfUsers } from './logic/get_folder_access';
 import { checkTrueInArray } from 'helpers/check_true_in_array';
@@ -30,6 +30,7 @@ interface DocsPageData {
   autoSaving: boolean;
   editTimestamp: number;
   lastUpdateEditTimestamp: number;
+  docProjectsMap: DocProjectMap;
 }
 
 type DocsPageDataType = DocsPageData;
@@ -53,6 +54,7 @@ const DocsPage = () => {
     editTimestamp,
     autoSaving,
     lastUpdateEditTimestamp,
+    docProjectsMap,
   }: DocsPageDataType = useSelector((state: RootState) => {
 
     return {
@@ -70,6 +72,7 @@ const DocsPage = () => {
       editTimestamp: state?.docs?.editTimestamp,
       autoSaving: state?.docs?.autoSaving,
       lastUpdateEditTimestamp:  state?.docs?.lastUpdateEditTimestamp,
+      docProjectsMap: state?.docs?.docProjectsMap,
     };
   }, shallowEqual);
   const onEditPage = !!selectedPage?._id || !!selectedPage?.title;
@@ -84,12 +87,15 @@ const DocsPage = () => {
   });
 
   useMemo(() => {
+    const docProjectID = selectedProject?._id ?? '';
+    const selectedPageID = selectedPage?._id ?? '';
+
     const shouldNotSave = checkTrueInArray({
       conditionsArray: [
         readOnly,
+        !docProjectID,
         !onEditPage,
         editTimestamp === lastUpdateEditTimestamp,
-        autoSaving,
       ],
     });
 
@@ -98,14 +104,34 @@ const DocsPage = () => {
       return;
     }
 
+    const newProjectsMap  = docProjectsMap;
+    const rawBlocks = convertToRaw(editorState?.getCurrentContent());
+    const pagesInProject = newProjectsMap[docProjectID]?.pages;
+
+    if (!pagesInProject) {
+
+      return;
+    }
+
+    pagesInProject[selectedPageID] = {
+      title,
+      pageContent: JSON.stringify(rawBlocks?.blocks),
+      _id: selectedPageID,
+      entityMap: JSON.stringify(Object.values(rawBlocks?.entityMap)),
+    };
+
+    dispatch(updateDocs({ docProjectsMap: newProjectsMap }));
+
+    if (autoSaving) {
+
+      return;
+    }
+
     dispatch(updateDocs({ autoSaving: true }));
 
-    const docProjectID = selectedProject?._id;
-    const selectedPageID = selectedPage?._id;
-
-    setTimeout((timestamp, state, projectID, pageID) => {
-      dispatch(autoSavePage({ timestamp, projectID, editorState: state, selectedPageID: pageID }));
-    }, docsAutoSaveTimeOut, editTimestamp, editorState, docProjectID, selectedPageID);
+    setTimeout((timestamp, projectID, pageID) => {
+      dispatch(autoSavePage({ timestamp, projectID, selectedPageID: pageID }));
+    }, docsAutoSaveTimeOut, editTimestamp, docProjectID, selectedPageID);
 
   }, [editTimestamp, lastUpdateEditTimestamp]);
 

@@ -47,6 +47,10 @@ export interface PageContent {
   createdBy?: CreatedBy;
 }
 
+export interface PagesMap {
+  [pageID: string]: PageContent;
+}
+
 export interface DocProjectMap {
   [projectID: string] : DocProject;
 }
@@ -59,7 +63,7 @@ export interface DocProject {
   departmentID?: string;
   userIDs?: string[];
   documentPicture?: string;
-  pages?: PageContent[];
+  pages?: PagesMap;
 }
 
 const initialState: DocsValue = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import {
   ListItem, ListItemText, Collapse, ListItemIcon,
 } from '@material-ui/core';
@@ -7,14 +7,33 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import FolderIcon from '@material-ui/icons/Folder';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useDispatch } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import DocsDrawerPageUI from './docs_drawer_page_item';
 import SideToolbarButton from '@components/my_editor/side_toolbar_button';
 import { deleteDocProject } from '../logic/docs_apis';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import { updateDocs } from '../logic/docs_actions';
+import { checkEmptyObject } from 'helpers/check_empty_object';
+import { DocProject, PageContent, PagesMap } from '../logic/docs_reducer';
+import { RootState } from 'redux/reducers_registration';
+import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access';
 
-const DocsDrawerProjectUI = ({
+interface DocsDrawerProject {
+  project: DocProject;
+  pages: PagesMap;
+  onClickPage: (props) => void;
+  onClickProject: (project) => void;
+  selected: boolean;
+}
+
+interface DocsDrawerData {
+  projectAccessOfUsers: ProjectAccessMapOfUsers;
+  accountUserID: string;
+}
+
+type DocsDrawerDataType = DocsDrawerData;
+
+const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   project,
   pages,
   onClickPage,
@@ -22,7 +41,18 @@ const DocsDrawerProjectUI = ({
   selected,
 }) => {
   const [open, setOpen] = React.useState(true);
-  let renderPages = null;
+  const {
+    projectAccessOfUsers,
+    accountUserID,
+  }: DocsDrawerDataType = useSelector((state: RootState) => {
+
+    return {
+      projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
+      accountUserID: state?.userInfo?.userID,
+    };
+  },
+  shallowEqual);
+  let renderPages: null | JSX.Element[] = null;
   const dispatch = useDispatch();
 
   const handleClick = () => {
@@ -30,8 +60,8 @@ const DocsDrawerProjectUI = ({
     onClickProject(project);
   };
 
-  if (typeof pages !== 'string' && pages?.length) {
-    renderPages = pages?.map((page) =>
+  if (!checkEmptyObject(pages)) {
+    renderPages = Object.values(pages)?.map((page: PageContent) =>
       <DocsDrawerPageUI
         key={page?._id}
         onClickPage={onClickPage}
@@ -42,6 +72,8 @@ const DocsDrawerProjectUI = ({
   }
 
   function renderEndIcons() {
+    const rolesInProject = projectAccessOfUsers?.[accountUserID]?.[project?._id ?? '']?.roles ?? [];
+
     const expandedIcon = renderPages !== null ?
       (open ?
         <ExpandLess className='doc-project-expanded-icon' /> :
@@ -53,6 +85,7 @@ const DocsDrawerProjectUI = ({
         type: 'normal',
         label: 'Delete Project',
         startIcon: <DeleteIcon />,
+        disabled: !rolesInProject.includes(DocsRole.WRITE),
         function: () => dispatch(deleteDocProject({ projectID: project?._id })),
       },
       {

@@ -102,27 +102,21 @@ const DocsDrawer = () => {
   }
 
   function showListTreeOfDocProjects() {
-    const listTreeOfDocProjects: JSX.Element[] = [];
+    const projects = Object.values(docProjectsMap);
+    const listTreeOfDocProjects: JSX.Element[] = projects?.map((project) => {
 
-    for (const projectID in docProjectsMap) {
-      if (!docProjectsMap[projectID]) {
-
-        continue;
-      }
-
-      const project = docProjectsMap[projectID];
       const onSelectedProject = !selectedPage?._id &&
-      selectedDocProject?._id === project?._id;
+        selectedDocProject?._id === project?._id;
 
-      listTreeOfDocProjects.push(<DocsDrawerProjectUI
+      return <DocsDrawerProjectUI
         key={project?._id}
         project={project}
-        pages={project?.pages}
+        pages={project?.pages ?? {}}
         onClickPage={onClickPage}
         onClickProject={onClickProject}
         selected={onSelectedProject}
-      />);
-    }
+      />;
+    });
 
     return listTreeOfDocProjects;
   }

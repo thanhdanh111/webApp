@@ -22,6 +22,7 @@ export function getDesiredChildrenIntoDesiredParents({
   fieldsOfParent,
   parentFieldInChild,
   parentFieldID,
+  childFieldID,
   childName,
 }): DesiredMap {
   if (!childName) {
@@ -52,12 +53,13 @@ export function getDesiredChildrenIntoDesiredParents({
     }
 
     const parentID = child?.[parentFieldInChild]?.[parentFieldID];
+    const childID = child?.[childFieldID];
     const parentDataInMap = desiredMap?.[parentID] ?? {
       ...parentData,
-      [childName]: [],
+      [childName]: {},
     };
 
-    parentDataInMap[childName].push(childData);
+    parentDataInMap[childName][childID] = childData;
 
     desiredMap[parentID] = parentDataInMap;
   });

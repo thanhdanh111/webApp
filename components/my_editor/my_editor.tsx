@@ -48,6 +48,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
         onClickSideToolbar,
         onMoveBlockAction,
         handleOnChangeLineStyle,
+        readOnly,
       })}
     blockStyleFn={(contentBlock) => myBlockStyleFn(contentBlock, editorState)}
     blockRenderMap={extendedBlockRenderMap}
