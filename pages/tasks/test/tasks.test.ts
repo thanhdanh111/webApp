@@ -45,7 +45,7 @@ describe('Home page', () => {
     expect(image).toMatchImageSnapshot();
 
   });
-  test('Test add tasks successfully after login', async () => {
+  test('Test add and delete task successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.board');
     await page.waitForSelector('.board-tasks');
@@ -57,16 +57,15 @@ describe('Home page', () => {
     await page.waitForSelector('.task-add');
     await page.waitFor(5000);
 
+    const addTaskImage = await page.screenshot();
+    expect(addTaskImage).toMatchImageSnapshot();
+
+    await page.click('input[name=title]');
+    await page.type('input[name=title]', 'feat/created task for task');
+    await page.click('save-add');
+
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
-
-  });
-
-  test('Test delete tasks successfully after login', async () => {
-    await page.goto('http://localhost:5000/home');
-    await page.waitForSelector('.board');
-    await page.waitForSelector('.board-tasks');
-    await page.waitForSelector('.task-status');
 
     await page.waitForSelector('.footer-task');
     await page.waitForSelector('.delete-task');
@@ -77,6 +76,22 @@ describe('Home page', () => {
     expect(deletedTaskImage).toMatchImageSnapshot();
 
   });
+
+  // test('Test delete tasks successfully after login', async () => {
+  //   await page.goto('http://localhost:5000/home');
+  //   await page.waitForSelector('.board');
+  //   await page.waitForSelector('.board-tasks');
+  //   await page.waitForSelector('.task-status');
+
+  //   await page.waitForSelector('.footer-task');
+  //   await page.waitForSelector('.delete-task');
+  //   await page.click('.delete-task');
+  //   await page.waitFor(5000);
+
+  //   const deletedTaskImage = await page.screenshot();
+  //   expect(deletedTaskImage).toMatchImageSnapshot();
+
+  // });
 });
 
 afterAll(() => {
