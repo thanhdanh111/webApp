@@ -67,15 +67,8 @@ describe('Home page', () => {
 
     const actionStatus = await page.screenshot();
     expect(actionStatus).toMatchImageSnapshot();
-
-    await page.click('.rename-status-menu-item');
-
-    await page.waitForSelector('.add-status-input');
-    await page.waitFor(5000);
-
-    const actionRetitleStatus = await page.screenshot();
-    expect(actionRetitleStatus).toMatchImageSnapshot();
   });
+
   test('Test actions taskStatus successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.board');
