@@ -60,9 +60,16 @@ describe('Home page', () => {
     const addTaskImage = await page.screenshot();
     expect(addTaskImage).toMatchImageSnapshot();
 
+    await page.waitForSelector('input[name=title]');
+
     await page.click('input[name=title]');
     await page.type('input[name=title]', 'feat/created task for task');
-    await page.click('save-add');
+
+    await page.waitForSelector('.save-add');
+    await page.click('.save-add');
+
+    await page.waitFor(5000);
+    await page.waitForSelector('.task-item');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -75,6 +82,13 @@ describe('Home page', () => {
     const deletedTaskImage = await page.screenshot();
     expect(deletedTaskImage).toMatchImageSnapshot();
 
+    await page.waitForSelector('.confirm-dialog--yes-btn');
+    await page.click('.confirm-dialog--yes-btn');
+    await page.waitFor(5000);
+    await page.waitForSelector('.board-tasks');
+
+    const confirmDeletedTaskImage = await page.screenshot();
+    expect(confirmDeletedTaskImage).toMatchImageSnapshot();
   });
 
   // test('Test delete tasks successfully after login', async () => {
