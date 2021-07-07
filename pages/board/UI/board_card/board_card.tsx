@@ -21,8 +21,8 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
 
   const [open, setOpen] = useState(false);
 
-  const onPushToPage = () => {
-    void router.push(`${pathname}/${board?._id}`);
+  const onPushToContentBoard = () => {
+    void router.push({ pathname: `${pathname}/content`, query: { id: board?._id } });
   };
 
   const handleOpenOrClose = () => {
@@ -37,7 +37,7 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
     <Grid item xs={12} sm={3} className='board-grid'>
       <Card className='board-card'>
         <CardContent className='board-card-content'>
-          <div className='create-name-flowchart' onClick={() => onPushToPage()}>
+          <div className='create-name-flowchart' onClick={() => onPushToContentBoard()}>
             <Typography className='name-board'>
               {board?.name}
             </Typography>
@@ -48,7 +48,7 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
           </div>
         </CardContent>
       </Card>
-      <div className='picture' onClick={() => onPushToPage()}>
+      <div className='picture' onClick={() => onPushToContentBoard()}>
         MINI Map
       </div>
     </Grid>

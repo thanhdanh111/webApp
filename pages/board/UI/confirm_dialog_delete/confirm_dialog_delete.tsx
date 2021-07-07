@@ -22,7 +22,7 @@ const ConfirmDialogDelete: FC<InitialProps> = (props: InitialProps) => {
       onClose={onClose}
     >
       <DialogTitle>
-        <div>
+        <div className='form-confirm'>
           <Typography style={{ fontWeight: 600 }} variant='subtitle1' color='primary' >
             Confirm
           </Typography>
