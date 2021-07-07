@@ -2,13 +2,18 @@ import React, { useState, useRef } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import Resizer from '../resizer/resize';
 import { handleResize } from '../../../../helpers/handle_resize';
-import { RootState } from 'redux/reducers_registration';
-import { useSelector } from 'react-redux';
-const CustomProcess = () => {
+
+
+interface InitialProps {
+  onChangeTextContent: () => void;
+}
+
+const CustomProcess: React.FC<InitialProps> = (props: InitialProps) => {
+
+  const { onChangeTextContent }: InitialProps = props;
   const panelRef = useRef<HTMLDivElement>(null);
   const [focus, setFocus] = useState<boolean>(false);
 
-  const tempCard = useSelector((state: RootState) => state.boards.tempCard);
   // const [source, setSource] = useState('');
 
   return (
@@ -22,7 +27,7 @@ const CustomProcess = () => {
       <div className='border' style={focus ? {} : { display: 'none' }}>
         <Resizer panelRef={panelRef} onResize={handleResize}  />
       </div>
-      <input title='text' placeholder='Add Text' className='text-input' />
+      <input title='text' placeholder='Add Text' className='text-input' onChange={onChangeTextContent} />
       <svg width='100%' height='100%' viewBox='0 0 80 40' preserveAspectRatio='none' fill='#ffffff' className='process-svg'>
         <rect height='40' width='135' />
       </svg>
@@ -30,7 +35,8 @@ const CustomProcess = () => {
         <Handle
           type='source'
           position={Position.Right}
-          id={`rightTo-${tempCard._id}`}
+          id='mm'
+          // id={`rightTo-${tempCard._id}`}
           // onConnect={(params) => console.log('handle onConnect', params)}
           // isValidConnection={(connection) => {
           //   return connection.target === 'some-id';
@@ -40,21 +46,24 @@ const CustomProcess = () => {
         <Handle
           type='target'
           position={Position.Left}
-          id={`leftTo-${tempCard._id}`}
+          // id={`leftTo-${tempCard._id}`}
+          id='mn'
           // onConnect={() => setSource(true)}
           // isValidConnection={(connection) => connection.source === 'some-id'}
         />
         <Handle
           type='target'
           position={Position.Top}
-          id={`topTo-${tempCard._id}`}
+          // id={`topTo-${tempCard._id}`}
+          id='mk'
           // onConnect={(params) => console.log('handle onConnect top', params)}
           // isValidConnection={(connection) => connection.source === 'some-id'}
         />
         <Handle
           type='source'
           position={Position.Bottom}
-          id={`bottomTo-${tempCard._id}`}
+          // id={`bottomTo-${tempCard._id}`}
+          id='mh'
           // onConnect={(params) => console.log('handle onConnect bottom', params)}
           // isValidConnection={(connection) => connection.target === 'some-id'}
         />

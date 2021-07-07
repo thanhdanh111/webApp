@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Shape } from 'pages/board/logic/board_reducer';
 
 interface InitialProps {
-  onClickAdd: (e) => void;
+  onClickAdd: (e: string) => void;
 }
 
 const ListOptionCard: FC<InitialProps> = (props: InitialProps) => {

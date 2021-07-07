@@ -1,13 +1,18 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { BoardsPage, CardPositionData } from 'helpers/type';
+import { BoardsPage, Card } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import {
   createBoardAction,
   getBoardAction,
-  setBoard, updateNameFlowChartAction, deleteBoardAction, createCardAction, getDataListCardAction } from './board_action';
+  setBoard,
+  updateNameFlowChartAction,
+  deleteBoardAction,
+  getDataListCardAction,
+  createCardAction} from './board_action';
 import { boardsActionType } from './board_type_action';
 import { checkArray } from 'helpers/check_array';
+import { convertCardData } from './helper/convert_card_data';
 
 export enum NotificationTypes {
   succeedCreateFlowChart = 'Create FlowChart Successfully',
@@ -18,13 +23,11 @@ export enum NotificationTypes {
   succeedDeleteBoard = 'Delete FlowChart Successfully',
   failedDeleteBoard = 'Failed Delete FlowChart',
 }
-export enum Shape {
-  PROCESS = 'PROCESS',
-  DECISION = 'DECISION',
-}
-enum Arrow {
-  OUT_LINE = 'OUT_LINE',
-}
+export const Shape = {
+  PROCESS: 'PROCESS',
+  DECISION: 'DECISION',
+};
+
 const initialState: BoardsPage = {
   boards: [],
   selectedBoard: {
@@ -34,38 +37,6 @@ const initialState: BoardsPage = {
     projectID: '',
   },
   cards: [],
-  tempCard: {
-    _id: '',
-    boardID: '',
-    companyID: '',
-    textContent: '',
-    shape: Shape.PROCESS,
-    position: {
-      x: 110,
-      y: 110,
-    },
-    leftTo: {
-      cardID: '',
-      text: '',
-      arrow: Arrow.OUT_LINE,
-    },
-    rightTo: {
-      cardID: '',
-      text: '',
-      arrow: Arrow.OUT_LINE,
-    },
-    bottomTo: {
-      cardID: '',
-      text: '',
-      arrow: Arrow.OUT_LINE,
-    },
-    topTo: {
-      cardID: '',
-      text: '',
-      arrow: Arrow.OUT_LINE,
-    },
-  },
-  type: Shape.PROCESS,
 };
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -104,9 +75,12 @@ export const boardsReducer = (state = initialState, action) => {
       };
 
     case boardsActionType.CREATE_CARD:
+      let newCards: Card[] = JSON.parse(JSON.stringify(state.cards));
+      newCards = [...newCards, action.payload];
+
       return {
         ...state,
-        tempCard: action.payload,
+        cards: newCards,
       };
 
     case boardsActionType.GET_DATA_LIST_CARD:
@@ -265,7 +239,7 @@ export const deleteBoardMiddleWare = (boardID: string) => async (dispatch, getSt
   }
 };
 
-export const createNewCard = (shape, position: CardPositionData) => async (dispatch, getState) => {
+export const createNewCard = (shape: string, textContent: string, position: string) => async (dispatch, getState) => {
 
   try {
     const token = localStorage.getItem('access_token');
@@ -288,6 +262,7 @@ export const createNewCard = (shape, position: CardPositionData) => async (dispa
         shape,
         position,
         boardID,
+        textContent,
       },
       {
         headers: {
@@ -297,9 +272,10 @@ export const createNewCard = (shape, position: CardPositionData) => async (dispa
       },
     );
 
+
     dispatch(createCardAction(res.data));
   } catch (error) {
-    throw error;
+    dispatch(pushNewNotifications({ variant: 'error', message: 'Error. No add cards.' }));
   }
 };
 
@@ -314,20 +290,24 @@ export const getDataListCard = () => async (dispatch) => {
       },
     });
 
+    // if (checkArray(res.data.list)) {
+    //   const cards = res.data.list.map((card) => {
+    //     return {
+    //       _id: card._id,
+    //       boardID: card.boardID,
+    //       companyID: card.companyID,
+    //       textContent: card.textContent,
+    //       shape: card.shape,
+    //       position: {
+    //         x: card.position.x,
+    //         y: card.position.y,
+    //       },
+    //     };
+    //   });
+    //   await dispatch(getDataListCardAction(cards));
+    // }
     if (checkArray(res.data.list)) {
-      const cards = res.data.list.map((card) => {
-        return {
-          _id: card._id,
-          boardID: card.boardID,
-          companyID: card.companyID,
-          textContent: card.textContent,
-          shape: card.Shape,
-          position: {
-            x: Math.random() * window.innerHeight - 100,
-            y: Math.random() * window.innerHeight,
-          },
-        };
-      });
+      const cards = res.data.list.map(convertCardData({ }));
       await dispatch(getDataListCardAction(cards));
     }
 

@@ -31,10 +31,19 @@ const nodeTypes = {
 const NewBoard = () => {
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
-  const tempCard = useSelector((state: RootState) => state.boards.tempCard);
   const dataList = useSelector((state: RootState) => state.boards.cards);
-  // const listCards = dataList.cards.list;
-  // console.log('dataList', dataList);
+  // const [textContent, setTextContent] = useState('');
+
+  // const onChangeTextContent = (event) => {
+  //   if (!event.target.value) {
+  //     setTextContent('');
+
+  //     return;
+  //   }
+  //   setTextContent(event.target.value);
+
+  // };
+
   useEffect(() => {
     dispatch(getDataListCard());
   }, []);
@@ -48,13 +57,11 @@ const NewBoard = () => {
       return {
         id: each._id,
         position: {
-          x: Math.random() * window.innerWidth - 100,
-          y: Math.random() * window.innerHeight,
+          x: each.position.x,
+          y: each.position.y,
         },
         type: each.shape,
-        data: {
-          label: each.textContent,
-        },
+        data: each.textContent,
       };
 
     });
@@ -63,34 +70,9 @@ const NewBoard = () => {
   }, [dataList]);
 
   function addShape(type: string) {
-    // const test = nodeTypes[type];
-     // console.log(type, typeof type);
-    // dispatch(createNewCard(type.toLowerCase(), tempCard.position));
-    dispatch(createNewCard(type, tempCard.position));
+    dispatch(createNewCard(type.toUpperCase(), '', ''));
   }
-  // console.log('tempCard', tempCard);
-  // console.log('dataList', dataList);
-  // console.log('elements', elements);
 
-  // const addShapeProcess = () => {
-  //   createCardAction()
-  //   setElements((element) => element.concat({
-  //     // id: (element.length + 1).toString(),
-  //     id: selectedCard._id,
-  //     position: { x: Math.random() * window.innerWidth - 100, y: Math.random() * window.innerHeight },
-  //     type: 'process',
-  //     // source: '',
-  //     // target: '',
-  //   }));
-  // };
-
-  // const addShapeDecision = () => {
-  //   setElements((element) => element.concat({
-  //     id: (element.length + 1).toString(),
-  //     position: { x: Math.random() * window.innerWidth - 100, y: Math.random() * window.innerHeight },
-  //     type: 'decision',
-  //   }));
-  // };
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));
 
