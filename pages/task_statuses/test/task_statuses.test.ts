@@ -43,7 +43,7 @@ describe('Home page', () => {
     expect(status).toMatchImageSnapshot();
   });
 
-  test('Test add taskStatus successfully after login', async () => {
+  test('Test add and delete taskStatus successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.board');
     await page.waitForSelector('.status');
@@ -56,9 +56,34 @@ describe('Home page', () => {
 
     const addStatus = await page.screenshot();
     expect(addStatus).toMatchImageSnapshot();
+
+    await page.waitFor(5000);
+    await page.click('.add-status-input');
+    await page.type('.add-status-input', 'Testing');
+    await page.click('.submit-create-status');
+    await page.waitForSelector('.status');
+
+    const confirmAddStatus = await page.screenshot();
+    expect(confirmAddStatus).toMatchImageSnapshot();
+
+    await page.waitForSelector('.action-status-btn');
+    await page.click('.action-status-btn');
+
+    await page.waitForSelector('.popper-action-status');
+    await page.waitFor(5000);
+
+    const actionsStatusPopup = await page.screenshot();
+    expect(actionsStatusPopup).toMatchImageSnapshot();
+
+    await page.waitForSelector('.delete-status-menu-item');
+    await page.click('.delete-status-menu-item');
+    await page.waitFor(5000);
+
+    const deleteStatusSuccessImg = await page.screenshot();
+    expect(deleteStatusSuccessImg).toMatchImageSnapshot();
   });
 
-  test('Test actions taskStatus successfully after login', async () => {
+  test('Test rename taskStatus successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.board');
     await page.waitForSelector('.status');
@@ -70,24 +95,9 @@ describe('Home page', () => {
     await page.waitFor(5000);
 
     await page.waitForSelector('.rename-status-menu-item');
-
-    const actionRetitleStatus = await page.screenshot();
-    expect(actionRetitleStatus).toMatchImageSnapshot();
-  });
-
-  test('Test actions taskStatus successfully after login', async () => {
-    await page.goto('http://localhost:5000/home');
-    await page.waitForSelector('.board');
-    await page.waitForSelector('.status');
-
-    await page.waitForSelector('.action-status-btn');
-    await page.click('.action-status-btn');
-
-    await page.waitForSelector('.popper-action-status');
-    await page.waitFor(5000);
     await page.click('.rename-status-menu-item');
-
-    await page.waitForSelector('.add-status-input');
+    await page.type('.add-status-input', 'Testing ReTitle');
+    await page.click('.submit-create-status');
     await page.waitFor(5000);
 
     const actionRetitleStatus = await page.screenshot();
