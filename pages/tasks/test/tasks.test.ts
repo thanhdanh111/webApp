@@ -90,22 +90,6 @@ describe('Home page', () => {
     const confirmDeletedTaskImage = await page.screenshot();
     expect(confirmDeletedTaskImage).toMatchImageSnapshot();
   });
-
-  // test('Test delete tasks successfully after login', async () => {
-  //   await page.goto('http://localhost:5000/home');
-  //   await page.waitForSelector('.board');
-  //   await page.waitForSelector('.board-tasks');
-  //   await page.waitForSelector('.task-status');
-
-  //   await page.waitForSelector('.footer-task');
-  //   await page.waitForSelector('.delete-task');
-  //   await page.click('.delete-task');
-  //   await page.waitFor(5000);
-
-  //   const deletedTaskImage = await page.screenshot();
-  //   expect(deletedTaskImage).toMatchImageSnapshot();
-
-  // });
 });
 
 afterAll(() => {
