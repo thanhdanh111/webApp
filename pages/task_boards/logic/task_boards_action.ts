@@ -114,3 +114,25 @@ export const setTemplateTitleStatus = (templateTitleStatus: string) => {
     payload: templateTitleStatus,
   };
 };
+
+// filter task
+export const searchTaskByTitle = (tasks) => {
+  return {
+    type: taskBoardsActionType.SEARCH_TASKS_BY_TITLE,
+    payload: tasks,
+  };
+};
+
+export const setHasNoData = (res: boolean) => {
+  return {
+    type: taskBoardsActionType.HAS_NO_DATA,
+    payload: res,
+  };
+};
+
+export const setFiltering = (filtering: boolean) => {
+  return {
+    type: taskBoardsActionType.SET_FILTERING,
+    payload: filtering,
+  };
+};
