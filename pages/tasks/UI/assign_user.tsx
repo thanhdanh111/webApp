@@ -25,8 +25,8 @@ const AssignUser: React.FC<InitialProps> = (props) => {
     <PopupState variant='popover'>
       {(popupState) => (
         <div>
-          <div {...bindTrigger(popupState)}>
-          <GroupUserAssigned currentUser={userInfo} usersAssigned={usersAssigned} sizes={sizes} />
+          <div {...bindTrigger(popupState)} className='choose-assign-user'>
+            <GroupUserAssigned currentUser={userInfo} usersAssigned={usersAssigned} sizes={sizes} />
           </div>
           <Menu
             {...bindMenu(popupState)}
