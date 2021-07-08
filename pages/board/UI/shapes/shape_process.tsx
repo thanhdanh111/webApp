@@ -3,7 +3,6 @@ import { Handle, Position } from 'react-flow-renderer';
 import Resizer from '../resizer/resize';
 import { handleResize } from '../../../../helpers/handle_resize';
 
-
 interface InitialProps {
   onChangeTextContent: () => void;
 }
@@ -13,8 +12,6 @@ const CustomProcess: React.FC<InitialProps> = (props: InitialProps) => {
   const { onChangeTextContent }: InitialProps = props;
   const panelRef = useRef<HTMLDivElement>(null);
   const [focus, setFocus] = useState<boolean>(false);
-
-  // const [source, setSource] = useState('');
 
   return (
     <div
@@ -36,36 +33,22 @@ const CustomProcess: React.FC<InitialProps> = (props: InitialProps) => {
           type='source'
           position={Position.Right}
           id='mm'
-          // id={`rightTo-${tempCard._id}`}
-          // onConnect={(params) => console.log('handle onConnect', params)}
-          // isValidConnection={(connection) => {
-          //   return connection.target === 'some-id';
-          // }}
         />
 
         <Handle
           type='target'
           position={Position.Left}
-          // id={`leftTo-${tempCard._id}`}
           id='mn'
-          // onConnect={() => setSource(true)}
-          // isValidConnection={(connection) => connection.source === 'some-id'}
         />
         <Handle
           type='target'
           position={Position.Top}
-          // id={`topTo-${tempCard._id}`}
           id='mk'
-          // onConnect={(params) => console.log('handle onConnect top', params)}
-          // isValidConnection={(connection) => connection.source === 'some-id'}
         />
         <Handle
           type='source'
           position={Position.Bottom}
-          // id={`bottomTo-${tempCard._id}`}
           id='mh'
-          // onConnect={(params) => console.log('handle onConnect bottom', params)}
-          // isValidConnection={(connection) => connection.target === 'some-id'}
         />
       </div>
     </div>

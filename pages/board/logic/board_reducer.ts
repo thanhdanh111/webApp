@@ -12,16 +12,19 @@ import {
   createCardAction} from './board_action';
 import { boardsActionType } from './board_type_action';
 import { checkArray } from 'helpers/check_array';
-import { convertCardData } from './helper/convert_card_data';
+import { convertCardData } from './convert_card_data';
 
 export enum NotificationTypes {
   succeedCreateFlowChart = 'Create FlowChart Successfully',
   succeedUpdateNameFlowChart = 'Succeed Update Name FlowChart',
+  failedUpdateNameFlowChart = 'Failed Update Name FlowChart',
   failedCreateFlowChart = 'Failed Create FlowChart',
   errorFailed = 'Error data. Please update slack token!',
   companyTokenNotification = 'You have not registered any companies for workspace',
   succeedDeleteBoard = 'Delete FlowChart Successfully',
   failedDeleteBoard = 'Failed Delete FlowChart',
+  failedAddCard = 'Failed add card',
+  failedGetCard = 'Error. Don\'t get cards!',
 }
 export const Shape = {
   PROCESS: 'PROCESS',
@@ -205,7 +208,7 @@ export const updateNameFlowChartMiddleWare = (boardID: string, name: string) => 
     }
 
   } catch (error) {
-    throw error;
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateNameFlowChart }));
   }
 };
 
@@ -271,18 +274,24 @@ export const createNewCard = (shape: string, textContent: string, position: stri
         },
       },
     );
-
-
-    dispatch(createCardAction(res.data));
+    const newCard: Card = convertCardData(res.data);
+    dispatch(createCardAction(newCard));
   } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'error', message: 'Error. No add cards.' }));
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedAddCard }));
   }
 };
 
-export const getDataListCard = () => async (dispatch) => {
+export const getDataListCard = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
+    const { selectedBoard }: BoardsPage = getState()?.boards;
+    const boardID = selectedBoard?._id;
+    if (!boardID) {
 
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+
+      return ;
+    }
     const res = await axios.get(`${config.BASE_URL}/cards`, {
       headers: {
         'Content-Type': 'application/json',
@@ -290,32 +299,17 @@ export const getDataListCard = () => async (dispatch) => {
       },
     });
 
-    // if (checkArray(res.data.list)) {
-    //   const cards = res.data.list.map((card) => {
-    //     return {
-    //       _id: card._id,
-    //       boardID: card.boardID,
-    //       companyID: card.companyID,
-    //       textContent: card.textContent,
-    //       shape: card.shape,
-    //       position: {
-    //         x: card.position.x,
-    //         y: card.position.y,
-    //       },
-    //     };
-    //   });
-    //   await dispatch(getDataListCardAction(cards));
-    // }
     if (checkArray(res.data.list)) {
-      const cards = res.data.list.map(convertCardData({ }));
+      const cards: Card[] = [];
+      res.data.list.forEach((item) => {
+        cards.push(convertCardData(item));
+      });
       await dispatch(getDataListCardAction(cards));
     }
 
-    // console.log('res.data.list', res.data.list);
-
     return;
   } catch (error) {
-    throw error;
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedGetCard }));
   }
 
 };
