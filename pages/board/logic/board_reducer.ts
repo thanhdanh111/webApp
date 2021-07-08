@@ -165,7 +165,8 @@ export const createFlowChartMiddleWare = (router, currentPath) => async (dispatc
 
     dispatch(createBoardAction(res.data));
 
-    router.push({ pathname: `${currentPath}/content`, query: { id: res.data?._id } });
+    router.push({ pathname: `${currentPath}/view`, query: { id: res.data?._id } });
+    dispatch(pushNewNotifications({ variant: 'success', message: 'Create FlowChart successfully' }));
   } catch (error) {
     dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedCreateFlowChart }));
   }

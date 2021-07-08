@@ -3,7 +3,6 @@ import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { RootState } from 'redux/reducers_registration';
 import { createFlowChartMiddleWare, getBoardDataMiddleWare } from '../logic/board_reducer';
 import { DisappearedLoading } from 'react-loadingg';
@@ -30,15 +29,10 @@ const BoardUI: FunctionComponent<BoardsType> = (props: InitialProps) => {
   const pathname = router.pathname;
 
   const handleBtnNewFlowChart = () => {
-    try {
-      dispatch(createFlowChartMiddleWare(
-        router,
-        pathname,
-      ));
-      dispatch(pushNewNotifications({ variant: 'success', message: 'Create FlowChart successfully' }));
-    } catch (error) {
-      dispatch(pushNewNotifications({ variant: 'error', message: 'Failed Create FlowChart' }));
-    }
+    dispatch(createFlowChartMiddleWare(
+      router,
+      pathname,
+    ));
   };
 
   useEffect(() => {

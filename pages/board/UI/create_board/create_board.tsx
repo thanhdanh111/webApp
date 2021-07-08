@@ -15,20 +15,11 @@ import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { updateNameFlowChartMiddleWare } from 'pages/board/logic/board_reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
-import { useDebounce } from 'pages/users/logic/users_reducer';
 import CustomProcess from '../shapes/shape_process';
 import ListOptionCard from './list_option_card';
+import { useDebounce } from 'helpers/debounce';
 
-const onLoad = (reactFlowInstance) => {
-  reactFlowInstance.fitView();
-};
-
-const nodeTypes = {
-  process: CustomProcess,
-  decision: CustomDecision,
-};
-
-const NewBoard = () => {
+const CreateBoard = () => {
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
   const selectedBoard = useSelector((state: RootState) => state.boards.selectedBoard);
@@ -64,6 +55,15 @@ const NewBoard = () => {
     setElements((els) => updateEdge(oldEdge, newConnection, els));
 
   const onConnect = (params) => setElements((els) => addEdge({ ...params, arrowHeadType: ArrowHeadType.ArrowClosed }, els));
+
+  const onLoad = (reactFlowInstance) => {
+    reactFlowInstance.fitView();
+  };
+
+  const nodeTypes = {
+    process: CustomProcess,
+    decision: CustomDecision,
+  };
 
   return (
     <Fragment>
@@ -115,4 +115,4 @@ const NewBoard = () => {
   );
 };
 
-export default NewBoard;
+export default CreateBoard;
