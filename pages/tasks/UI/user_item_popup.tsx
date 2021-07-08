@@ -4,17 +4,17 @@ import { UserAccess } from 'helpers/type';
 interface InitProps {
   userAccess: UserAccess;
   handleAssign: () => void;
-  isAssign?: boolean;
+  isAssigned?: boolean;
 }
 const UserItem: React.FC<InitProps> = (props) => {
-  const { userAccess, handleAssign, isAssign }: InitProps = props;
+  const { userAccess, handleAssign, isAssigned }: InitProps = props;
 
   return (
     <MenuItem onClick={handleAssign}>
     <Box
       display='flex'
       alignItems='center'
-      className={isAssign ? 'user-accept' : ''}
+      className={isAssigned ? 'user-accept' : ''}
     >
         <Avatar
           src={userAccess.userID?.profilePhoto}

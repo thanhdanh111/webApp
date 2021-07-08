@@ -4,7 +4,7 @@ import { updateAssignUserThunkAction } from 'pages/task_boards/logic/task_boards
 import React, { FunctionComponent } from 'react';
 import { useDispatch } from 'react-redux';
 import AssignUser from './assign_user';
-import { checkAssigned } from 'helpers/check_assigned';
+import { checkAssignedUserID } from 'helpers/check_assigned';
 
 interface InitialProp {
   task: Task;
@@ -20,7 +20,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
   const handleAssign = (user) => {
 
     let userAssigns = task?.userIDs?.map((each) => each._id) as string[];
-    const checkAssignedOfUser = checkAssigned(userAssigns, user?.userID?._id);
+    const checkAssignedOfUser = checkAssignedUserID(userAssigns, user?.userID?._id);
 
     if (checkAssignedOfUser) {
       const removedUsers = userAssigns.filter((assignedUser) => user.userID._id !== assignedUser);

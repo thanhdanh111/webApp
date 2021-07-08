@@ -7,6 +7,8 @@ import { getSearchAction, useDebounce } from 'pages/users/logic/users_reducer';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import UserItem from './user_item_popup';
 import { User } from 'helpers/type';
+import { checkAssignedUserByID } from 'helpers/check_assigned';
+// import { checkAssigned } from 'helpers/check_assigned';
 
 interface InitProps {
   getUser: () => void;
@@ -35,15 +37,14 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
     const user = debouncedSearchTerm ? users.listSearch : users.list;
 
     const renderUser = user?.map((each) => {
-      const isAssignUser = usersAssigned?.filter((assign) => assign?._id === each?.user?.userID?._id)
-      .length !== 0;
+      const checkAssignedOfUser = checkAssignedUserByID(usersAssigned, each?.user?.userID?._id);
 
       return (
         <UserItem
           key={each?.user?._id}
           userAccess={each?.user}
           handleAssign={() => handleAssign(each?.user)}
-          isAssign={isAssignUser}
+          isAssigned={checkAssignedOfUser}
         />
       );
     });
