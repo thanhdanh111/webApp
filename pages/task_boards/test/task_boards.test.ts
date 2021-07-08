@@ -53,7 +53,22 @@ describe('Home page', () => {
     const showTaskBoards = await page.screenshot();
     expect(showTaskBoards).toMatchImageSnapshot();
   });
+  test('Test search tasks by title successfully after login', async () => {
+    await page.goto('http://localhost:5000/home');
+    await page.waitForSelector('.board');
 
+    await page.waitForSelector('.status');
+    await page.waitFor(5000);
+    await page.waitForSelector('.status-left');
+    await page.waitForSelector('.nav-input-search');
+
+    await page.click('.nav-input-search');
+    await page.type('.nav-input-search', 'test');
+    await page.waitFor(5000);
+
+    const showTaskBoards = await page.screenshot();
+    expect(showTaskBoards).toMatchImageSnapshot();
+  });
 });
 
 afterAll(() => {
