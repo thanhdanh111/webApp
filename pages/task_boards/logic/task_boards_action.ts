@@ -100,3 +100,38 @@ export const setTasksToTaskStatus = (data: SetTasksToTaskStatus) => {
     type: taskBoardsActionType.SET_TASKS_TO_TASK_STATUS,
   };
 };
+
+export const getTaskDetail = (task) => {
+  return {
+    type: taskBoardsActionType.GET_TASK_DETAIL,
+    payload: task,
+  };
+};
+
+export const getTag = (tags) => {
+  return {
+    type: taskBoardsActionType.GET_TAG,
+    payload: tags,
+  };
+};
+
+export const createTag = (tag) => {
+  return {
+    type: taskBoardsActionType.CREATE_TAG,
+    payload: tag,
+  };
+};
+
+export const updateTag = (tag) => {
+  return {
+    type: taskBoardsActionType.UPDATE_TAG,
+    payload: tag,
+  };
+};
+
+export const deleteTag = (id) => {
+  return {
+    type: taskBoardsActionType.DELETE_TAG,
+    payload: id,
+  };
+};

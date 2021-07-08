@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedTaskBoard } from '../logic/task_boards_action';
-import { createTaskBoardThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
+import { createTaskBoardThunkAction, getTagsThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
 import { Close } from '@material-ui/icons';
 import { checkArray } from 'helpers/check_array';
 import { Roles } from 'constants/roles';
@@ -49,6 +49,7 @@ const TaskBoardUI = () => {
   const fetchData = async () => {
     await Promise.all([
       dispatch(getTaskBoardThunkAction()),
+      dispatch(getTagsThunkAction()),
     ]);
   };
 

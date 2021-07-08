@@ -260,13 +260,11 @@ export interface ChannelIDData {
 }
 
 export interface Tag {
-  tagId: string;
-  title: string;
-  workspaceId: string;
-  description?: string;
-  createdBy?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  _id?: string;
+  name: string;
+  companyID?: string;
+  departmentID?: string;
+  color?: string;
 }
 
 interface UpdateTaskData {

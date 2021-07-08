@@ -57,7 +57,7 @@
       padding: 2px 0
       color: #777
 
-.task-add 
+.task-add
   margin: 15px 10px 6px 10px
   background: #fff
   box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .06)
@@ -80,35 +80,10 @@
   .close-icon
     margin-right: 8px
 
-  .badge-task
-    border-radius: 50%;
-
-    .MuiBadge-dot
-      background-color: #44b700
-      box-shadow: 0 0 0 2px #fff
-
-  .group-avatar-task
-    .MuiAvatarGroup-avatar
-      width: 23px
-      height: 23px 
-
-      .avata-task  
-        width: 23px  
-        height: 23px  
-
-    .MuiAvatar-colorDefault
-      text-align: right;
-      font-size: 12px;
-
-    .no-user-assign
-      border-radius: 50px
-      padding: 2px
-      border: 1px dotted #7c828d
-
   .grid-icon
     height: 40px
 
-    .icon-add 
+    .icon-add
       .date-text
         font-size: 11px
 
@@ -120,19 +95,19 @@
 
     .normal-icon
       color: #70dcfc
-      
+
     .low-icon
       color: #d8d8d8
 
     .clear-icon
-      color: #f8b6b1 
+      color: #f8b6b1
 
   .date-add
     width: 0
     height: 0
     visibility: hidden
 
-  .save-add 
+  .save-add
     background-color: #50ac55
     font-size: 10px
     min-width: 20px
@@ -149,9 +124,34 @@
       .icon-direct
         font-size: 15px
 
+.badge-task
+  border-radius: 50%;
+
+  .MuiBadge-dot
+    background-color: #44b700
+    box-shadow: 0 0 0 2px #fff
+
+.group-avatar-task
+  .MuiAvatarGroup-avatar
+    width: 23px
+    height: 23px
+
+    .avata-task
+      width: 23px
+      height: 23px
+
+  .MuiAvatar-colorDefault
+    text-align: right;
+    font-size: 12px;
+
+  .no-user-assign
+    border-radius: 50px
+    padding: 2px
+    border: 1px dotted #7c828d
+
 .user-popup
   .avata-popup
-    width: 30px  
+    width: 30px
     height: 30px
     margin-right: 16px
 
@@ -165,3 +165,169 @@
 .priority-popup
   .icon-popup
     margin-right: 10px
+
+.detail-modal
+  display: flex
+  align-items: center
+  justify-content: center
+
+  .collapse-content
+    height: calc(100% - 40px)
+
+    .detail-content
+      background-color: #fff
+      max-width: unset
+      border-radius: 10px
+      overflow: hidden
+      width: 100%
+      height: 100%
+
+      .btn-detail
+        padding: 2px
+        min-width: 0
+        background: #fff
+
+        .icon-close
+          font-size: 14px
+
+      .done-detail
+        width: 30px
+        height: 30px
+        margin-right: 8px
+
+        &:hover
+          color: #50ac55
+          border-color: #50ac55
+
+    .tag-border
+      border-radius: 50px
+      border: 1px dashed #d3d3d3
+      color: #d3d3d3
+
+    .status-modal
+      border-bottom: 0.5px solid #dedede
+
+    .status-detail
+      border-radius: 5px
+      overflow: hidden
+      margin-right: 10px
+
+      .btn-status
+        border: 1px solid #fff
+        background-color: #50ac55
+        color: #fff
+        cursor: pointer
+        font-size: 12px
+
+    .priority-detail
+      &:before
+        content: ''
+        margin: 0 20px
+        height: 25px
+        border-right: 1px solid #dedede
+
+      .priority-icon
+        padding: 6px
+        width: 35px
+        height: 35px
+
+    .header-modal-detail
+      border-bottom: 1px solid #dedede
+      background-color: #eff0f3
+
+    .left-content
+      border-right: 1px solid #dedede
+
+    .main-content-detail
+      height: 100%
+      overflow: auto
+
+    .title-detail
+      background-color: #fff
+
+      .input-title
+        font-size: 25px
+        padding-left: 16px
+        border: none
+        width: 100%
+        padding: 8px 16px
+        max-height: 150px
+        overflow: auto
+        resize: none
+
+        &:hover
+          border: 1px solid #dedede
+
+        &:focus-visible
+          outline: unset
+          border: 1px solid #dedede
+          padding: 8px 16px;
+
+      .input-description
+        font-size: 15px
+        max-height: unset
+
+        &:hover
+          border-top: none
+
+        &:focus-visible
+          border-top: none
+
+    .attachment-detail
+      .attachments-title
+        font-size: 20px
+
+      .btn-add-attachment
+        margin-left: 10px
+        min-width: 10px
+        font-size: 10px
+        padding: 0 4px
+        text-transform: none
+        color: #50ac55
+        border-color: #50ac55
+
+        &:hover
+          background-color: #50ac55
+          color: #fff
+
+        .icon-attachment
+          font-size: 16px
+
+      .veiw-attachment
+        width: 30px
+        padding: 4px
+        height: 30px
+        color: #b7b9bb
+
+        &.active
+          background-color: #f2f2f4
+
+    .footer-detail-task
+      color: #c8cadc
+      height: 60px
+      box-shadow: 0 -11px 20px 0 #dedede
+
+      .uploader-file
+        border-right: 1px solid #dedede
+        height: 60px
+
+      .text-upload
+        margin-left: 8px
+        margin-right: 4px
+
+      .label-upload
+        cursor: pointer
+        color: #50ac55
+
+      .attachment-browse
+        opacity: 0
+        position: absolute
+        z-index: -1
+
+.attachment-detail-popup
+  .option-attachment
+    font-size: 12px
+
+    .icon-option
+      margin-right: 8px
+      font-size: 20px

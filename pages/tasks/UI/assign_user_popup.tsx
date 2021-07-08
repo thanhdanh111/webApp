@@ -30,7 +30,7 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
   const generateUser = () => {
     const user = debouncedSearchTerm ? users.listSearch : users.list;
     const renderUser = user?.map((userAccess) => {
-      return <UserItem key={userAccess._id}  userAccess={userAccess}/>;
+      return <UserItem key={userAccess._id}  userAccess={userAccess.user}/>;
     });
 
     return renderUser;
