@@ -291,8 +291,6 @@ export const getDataListCard = () => async (dispatch, getState) => {
     if (!companyID || !boardID) {
 
       dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
-
-      return ;
     }
     const res = await axios.get(`${config.BASE_URL}/cards`, {
       headers: {
