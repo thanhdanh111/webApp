@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { DisappearedLoading } from 'react-loadingg';
-import { getSearchAction, useDebounce } from 'pages/users/logic/users_reducer';
+import { getSearchAction } from 'pages/users/logic/users_reducer';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import UserItem from './user_item_popup';
 import { User } from 'helpers/type';
 import { checkAssignedUserByID } from 'helpers/check_assigned';
 // import { checkAssigned } from 'helpers/check_assigned';
+import { useDebounce } from 'helpers/debounce';
 
 interface InitProps {
   getUser: () => void;

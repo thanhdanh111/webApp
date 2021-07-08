@@ -5,7 +5,7 @@ import {
   MenuItem,
   Typography,
 } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
@@ -16,25 +16,41 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import ListIcon from '@material-ui/icons/List';
 import TaskBoardUI from './show_task_board';
-import { TaskBoardsType } from '../logic/task_boards_reducer';
+import { searchTasksByTitleThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilterTaskByUserAction } from '../logic/task_boards_action';
+import { setFiltering, setFilterTaskByUserAction } from '../logic/task_boards_action';
 import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 import { checkValidAccess } from 'helpers/check_valid_access';
 import { Roles } from 'constants/roles';
+import { useDebounce } from 'helpers/debounce';
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
 
 const NavClickUp = () => {
   const dispatch = useDispatch();
-  const { filteringTaskByUser }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
+  const {
+    filteringTaskByUser,
+  }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
   const {
     isAdmin,
     rolesInCompany,
   }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const loadData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
   const btnShow = filteringTaskByUser ? 'btn-show-me' : 'btn-show-all';
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      void getSearchTaskData();
+
+      return;
+    }
+
+    dispatch(setFiltering(false));
+  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     if (loadData) {
@@ -43,6 +59,13 @@ const NavClickUp = () => {
 
     return;
   }, []);
+
+  const getSearchTaskData = async () => {
+    await Promise.all([
+      dispatch(setFiltering(true)),
+      dispatch(searchTasksByTitleThunkAction(debouncedSearchTerm)),
+    ]);
+  };
 
   const onChangeMe = () => {
     dispatch(setFilterTaskByUserAction(true));
@@ -59,8 +82,9 @@ const NavClickUp = () => {
         <div className='nav-search'>
           <SearchIcon className='icon-search' />
           <input
-            placeholder='Filter by task name...'
+            placeholder='Filter by task title...'
             className='nav-input-search'
+            onChange={(event) => setSearchTerm(event.target.value)}
           />
         </div>
       </Container>
