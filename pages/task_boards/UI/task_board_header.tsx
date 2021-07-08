@@ -23,7 +23,7 @@ import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 import { checkValidAccess } from 'helpers/check_valid_access';
 import { Roles } from 'constants/roles';
-import { useDebounce } from 'pages/users/logic/users_reducer';
+import { useDebounce } from 'helpers/debounce';
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
 
