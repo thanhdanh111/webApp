@@ -20,6 +20,7 @@ import { Roles } from 'constants/roles';
 import { RootState } from 'redux/reducers_registration';
 import { UserInfoType } from 'helpers/type';
 import { checkValidAccess } from 'helpers/check_valid_access';
+import { getPaginationThunkAction } from 'pages/users/logic/users_reducer';
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
 
@@ -49,6 +50,7 @@ const TaskBoardUI = () => {
   const fetchData = async () => {
     await Promise.all([
       dispatch(getTaskBoardThunkAction()),
+      dispatch(getPaginationThunkAction()),
     ]);
   };
 

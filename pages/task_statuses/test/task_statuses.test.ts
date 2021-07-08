@@ -60,6 +60,10 @@ describe('Home page', () => {
     await page.waitFor(5000);
     await page.click('.add-status-input');
     await page.type('.add-status-input', 'Testing');
+
+    const chooseUserAssignImg = await page.screenshot();
+    expect(chooseUserAssignImg).toMatchImageSnapshot();
+
     await page.click('.submit-create-status');
     await page.waitForSelector('.status');
 
