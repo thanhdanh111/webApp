@@ -6,7 +6,6 @@ import {
   headCells,
   actionList,
   getSearchAction,
-  useDebounce,
   getPaginationThunkAction,
 } from '../logic/users_reducer';
 import BaseTable from '@components/table/table';
@@ -16,6 +15,7 @@ import UserDetail from './user_detail/user_detail';
 import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
 import { updateUsersReducer } from '../logic/users_actions';
 import { removeUserFromCompany, removeUserFromDepartment } from '../logic/users_apis';
+import { useDebounce } from 'helpers/debounce';
 
 const ListUsers: FunctionComponent = () => {
   const dispatch = useDispatch();
