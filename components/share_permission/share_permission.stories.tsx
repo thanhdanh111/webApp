@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import { SharePermission } from './share_permission';
 
-storiesOf('Inline Toolbar', module).add('Header', () => {
+storiesOf('Share Permission', module).add('Header', () => {
   return <SharePermission
     selectedProject={{}}
     openShare={true}
@@ -11,5 +11,12 @@ storiesOf('Inline Toolbar', module).add('Header', () => {
     accountUserID={''}
     selectedPage={{}}
     handleShare={() => 'handled'}
+    handleRemoveRole={({ role, userID }) => {
+
+      return {
+        role,
+        userID,
+      };
+    }}
   />;
 });
