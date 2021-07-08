@@ -45,8 +45,7 @@ describe('Board Page', () => {
     await page.waitForSelector('.check-box');
     await page.click('.check-box');
     await page.waitFor(5000);
-    await page.waitForSelector('.confirm-delete--close-btn');
-    await page.waitFor(5000);
+
     const deleteFlowChart = await page.screenshot();
     expect(deleteFlowChart).toMatchImageSnapshot();
 
