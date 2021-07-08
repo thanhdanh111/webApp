@@ -18,6 +18,7 @@ import { RootState } from 'redux/reducers_registration';
 import CustomProcess from '../shapes/shape_process';
 import ListOptionCard from './list_option_card';
 import HeaderContentBoard from './header_content_board';
+// import { useRouter } from 'next/router';
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
@@ -32,6 +33,9 @@ const NewBoard = () => {
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
   const dataList = useSelector((state: RootState) => state.boards.cards);
+
+  // const router = useRouter();
+  // const query = router.query;
   // const [textContent, setTextContent] = useState('');
 
   // const onChangeTextContent = (event) => {
@@ -113,8 +117,8 @@ const NewBoard = () => {
           />
           <MiniMap
             nodeColor={(n) => {
-              if (n.type === 'process') return '#0041d0';
-              if (n.type === 'decision') return '#ff0072';
+              if (n.type === 'PROCESS') return '#0041d0';
+              if (n.type === 'DECISION') return '#ff0072';
 
               return '#FFCC00';
             }}

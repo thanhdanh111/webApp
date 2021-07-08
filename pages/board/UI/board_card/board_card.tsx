@@ -23,7 +23,7 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
   const [open, setOpen] = useState(false);
 
   const onPushToPage = () => {
-    void router.push(`${pathname}/${board?._id}`);
+    void router.push({ pathname: `${pathname}/content` , query: { id: board?._id } });
   };
 
   const handleOpenOrClose = () => {

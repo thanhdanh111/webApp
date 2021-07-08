@@ -171,7 +171,7 @@ export const createFlowChartMiddleWare = (router, currentPath) => async (dispatc
 
     dispatch(createBoardAction(res.data));
 
-    router.push(`${currentPath}/${res.data?._id}`);
+    router.push({ pathname: `${currentPath}/content`, query: { id: res.data._id } });
   } catch (error) {
     dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedCreateFlowChart }));
   }
@@ -284,9 +284,11 @@ export const createNewCard = (shape: string, textContent: string, position: stri
 export const getDataListCard = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
     const { selectedBoard }: BoardsPage = getState()?.boards;
     const boardID = selectedBoard?._id;
-    if (!boardID) {
+    if (!companyID || !boardID) {
 
       dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
 
