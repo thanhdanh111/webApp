@@ -13,6 +13,7 @@ import { PageContent } from '../logic/docs_reducer';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import { updateDocs } from '../logic/docs_actions';
 import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access';
+import { getItemSelectedRolesOfUser } from '../logic/get_item_selected_roles_of_user';
 
 interface DocsDrawerPageData {
   selectedPage: PageContent;
@@ -40,26 +41,26 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
   function sildePageDrawerToolbarActions() {
     const projectID = project?._id ?? '';
     const pageID = page?._id ?? '';
-    let rolesInPage = projectAccessOfUsers?.[accountUserID]?.[projectID]?.accessInPages?.[pageID] ?? [];
-    const isOwner = (page?.createdBy?._id ?? page?.createdBy) === accountUserID;
-
-    if (isOwner) {
-      rolesInPage = [DocsRole.WRITE, DocsRole.READ];
-    }
+    const rolesOfUser = getItemSelectedRolesOfUser({
+      projectAccessOfUsers,
+      userID: accountUserID,
+      selectedPageID: pageID,
+      selectedProjectID: projectID,
+    });
 
     const sideToolbarActions = [
-      {
-        type: 'normal',
-        label: 'Delete',
-        startIcon: <DeleteIcon />,
-        disabled: !rolesInPage.includes(DocsRole.WRITE),
-        function: () => dispatch(deletePage()),
-      },
       {
         type: 'normal',
         label: 'Share',
         startIcon: <PeopleOutlineIcon />,
         function: () => dispatch(updateDocs({ openShare: true })),
+      },
+      {
+        type: 'normal',
+        label: 'Delete',
+        startIcon: <DeleteIcon />,
+        disabled: !rolesOfUser.includes(DocsRole.WRITE),
+        function: () => dispatch(deletePage()),
       },
     ];
 
@@ -92,4 +93,11 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
   </ListItem>;
 };
 
-export default DocsDrawerPageUI;
+function areEqual(prevProps, nextProps) {
+  const sameID = prevProps?.page?._id === nextProps?.page?._id;
+  const sameTitle = prevProps?.page?.title === nextProps?.page?.title;
+
+  return sameID && sameTitle;
+}
+
+export default React.memo(DocsDrawerPageUI, areEqual);

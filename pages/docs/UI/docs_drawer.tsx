@@ -5,14 +5,11 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { createNewDocProject, getDocProjects, getFolderAccessOfProjectIDs, getUsersInCompanyApi } from '../logic/docs_apis';
 import { RootState } from 'redux/reducers_registration';
-import { updateDocsInDrawer } from '../logic/docs_actions';
-import { convertFromRaw, EditorState, CompositeDecorator } from 'draft-js';
+import { updateSelectedItemInDrawer } from '../logic/docs_actions';
 import CreateNewProjectDialog from './docs_new_project';
 import { Tooltip, IconButton, List } from '@material-ui/core';
 import DocsDrawerProjectUI from './docs_drawer_project_item';
-import { docsLinkDecorator } from 'pages/docs/UI/decorator_link';
 import { DocProject, DocProjectMap, PageContent } from '../logic/docs_reducer';
-import { docsImageDecorator } from './decorator_image';
 
 interface DocsDrawerData {
   docProjectsMap: DocProjectMap;
@@ -57,37 +54,17 @@ const DocsDrawer = () => {
   }
 
   function onClickProject(project) {
-    const decorator = new CompositeDecorator([
-      docsLinkDecorator,
-      docsImageDecorator,
-    ]);
 
-    dispatch(updateDocsInDrawer({
-      selectedDocProject: project,
-      selectedPage: {},
-      editorState: EditorState.createEmpty(decorator),
-      title: '',
+    dispatch(updateSelectedItemInDrawer({
+      projectID: project?._id,
       needDisplay: false,
     }));
   }
 
   function onClickPage(props) {
-    const convertedBlocks = JSON.parse(props?.page?.pageContent);
-    const convertedEntityMap = JSON.parse(props?.page?.entityMap);
-    const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: convertedEntityMap });
-    const decorator = new CompositeDecorator([
-      docsLinkDecorator,
-      docsImageDecorator,
-    ]);
-
-    dispatch(updateDocsInDrawer({
-      editorState: EditorState.createWithContent(
-        newContentState,
-        decorator,
-      ),
-      selectedDocProject: props?.project,
-      selectedPage: props?.page,
-      title: props?.page?.title,
+    dispatch(updateSelectedItemInDrawer({
+      pageID: props?.page?._id,
+      projectID: props.project?._id,
       needDisplay: false,
     }));
   }

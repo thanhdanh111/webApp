@@ -5,6 +5,7 @@ import { ProjectAccessMapOfUsers } from './get_folder_access';
 export enum DocsActionTypes {
   UpdateDocs = 'UpdateDocs',
   UpdateDocsInDrawer = 'UpdateDocsInDrawer',
+  UpdateSelectedItemInDrawer = 'updateSelectedItemInDrawer',
 }
 
 interface UpdateDocs {
@@ -34,5 +35,19 @@ export const updateDocsInDrawer = (data: UpdateDocs) => {
   return {
     data,
     type: DocsActionTypes.UpdateDocsInDrawer,
+  };
+};
+
+interface UpdateSelectedItemInDrawer extends UpdateDocs {
+  pageID?: string;
+  projectID?: string;
+}
+
+export type UpdateSelectedItemInDrawerType = UpdateSelectedItemInDrawer;
+
+export const updateSelectedItemInDrawer = (data: UpdateSelectedItemInDrawer) => {
+  return {
+    data,
+    type: DocsActionTypes.UpdateSelectedItemInDrawer,
   };
 };

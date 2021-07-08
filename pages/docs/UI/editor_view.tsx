@@ -35,7 +35,7 @@ const EditorView: FunctionComponent<EditorView> = ({ readOnly }) => {
 
   function onClickSideToolbar(props) {
     const contentBlock = props?.contentBlock;
-    if (!contentBlock) {
+    if (!contentBlock || !editorState || readOnly) {
       return;
     }
 

@@ -10,18 +10,63 @@
   justify-content: space-between
   align-items: center
   margin-bottom: 10px
+  position: relative
+
+  .remove-shared-user--icon-button
+    position: absolute
+    width: 20px
+    height: 20px
+    left: -25px
+    top: 10px
+    cursor: pointer
+
+    .remove-shared-user--icon
+      width: 15px
+      height: 15px
+
 
   .users-shared-with--name
     flex-grow: 2
 
   .users-shared-with--owner
-    margin-right: 20px
     background-color: rgba(0, 171, 85, 0.95)
     padding: 4px
     opacity: 0.95
-    width: 65px
+    width: 80px
     color: #fff
+    font-size: 16px
+    user-select: none
     font-weight: 600
     display: flex
     border-radius: 15px
     justify-content: center
+
+.users-shared-with--roles-render
+  display: flex
+  flex-direction: row
+  font-size: 0.8125rem
+  
+  .users-shared-with--role-render
+    margin: 3px
+    display: inline-flex
+    width: 80px
+    background-color: #e0e0e0
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif
+    align-items: center
+    border-radius: 16px
+    height: 32px
+
+    .users-shared-with--role-render-text
+      padding: 5px 12px
+      user-select: none
+      white-space: nowrap
+      width: 50px
+  
+    .users-shared-with--role-render-icon
+      width: 20px
+      height: 20px
+      cursor: pointer
+      opacity: 0.6
+
+      &:hover
+        opacity: 1

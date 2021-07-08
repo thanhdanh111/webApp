@@ -16,7 +16,6 @@ import { updateDocs } from '../logic/docs_actions';
 import { checkEmptyObject } from 'helpers/check_empty_object';
 import { DocProject, PageContent, PagesMap } from '../logic/docs_reducer';
 import { RootState } from 'redux/reducers_registration';
-import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access';
 
 interface DocsDrawerProject {
   project: DocProject;
@@ -27,7 +26,6 @@ interface DocsDrawerProject {
 }
 
 interface DocsDrawerData {
-  projectAccessOfUsers: ProjectAccessMapOfUsers;
   accountUserID: string;
 }
 
@@ -41,17 +39,12 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   selected,
 }) => {
   const [open, setOpen] = React.useState(true);
-  const {
-    projectAccessOfUsers,
-    accountUserID,
-  }: DocsDrawerDataType = useSelector((state: RootState) => {
+  const { accountUserID }: DocsDrawerDataType = useSelector((state: RootState) => {
 
     return {
-      projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
       accountUserID: state?.userInfo?.userID,
     };
-  },
-  shallowEqual);
+  }, shallowEqual);
   let renderPages: null | JSX.Element[] = null;
   const dispatch = useDispatch();
 
@@ -72,7 +65,7 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   }
 
   function renderEndIcons() {
-    const rolesInProject = projectAccessOfUsers?.[accountUserID]?.[project?._id ?? '']?.roles ?? [];
+    const canDeleteProject = (project?.createdBy?.['_id'] ?? project?.createdBy) === accountUserID;
 
     const expandedIcon = renderPages !== null ?
       (open ?
@@ -83,16 +76,16 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
     const sideToolbarActions = [
       {
         type: 'normal',
-        label: 'Delete Project',
-        startIcon: <DeleteIcon />,
-        disabled: !rolesInProject.includes(DocsRole.WRITE),
-        function: () => dispatch(deleteDocProject({ projectID: project?._id })),
-      },
-      {
-        type: 'normal',
         label: 'Share Project',
         startIcon: <PeopleOutlineIcon />,
         function: () => dispatch(updateDocs({ openShare: true })),
+      },
+      {
+        type: 'normal',
+        label: 'Delete Project',
+        startIcon: <DeleteIcon />,
+        disabled: !canDeleteProject,
+        function: () => dispatch(deleteDocProject({ projectID: project?._id })),
       },
     ];
 
@@ -128,4 +121,12 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   </>;
 };
 
-export default DocsDrawerProjectUI;
+function areEqual(prevProps, nextProps) {
+  const sameID = prevProps?.project?._id === nextProps?.project?._id;
+  const sameSelected = prevProps?.selected === nextProps?.selected;
+  const samePagesLength = Object.keys(prevProps?.project?.pages) === Object.keys(nextProps?.project?.pages);
+
+  return sameID && sameSelected && samePagesLength;
+}
+
+export default React.memo(DocsDrawerProjectUI, areEqual);

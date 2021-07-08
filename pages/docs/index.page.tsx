@@ -14,6 +14,7 @@ import { DocProject, DocProjectMap, PageContent, UsersInCompanyMap } from './log
 import { SharePermission } from '../../components/share_permission/share_permission';
 import { DocsRole, ProjectAccessMapOfUsers } from './logic/get_folder_access';
 import { checkTrueInArray } from 'helpers/check_true_in_array';
+import { getItemSelectedRolesOfUser } from './logic/get_item_selected_roles_of_user';
 
 interface DocsPageData {
   needDisplay: boolean;
@@ -118,6 +119,7 @@ const DocsPage = () => {
       pageContent: JSON.stringify(rawBlocks?.blocks),
       _id: selectedPageID,
       entityMap: JSON.stringify(Object.values(rawBlocks?.entityMap)),
+      createdBy: selectedPage?.createdBy,
     };
 
     dispatch(updateDocs({ docProjectsMap: newProjectsMap }));
@@ -167,19 +169,14 @@ const DocsPage = () => {
     const selectedProjectID = selectedProject?._id ?? '';
     const selectedPageID = selectedPage?._id;
 
-    const rolesInProject = projectAccessOfUsers?.[accountUserID]?.[selectedProjectID]?.roles ?? [];
-    let haveWritePermission = rolesInProject.includes(DocsRole.WRITE);
+    const rolesOfUser = getItemSelectedRolesOfUser({
+      selectedPageID,
+      selectedProjectID,
+      projectAccessOfUsers,
+      userID: accountUserID,
+    });
 
-    if (selectedPageID && !haveWritePermission) {
-      haveWritePermission = projectAccessOfUsers?.
-                                [accountUserID]?.
-                                [selectedProjectID]?.
-                                accessInPages?.
-                                [selectedPageID]?.
-                                includes(DocsRole.WRITE);
-    }
-
-    return haveWritePermission;
+    return rolesOfUser.includes(DocsRole.WRITE);
   }
 
   function onClickShare(role, userID) {
@@ -188,6 +185,15 @@ const DocsPage = () => {
     }
 
     dispatch(shareDocument({ role, userID }));
+  }
+
+  function onClickRemoveShare({ role, userID }) {
+    if (!role?.length || !userID?.length) {
+
+      return;
+    }
+
+    return;
   }
 
   return <div
@@ -229,6 +235,7 @@ const DocsPage = () => {
       accountUserID={accountUserID}
       selectedPage={selectedPage}
       handleShare={onClickShare}
+      handleRemoveRole={onClickRemoveShare}
     />
   </div>;
 };

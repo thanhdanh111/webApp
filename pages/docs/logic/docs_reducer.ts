@@ -1,8 +1,12 @@
-import { DocsActionTypes } from './docs_actions';
-import { EditorState } from 'draft-js';
+import { DocsActionTypes, UpdateSelectedItemInDrawerType } from './docs_actions';
+import { EditorState, CompositeDecorator, convertFromRaw } from 'draft-js';
 import { Company, User } from 'helpers/type';
 import { ProjectAccessMapOfUsers } from './get_folder_access';
 import { checkEmptyObject } from 'helpers/check_empty_object';
+import { docsImageDecorator } from '../UI/decorator_image';
+import { docsLinkDecorator } from '../UI/decorator_link';
+import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { checkTrueInArray } from 'helpers/check_true_in_array';
 
 interface DocsValue {
   needDisplay: boolean;
@@ -102,13 +106,53 @@ function notChangeFocusOfEditorState(oldState, newState) {
   return oldBlockKey === newBlockKey && oldFocus === newFocus;
 }
 
+function updateSelectedItemInDrawer(data, state: DocsValue) {
+  const { pageID, projectID, ...restData }: UpdateSelectedItemInDrawerType  = data;
+  const decorator = new CompositeDecorator([
+    docsLinkDecorator,
+    docsImageDecorator,
+  ]);
+  const project = state?.docProjectsMap?.[projectID ?? ''];
+  const page = project?.pages?.[pageID ?? ''];
+
+  if (project) {
+    state.selectedDocProject = project;
+    state.editorState = EditorState.createEmpty(decorator);
+    state.title = '';
+    state.selectedPage = {};
+  }
+
+  if (page) {
+    const convertedBlocks = JSON.parse(page?.pageContent ?? '[]');
+    const convertedEntityMap = JSON.parse(page?.entityMap ?? '[]');
+    const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: convertedEntityMap });
+
+    state.autoSaving = false;
+    state.selectedPage = page;
+    state.title = page.title ?? '';
+    state.editorState = EditorState.createWithContent(
+      newContentState,
+      decorator,
+    );
+  }
+
+  return {
+    ...state,
+    ...restData,
+  };
+}
+
 const docsReducer = (state = initialState, action) => {
   switch (action.type) {
     case DocsActionTypes.UpdateDocs:
-      if (
-        !checkEmptyObject(action?.data?.editorState) &&
-        notChangeFocusOfEditorState(state?.editorState, action?.data?.editorState)
-      ) {
+      const editContent = checkOnlyTrueInArray({
+        conditionsArray: [
+          !checkEmptyObject(action?.data?.editorState),
+          notChangeFocusOfEditorState(state?.editorState, action?.data?.editorState),
+        ],
+      });
+      const editTitle = !!action?.data?.title;
+      if (checkTrueInArray({ conditionsArray: [editContent, editTitle] })) {
         const timestamp = new Date().getTime();
 
         state.editTimestamp = timestamp;
@@ -124,6 +168,10 @@ const docsReducer = (state = initialState, action) => {
         ...state,
         ...action.data,
       };
+
+    case DocsActionTypes.UpdateSelectedItemInDrawer:
+
+      return updateSelectedItemInDrawer(action.data, state);
     default:
       return state;
   }

@@ -21,6 +21,7 @@ export const createNewPage = () => async (dispatch, getState) => {
       selectedDocProject,
       selectedPage,
       docProjectsMap,
+      projectAccessOfUsers,
     }: DocsValueType = getState()?.docs;
     const companyID = selectedDocProject?.companyID?._id ?? selectedDocProject?.companyID;
     const docProjectID = selectedDocProject?._id ?? '';
@@ -78,7 +79,11 @@ export const createNewPage = () => async (dispatch, getState) => {
       },
     };
 
-    dispatch(updateDocs({ loading: false, docProjectsMap: newProjectsMap }));
+    const accessForNewPage = projectAccessOfUsers?.[userID]?.[docProjectID]?.accessInPages ?? {};
+
+    accessForNewPage[pageID] = [DocsRole.WRITE, DocsRole.READ];
+
+    dispatch(updateDocs({ projectAccessOfUsers, loading: false, docProjectsMap: newProjectsMap }));
   } catch (error) {
     dispatch(updateDocs({ loading: false }));
   }
@@ -523,7 +528,7 @@ export const autoSavePage = ({ timestamp, projectID, selectedPageID  }) => async
       {
         title: page?.title ?? null,
         pageContent: JSON.parse(page?.pageContent as string) ?? [],
-        entityMap: JSON.parse(page?.pageContent as string) ?? [],
+        entityMap: JSON.parse(page?.entityMap as string) ?? [],
       },
       {
         headers: {
