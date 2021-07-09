@@ -12,6 +12,7 @@ import TaskNew from 'pages/tasks/UI/task_new';
 import { setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
 import ActionTaskStatusUI from './action_task_status';
 import RenameStatusUI from './ui_rename_task_status';
+import { checkArray } from 'helpers/check_array';
 
 interface InitProps {
   taskStatusID: string;
@@ -24,6 +25,8 @@ const TaskStatusUI = (props: InitProps) => {
     taskStatus,
     loading,
     currentTaskStatus,
+    isFiltering,
+    filterResultTasks,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const { userID }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const dispatch = useDispatch();
@@ -57,6 +60,10 @@ const TaskStatusUI = (props: InitProps) => {
 
         return false;
       });
+    }
+
+    if (isFiltering) {
+      taskIDs = filterResultTasks.filter((task) => task.taskStatusID._id === taskStatusID);
     }
 
     const scrollInput = () => {
@@ -104,7 +111,7 @@ const TaskStatusUI = (props: InitProps) => {
                   taskStatusID={taskStatus[taskStatusID]?._id}
                 />
               }
-              {taskIDs?.map((task, index) => {
+              {checkArray(taskIDs) && taskIDs?.map((task, index) => {
                 return (
                   <Draggable
                     key={task?._id}
@@ -148,7 +155,7 @@ const TaskStatusUI = (props: InitProps) => {
 
   return (
     <div className='task-status'>
-      {(taskStatus && !loading) &&
+      {(!loading) &&
         TaskStatusContent()
       }
       {loading && <DisappearedLoading color={'#67cb48'}/>}

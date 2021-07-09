@@ -11,7 +11,7 @@ beforeAll(async () => {
 
   try {
     browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       slowMo: 0,
       ignoreDefaultArgs: ['--no-sandbox'],
     });
@@ -60,6 +60,10 @@ describe('Home page', () => {
     await page.waitFor(5000);
     await page.click('.add-status-input');
     await page.type('.add-status-input', 'Testing');
+
+    const chooseUserAssignImg = await page.screenshot();
+    expect(chooseUserAssignImg).toMatchImageSnapshot();
+
     await page.click('.submit-create-status');
     await page.waitForSelector('.status');
 
@@ -160,6 +164,7 @@ describe('Home page', () => {
 
     await page.waitForSelector('.confirm-dialog--yes-btn');
     await page.click('.confirm-dialog--yes-btn');
+    await page.click('.confirm-dialog--no-btn');
     await page.waitFor(5000);
     await page.waitForSelector('.board-tasks');
 
@@ -197,27 +202,6 @@ describe('Home page', () => {
     const deleteStatusSuccessImg = await page.screenshot();
     expect(deleteStatusSuccessImg).toMatchImageSnapshot();
   });
-
-  // test('Test rename taskStatus successfully after login', async () => {
-    // await page.goto('http://localhost:5000/home');
-    // await page.waitForSelector('.board');
-    // await page.waitForSelector('.status');
-//
-    // await page.waitForSelector('.action-status-btn');
-    // await page.click('.action-status-btn');
-//
-    // await page.waitForSelector('.popper-action-status');
-    // await page.waitFor(5000);
-//
-    // await page.waitForSelector('.rename-status-menu-item');
-    // await page.click('.rename-status-menu-item');
-    // await page.type('.add-status-input', 'Testing ReTitle');
-    // await page.click('.submit-create-status');
-    // await page.waitFor(5000);
-//
-    // const actionRetitleStatus = await page.screenshot();
-    // expect(actionRetitleStatus).toMatchImageSnapshot();
-  // });
 
 });
 
