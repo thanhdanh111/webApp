@@ -11,6 +11,7 @@ import { eventLogsReducer } from 'pages/event_logs/logic/event_log_reducer';
 import docsReducer from 'pages/docs/logic/docs_reducer';
 import companyReducer from 'pages/company/logic/company_reducer';
 import { notificationReducer } from './common/notifications/reducer';
+import { boardsReducer } from 'pages/board/logic/board_reducer';
 import { taskBoardsReducer } from 'pages/task_boards/logic/task_boards_reducer';
 
 const rootReducer = combineReducers({
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   docs: docsReducer,
   company: companyReducer,
   newNotifications: notificationReducer,
+  boards: boardsReducer,
 });
 
 export default rootReducer;

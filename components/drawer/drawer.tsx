@@ -12,6 +12,7 @@ import EventNoteIcon from '@material-ui/icons/EventNote';
 import EditIcon from '@material-ui/icons/Edit';
 import BusinessIcon from '@material-ui/icons/Business';
 import DocsDrawer from 'pages/docs/UI/docs_drawer';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -24,11 +25,12 @@ const elementIcons = {
   event_logs: <EventNoteIcon />,
   projects: <EventNoteIcon />,
   company: <BusinessIcon />,
+  board: <DashboardIcon />,
 };
 
 const drawerElements = {
   general: ['home', 'users', 'statistics', 'docs'],
-  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects'],
+  management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects', 'board'],
 };
 
 interface DrawerUi {

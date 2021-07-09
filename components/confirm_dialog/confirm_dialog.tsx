@@ -23,6 +23,7 @@ enum Action {
   CONTINUE = 'CONTINUE',
   CANCEL = 'CANCEL',
   REMOVE = 'REMOVE',
+  DELETE = 'DELETE',
 }
 
 type ConfirmDialogType = ConfirmDialog;
