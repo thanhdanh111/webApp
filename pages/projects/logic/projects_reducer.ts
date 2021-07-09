@@ -137,7 +137,7 @@ export const getProjectDetailData = (detailsProjectID) => async (dispatch) => {
   }
 };
 
-export const updateChannelIDMiddeleWare = (projectID: string, channelID: string) => async (dispatch) => {
+export const updateChannelIDMiddleWare = (projectID: string, channelID: string) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
 
@@ -177,7 +177,7 @@ export const updateChannelIDMiddeleWare = (projectID: string, channelID: string)
   }
 };
 
-export const getExtendedCompaniesMiddelWare = () => async (dispatch, getState) => {
+export const getExtendedCompaniesMiddleWare = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const userInfo = getState()?.userInfo;
@@ -214,7 +214,7 @@ export const getExtendedCompaniesMiddelWare = () => async (dispatch, getState) =
   }
 };
 
-export const createProjectMiddelWare = (name: string, channelID: string, description: string) => async (dispatch, getState) => {
+export const createProjectMiddleWare = (name: string, channelID: string, description: string) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const userInfo = getState()?.userInfo;
