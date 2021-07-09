@@ -13,7 +13,6 @@ import { DocsRole, ProjectAccessMapOfUsers } from '../../pages/docs/logic/get_fo
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { checkTrueInArray } from 'helpers/check_true_in_array';
 import { getItemSelectedRolesOfUser } from 'pages/docs/logic/get_item_selected_roles_of_user';
-import CancelIcon from '@material-ui/icons/Cancel';
 
 interface ShareComponentData {
   loading: boolean;
@@ -51,7 +50,6 @@ export const SharePermission = ({
   accountUserID,
   selectedPage,
   handleShare,
-  handleRemoveRole,
 }: ShareComponentData) => {
   const dispatch = useDispatch();
   const [selectedShare, setSelectedShare] = useState({});
@@ -59,7 +57,7 @@ export const SharePermission = ({
   const selectedPageID = selectedPage?._id ?? '';
   const userIDCreatedPage = selectedPage?.createdBy?._id ?? selectedPage?.createdBy;
   const userIDCreatedProject = selectedProject?.createdBy?.['_id'] ?? selectedProject?.createdBy;
-  const haveWritePermission = checkHaveWriteToRemoveShare();
+  const haveWritePermission = checkHaveWriteToShare();
 
   function handleClose() {
     dispatch(updateDocs({ openShare: false }));
@@ -114,7 +112,7 @@ export const SharePermission = ({
     return rolesToSelect;
   }
 
-  function renderRolesOfUser({ rolesOfUser, isOwner, userID, couldRemove }) {
+  function renderRolesOfUser({ rolesOfUser, isOwner }) {
     if (isOwner) {
       return <div className='users-shared-with--owner'>Owner</div>;
     }
@@ -125,46 +123,29 @@ export const SharePermission = ({
           <div key={role} className='users-shared-with--role-render'>
             <span
               className='users-shared-with--role-render-text'
-              style={{ width: couldRemove ? '50px' : '' }}
             >
               {defaultRoles[role].name}
             </span>
-            {
-              couldRemove &&
-                <CancelIcon
-                  onClick={() => handleRemoveRole({ role, userID })}
-                  className='users-shared-with--role-render-icon'
-                />
-            }
           </div>)
       }
     </div>;
   }
 
-  function checkHaveWriteToRemoveShare() {
+  function checkHaveWriteToShare() {
     const projectRolesOfAccount = projectAccessOfUsers?.[accountUserID]?.[selectedProjectID]?.roles ?? [];
     const pageRolesOfAccount = projectAccessOfUsers?.[accountUserID]?.[selectedProjectID]?.accessInPages?.[selectedPageID] ?? [];
     const isOwner =  (userIDCreatedPage ?? userIDCreatedProject) === accountUserID;
 
-    const haveRoleToRemove = projectRolesOfAccount.includes(DocsRole.WRITE) ||
+    const haveWriteRole = projectRolesOfAccount.includes(DocsRole.WRITE) ||
       pageRolesOfAccount.includes(DocsRole.WRITE);
-    const roleCouldRemove = checkTrueInArray({
+    const roleCouldShare = checkTrueInArray({
       conditionsArray: [
         isOwner,
-        haveRoleToRemove,
+        haveWriteRole,
       ],
     });
 
-    return roleCouldRemove;
-  }
-
-  function canRemoveSharedUser({ userID }) {
-    const isNotOwnerOfProject = userID !== userIDCreatedProject;
-    const isNotOnwerOfPage = userID !== userIDCreatedPage;
-    const notMe = accountUserID !== userID;
-    const accountIsOwnerOfProject = accountUserID === userIDCreatedProject;
-
-    return notMe && isNotOwnerOfProject && (isNotOnwerOfPage || accountIsOwnerOfProject);
+    return roleCouldShare;
   }
 
   function renderUsersSharedWith() {
@@ -200,21 +181,13 @@ export const SharePermission = ({
         removeRole: rolesOfUser[0],
       };
 
-      const canRemoveCurrentUser = canRemoveSharedUser({ userID });
-      const couldRemove = checkOnlyTrueInArray({
-        conditionsArray: [
-          haveWritePermission,
-          canRemoveCurrentUser,
-        ],
-      });
-
       usersRender.push(
         <div key={userID} className='users-shared-with'>
           <UserAvatar user={userProfile}  style='notification-img'/>
           <Typography className='users-shared-with--name' style={{ marginLeft: '20px' }}>
             {`${userProfile?.lastName} ${userProfile.firstName}`}
           </Typography>
-          {renderRolesOfUser({ rolesOfUser, isOwner, userID, couldRemove })}
+          {renderRolesOfUser({ rolesOfUser, isOwner })}
         </div>,
       );
     }
