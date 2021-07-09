@@ -31,7 +31,7 @@ beforeAll(async () => {
   }
 });
 
-describe('Pots Page', () => {
+describe('docs page', () => {
   test('Test docs page successfully after login', async () => {
     await page.goto('http://localhost:5000/docs');
     await page.waitForSelector('.docs-page');
