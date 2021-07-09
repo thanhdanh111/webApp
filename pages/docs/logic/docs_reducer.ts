@@ -115,7 +115,7 @@ function updateSelectedItemInDrawer(data, state: DocsValue) {
   const project = state?.docProjectsMap?.[projectID ?? ''];
   const page = project?.pages?.[pageID ?? ''];
 
-  if (project && !page) {
+  if (project) {
     state.selectedDocProject = project;
     state.editorState = EditorState.createEmpty(decorator);
     state.title = '';

@@ -1,5 +1,5 @@
 import { blockStyles, inlineStyles } from 'constants/toolbar_docs';
-import { RichUtils, EditorState } from 'draft-js';
+import { RichUtils, EditorState, Modifier } from 'draft-js';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { updateDocs } from './docs_actions';
 
@@ -23,6 +23,13 @@ export function handleToolbarActions(editorState, action) {
       editorState,
       action,
     );
+  }
+
+  if (action === 'unstyled') {
+    const newContentState = inlineStyles.reduce((contentState, style) => {
+      return Modifier.removeInlineStyle(contentState, editorState.getSelection(), style);
+    }, newEditorState.getCurrentContent());
+    newEditorState = EditorState.push(newEditorState, newContentState);
   }
 
   return EditorState.forceSelection(

@@ -24,8 +24,8 @@ const InlineToolbar = ({
     const width = window?.innerWidth;
 
     return {
-      top: `${position?.top}px`,
-      left: width < 960 ? `${position?.left + 280}px` : `${position?.left}px`,
+      top: `${position?.top + 10}px`,
+      left: width < 960 ? `${position?.left + 285}px` : `${position?.left}px`,
     };
   };
 
