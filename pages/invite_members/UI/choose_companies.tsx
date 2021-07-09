@@ -1,10 +1,9 @@
 import React, { FunctionComponent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Typography, ListItem } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { chooseInviteCompany } from '../logic/invite_actions';
-import { InviteDepartmentInfo, InviteStateProps } from '../logic/invite_interface';
-import { RootState } from 'redux/reducers_registration';
+import { AvailInviteCompanies, InviteDepartmentInfo } from '../logic/invite_interface';
+import { updateInviteMembers } from '../logic/invite_actions';
 
 interface ChoosingCompanyProps {
   name: string;
@@ -14,9 +13,16 @@ interface ChoosingCompanyProps {
 
 type ChoosingCompanyType = ChoosingCompanyProps;
 
-const ChooseCompaniesUI: FunctionComponent = () => {
+interface ChooseCompanies {
+  companies: AvailInviteCompanies[];
+  hasNoCompanies: boolean;
+}
+
+const ChooseCompaniesUI: FunctionComponent<ChooseCompanies> = ({
+  companies,
+  hasNoCompanies,
+}) => {
   const dispatch = useDispatch();
-  const { availInviteCompanies, hasNoCompanies }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
 
   const ChoosingCompany = (props: ChoosingCompanyType) => {
     const { name, companyID, departments }: ChoosingCompanyType = props;
@@ -29,10 +35,10 @@ const ChooseCompaniesUI: FunctionComponent = () => {
   };
 
   function choseCompany({ name, companyID, departments }) {
-    dispatch(chooseInviteCompany({ inviteCompany: { name, companyID, departments } }));
+    dispatch(updateInviteMembers({ inviteCompany: { name, companyID, departments } }));
   }
 
-  if (!availInviteCompanies?.length && !hasNoCompanies) {
+  if (!companies?.length && !hasNoCompanies) {
     return <div className='skeleton-wrapper'>
       <Skeleton variant='text' className='skeleton' />
       <Skeleton variant='text' className='skeleton' />
@@ -43,7 +49,7 @@ const ChooseCompaniesUI: FunctionComponent = () => {
     </div>;
   }
 
-  if (!availInviteCompanies?.length && hasNoCompanies) {
+  if (!companies?.length && hasNoCompanies) {
     return <div className='empty-state'>
       <img alt='logo' width='100px' src='../document.svg'/>
       <Typography color='textSecondary' className='empty-state--text'>Not found any companies</Typography>
@@ -53,12 +59,12 @@ const ChooseCompaniesUI: FunctionComponent = () => {
   return (
     <>
       <div className='choose-company-layout'>
-        {availInviteCompanies.map((company) => {
+        {companies.map((company) => {
           return <ChoosingCompany
             key={`${company.companyID}`}
-            companyID={company.companyID}
-            name={company.name}
-            departments={company.departments}
+            companyID={company?.companyID}
+            name={company?.name}
+            departments={company?.departments}
           />;
         })}
       </div>

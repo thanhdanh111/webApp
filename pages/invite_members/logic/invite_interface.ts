@@ -1,10 +1,8 @@
 export interface InviteValue {
   inviteMembers: InviteMemberInfo[];
-  inviteCompany: InviteCompany;
-  currentPage: string;
-  availInviteCompanies: AvailInviteCompanies[];
+  loading: boolean;
   inviteLoading: boolean;
-  hasNoCompanies: boolean;
+  departments: InviteDepartmentInfo[];
 }
 
 export interface InviteDepartmentInfo {
@@ -16,12 +14,6 @@ export interface InviteMemberInfo {
   role: string;
   departmentID?: string;
   email: string;
-}
-
-export interface InviteCompany {
-  name: string;
-  companyID: string;
-  departments: InviteDepartmentInfo[];
 }
 
 export interface AvailInviteCompanies {

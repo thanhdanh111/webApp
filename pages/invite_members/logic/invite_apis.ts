@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { inviteLoading, updateInviteCompanies } from './invite_actions';
-import { AvailInviteCompanies } from './invite_interface';
+import { updateInviteMembers } from './invite_actions';
 import { config } from 'helpers/get_config';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from './invite_error_notifications';
@@ -11,9 +10,17 @@ type Token = string | null;
 export enum NotificationTypes{
   error403 = 'You don\'t have permission to invite',
 }
-export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (dispatch) => {
+export const inviteMembersApi = ({ inviteMembers = [] }) => async (dispatch, getState) => {
   try {
-    await dispatch(inviteLoading({ isLoading: true }));
+    const companyID = getState()?.userInfo?.currentCompany?._id;
+
+    if (!companyID?.length || !inviteMembers?.length) {
+
+      return;
+    }
+
+    dispatch(updateInviteMembers({ inviteLoading: true }));
+
     const token: Token =  localStorage.getItem('access_token');
     const res = await axios({
       url: `${config.BASE_URL}/companies/${companyID}/members/invite`,
@@ -26,6 +33,7 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
         inviteMembersData: inviteMembers,
       },
     });
+
     if (res?.data || res?.data?.length) {
       await Promise.all(res.data.map((info) => {
         const errorNotification = returnNotification({ type: info?.status, email: info?.email, message: info?.errorMessage });
@@ -33,31 +41,35 @@ export const  inviteMembersApi = ({ companyID, inviteMembers = [] }) => async (d
         return dispatch(pushNewNotifications({ variant: errorNotification['status'] , message: errorNotification['message'] }));
       }));
     }
-    await dispatch(inviteLoading({ isLoading: false }));
+
+    dispatch(updateInviteMembers({ inviteLoading: false }));
   } catch (error) {
     await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.error403 }));
-    await dispatch(inviteLoading({ isLoading: false }));
+    await dispatch(updateInviteMembers({ loading: false }));
   }
 };
+
 export const getDepartmentsOfCompany = () => async (dispatch, getState) => {
   try {
-    await dispatch(inviteLoading({ isLoading: true }));
+    await dispatch(updateInviteMembers({ loading: true }));
     const userInfo = getState()?.userInfo;
     const token: Token = localStorage.getItem('access_token');
     const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
     const haveAccess = checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany });
     const isAdmin = userInfo?.isAdmin;
     let companiesParams = '';
+
     if (!isAdmin && haveAccess) {
       const companies: string[] = [userInfo?.currentCompany?._id];
       companiesParams = companies.map((companyID: string, index) => `companyID[${index}]=${companyID}`).join('&');
     }
 
     if (!isAdmin && !companiesParams?.length) {
-      await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
+      await dispatch(updateInviteMembers({ loading: false }));
 
       return;
     }
+
     const departments = await axios.get(
       `${config.BASE_URL}/departments?${companiesParams}`,
       {
@@ -71,70 +83,46 @@ export const getDepartmentsOfCompany = () => async (dispatch, getState) => {
 
     await dispatch(getUserCompaniesApi(departments?.data?.list));
   } catch (error) {
-    throw error;
+    await dispatch(updateInviteMembers({ loading: false }));
   }
 };
 
-const checkValidCompanyOfDepartment = (department) => {
-  const invalidCompany =
-    !department?.companyID ||
-    !department?.companyID?._id ||
-    !department?.companyID?.name;
+const checkValidDepartment = (department) => {
   const invalidDepartment = !department?.name || !department?._id;
 
-  const isValid = invalidCompany || invalidDepartment;
-
-  return isValid;
+  return invalidDepartment;
 };
 
 export const getUserCompaniesApi = (departments) => async (dispatch) => {
   try {
     if (!checkArray(departments)) {
-      await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
+      await dispatch(updateInviteMembers({ loading: false }));
 
       return;
     }
 
-    const storeAvailCompaniesIndice = { };
-    const availCompanies: AvailInviteCompanies[] = [];
-    let indexForNewTempCompany = 0;
-    departments.forEach((availDepartment) => {
-      const inValid = checkValidCompanyOfDepartment(availDepartment);
+    const newDepartments = departments.map((department) => {
+      const inValid = checkValidDepartment(department);
 
       if (inValid) {
         return;
       }
 
-      const companyID = availDepartment?.companyID?._id ?? availDepartment?.companyID;
-      let indexOfTempCompany = storeAvailCompaniesIndice[companyID];
-      if (typeof indexOfTempCompany !== 'number') {
-        storeAvailCompaniesIndice[companyID] = indexForNewTempCompany;
-        indexOfTempCompany = indexForNewTempCompany;
-        availCompanies[indexForNewTempCompany] = {
-          companyID,
-          name: availDepartment?.companyID?.name,
-          departments: [
-            {
-              name: 'none',
-              departmentID: '',
-            },
-          ],
-        };
-        indexForNewTempCompany = indexForNewTempCompany + 1;
-      }
-      let departmentsOfCompany =  availCompanies[indexOfTempCompany]['departments'];
-      departmentsOfCompany = [
-        ...departmentsOfCompany,
-        {
-          departmentID: availDepartment._id,
-          name: availDepartment.name,
-        },
-      ];
-      availCompanies[indexOfTempCompany]['departments'] = departmentsOfCompany;
+      return {
+        departmentID: department?._id,
+        name: department?.name,
+      };
     });
-    await dispatch(updateInviteCompanies({ availCompanies, isLoading: false }));
+
+    await dispatch(updateInviteMembers({
+      departments: [
+        { departmentID: '', name: 'None' },
+        ...newDepartments,
+      ],
+      loading: false,
+    }));
   } catch (error) {
     await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.error403 }));
-    await dispatch(updateInviteCompanies({ availCompanies: [], isLoading: false }));
+    await dispatch(updateInviteMembers({ loading: false }));
   }
 };
