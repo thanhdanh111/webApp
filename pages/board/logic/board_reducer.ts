@@ -89,6 +89,7 @@ export const boardsReducer = (state = initialState, action) => {
     case boardsActionType.GET_DATA_LIST_CARD:
       return {
         ...state,
+        // selectedBoard: action.payload,
         cards: action.payload,
       };
     default:
@@ -281,17 +282,18 @@ export const createNewCard = (shape: string, textContent: string, position: stri
   }
 };
 
-export const getDataListCard = () => async (dispatch, getState) => {
+export const getDataListCard = (boardID) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
-    const { selectedBoard }: BoardsPage = getState()?.boards;
-    const boardID = selectedBoard?._id;
-    if (!companyID || !boardID) {
+    // const { selectedBoard }: BoardsPage = getState()?.boards;
+    // const boardID = selectedBoard?._id;
+    if (!boardID) {
 
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: 'Not found boardID' }));
+
+      return ;
     }
+
     const res = await axios.get(`${config.BASE_URL}/cards`, {
       headers: {
         'Content-Type': 'application/json',

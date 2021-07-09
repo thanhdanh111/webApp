@@ -34,8 +34,7 @@ const NewBoard = () => {
   const [elements, setElements] = useState(initialElements);
   const dataList = useSelector((state: RootState) => state.boards.cards);
 
-  // const router = useRouter();
-  // const query = router.query;
+  const select = useSelector((state: RootState) => state.boards.selectedBoard);
   // const [textContent, setTextContent] = useState('');
 
   // const onChangeTextContent = (event) => {
@@ -49,7 +48,7 @@ const NewBoard = () => {
   // };
 
   useEffect(() => {
-    dispatch(getDataListCard());
+    dispatch(getDataListCard(select._id));
   }, []);
 
   useEffect(() => {
