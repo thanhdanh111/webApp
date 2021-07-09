@@ -7,4 +7,5 @@ export const boardsActionType = {
   CREATE_CARD: 'CREATE_CARD',
   GET_DATA_LIST_CARD: 'GET_DATA_LIST_CARD',
   UPDATE_CARDS: 'UPDATE_CARDS',
+  SET_CARD: 'SET_CARD',
 };

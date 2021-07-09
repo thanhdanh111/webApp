@@ -54,3 +54,10 @@ export const updateCards = (res: object) => {
     payload: res,
   };
 };
+
+export const setCard = (res: object) => {
+  return {
+    type: boardsActionType.SET_CARD,
+    payload: res,
+  };
+};

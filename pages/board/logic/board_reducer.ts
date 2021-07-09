@@ -9,7 +9,8 @@ import {
   updateNameFlowChartAction,
   deleteBoardAction,
   getDataListCardAction,
-  createCardAction} from './board_action';
+  createCardAction,
+} from './board_action';
 import { boardsActionType } from './board_type_action';
 import { checkArray } from 'helpers/check_array';
 import { convertCardData } from './convert_card_data';
@@ -89,9 +90,9 @@ export const boardsReducer = (state = initialState, action) => {
     case boardsActionType.GET_DATA_LIST_CARD:
       return {
         ...state,
-        // selectedBoard: action.payload,
         cards: action.payload,
       };
+
     default:
       return state;
   }
@@ -172,7 +173,7 @@ export const createFlowChartMiddleWare = (router, currentPath) => async (dispatc
 
     dispatch(createBoardAction(res.data));
 
-    router.push({ pathname: `${currentPath}/content`, query: { id: res.data._id } });
+    router.push({ pathname: `${currentPath}/view`, query: { id: res.data._id } });
   } catch (error) {
     dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedCreateFlowChart }));
   }
@@ -285,19 +286,14 @@ export const createNewCard = (shape: string, textContent: string, position: stri
 export const getDataListCard = (boardID) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
-    // const { selectedBoard }: BoardsPage = getState()?.boards;
-    // const boardID = selectedBoard?._id;
-    if (!boardID) {
-
-      dispatch(pushNewNotifications({ variant: 'error' , message: 'Not found boardID' }));
-
-      return ;
-    }
 
     const res = await axios.get(`${config.BASE_URL}/cards`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
+      },
+      params: {
+        boardID,
       },
     });
 
@@ -307,6 +303,7 @@ export const getDataListCard = (boardID) => async (dispatch) => {
         cards.push(convertCardData(item));
       });
       await dispatch(getDataListCardAction(cards));
+
     }
 
     return;

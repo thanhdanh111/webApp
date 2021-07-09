@@ -3,7 +3,6 @@ import { RootState } from 'redux/reducers_registration';
 import { useState, useEffect } from 'react';
 import { useDebounce } from 'pages/users/logic/users_reducer';
 import { updateNameFlowChartMiddleWare } from 'pages/board/logic/board_reducer';
-import AvatarFlowChart from './avatar_flowchart';
 
 const HeaderContentBoard = () => {
   const dispatch = useDispatch();
@@ -26,9 +25,6 @@ const HeaderContentBoard = () => {
 
   return(
     <>
-      <div className='avt-flowchart'>
-        <AvatarFlowChart />
-      </div>
       <input
         className='input-name'
         placeholder={selectedBoard.name}

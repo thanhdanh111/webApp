@@ -18,7 +18,7 @@ import { RootState } from 'redux/reducers_registration';
 import CustomProcess from '../shapes/shape_process';
 import ListOptionCard from './list_option_card';
 import HeaderContentBoard from './header_content_board';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 const onLoad = (reactFlowInstance) => {
   reactFlowInstance.fitView();
@@ -29,12 +29,13 @@ const nodeTypes = {
   DECISION: CustomDecision,
 };
 
-const NewBoard = () => {
+const CreateBoard = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
   const dataList = useSelector((state: RootState) => state.boards.cards);
-
-  const select = useSelector((state: RootState) => state.boards.selectedBoard);
+  const query = router.query;
+  // const selected = useSelector((state: RootState) => state.boards.selectedBoard);
   // const [textContent, setTextContent] = useState('');
 
   // const onChangeTextContent = (event) => {
@@ -48,8 +49,12 @@ const NewBoard = () => {
   // };
 
   useEffect(() => {
-    dispatch(getDataListCard(select._id));
-  }, []);
+    if (!query.id) {
+      return;
+    }
+
+    dispatch(getDataListCard(query.id));
+  }, [query.id]);
 
   useEffect(() => {
     if (!dataList) {
@@ -132,4 +137,4 @@ const NewBoard = () => {
   );
 };
 
-export default NewBoard;
+export default CreateBoard;

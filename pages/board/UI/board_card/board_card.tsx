@@ -6,7 +6,6 @@ import { Delete } from '@material-ui/icons';
 import ConfirmDialogDelete from '../confirm_dialog_delete/confirm_dialog_delete';
 import { deleteBoardMiddleWare } from 'pages/board/logic/board_reducer';
 import { useDispatch } from 'react-redux';
-import AvatarFlowChart from '../new_board/avatar_flowchart';
 
 interface InitProps {
   board: Board;
@@ -23,7 +22,7 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
   const [open, setOpen] = useState(false);
 
   const onPushToPage = () => {
-    void router.push({ pathname: `${pathname}/content` , query: { id: board?._id } });
+    void router.push({ pathname: `${pathname}/view` , query: { id: board?._id } });
   };
 
   const handleOpenOrClose = () => {
@@ -39,9 +38,6 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
       <Card className='board-card'>
         <CardContent className='board-card-content'>
           <div className='create-name-flowchart' onClick={() => onPushToPage()}>
-            <div className='avt-flowchart'>
-              <AvatarFlowChart />
-            </div>
             <Typography className='name-board'>
               {board?.name}
             </Typography>
