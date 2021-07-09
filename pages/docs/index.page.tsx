@@ -196,47 +196,53 @@ const DocsPage = () => {
     return;
   }
 
-  return <div
-    className='docs-page'
-    onKeyDown={(e) => handleKeyCombination(e, onEditPage, dispatch)}
-  >
-    <div className='docs-action-bar'>
-      <PrimaryButtonUI
-        disabled={cannotClickButton}
-        title={onEditPage ? 'Save' : 'Create'}
-        handleClick={handleClickHeadingButton}
+  return <div className='docs-layout'>
+    <div
+      className='docs-page'
+      onKeyDown={(e) => handleKeyCombination(e, onEditPage, dispatch)}
+    >
+      <div className='docs-action-bar'>
+        <PrimaryButtonUI
+          disabled={cannotClickButton}
+          title={onEditPage ? 'Save' : 'Create'}
+          handleClick={handleClickHeadingButton}
+        />
+      </div>
+      <Input
+        style={{ marginTop: '20px', paddingLeft: '45px', marginBottom: '20px' }}
+        value={title}
+        className='docs-page--title'
+        disableUnderline
+        onChange={(event) => onChangeTitle(event)}
+        placeholder='UNTITLED'
+        multiline={false}
+        autoFocus
+        required={true}
+        disabled={readOnly}
+      />
+      <EditorView
+        readOnly={readOnly}
+        editorState={editorState}
+        needDisplay={needDisplay}
+      />
+      <SharePermission
+        selectedProject={selectedProject}
+        openShare={openShare}
+        usersInCompanyMap={usersInCompanyMap}
+        loading={loading}
+        projectAccessOfUsers={projectAccessOfUsers}
+        accountUserID={accountUserID}
+        selectedPage={selectedPage}
+        handleShare={onClickShare}
+        handleRemoveRole={onClickRemoveShare}
       />
     </div>
-    <Input
-      style={{ marginTop: '20px', paddingLeft: '45px', marginBottom: '20px' }}
-      value={title}
-      className='docs-page--title'
-      disableUnderline
-      onChange={(event) => onChangeTitle(event)}
-      placeholder='UNTITLED'
-      multiline={false}
-      autoFocus
-      required={true}
-      disabled={readOnly}
-    />
-    <EditorView readOnly={readOnly} />
-    <InlineToolbar
-      editorState={editorState}
-      onClickOption={onClickOptionInToolbar}
-      needDisplay={needDisplay}
-      selectionRect={selectionRect}
-    />
-    <SharePermission
-      selectedProject={selectedProject}
-      openShare={openShare}
-      usersInCompanyMap={usersInCompanyMap}
-      loading={loading}
-      projectAccessOfUsers={projectAccessOfUsers}
-      accountUserID={accountUserID}
-      selectedPage={selectedPage}
-      handleShare={onClickShare}
-      handleRemoveRole={onClickRemoveShare}
-    />
+      <InlineToolbar
+        editorState={editorState}
+        onClickOption={onClickOptionInToolbar}
+        needDisplay={needDisplay}
+        selectionRect={selectionRect}
+      />
   </div>;
 };
 

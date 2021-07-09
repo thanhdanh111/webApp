@@ -4,7 +4,12 @@ import { Modifier, EditorState, SelectionState } from 'draft-js';
 export function handleBeforeInput(chars, editorState, handleOnChange) {
   if (chars === ' ') {
     const oldSelection = editorState?.getSelection();
-    const newContentState = Modifier?.insertText(editorState?.getCurrentContent(), oldSelection, ' ');
+    const newContentState = Modifier?.insertText(
+      editorState?.getCurrentContent(),
+      oldSelection,
+      ' ',
+      editorState.getCurrentInlineStyle(),
+    );
     const addedSpaceEditorState = EditorState.push(editorState, newContentState);
 
     const newEditorState = findURLInTextOfBlock(addedSpaceEditorState);
@@ -14,7 +19,7 @@ export function handleBeforeInput(chars, editorState, handleOnChange) {
     return 'handled';
   }
 
-  return 'not-handled';
+  return;
 }
 
 function findURLInTextOfBlock(editorState) {

@@ -56,6 +56,7 @@ export function showUpToolbarAndUpdateState(newEditorState, needDisplay, dispatc
 
     return;
   }
+
   const getRange  = selection?.getRangeAt(0);
   const newSelectionRect = getRange?.getBoundingClientRect();
 
