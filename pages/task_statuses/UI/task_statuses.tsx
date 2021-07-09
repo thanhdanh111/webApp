@@ -1,6 +1,5 @@
 import { Container, Link, Typography } from '@material-ui/core';
-import React, { useEffect, useRef } from 'react';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import React, { useEffect, useRef, useState } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import TasksUI from '../../tasks/UI/tasks';
 import { RootStateOrAny,  useDispatch,  useSelector } from 'react-redux';
@@ -11,6 +10,9 @@ import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 import TaskNew from 'pages/tasks/UI/task_new';
 import { setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
+import ActionTaskStatusUI from './action_task_status';
+import RenameStatusUI from './ui_rename_task_status';
+import { checkArray } from 'helpers/check_array';
 
 interface InitProps {
   taskStatusID: string;
@@ -23,15 +25,22 @@ const TaskStatusUI = (props: InitProps) => {
     taskStatus,
     loading,
     currentTaskStatus,
+    isFiltering,
+    filterResultTasks,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const { userID }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
   const dispatch = useDispatch();
   const newTaskRef = useRef<HTMLTitleElement>(null);
   const style = taskStatus && taskStatus[taskStatusID]?.title?.split(' ').join('-').toLowerCase();
+  const [retitling, setRetitling] = useState(false);
 
   useEffect(() => {
     dispatch(getTaskStatusThunkAction(taskStatusID));
   }, []);
+
+  const setRetitleStatus = () => {
+    setRetitling(!retitling);
+  };
 
   const TaskStatusContent = () => {
     let taskIDs = taskStatus[taskStatusID]?.taskIDs;
@@ -53,6 +62,10 @@ const TaskStatusUI = (props: InitProps) => {
       });
     }
 
+    if (isFiltering) {
+      taskIDs = filterResultTasks.filter((task) => task.taskStatusID._id === taskStatusID);
+    }
+
     const scrollInput = () => {
       if (!newTaskRef.current) {
         return;
@@ -71,11 +84,17 @@ const TaskStatusUI = (props: InitProps) => {
           >
             <div className={`status ${style}`}>
               <Container className='status-left'>
-                  <Typography className='name-status' ref={newTaskRef}>{taskStatus[taskStatusID]?.title}</Typography>
-                  <Typography className='quality-task'>{taskIDs?.length}</Typography>
+                  <RenameStatusUI
+                    taskStatusID={taskStatus[taskStatusID]}
+                    renaming={retitling}
+                    setRetitleStatus={setRetitleStatus}
+                  />
               </Container>
               <Container className='status-right'>
-                  <Link className='actions-status more-actions'><MoreHorizIcon/></Link>
+                  <ActionTaskStatusUI
+                    taskStatusID={taskStatusID}
+                    setRenameStatus={setRetitleStatus}
+                  />
                   <Link
                     className='actions-status add-action'
                     onClick={() => dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''))}
@@ -92,7 +111,7 @@ const TaskStatusUI = (props: InitProps) => {
                   taskStatusID={taskStatus[taskStatusID]?._id}
                 />
               }
-              {taskIDs?.map((task, index) => {
+              {checkArray(taskIDs) && taskIDs?.map((task, index) => {
                 return (
                   <Draggable
                     key={task?._id}
@@ -136,7 +155,7 @@ const TaskStatusUI = (props: InitProps) => {
 
   return (
     <div className='task-status'>
-      {(taskStatus && !loading) &&
+      {(!loading) &&
         TaskStatusContent()
       }
       {loading && <DisappearedLoading color={'#67cb48'}/>}

@@ -1,10 +1,9 @@
 import { taskBoardsActionType } from './task_board_action_type';
-import { Task, TaskBoard, TaskStatus } from '../../../helpers/type';
+import { Task, TaskBoard, TaskStatus, User } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import {
   setLoading,
-  getTasksStatusByID,
   getTaskBoard,
   createdTaskBoard,
   setSelectedTaskBoard,
@@ -12,15 +11,15 @@ import {
   createdTaskStatus,
   addTask,
   setTasksToTaskStatus,
+  updateUserAssigned,
+  deletedTaskStatus,
+  renameTaskStatus,
+  searchTaskByTitle,
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
+import { checkArray } from 'helpers/check_array';
 
-export interface UserAssigned {
-  _id: string;
-  profilePhoto: string;
-  fullName: string;
-}
 export interface TaskBoardsType {
   loading: boolean;
   taskStatus: { [key: string]: TaskStatus };
@@ -31,7 +30,10 @@ export interface TaskBoardsType {
   filteringTaskByUser: boolean;
   currentTaskStatus: string;
   newTask: Task;
-  usersAssigned: UserAssigned[];
+  usersAssigned: User[];
+  templateTitleStatus?: string;
+  filterResultTasks: Task[];
+  isFiltering: boolean;
 }
 
 export enum NotificationTypes {
@@ -51,8 +53,20 @@ const initialState: TaskBoardsType = {
   onSendingRequest: false,
   filteringTaskByUser: false,
   currentTaskStatus: '',
-  newTask: { title: '', _id: '' },
+  newTask: {
+    title: '',
+    _id: '',
+    taskStatusID: {
+      _id: '',
+      taskBoardID: '',
+      taskIDs: [],
+      title: '',
+    },
+  },
   usersAssigned: [],
+  templateTitleStatus: '',
+  filterResultTasks: [],
+  isFiltering: false,
 };
 
 interface UpdateTaskStatus {
@@ -140,7 +154,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         currentTaskStatus: '',
         usersAssigned: [],
       };
-
     case taskBoardsActionType.SET_TYPE_CREATE_TASK:
       if (state.currentTaskStatus === action.payload){
         return { ...state };
@@ -168,7 +181,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         ...state,
         usersAssigned: state.usersAssigned.filter((user) => action.payload !== user._id),
       };
-
     case taskBoardsActionType.SET_TASKS_TO_TASK_STATUS:
 
       updatedTaskStatuses = state.taskStatus;
@@ -191,6 +203,88 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         ...state,
         taskStatus: updatedTaskStatuses,
       };
+    case taskBoardsActionType.DELETE_TASK_STATUS:
+      updatedTaskStatuses = state.taskStatus;
+      const deleteStatusID = action?.payload;
+      const status = delete updatedTaskStatuses?.[deleteStatusID];
+
+      if (!status) {
+        return;
+      }
+
+      const updateStatusInTaskBoard = state?.currentTaskBoard?.taskStatusIDs?.filter((statusID) => statusID !== deleteStatusID);
+
+      return {
+        ...state,
+        taskStatus: updatedTaskStatuses,
+        currentTaskBoard: {
+          ...state.currentTaskBoard,
+          taskStatusIDs: updateStatusInTaskBoard,
+        },
+      };
+    case taskBoardsActionType.SET_TEMPLATE_TITLE_STATUS:
+      return {
+        ...state,
+        templateTitleStatus: action?.payload,
+      };
+    case taskBoardsActionType.RENAME_TASK_STATUS:
+      if (action.payload?._id) {
+        updatedTaskStatuses = {
+          ...updatedTaskStatuses,
+          [action.payload?._id]: action.payload,
+        };
+      }
+
+      return {
+        ...state,
+        taskStatus: updatedTaskStatuses,
+      };
+
+      // filter task
+    case taskBoardsActionType.HAS_NO_DATA:
+      return {
+        ...state,
+        hasNoData: action?.payload,
+      };
+    case taskBoardsActionType.SEARCH_TASKS_BY_TITLE:
+
+      return {
+        ...state,
+        filterResultTasks: action.payload,
+      };
+    case taskBoardsActionType.SET_FILTERING:
+      return {
+        ...state,
+        isFiltering: action.payload,
+      };
+    case taskBoardsActionType.UPDATE_USER_ASSIGN_FOR_TASK:
+      updatedTaskStatuses = state.taskStatus;
+
+      let statusUpdated = updatedTaskStatuses[action?.payload?.taskStatusID?._id];
+      const tasksUpdated = statusUpdated?.taskIDs?.map((task) => {
+        if (task?._id === action?.payload?._id) {
+          return action.payload;
+        }
+
+        return task;
+      });
+
+      if (statusUpdated) {
+        statusUpdated = {
+          ...statusUpdated,
+          taskIDs: tasksUpdated,
+        };
+
+        updatedTaskStatuses = {
+          ...updatedTaskStatuses,
+          [action?.payload?.taskStatusID?._id]: statusUpdated,
+        };
+      }
+
+      return {
+        ...state,
+        taskStatus: updatedTaskStatuses,
+      };
     default:
       return state;
   }
@@ -199,35 +293,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
 const notificationsType = {
   201: 'Created taskBoard to Company successfully',
   400: 'You have no taskBoard right now!',
-};
-
-export const getTaskStatusByIDThunkAction = (title, taskStatusID) => async (dispatch) => {
-  try {
-    const token = localStorage.getItem('access_token');
-
-    if (!token || !taskStatusID) {
-      return;
-    }
-    // title is targetEntityName
-    const res = await axios.get(`${config.BASE_URL}/${title}/${taskStatusID}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-    if (!res.data) {
-      await dispatch(setLoading(false));
-
-      return;
-    }
-
-    await dispatch(getTasksStatusByID(res.data));
-    await dispatch(setLoading(false));
-  } catch (error) {
-    throw error;
-  }
 };
 
 export const getTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
@@ -468,6 +533,170 @@ export const updateTaskById = ({
       method: 'PUT',
     });
 
+    const notification = notificationsType[res.status];
+    await dispatch(setLoading(false));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: notification }));
+  } catch (error) {
+    const errorNotification = returnNotification({ type: 'failed' });
+    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+  }
+};
+
+export const deletedTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem('access_token');
+
+    if (!token || !taskStatusID) {
+      return;
+    }
+
+    const res = await axios({
+      url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'DELETE',
+    });
+
+    if (!res.data) {
+      await dispatch(pushNewNotifications({ variant: 'error' , message: 'delete status unsuccess!' }));
+
+      return;
+    }
+
+    await dispatch(deletedTaskStatus(taskStatusID));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'delete status successfully!' }));
+  } catch (error) {
+    const notification = notificationsType[error?.response?.status] || 'Something went wrong';
+    await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
+  }
+};
+
+export const renameTaskStatusThunkAction = (taskStatusID) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const reTitleStatus = getState().taskBoards.templateTitleStatus;
+
+    if (!token || !reTitleStatus?.length || !taskStatusID) {
+      return;
+    }
+
+    const res = await axios({
+      url: `${config.BASE_URL}/taskStatuses/${taskStatusID}`,
+      data: {
+        title: reTitleStatus,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'PUT',
+    });
+
+    await dispatch(renameTaskStatus(res.data));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'rename status successfully!' }));
+  } catch (error) {
+    const notification = notificationsType[error?.response?.status] || 'Something went wrong';
+    await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
+  }
+};
+
+export const deletedTaskThunkAction = (taskID: Task) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const userInfo = getState()?.userInfo;
+    const taskStatuses: { [key: string]: TaskStatus } = getState()?.taskBoards?.taskStatus;
+    const companyID = userInfo?.currentCompany?._id;
+
+    if (!token || !taskID || !companyID) {
+      return;
+    }
+
+    await axios({
+      url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID?._id}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'DELETE',
+    });
+
+    const taskStatus = taskID?.taskStatusID?._id as string;
+    const listTasks: Task[] = taskStatus ?
+    taskStatuses[taskStatus]?.taskIDs?.filter((item) => item?._id !== taskID?._id) : [];
+
+    await dispatch(updateTaskStatusById({ taskStatusID: taskStatus, tasks: listTasks }));
+    await dispatch(setLoading(false));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'Deleted task by taskID successfully!' }));
+  } catch (error) {
+    const errorNotification = returnNotification({ type: 'failed' });
+    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+
+  }
+};
+
+// filter tasks
+export const searchTasksByTitleThunkAction = (title: string) => async (dispatch, getState) => {
+  try {
+    await dispatch(setLoading(true));
+    const token = localStorage.getItem('access_token');
+    const userInfo = getState().userInfo;
+    const companyID = userInfo.currentCompany._id;
+
+    if (!token || !title?.length) {
+      return;
+    }
+
+    const res = await axios.get(`${config.BASE_URL}/tasks`, {
+      params: {
+        title,
+        companyID,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (checkArray(!res?.data?.list)) {
+      await dispatch(setLoading(false));
+
+      return;
+    }
+
+    await dispatch(searchTaskByTitle(res.data.list));
+    await dispatch(setLoading(false));
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateAssignUserThunkAction = (
+  taskID: string,
+  assignUserIDs?: string[],
+) => async (dispatch, getState) => {
+  try {
+    const localAccess = localStorage.getItem('access_token');
+    const companyID = getState().userInfo.currentCompany._id;
+
+    if (!companyID || !taskID) {
+      return;
+    }
+
+    const res = await axios({
+      data: {
+        userIDs: assignUserIDs,
+      },
+      url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localAccess}`,
+      },
+      method: 'PUT',
+    });
+
+    await dispatch(updateUserAssigned(res?.data));
     const notification = notificationsType[res.status];
     await dispatch(setLoading(false));
     await dispatch(pushNewNotifications({ variant: 'success' , message: notification }));

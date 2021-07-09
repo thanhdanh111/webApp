@@ -51,6 +51,19 @@
       width: 200px
 
   .footer-task
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .delete-task
+      .delete-task-icon
+        color: #ccc
+        font-size: 16px
+
+      &:hover
+        .delete-task-icon
+          color: #f44336;
+
     .task-id
       transition: color .2s cubic-bezier(.785, .135, .15, .86) 0s
       font: 400 10px/1 Gotham Pro, Proxima Nova, arial, serif
@@ -165,3 +178,14 @@
 .priority-popup
   .icon-popup
     margin-right: 10px
+
+.group-avatar-task
+  .badge-task
+    .assigned-user-avatar
+      width: 22px
+      height: 22px
+
+  .MuiAvatar-circle
+    width: 25px
+    height: 25px
+    font-size: 10px

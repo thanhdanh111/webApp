@@ -142,7 +142,7 @@ export interface Task {
   _id: string;
   companyID?: Company;
   departmentID?: Department;
-  taskStatusID?: TaskStatus;
+  taskStatusID: TaskStatus;
   tagIDs?: string[];
   userIDs?: User[];
   title: string;

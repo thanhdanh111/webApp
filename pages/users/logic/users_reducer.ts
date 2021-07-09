@@ -2,7 +2,6 @@ import axios from 'axios';
 import { search, setLoading, pagination, hasNoNotification, getNotificationsAction, updateUnreadNotifications } from './users_actions';
 import { UsersData, HeadCell, ParamGetUser, Data, UserAccess, Access } from '../../../helpers/type';
 import { config } from 'helpers/get_config';
-import { useEffect, useState } from 'react';
 import { usersAction } from './users_type_action';
 import { rolesRender } from 'constants/roles';
 import { getRenderingRolesForUsersPage } from './users_rendering_roles';
@@ -219,23 +218,6 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
   } catch (error) {
     dispatch(setLoading(false));
   }
-};
-
-export const useDebounce = (value, delay) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(
-    () => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [value]);
-
-  return debouncedValue;
 };
 
 function createData(

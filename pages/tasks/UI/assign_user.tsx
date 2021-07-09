@@ -1,25 +1,21 @@
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import { Menu } from '@material-ui/core';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { assignUser } from 'pages/task_boards/logic/task_boards_action';
 import { getPaginationThunkAction } from 'pages/users/logic/users_reducer';
 import GroupUserAssigned from './group_user_assigned';
 import AssignUserPopup from './assign_user_popup';
+import { User } from 'helpers/type';
 
-const AssignUser: React.FC = () => {
+interface InitialProps {
+  usersAssigned?: User[];
+  handleAssign: (user) => void;
+  sizes: string;
+}
+
+const AssignUser: React.FC<InitialProps> = (props) => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
-
-  useEffect(() => {
-    dispatch(assignUser({
-      _id: userInfo?.userID,
-      profilePhoto: userInfo?.profile?.profilePhoto,
-      fullName: `
-        ${userInfo?.profile?.firstName} ${userInfo?.profile?.lastName}`,
-    }));
-    getUser();
-  }, []);
+  const { usersAssigned, handleAssign, sizes }: InitialProps = props;
 
   const getUser = () => {
     dispatch(getPaginationThunkAction());
@@ -29,15 +25,15 @@ const AssignUser: React.FC = () => {
     <PopupState variant='popover'>
       {(popupState) => (
         <div>
-          <div {...bindTrigger(popupState)}>
-          <GroupUserAssigned userInfo={userInfo}/>
+          <div {...bindTrigger(popupState)} className='choose-assign-user'>
+            <GroupUserAssigned currentUser={userInfo} usersAssigned={usersAssigned} sizes={sizes} />
           </div>
           <Menu
             {...bindMenu(popupState)}
             autoFocus={false}
             className='user-popup'
           >
-            <AssignUserPopup getUser={getUser}/>
+            <AssignUserPopup handleAssign={handleAssign} getUser={getUser} usersAssigned={usersAssigned}/>
           </Menu>
         </div>
       )}
