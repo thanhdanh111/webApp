@@ -68,6 +68,7 @@ const AddTagPopup: React.FC = () => {
                   onKeyUp={onKeyUpTagName}
                   onChange={(event) => setNewTag({ ...newTag, name: event.target.value })}
                   value={newTag.name}
+                  className='input-search-tag'
                 />
               </Box>
               <Box px={1}>

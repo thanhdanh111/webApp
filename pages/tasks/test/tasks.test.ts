@@ -37,14 +37,13 @@ describe('Home page', () => {
     await page.waitForSelector('.board');
     await page.waitForSelector('.board-tasks');
     await page.waitForSelector('.task-status');
+
     await page.waitForSelector('.add-task');
-    await page.waitFor(5000);
-    await page.click('.add-task');
-    await page.waitForSelector('.task-add');
     await page.waitFor(5000);
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
+
   });
 
 });

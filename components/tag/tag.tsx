@@ -91,7 +91,7 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
     <PopupState variant='popover' popupId='demo-popup-menu'>
       {(popupState) => (
         <>
-          <MoreHorizIcon className='icon-item' {...bindTrigger(popupState)} />
+          <MoreHorizIcon className='more-item-icon' {...bindTrigger(popupState)} />
           <Popover
             {...bindPopover(popupState)}
             anchorOrigin={{
@@ -104,7 +104,7 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
             }}
           >
             <List component='nav' className='tag-action-popup'>
-              <ListItem button onClick={() => { popupState.close(); setDeleteTag(true); }}>
+              <ListItem button className='delete-tag' onClick={() => { popupState.close(); setDeleteTag(true); }}>
                   <DeleteOutlineOutlinedIcon className='icon-tag-action' color='error'/>
                   Delete
               </ListItem>
