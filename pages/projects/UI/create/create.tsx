@@ -2,7 +2,7 @@ import SelectOption from '@components/option_select/option_select';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { Box, TextareaAutosize, TextField } from '@material-ui/core';
 import { ProjectsPage } from 'helpers/type';
-import { createProjectMiddelWare, getExtendedCompaniesMiddelWare } from 'pages/projects/logic/projects_reducer';
+import { createProjectMiddleWare, getExtendedCompaniesMiddleWare } from 'pages/projects/logic/projects_reducer';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
@@ -24,7 +24,7 @@ const CreateProject: FunctionComponent = () => {
   }, []);
 
   const fetchData = () => {
-    dispatch(getExtendedCompaniesMiddelWare());
+    dispatch(getExtendedCompaniesMiddleWare());
   };
 
   const changeChannelID = (event) => {
@@ -56,7 +56,7 @@ const CreateProject: FunctionComponent = () => {
 
       return;
     }
-    dispatch(createProjectMiddelWare(name, channelID, description));
+    dispatch(createProjectMiddleWare(name, channelID, description));
   }
 
   return (

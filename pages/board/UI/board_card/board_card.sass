@@ -1,0 +1,52 @@
+.board-grid
+  display: inline-block
+  border: 1px solid rgb(198, 190, 207)
+  width: 100%
+  cursor: pointer
+  margin: 20px 20px !important
+  height: 11rem
+
+  .board-card
+    background-color: #fff
+
+    .board-card-content
+      display: flex
+      padding: 5px 0
+
+      .create-name-flowchart
+        display: flex
+        width: 100%
+
+        .avt-flowchart
+          padding: 5px
+
+          .span
+            display: inline-block
+            width: 20px
+            height: 20px
+            flex-shrink: 0
+            padding: 2px
+
+        .name-board
+          font-size: 15px
+          color: rgb(41, 56, 69)
+          font-weight: 600
+          overflow: hidden
+          line-height: 18px
+          text-overflow: ellipsis
+          padding: 5px
+          text-decoration: none
+
+      .check-box
+        .trash-logo
+          margin: 4px 10px
+          cursor: pointer
+          height: 20px
+          width: 20px
+          color: #637381
+
+          &:hover
+            color: rgb(33, 43, 54);
+
+  .picture
+    height: 75%

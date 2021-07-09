@@ -6,7 +6,7 @@ import { checkValidAccess } from 'helpers/check_valid_access';
 import { UserInfoType, ProjectsPage } from 'helpers/type';
 import { useRouter } from 'next/router';
 import { setSelectedChannelID } from 'pages/projects/logic/projects_actions';
-import { getExtendedCompaniesMiddelWare, getProjectDetailData, updateChannelIDMiddeleWare } from 'pages/projects/logic/projects_reducer';
+import { getExtendedCompaniesMiddleWare, getProjectDetailData, updateChannelIDMiddleWare } from 'pages/projects/logic/projects_reducer';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
@@ -41,7 +41,7 @@ const ProjectDetail: FunctionComponent = () => {
     await Promise.all([
       dispatch(getProjectDetailData(query.id)),
       dispatch(setSelectedChannelID(selectedProject?.channelID)),
-      dispatch(getExtendedCompaniesMiddelWare()),
+      dispatch(getExtendedCompaniesMiddleWare()),
     ]);
   };
 
@@ -58,7 +58,7 @@ const ProjectDetail: FunctionComponent = () => {
     if (!loadMemberData) {
       return;
     }
-    dispatch(updateChannelIDMiddeleWare(selectedProject._id, dataUpdate));
+    dispatch(updateChannelIDMiddleWare(selectedProject._id, dataUpdate));
   }
 
   return (
