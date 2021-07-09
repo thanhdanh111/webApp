@@ -55,6 +55,11 @@ export const SharePermission = ({
 }: ShareComponentData) => {
   const dispatch = useDispatch();
   const [selectedShare, setSelectedShare] = useState({});
+  const selectedProjectID = selectedProject?._id ?? '';
+  const selectedPageID = selectedPage?._id ?? '';
+  const userIDCreatedPage = selectedPage?.createdBy?._id ?? selectedPage?.createdBy;
+  const userIDCreatedProject = selectedProject?.createdBy?.['_id'] ?? selectedProject?.createdBy;
+  const haveWritePermission = checkHaveWriteToRemoveShare();
 
   function handleClose() {
     dispatch(updateDocs({ openShare: false }));
@@ -109,7 +114,7 @@ export const SharePermission = ({
     return rolesToSelect;
   }
 
-  function renderRolesOfUser({ rolesOfUser, isOwner, userID }) {
+  function renderRolesOfUser({ rolesOfUser, isOwner, userID, couldRemove }) {
     if (isOwner) {
       return <div className='users-shared-with--owner'>Owner</div>;
     }
@@ -118,25 +123,34 @@ export const SharePermission = ({
       {
         rolesOfUser.map((role) =>
           <div key={role} className='users-shared-with--role-render'>
-            <span className='users-shared-with--role-render-text' >{defaultRoles[role].name}</span>
-            <CancelIcon onClick={() => handleRemoveRole({ role, userID })} className='users-shared-with--role-render-icon'/>
+            <span
+              className='users-shared-with--role-render-text'
+              style={{ width: couldRemove ? '50px' : '' }}
+            >
+              {defaultRoles[role].name}
+            </span>
+            {
+              couldRemove &&
+                <CancelIcon
+                  onClick={() => handleRemoveRole({ role, userID })}
+                  className='users-shared-with--role-render-icon'
+                />
+            }
           </div>)
       }
     </div>;
   }
 
-  function checkHaveWriteToRemoveShare({ userIDCreatedProject, selectedPageID, selectedProjectID }) {
-    let rolesOfAccount = projectAccessOfUsers?.[accountUserID]?.[selectedProjectID]?.roles ?? [];
-    const isOwnerOfProject = userIDCreatedProject === accountUserID;
+  function checkHaveWriteToRemoveShare() {
+    const projectRolesOfAccount = projectAccessOfUsers?.[accountUserID]?.[selectedProjectID]?.roles ?? [];
+    const pageRolesOfAccount = projectAccessOfUsers?.[accountUserID]?.[selectedProjectID]?.accessInPages?.[selectedPageID] ?? [];
+    const isOwner =  (userIDCreatedPage ?? userIDCreatedProject) === accountUserID;
 
-    if (selectedPageID?.length) {
-      rolesOfAccount = projectAccessOfUsers?.[accountUserID]?.[selectedProjectID]?.accessInPages?.[selectedPageID] ?? [];
-    }
-
-    const haveRoleToRemove = rolesOfAccount.includes(DocsRole.WRITE);
+    const haveRoleToRemove = projectRolesOfAccount.includes(DocsRole.WRITE) ||
+      pageRolesOfAccount.includes(DocsRole.WRITE);
     const roleCouldRemove = checkTrueInArray({
       conditionsArray: [
-        isOwnerOfProject,
+        isOwner,
         haveRoleToRemove,
       ],
     });
@@ -144,7 +158,7 @@ export const SharePermission = ({
     return roleCouldRemove;
   }
 
-  function canRemoveSharedUser({ userIDCreatedPage, userIDCreatedProject, userID }) {
+  function canRemoveSharedUser({ userID }) {
     const isNotOwnerOfProject = userID !== userIDCreatedProject;
     const isNotOnwerOfPage = userID !== userIDCreatedPage;
     const notMe = accountUserID !== userID;
@@ -155,11 +169,6 @@ export const SharePermission = ({
 
   function renderUsersSharedWith() {
     const usersRender: JSX.Element[] = [];
-    const selectedProjectID = selectedProject?._id ?? '';
-    const selectedPageID = selectedPage?._id ?? '';
-    const userIDCreatedPage = selectedPage?.createdBy?._id ?? selectedPage?.createdBy;
-    const userIDCreatedProject = selectedProject?.createdBy?.['_id'] ?? selectedProject?.createdBy;
-    const couldRemoveShare = checkHaveWriteToRemoveShare({ userIDCreatedProject, selectedPageID, selectedProjectID });
 
     for (const userID in projectAccessOfUsers) {
       if (!userID) {
@@ -191,25 +200,21 @@ export const SharePermission = ({
         removeRole: rolesOfUser[0],
       };
 
-      const canRemoveCurrentUser = canRemoveSharedUser({ userID, userIDCreatedPage, userIDCreatedProject });
+      const canRemoveCurrentUser = canRemoveSharedUser({ userID });
+      const couldRemove = checkOnlyTrueInArray({
+        conditionsArray: [
+          haveWritePermission,
+          canRemoveCurrentUser,
+        ],
+      });
 
       usersRender.push(
         <div key={userID} className='users-shared-with'>
-          {
-            checkOnlyTrueInArray({
-              conditionsArray: [
-                couldRemoveShare,
-                canRemoveCurrentUser,
-              ],
-            }) && <IconButton className='remove-shared-user--icon-button' >
-              <CloseIcon className='remove-shared-user--icon' />
-            </IconButton>
-          }
           <UserAvatar user={userProfile}  style='notification-img'/>
           <Typography className='users-shared-with--name' style={{ marginLeft: '20px' }}>
             {`${userProfile?.lastName} ${userProfile.firstName}`}
           </Typography>
-          {renderRolesOfUser({ rolesOfUser, isOwner, userID })}
+          {renderRolesOfUser({ rolesOfUser, isOwner, userID, couldRemove })}
         </div>,
       );
     }
@@ -271,7 +276,7 @@ export const SharePermission = ({
             <PrimaryButtonUI
               title='Share'
               handleClick={() => handleShare(selectedShare?.['role'], selectedShare?.['userID'])}
-              disabled={loading}
+              disabled={loading || !haveWritePermission}
             />
           </div>
             <Typography variant='body2' style={{ fontWeight: 600, margin: '10px 0' }}>
