@@ -113,6 +113,12 @@ export const boardsReducer = (state = initialState, action) => {
         ...state,
         hasNoBoards: true,
       };
+
+    case boardsActionType.SET_SELECTED_BOARD:
+      return {
+        ...state,
+        selectedBoard: {},
+      };
     default:
       return state;
   }
