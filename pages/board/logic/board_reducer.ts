@@ -9,11 +9,13 @@ import {
   updateNameFlowChartAction,
   deleteBoardAction,
   getDataListCardAction,
+  hasNoBoards,
   createCardAction,
 } from './board_action';
 import { boardsActionType } from './board_type_action';
 import { checkArray } from 'helpers/check_array';
 import { convertCardData } from './convert_card_data';
+import { hideLoader } from 'pages/event_logs/logic/event_log_action';
 
 export enum NotificationTypes {
   succeedCreateFlowChart = 'Create FlowChart Successfully',
@@ -41,6 +43,8 @@ const initialState: BoardsPage = {
     projectID: '',
   },
   cards: [],
+  loading: true,
+  hasNoBoards: false,
 };
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -93,6 +97,22 @@ export const boardsReducer = (state = initialState, action) => {
         cards: action.payload,
       };
 
+    case boardsActionType.SHOW_LOADER_LIST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case boardsActionType.HIDE_LOADER_LIST:
+      return {
+        ...state,
+        loading: false,
+      };
+
+    case boardsActionType.HAS_NO_DATA:
+      return {
+        ...state,
+        hasNoBoards: true,
+      };
     default:
       return state;
   }
@@ -115,7 +135,13 @@ export const getBoardDataMiddleWare = () => async (dispatch, getState) => {
       },
     });
 
+    if (!res?.data?.totalCount) {
+      await dispatch(hasNoBoards());
+      await dispatch(hideLoader());
+    }
+
     await dispatch(getBoardAction(res.data));
+    await dispatch(hideLoader());
 
   } catch (error) {
     throw error;
@@ -173,7 +199,8 @@ export const createFlowChartMiddleWare = (router, currentPath) => async (dispatc
 
     dispatch(createBoardAction(res.data));
 
-    router.push({ pathname: `${currentPath}/view`, query: { id: res.data._id } });
+    router.push({ pathname: `${currentPath}/view`, query: { id: res.data?._id } });
+    dispatch(pushNewNotifications({ variant: 'success', message: 'Create FlowChart successfully' }));
   } catch (error) {
     dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedCreateFlowChart }));
   }

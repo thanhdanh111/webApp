@@ -10,8 +10,8 @@ const View = () => {
   const query = router.query;
 
   useEffect(() => {
-    fetchDataProject();
-  }, [query.id]);
+    void fetchDataProject();
+  }, []);
 
   const fetchDataProject = () => {
     dispatch(getBoardDetailDataMiddleWare(query.id));

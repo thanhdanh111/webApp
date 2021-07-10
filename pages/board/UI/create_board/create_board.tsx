@@ -20,15 +20,6 @@ import ListOptionCard from './list_option_card';
 import HeaderContentBoard from './header_content_board';
 import { useRouter } from 'next/router';
 
-const onLoad = (reactFlowInstance) => {
-  reactFlowInstance.fitView();
-};
-
-const nodeTypes = {
-  PROCESS: CustomProcess,
-  DECISION: CustomDecision,
-};
-
 const CreateBoard = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -89,6 +80,15 @@ const CreateBoard = () => {
 
   const onConnect = (params) => setElements((els) => addEdge({ ...params, arrowHeadType: ArrowHeadType.ArrowClosed }, els));
   // const onConnectStart = (params) => setOnConnectStart(() => console.log('onConnect start', params));
+
+  const onLoad = (reactFlowInstance) => {
+    reactFlowInstance.fitView();
+  };
+
+  const nodeTypes = {
+    PROCESS: CustomProcess,
+    DECISION: CustomDecision,
+  };
 
   return (
     <Fragment>

@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import { useState, useEffect } from 'react';
-import { useDebounce } from 'pages/users/logic/users_reducer';
 import { updateNameFlowChartMiddleWare } from 'pages/board/logic/board_reducer';
+import { useDebounce } from 'helpers/debounce';
 
 const HeaderContentBoard = () => {
   const dispatch = useDispatch();

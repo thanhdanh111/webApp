@@ -150,7 +150,7 @@ export interface Task {
   _id: string;
   companyID?: Company;
   departmentID?: Department;
-  taskStatusID?: TaskStatus | string;
+  taskStatusID: TaskStatus;
   tagIDs?: string[];
   userIDs?: User[];
   title: string;
@@ -281,6 +281,8 @@ export interface BoardsPage {
   boards: Board[];
   selectedBoard: Board;
   cards: Card[];
+  loading: boolean;
+  hasNoBoards: boolean;
 }
 
 export interface ConnectToData {

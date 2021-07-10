@@ -55,9 +55,29 @@ export const updateCards = (res: object) => {
   };
 };
 
-export const setCard = (res: object) => {
+export const showLoaderListEventLogs = () => {
   return {
-    type: boardsActionType.SET_CARD,
-    payload: res,
+    type: boardsActionType.SHOW_LOADER_LIST,
+  };
+};
+
+export const hideLoaderListEventLogs = () => {
+  return {
+    type: boardsActionType.HIDE_LOADER_LIST,
+  };
+};
+
+export const hasNoBoards = () => {
+  return {
+    type: boardsActionType.HAS_NO_DATA,
+  };
+};
+
+export const setSelectedBoard = (res) => {
+  return {
+    type: boardsActionType.SET_SELECTED_BOARD,
+    payload: {
+      selectedBoard: res,
+    },
   };
 };

@@ -94,6 +94,13 @@ export const setTasksToTaskStatus = (data: SetTasksToTaskStatus) => {
   };
 };
 
+export const updateUserAssigned = (res: object) => {
+  return {
+    type: taskBoardsActionType.UPDATE_USER_ASSIGN_FOR_TASK,
+    payload: res,
+  };
+};
+
 export const deletedTaskStatus = (taskStatusID) => {
   return {
     type: taskBoardsActionType.DELETE_TASK_STATUS,
@@ -112,5 +119,27 @@ export const setTemplateTitleStatus = (templateTitleStatus: string) => {
   return {
     type: taskBoardsActionType.SET_TEMPLATE_TITLE_STATUS,
     payload: templateTitleStatus,
+  };
+};
+
+// filter task
+export const searchTaskByTitle = (tasks) => {
+  return {
+    type: taskBoardsActionType.SEARCH_TASKS_BY_TITLE,
+    payload: tasks,
+  };
+};
+
+export const setHasNoData = (res: boolean) => {
+  return {
+    type: taskBoardsActionType.HAS_NO_DATA,
+    payload: res,
+  };
+};
+
+export const setFiltering = (filtering: boolean) => {
+  return {
+    type: taskBoardsActionType.SET_FILTERING,
+    payload: filtering,
   };
 };

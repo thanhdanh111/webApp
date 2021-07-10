@@ -3,9 +3,9 @@ import { Board } from 'helpers/type';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Delete } from '@material-ui/icons';
-import ConfirmDialogDelete from '../confirm_dialog_delete/confirm_dialog_delete';
 import { deleteBoardMiddleWare } from 'pages/board/logic/board_reducer';
 import { useDispatch } from 'react-redux';
+import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
 
 interface InitProps {
   board: Board;
@@ -18,11 +18,10 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
   const { board }: InitProps = props;
   const router = useRouter();
   const pathname = router.pathname;
-
   const [open, setOpen] = useState(false);
 
-  const onPushToPage = () => {
-    void router.push({ pathname: `${pathname}/view` , query: { id: board?._id } });
+  const onPushToContentBoard = () => {
+    void router.push({ pathname: `${pathname}/view`, query: { id: board?._id } });
   };
 
   const handleOpenOrClose = () => {
@@ -37,18 +36,23 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
     <Grid item xs={12} sm={3} className='board-grid'>
       <Card className='board-card'>
         <CardContent className='board-card-content'>
-          <div className='create-name-flowchart' onClick={() => onPushToPage()}>
+          <div className='create-name-flowchart' onClick={() => onPushToContentBoard()}>
             <Typography className='name-board'>
               {board?.name}
             </Typography>
           </div>
           <div className='check-box' onClick={() => handleOpenOrClose()}>
             <Delete className='trash-logo'/>
-            <ConfirmDialogDelete open={open} onClose={handleOpenOrClose} handleDelete={() => handleDeleteBoard(board._id)}/>
+            <ConfirmDialog
+              onOpen={open}
+              handleClose={handleOpenOrClose}
+              handleYes={() => handleDeleteBoard(board._id)}
+              status='DELETE'
+            />
           </div>
         </CardContent>
       </Card>
-      <div className='picture' onClick={() => onPushToPage()}>
+      <div className='picture' onClick={() => onPushToContentBoard()}>
         MINI Map
       </div>
     </Grid>
