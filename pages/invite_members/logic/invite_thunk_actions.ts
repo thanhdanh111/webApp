@@ -1,14 +1,14 @@
+import { updateInviteMembers } from './invite_actions';
 import { inviteMembersApi } from './invite_apis';
-import { inviteLoading } from './invite_actions';
 
-export const inviteMembersThunkAction = ({ companyID, inviteMembersData }) => async (dispatch) => {
+export const inviteMembersThunkAction = ({ inviteMembersData }) => async (dispatch) => {
   try {
-    if (!companyID || !inviteMembersData || !inviteMembersData?.length) {
+    if (!inviteMembersData || !inviteMembersData?.length) {
       return;
     }
 
-    await dispatch(inviteMembersApi({ companyID, inviteMembers: inviteMembersData }));
+    await dispatch(inviteMembersApi({  inviteMembers: inviteMembersData }));
   } catch (error) {
-    await dispatch(inviteLoading({ isLoading: false }));
+    await dispatch(updateInviteMembers({ isLoading: false }));
   }
 };

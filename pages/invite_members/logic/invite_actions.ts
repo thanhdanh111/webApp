@@ -1,72 +1,10 @@
-import { InviteMembersPageFlow } from '../index.page';
-import { InviteCompany } from './invite_interface';
-
 export enum InviteActionTypes {
   updateInviteMembers = 'updateInviteMembers',
-  chooseCompany = 'chooseCompany',
-  backToChooseCompany = 'backToChooseCompanyPage',
-  updateAvailCompanies = 'updateAvailCompanies',
-  inviteMembers = 'inviteMembersPage',
-  inviteLoading = 'inviteLoading',
 }
 
-interface ChooseInviteCompany {
-  inviteCompany: InviteCompany;
-}
-
-export const chooseInviteCompany = ({ inviteCompany }: ChooseInviteCompany) => {
-
+export const updateInviteMembers = (data) => {
   return {
-    data: {
-      inviteCompany,
-      currentPage: InviteMembersPageFlow.InviteMembers,
-    },
-    type: InviteActionTypes.chooseCompany,
-  };
-};
-
-export const backToChooseCompany = () => {
-  const resetInit = {
-    inviteCompany: {
-      name: '',
-      id: '',
-    },
-    inviteMembers: [
-      {
-        email: '',
-        role: 'COMPANY_STAFF',
-      },
-    ],
-  };
-
-  return {
-    data: {
-      ...resetInit,
-      currentPage: InviteMembersPageFlow.ChoosingCompanies,
-    },
-    type: InviteActionTypes.chooseCompany,
-  };
-};
-
-export const updateInviteCompanies = ({ availCompanies, isLoading }) => {
-  return {
-    availCompanies,
-    isLoading,
-    type: InviteActionTypes.updateAvailCompanies,
-  };
-};
-
-export const inviteLoading = ({ isLoading }) => {
-  return {
-    isLoading,
-    type: InviteActionTypes.inviteLoading,
-  };
-};
-
-export const updateInviteMembers = ({ inviteMembers }) => {
-
-  return {
-    inviteMembers,
+    data,
     type: InviteActionTypes.updateInviteMembers,
   };
 };
