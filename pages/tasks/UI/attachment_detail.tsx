@@ -51,6 +51,26 @@ const attachmentOption = [
 ];
 
 const AttachmentInBody: React.FC = () => {
+  const renderMenuOption = (popupState) => (
+    <Menu
+      {...bindMenu(popupState)}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+      className='attachment-detail-popup'
+    > {
+        attachmentOption.map((option) => (
+          <MenuItem className='option-attachment' key={option.id}>{option.icon} {option.title}</MenuItem>
+        ))
+      }
+    </Menu>
+  );
+
   return (
     <Box px={4} display='flex' justifyContent='space-between' alignItems='center'>
       <Box>
@@ -58,32 +78,12 @@ const AttachmentInBody: React.FC = () => {
       <PopupState variant='popover' popupId='demo-popup-popover'>
         {(popupState) => (
           <>
-          <Button
-            variant='outlined'
-            className='btn-add-attachment'
-            {...bindTrigger(popupState)}
-          >
-            Add
-            <ArrowDropDownIcon className='icon-attachment'/>
-          </Button>
-        <Menu
-          {...bindMenu(popupState)}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          className='attachment-detail-popup'
-        > {
-            attachmentOption.map((option) => (
-              <MenuItem className='option-attachment' key={option.id}>{option.icon} {option.title}</MenuItem>
-            ))
-          }
-        </Menu>
-        </>
+            <Button variant='outlined' className='btn-add-attachment' {...bindTrigger(popupState)} >
+              Add
+              <ArrowDropDownIcon className='icon-attachment'/>
+            </Button>
+            {renderMenuOption(popupState)}
+          </>
       )}
       </PopupState>
       </Box>

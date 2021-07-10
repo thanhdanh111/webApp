@@ -29,6 +29,52 @@ const AddTagPopup: React.FC = () => {
     setNewTag({ name: '' });
   };
 
+  const renderListTag = () => {
+    const listTag = tags?.map((tag) => (
+      <ListItem
+        key={tag?._id}
+        className='tag-item-list'
+        style={{ color: tag.color }}
+      >
+        <span>{tag.name}</span>
+        {tagChangeName === tag?._id && (
+          <input className='input-name-tag' />
+        )}
+        <TagMoreAction
+          changeName={() => setTaskChangeName(tag?._id)}
+          onDeleteTag={() => dispatch(deleteTagThunkAction(tag?._id))}
+        />
+      </ListItem>
+    ));
+
+    return listTag;
+  };
+
+  const renderElementTag = () => (
+    <Grid
+      container
+      spacing={1}
+      alignItems='center'
+      className='tags-selected'
+    >
+      <Grid item>
+        <TagItem tag={{ name: 'Snt-app' }} />
+      </Grid>
+    </Grid>
+  );
+
+  const renderSearchInput = () => (
+    <Box px={1} className='search-tag'>
+    <InputBase
+      placeholder='Search or Create New'
+      onKeyUp={onKeyUpTagName}
+      onChange={(event) => setNewTag({ ...newTag, name: event.target.value })}
+      value={newTag.name}
+      className='input-search-tag'
+    />
+  </Box>
+  );
+
   return (
     <PopupState variant='popover' popupId='demo-popup-menu'>
       {(popupState) => (
@@ -52,43 +98,11 @@ const AddTagPopup: React.FC = () => {
               flexDirection='column'
               className='add-tag-popup'
             >
-              <Grid
-                container
-                spacing={1}
-                alignItems='center'
-                className='tags-selected'
-              >
-                <Grid item>
-                  <TagItem tag={{ name: 'Snt-app' }} />
-                </Grid>
-              </Grid>
-              <Box px={1} className='search-tag'>
-                <InputBase
-                  placeholder='Search or Create New'
-                  onKeyUp={onKeyUpTagName}
-                  onChange={(event) => setNewTag({ ...newTag, name: event.target.value })}
-                  value={newTag.name}
-                  className='input-search-tag'
-                />
-              </Box>
+              {renderElementTag()}
+              {renderSearchInput()}
               <Box px={1}>
                 <List component='nav' className='tag-list'>
-                  {tags?.map((tag) => (
-                    <ListItem
-                      key={tag?._id}
-                      className='tag-item-list'
-                      style={{ color: tag.color }}
-                    >
-                      <span>{tag.name}</span>
-                      {tagChangeName === tag?._id && (
-                        <input className='input-name-tag' />
-                      )}
-                      <TagMoreAction
-                        changeName={() => setTaskChangeName(tag?._id)}
-                        onDeleteTag={() => dispatch(deleteTagThunkAction(tag?._id))}
-                      />
-                    </ListItem>
-                  ))}
+                  {renderListTag()}
                 </List>
               </Box>
             </Box>

@@ -86,6 +86,22 @@ interface InitialPropMoreAction {
 export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
   const [deleteTag, setDeleteTag] = useState(false);
 
+  const renderActionForTag = (popupState) => (
+    <List component='nav' className='tag-action-popup'>
+      <ListItem button className='delete-tag' onClick={() => { popupState.close(); setDeleteTag(true); }}>
+          <DeleteOutlineOutlinedIcon className='icon-tag-action' color='error'/>
+          Delete
+      </ListItem>
+      <label htmlFor='input-tag-name'>
+      <ListItem button onClick={() => { props.changeName(); popupState.close(); }}>
+          <EditOutlinedIcon className='icon-tag-action'/>
+            Rename
+      </ListItem>
+      </label>
+      <ChangeColor/>
+    </List>
+  );
+
   return (
     <>
     <PopupState variant='popover' popupId='demo-popup-menu'>
@@ -103,19 +119,7 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
               horizontal: 'left',
             }}
           >
-            <List component='nav' className='tag-action-popup'>
-              <ListItem button className='delete-tag' onClick={() => { popupState.close(); setDeleteTag(true); }}>
-                  <DeleteOutlineOutlinedIcon className='icon-tag-action' color='error'/>
-                  Delete
-              </ListItem>
-              <label htmlFor='input-tag-name'>
-              <ListItem button onClick={() => { props.changeName(); popupState.close(); }}>
-                  <EditOutlinedIcon className='icon-tag-action'/>
-                    Rename
-              </ListItem>
-              </label>
-              <ChangeColor/>
-            </List>
+            {renderActionForTag(popupState)}
           </Popover>
         </>
       )}
@@ -135,6 +139,15 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
 };
 
 const ChangeColor: React.FC = () => {
+
+  const renderColor = () => {
+    colorDefault.map((color, key) => (
+      <div className='color-item active' key={key} style={{ backgroundColor : color }}>
+        <DoneOutlinedIcon className='color-checked'/>
+      </div>
+    ));
+  };
+
   return (
     <PopupState variant='popover' popupId='demo-popup-menu'>
   {(popupState) => (
@@ -156,13 +169,7 @@ const ChangeColor: React.FC = () => {
       className='change-color-popup'
     >
       <Box className='change-color' display='flex' flexWrap='wrap'>
-        {
-          colorDefault.map((color, key) => (
-            <div className='color-item active' key={key} style={{ backgroundColor : color }}>
-              <DoneOutlinedIcon className='color-checked'/>
-            </div>
-          ))
-        }
+        {renderColor()}
         <div className='color-picker'>
           <label htmlFor='color-picker'><ColorizeIcon/></label>
           <input type='color' id='input-color-picker'/>

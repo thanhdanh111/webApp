@@ -65,129 +65,29 @@ describe('Home page', () => {
     expect(chooseUserAssignImg).toMatchImageSnapshot();
 
     await page.click('.submit-create-status');
-    await page.waitForSelector('.status');
+    await page.waitForSelector('.testing .status');
 
     const confirmAddStatus = await page.screenshot();
     expect(confirmAddStatus).toMatchImageSnapshot();
 
-  // add task
-
-    await page.waitForSelector('.task-status');
-
-    await page.waitForSelector('.add-task');
-    await page.waitFor(5000);
-    await page.click('.add-task');
-    await page.waitForSelector('.task-add');
-    await page.waitFor(5000);
-
-    const addTaskImage = await page.screenshot();
-    expect(addTaskImage).toMatchImageSnapshot();
-
-    await page.waitForSelector('input[name=title]');
-
-    await page.click('input[name=title]');
-    await page.type('input[name=title]', 'feat/created task for task');
-
-    await page.waitForSelector('.save-add');
-    await page.click('.save-add');
-
-    await page.waitFor(5000);
-    await page.waitForSelector('.task-item');
-
-    const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
-
-  // task detail
-
-    await page.click('.task-name');
-    await page.waitFor(5000);
-    await page.waitForSelector('.detail-modal');
-
-    const taskDetail = await page.screenshot();
-    expect(taskDetail).toMatchImageSnapshot();
-
-  // add tag
-
-    await page.waitForSelector('.tag-add');
-    await page.click('.tag-add');
-    await page.waitFor(5000);
-
-    const tagAddpopup = await page.screenshot();
-    expect(tagAddpopup).toMatchImageSnapshot();
-
-    await page.waitForSelector('.input-search-tag');
-    await page.click('.input-search-tag');
-    await page.type('.input-search-tag', 'snt-app');
-    await page.keyboard.press('Enter');
-    await page.waitFor(5000);
-    await page.waitForSelector('.tag-item-list');
-
-  // delete tag
-
-    await page.hover('.tag-item-list');
-    await page.waitForSelector('.tag-item-list >.more-item-icon');
-    await page.click('.tag-item-list >.more-item-icon');
-    await page.waitForSelector('.tag-action-popup');
-
-    const actionForTagImage = await page.screenshot();
-    expect(actionForTagImage).toMatchImageSnapshot();
-
-    await page.click('.delete-tag');
-    await page.waitFor(5000);
-    await page.waitForSelector('.confirm-dialog--yes-btn');
-
-    const deleteConfirm = await page.screenshot();
-    expect(deleteConfirm).toMatchImageSnapshot();
-
-    await page.click('.confirm-dialog--yes-btn');
-    await page.waitFor(5000);
-
-    const deletedTagImage = await page.screenshot();
-    expect(deletedTagImage).toMatchImageSnapshot();
-
-    await page.click('.close-detail');
-    await page.waitFor(5000);
-    await page.click('.close-detail');
-
-  // delete tag
-
-    const closeDetailModalImage = await page.screenshot();
-    expect(closeDetailModalImage).toMatchImageSnapshot();
-
-    await page.waitForSelector('.footer-task');
-    await page.waitForSelector('.delete-task');
-    await page.click('.delete-task');
-    await page.waitFor(5000);
-
-    const deletedTaskImage = await page.screenshot();
-    expect(deletedTaskImage).toMatchImageSnapshot();
-
-    await page.waitForSelector('.confirm-dialog--yes-btn');
-    await page.click('.confirm-dialog--yes-btn');
-    await page.click('.confirm-dialog--no-btn');
-    await page.waitFor(5000);
-    await page.waitForSelector('.board-tasks');
-
-    const confirmDeletedTaskImage = await page.screenshot();
-    expect(confirmDeletedTaskImage).toMatchImageSnapshot();
-
     // rename task status
-    await page.waitForSelector('.action-status-btn');
-    await page.click('.action-status-btn');
+    await page.waitForSelector('.testing .action-status-btn');
+    await page.click('.testing .action-status-btn');
 
     await page.waitForSelector('.popper-action-status');
     await page.waitFor(5000);
 
     await page.waitForSelector('.rename-status-menu-item');
     await page.click('.rename-status-menu-item');
+    await page.$eval('.add-status-input', (el) => el.value = '');
     await page.type('.add-status-input', 'Testing ReTitle');
-    await page.click('.submit-create-status');
+    await page.click('.testing .submit-create-status');
     await page.waitFor(5000);
 
-  // delete status tag
+  // delete status task
 
-    await page.waitForSelector('.action-status-btn');
-    await page.click('.action-status-btn');
+    await page.waitForSelector('.testing-retitle .action-status-btn');
+    await page.click('.testing-retitle .action-status-btn');
 
     await page.waitForSelector('.popper-action-status');
     await page.waitFor(5000);
