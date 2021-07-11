@@ -12,41 +12,65 @@ import ReactFlow, {
 import CustomDecision from '../shapes/shape_decision';
 import { initialElements } from './initial_elements';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { updateNameFlowChartMiddleWare } from 'pages/board/logic/board_reducer';
+import { createNewCard, getDataListCard } from 'pages/board/logic/board_reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import CustomProcess from '../shapes/shape_process';
 import ListOptionCard from './list_option_card';
-import { useDebounce } from 'helpers/debounce';
+import HeaderContentBoard from './header_content_board';
+import { useRouter } from 'next/router';
 
-const CreateBoard = () => {
+const ViewBoard = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
-  const selectedBoard = useSelector((state: RootState) => state.boards.selectedBoard);
+  const dataList = useSelector((state: RootState) => state.boards.cards);
+  const query = router.query;
+  // const selected = useSelector((state: RootState) => state.boards.selectedBoard);
+  // const [textContent, setTextContent] = useState('');
 
-  const [inputName, setInputName] = useState('');
+  // const onChangeTextContent = (event) => {
+  //   if (!event.target.value) {
+  //     setTextContent('');
 
-  const debouncedInputName = useDebounce(inputName, 1000);
+  //     return;
+  //   }
+  //   setTextContent(event.target.value);
+
+  // };
 
   useEffect(() => {
-    if (debouncedInputName) {
-      dispatch(updateNameFlowChartMiddleWare(selectedBoard._id, inputName));
+    if (!query.id) {
+      return;
     }
 
-    return;
-  }, [debouncedInputName]);
+    dispatch(getDataListCard(query.id));
+  }, [query.id]);
 
-  const onChangeNameFlowChart = (event) => {
-    setInputName(event.target.value);
-  };
+  useEffect(() => {
+    if (!dataList) {
+      return;
+    }
 
-  const addShape = () => {
-    setElements((element) => element.concat({
-      id: (element.length + 1).toString(),
-      position: { x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight },
-      type: 'process',
-    }));
-  };
+    const list = dataList.map((each) => {
+      return {
+        id: each._id,
+        position: {
+          x: each.position.x,
+          y: each.position.y,
+        },
+        type: each.shape,
+        data: each.textContent,
+      };
+
+    });
+
+    setElements(list);
+  }, [dataList]);
+
+  function addShape(type: string) {
+    dispatch(createNewCard(type.toUpperCase(), '', ''));
+  }
 
   const onElementsRemove = (elementsToRemove) =>
     setElements((els) => removeElements(elementsToRemove, els));
@@ -55,14 +79,15 @@ const CreateBoard = () => {
     setElements((els) => updateEdge(oldEdge, newConnection, els));
 
   const onConnect = (params) => setElements((els) => addEdge({ ...params, arrowHeadType: ArrowHeadType.ArrowClosed }, els));
+  // const onConnectStart = (params) => setOnConnectStart(() => console.log('onConnect start', params));
 
   const onLoad = (reactFlowInstance) => {
     reactFlowInstance.fitView();
   };
 
   const nodeTypes = {
-    process: CustomProcess,
-    decision: CustomDecision,
+    PROCESS: CustomProcess,
+    DECISION: CustomDecision,
   };
 
   return (
@@ -70,11 +95,7 @@ const CreateBoard = () => {
       <div className='style-page'>
         <div className='header-flowchart'>
           <div className='create-name-flowchart'>
-            <input
-              className='input-name'
-              placeholder={selectedBoard.name}
-              onChange={onChangeNameFlowChart}
-            />
+            <HeaderContentBoard />
           </div>
           <PrimaryButtonUI
             title='Save'
@@ -85,22 +106,23 @@ const CreateBoard = () => {
           elements={elements}
           onLoad={onLoad}
           onConnect={onConnect}
+          // onConnectStart={onConnectStart}
           connectionLineStyle={{ stroke: '#af00e7', strokeWidth: 2 }}
           connectionLineType={ConnectionLineType.SmoothStep}
           snapToGrid={true}
-          snapGrid={[16, 16]}
+          snapGrid={[13, 13]}
           onElementsRemove={onElementsRemove}
           nodeTypes={nodeTypes}
           onEdgeUpdate={onEdgeUpdate}
         >
           <Background
             className='back-ground'
-            gap={16}
+            gap={13}
           />
           <MiniMap
             nodeColor={(n) => {
-              if (n.type === 'process') return '#0041d0';
-              if (n.type === 'decision') return '#ff0072';
+              if (n.type === 'PROCESS') return '#0041d0';
+              if (n.type === 'DECISION') return '#ff0072';
 
               return '#FFCC00';
             }}
@@ -115,4 +137,4 @@ const CreateBoard = () => {
   );
 };
 
-export default CreateBoard;
+export default ViewBoard;
