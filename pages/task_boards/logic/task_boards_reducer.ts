@@ -375,7 +375,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
     case taskBoardsActionType.SET_SELECT_USERIDS:
       const templateSelectedUsers = state.selectedUserIDs;
 
-      if (checkInArrayString(templateSelectedUsers, action.payload)) {
+      if (checkInArrayString(templateSelectedUsers, action.payload.userID)) {
         const removeUser = templateSelectedUsers.filter(
           (each) => each !== action.payload);
 
@@ -929,5 +929,43 @@ export const updateAssignUserThunkAction = (
   } catch (error) {
     const errorNotification = returnNotification({ type: 'failed' });
     await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+  }
+};
+
+export const filterTasksThunkAction = () => async (dispatch, getState) => {
+  try {
+    await dispatch(setLoading(true));
+    const token = localStorage.getItem('access_token');
+    const userInfo = getState().userInfo;
+    const companyID = userInfo.currentCompany._id;
+    const { selectedTitle, selectedTags, selectedUserIDs }: TaskBoardsType = getState().taskBoards;
+
+    if (!token) {
+      return;
+    }
+
+    const res = await axios.get(`${config.BASE_URL}/tasks`, {
+      params: {
+        companyID,
+        title: selectedTitle,
+        tags: selectedTags,
+        userIDs: selectedUserIDs,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (checkArray(!res?.data?.list)) {
+      await dispatch(setLoading(false));
+
+      return;
+    }
+
+    await dispatch(searchTaskByTitle(res.data.list));
+    await dispatch(setLoading(false));
+  } catch (error) {
+    throw error;
   }
 };

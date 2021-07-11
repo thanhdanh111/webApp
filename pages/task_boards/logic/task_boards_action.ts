@@ -206,3 +206,10 @@ export const setSelectedUserIDs = (userIDs) => {
     payload: userIDs,
   };
 };
+
+export const filterTasks = (tasks) => {
+  return {
+    type: taskBoardsActionType.FILTER_TASKS,
+    payload: tasks,
+  };
+};
