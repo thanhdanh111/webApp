@@ -81,3 +81,12 @@ export const setSelectedBoard = (res) => {
     },
   };
 };
+
+export const setCard = (res) => {
+  return {
+    type: boardsActionType.SET_CARD,
+    payload: {
+      cards: res,
+    },
+  };
+};

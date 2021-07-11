@@ -20,7 +20,7 @@ import ListOptionCard from './list_option_card';
 import HeaderContentBoard from './header_content_board';
 import { useRouter } from 'next/router';
 
-const CreateBoard = () => {
+const ViewBoard = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
@@ -137,4 +137,4 @@ const CreateBoard = () => {
   );
 };
 
-export default CreateBoard;
+export default ViewBoard;

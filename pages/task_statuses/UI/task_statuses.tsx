@@ -78,11 +78,11 @@ const TaskStatusUI = (props: InitProps) => {
       <Droppable droppableId={taskStatus[taskStatusID]?._id} type='TASK_STATUS'>
         {(provided) => (
           <div
-            className='task-status'
+            className={`task-status ${style}`}
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            <div className={`status ${style}`}>
+            <div className='status'>
               <Container className='status-left'>
                   <RenameStatusUI
                     taskStatusID={taskStatus[taskStatusID]}

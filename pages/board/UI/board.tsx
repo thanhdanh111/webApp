@@ -8,7 +8,7 @@ import { createFlowChartMiddleWare, getBoardDataMiddleWare } from '../logic/boar
 import { DisappearedLoading } from 'react-loadingg';
 import { BoardsPage } from 'helpers/type';
 import { Typography } from '@material-ui/core';
-import { setSelectedBoard } from '../logic/board_action';
+import { setSelectedBoard, setCard } from '../logic/board_action';
 
 interface InitialProps {
   loading: boolean;
@@ -39,16 +39,16 @@ const BoardUI: FunctionComponent<BoardsType> = (props: InitialProps) => {
     return void fetchDataProject();
   }, []);
 
-  const resultSelectedNotFound = {
-    _id : '',
-    name: '',
-    companyID: '',
-    projectID: '',
-  };
+  const setSelectedBoardEmpty = {};
 
-  const fetchDataProject = () => {
-    dispatch(getBoardDataMiddleWare());
-    dispatch(setSelectedBoard(resultSelectedNotFound));
+  const setCardEmpty = [{}];
+
+  const fetchDataProject = async() => {
+    await Promise.all([
+      dispatch(getBoardDataMiddleWare()),
+      dispatch(setSelectedBoard(setSelectedBoardEmpty)),
+      dispatch(setCard(setCardEmpty)),
+    ]);
   };
 
   const generateBoardItem = () => {
