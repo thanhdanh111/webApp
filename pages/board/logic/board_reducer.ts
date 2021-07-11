@@ -26,8 +26,8 @@ export enum NotificationTypes {
   companyTokenNotification = 'You have not registered any companies for workspace',
   succeedDeleteBoard = 'Delete FlowChart Successfully',
   failedDeleteBoard = 'Failed Delete FlowChart',
-  failedAddCard = 'Failed add card',
-  failedGetCard = 'Error. Don\'t get cards!',
+  failedAddCard = 'Failed to card',
+  failedGetCard = 'Cards not found!',
 }
 export const Shape = {
   PROCESS: 'PROCESS',
