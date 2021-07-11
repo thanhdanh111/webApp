@@ -24,6 +24,7 @@ import {
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
 import { checkArray } from 'helpers/check_array';
+import { checkInArrayString } from 'helpers/check_assigned';
 
 export interface TaskBoardsType {
   loading: boolean;
@@ -41,6 +42,10 @@ export interface TaskBoardsType {
   templateTitleStatus?: string;
   filterResultTasks: Task[];
   isFiltering: boolean;
+  currentFilterLabel: string;
+  selectedTitle: string;
+  selectedTags: string[];
+  selectedUserIDs: string[];
 }
 
 export enum NotificationTypes {
@@ -87,6 +92,10 @@ const initialState: TaskBoardsType = {
   templateTitleStatus: '',
   filterResultTasks: [],
   isFiltering: false,
+  currentFilterLabel: '',
+  selectedTitle: '',
+  selectedTags: [],
+  selectedUserIDs: [],
 };
 
 interface UpdateTaskStatus {
@@ -333,6 +342,54 @@ export  const taskBoardsReducer = (state = initialState, action) => {
       return {
         ...state,
         taskStatus: updatedTaskStatuses,
+      };
+    case taskBoardsActionType.SET_CURRENT_FILTER_LABEL:
+      return {
+        ...state,
+        currentFilterLabel: action.payload,
+      };
+    case taskBoardsActionType.SET_SELECT_TITLE:
+      return {
+        ...state,
+        selectedTitle: action.payload,
+      };
+    case taskBoardsActionType.SET_SELECT_TAGS:
+      const templateSelectedTags = state.selectedTags;
+
+      if (checkInArrayString(templateSelectedTags, action.payload)) {
+        const removeTag = templateSelectedTags.filter(
+          (each) => each !== action.payload);
+
+        return {
+          ...state,
+          selectedTags: removeTag,
+        };
+      }
+
+      const addTag = [...templateSelectedTags, action.payload];
+
+      return {
+        ...state,
+        selectedTags: addTag,
+      };
+    case taskBoardsActionType.SET_SELECT_USERIDS:
+      const templateSelectedUsers = state.selectedUserIDs;
+
+      if (checkInArrayString(templateSelectedUsers, action.payload)) {
+        const removeUser = templateSelectedUsers.filter(
+          (each) => each !== action.payload);
+
+        return {
+          ...state,
+          selectedUserIDs: removeUser,
+        };
+      }
+
+      const addUser = [...templateSelectedUsers, action.payload];
+
+      return {
+        ...state,
+        selectedUserIDs: addUser,
       };
     default:
       return state;

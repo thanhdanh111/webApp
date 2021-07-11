@@ -1,7 +1,7 @@
 import { checkArray } from './check_array';
 import { User } from './type';
 
-export const checkAssignedUserID = (arr: string[], userID: string) => {
+export const checkInArrayString = (arr: string[], userID: string) => {
   if (!checkArray(arr)) {
     return false;
   }
@@ -9,7 +9,7 @@ export const checkAssignedUserID = (arr: string[], userID: string) => {
   return arr.includes(userID);
 };
 
-export const checkAssignedUserByID = (arr?: User[], userID?: string) => {
+export const checkInObjectByID = (arr?: User[], userID?: string) => {
   if (!checkArray(arr)) {
     return false;
   }

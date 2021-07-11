@@ -3,26 +3,25 @@ import React, { useEffect, useState } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { DisappearedLoading } from 'react-loadingg';
-import { getSearchAction } from 'pages/users/logic/users_reducer';
+import { getPaginationThunkAction, getSearchAction } from 'pages/users/logic/users_reducer';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import UserItem from './user_item_popup';
+import UserItem from './user_popup_item';
 import { User } from 'helpers/type';
-import { checkAssignedUserByID } from 'helpers/check_assigned';
-// import { checkAssigned } from 'helpers/check_assigned';
+import { checkInObjectByID } from 'helpers/check_assigned';
 import { useDebounce } from 'helpers/debounce';
 
 interface InitProps {
-  getUser: () => void;
   usersAssigned?: User[];
-  handleAssign: (user) => void;
+  chooseUser: (user) => void;
+  type?: string;
 }
 
-const AssignUserPopup: React.FC<InitProps> = (props) => {
+const UsersPopupUI: React.FC<InitProps> = (props) => {
   const dispatch = useDispatch();
   const users = useSelector((state: RootStateOrAny) => state.users);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
-  const { getUser, handleAssign, usersAssigned }: InitProps = props;
+  const { chooseUser, usersAssigned, type }: InitProps = props;
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -34,17 +33,31 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
     dispatch(getSearchAction(debouncedSearchTerm));
   }, [debouncedSearchTerm]);
 
+  const onHandleAssigned = (user) => {
+    if (!chooseUser || !user) {
+      return;
+    }
+
+    if (type === 'reduxAction') {
+      dispatch(chooseUser(user));
+
+      return;
+    }
+
+    return chooseUser(user);
+  };
+
   const generateUser = () => {
     const user = debouncedSearchTerm ? users.listSearch : users.list;
 
     const renderUser = user?.map((each) => {
-      const checkAssignedOfUser = checkAssignedUserByID(usersAssigned, each?.user?.userID?._id);
+      const checkAssignedOfUser = usersAssigned && checkInObjectByID(usersAssigned, each?.user?.userID?._id);
 
       return (
         <UserItem
           key={each?.user?._id}
           userAccess={each?.user}
-          handleAssign={() => handleAssign(each?.user)}
+          handleAssign={() => onHandleAssigned(each?.user)}
           isAssigned={checkAssignedOfUser}
         />
       );
@@ -67,7 +80,7 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
     <InfiniteScroll
       dataLength={users?.list?.length}
       hasMore={users?.list?.length < users?.totalCount}
-      next={getUser}
+      next={() => dispatch(getPaginationThunkAction())}
       loader={<DisappearedLoading color={'#67cb48'} />}
       scrollThreshold={0.8}
       height={200}
@@ -78,4 +91,4 @@ const AssignUserPopup: React.FC<InitProps> = (props) => {
   );
 };
 
-export default AssignUserPopup;
+export default UsersPopupUI;

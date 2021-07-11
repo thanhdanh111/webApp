@@ -24,10 +24,11 @@ import { RootState } from 'redux/reducers_registration';
 import { checkValidAccess } from 'helpers/check_valid_access';
 import { Roles } from 'constants/roles';
 import { useDebounce } from 'helpers/debounce';
+import FilterTaskPopupUI from './filter_task_popup';
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
 
-const NavClickUp = () => {
+const NavClickUp: React.FC = () => {
   const dispatch = useDispatch();
   const {
     filteringTaskByUser,
@@ -132,12 +133,7 @@ const NavClickUp = () => {
       <Container className='nav-actions'>
         <ul className='list-actions'>
           <li className='item-action'>
-            <div className='action action-filter'>
-              <FilterListIcon className='action-icon filter-icon' />
-              <Typography className='action-text text-filter'>
-                Filter
-              </Typography>
-            </div>
+            <FilterTaskPopupUI />
           </li>
           <li className='item-action'>
             <div className='action action-sort'>

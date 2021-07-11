@@ -178,3 +178,31 @@ export const setFiltering = (filtering: boolean) => {
     payload: filtering,
   };
 };
+
+export const setCrrentFilterLabel = (label) => {
+  return {
+    type: taskBoardsActionType.SET_CURRENT_FILTER_LABEL,
+    payload: label,
+  };
+};
+
+export const setSelectedTitle = (title) => {
+  return {
+    type: taskBoardsActionType.SET_SELECT_TITLE,
+    payload: title,
+  };
+};
+
+export const setSelectedTags = (tags) => {
+  return {
+    type: taskBoardsActionType.SET_SELECT_TAGS,
+    payload: tags,
+  };
+};
+
+export const setSelectedUserIDs = (userIDs) => {
+  return {
+    type: taskBoardsActionType.SET_SELECT_USERIDS,
+    payload: userIDs,
+  };
+};

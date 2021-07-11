@@ -5,7 +5,7 @@ import OutlinedFlagIcon from '@material-ui/icons/OutlinedFlag';
 import DoneIcon from '@material-ui/icons/Done';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { updateAssignUserThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
-import { checkAssignedUserID } from 'helpers/check_assigned';
+import { checkInArrayString } from 'helpers/check_assigned';
 
 const StatusDetail = () => {
   const task = useSelector((state: RootStateOrAny) => state.taskBoards.taskDetail);
@@ -13,7 +13,7 @@ const StatusDetail = () => {
 
   const getAssignUser = (user) => {
     let userAssigns = task?.userIDs?.map((each) => each._id) as string[];
-    const checkAssignedOfUser = checkAssignedUserID(userAssigns, user?.userID?._id);
+    const checkAssignedOfUser = checkInArrayString(userAssigns, user?.userID?._id);
     if (checkAssignedOfUser) {
       const removedUsers = userAssigns.filter((assignedUser) => user.userID._id !== assignedUser);
 
