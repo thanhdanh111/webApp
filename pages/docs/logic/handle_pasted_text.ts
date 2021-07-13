@@ -19,38 +19,64 @@ export default function handlePastedText({ html, state, handleOnChange, text }) 
     return true;
   }
 
-  let contentState;
+  const selectedBlockType = getTypeOfBlock(state);
+  const oldSelection = state?.getSelection();
 
-  if (html) {
-    const converted = convertFromHTML(html);
-    const rawContentState = convertToRaw(ContentState.createFromBlockArray(converted.contentBlocks));
-    contentState = turnMutableToImmutableLinkEntity({ rawContentState });
+  if (selectedBlockType?.length) {
+
+    return;
   }
 
-  if (!html && text) {
-    const onlyTextContentState = ContentState.createFromText(text);
-    contentState = handleUrlForText({
-      contentBlocks: onlyTextContentState.getBlocksAsArray(),
-      contentState: onlyTextContentState,
-    });
-  }
+  const contentState = handlePasteCases({ html, text });
 
   if (!contentState) {
 
     return;
   }
 
-  const oldSelection = state?.getSelection();
-
   const newContentState = Modifier.replaceWithFragment(
     state?.getCurrentContent(),
     oldSelection,
-    contentState.getBlockMap(),
+    contentState?.getBlockMap(),
   );
 
   handleOnChange(EditorState.push(state, newContentState));
 
   return true;
+}
+
+function getTypeOfBlock(editorState) {
+  const startKey = editorState.getSelection().getStartKey();
+  const selectedBlockType = editorState
+    .getCurrentContent()
+    .getBlockForKey(startKey)
+    .getType();
+
+  return selectedBlockType;
+}
+
+function handlePasteCases({
+  html,
+  text,
+}) {
+
+  if (html) {
+    const converted = convertFromHTML(html);
+    const rawContentState = convertToRaw(ContentState.createFromBlockArray(converted.contentBlocks));
+
+    return turnMutableToImmutableLinkEntity({ rawContentState });
+  }
+
+  if (!html && text) {
+    const onlyTextContentState = ContentState.createFromText(text);
+
+    return handleUrlForText({
+      contentBlocks: onlyTextContentState.getBlocksAsArray(),
+      contentState: onlyTextContentState,
+    });
+  }
+
+  return null;
 }
 
 function turnMutableToImmutableLinkEntity({ rawContentState }) {

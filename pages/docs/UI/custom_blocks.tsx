@@ -1,6 +1,6 @@
 import React from 'react';
 import SideToolbarButton from '../../../components/my_editor/side_toolbar_button';
-import { EditorBlock, DefaultDraftBlockRenderMap } from 'draft-js';
+import { EditorBlock, DefaultDraftBlockRenderMap, convertToRaw } from 'draft-js';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import Immutable from 'immutable';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
@@ -195,38 +195,24 @@ const Image = ({ src }) => {
 
 const IndexElement = (props) => {
   const currentContentBlock = props.block;
-  const currentKey = currentContentBlock.getKey();
-  const blocks = props.contentState.getBlockMap()._list._tail.array;
+  let currentKey = currentContentBlock.getKey();
+  const contentState = props.contentState;
   let orderNumber = 1;
 
-  if (!currentContentBlock || !blocks?.length) {
+  if (!currentContentBlock || !contentState) {
     return <div>{orderNumber}. </div>;
   }
 
-  for (const block of blocks) {
-    const contentBlock = block[1];
-    const blockKey = block[0];
+  while (true) {
+    const contentBlockBefore = contentState.getBlockBefore(currentKey);
+    const blockTypeOfBefore = contentBlockBefore.getType();
 
-    const blockType = contentBlock.getType();
-    const nextOrderedBlock = checkOnlyTrueInArray({
-      conditionsArray: [
-        blockKey !== currentKey,
-        blockType === 'ordered-list-item',
-      ],
-    });
-
-    if (nextOrderedBlock) {
-      orderNumber = orderNumber + 1;
-
-      continue;
-    }
-
-    if (blockKey === currentKey) {
-
+    if (blockTypeOfBefore !== 'ordered-list-item') {
       break;
     }
 
-    orderNumber = 1;
+    currentKey = contentBlockBefore.getKey();
+    orderNumber = orderNumber + 1;
   }
 
   return <div
