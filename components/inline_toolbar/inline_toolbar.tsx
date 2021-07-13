@@ -45,6 +45,8 @@ const InlineToolbar = ({
     };
   };
 
+  const styles = styleControls();
+
   return <Fade in={displayInlineToolbar}>
     <div
       className='inline-toolbar-wrapper'
@@ -52,7 +54,6 @@ const InlineToolbar = ({
     >
       <div className='inline-toolbar'>
         {inlineToolbarButons.map((button) => {
-          const styles = styleControls();
           const isActive = styles?.inlineStyles?.has(button.styleName) ||
             styles?.blockType === button.styleName;
 
