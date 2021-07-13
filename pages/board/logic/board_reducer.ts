@@ -11,6 +11,7 @@ import {
   getDataListCardAction,
   hasNoBoards,
   createCardAction,
+  deleteCardAction,
 } from './board_action';
 import { boardsActionType } from './board_type_action';
 import { checkArray } from 'helpers/check_array';
@@ -28,6 +29,7 @@ export enum NotificationTypes {
   failedDeleteBoard = 'Failed Delete FlowChart',
   failedAddCard = 'Failed to card',
   failedGetCard = 'Cards not found!',
+  failedDeleteCard = 'Failed Delete Card',
 }
 export const Shape = {
   PROCESS: 'PROCESS',
@@ -124,6 +126,14 @@ export const boardsReducer = (state = initialState, action) => {
       return {
         ...state,
         cards: [],
+      };
+
+    case boardsActionType.DELETE_CARD:
+      const resolveCard = state.cards.filter((card) => card._id !== action.payload);
+
+      return {
+        ...state,
+        cards: resolveCard,
       };
     default:
       return state;
@@ -350,4 +360,32 @@ export const getDataListCard = (boardID) => async (dispatch) => {
     dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedGetCard }));
   }
 
+};
+
+export const deleteCardMiddleWare = (cardID) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const userInfo = getState()?.userInfo;
+    const companyID = userInfo?.currentCompany?._id;
+
+    if (!companyID || !cardID) {
+
+      return ;
+    }
+
+    const res = await axios.delete(`${config.BASE_URL}/cards/${cardID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    if (res.data) {
+      dispatch(deleteCardAction(cardID));
+    }
+
+  } catch (error) {
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedDeleteCard }));
+  }
 };

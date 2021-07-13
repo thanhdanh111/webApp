@@ -90,3 +90,10 @@ export const setCard = (res) => {
     },
   };
 };
+
+export const deleteCardAction = (id) => {
+  return {
+    type: boardsActionType.DELETE_CARD,
+    payload: id,
+  };
+};

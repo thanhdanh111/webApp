@@ -26,18 +26,6 @@ const ViewBoard = () => {
   const [elements, setElements] = useState(initialElements);
   const dataList = useSelector((state: RootState) => state.boards.cards);
   const query = router.query;
-  // const selected = useSelector((state: RootState) => state.boards.selectedBoard);
-  // const [textContent, setTextContent] = useState('');
-
-  // const onChangeTextContent = (event) => {
-  //   if (!event.target.value) {
-  //     setTextContent('');
-
-  //     return;
-  //   }
-  //   setTextContent(event.target.value);
-
-  // };
 
   useEffect(() => {
     if (!query.id) {
@@ -103,6 +91,7 @@ const ViewBoard = () => {
           />
         </div>
         <ReactFlow
+          className='validation-flow'
           elements={elements}
           onLoad={onLoad}
           onConnect={onConnect}

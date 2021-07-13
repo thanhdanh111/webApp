@@ -1,11 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { Direction } from './constants';
+import CloseIcon from '@material-ui/icons/Close';
+import { deleteCardMiddleWare } from 'pages/board/logic/board_reducer';
+import { useDispatch } from 'react-redux';
 
-const Resizer = ({ onResize, panelRef }) => {
+const Resizer = ({ id, onResize, panelRef }) => {
   const heightRef = useRef(40);
   const widthRef = useRef(100);
   const [direction, setDirection] = useState('');
   const [mouseDown, setMouseDown] = useState(false);
+  const dispatch = useDispatch();
 
   const handleMouseMove = (event) => {
     if (!direction) return;
@@ -38,8 +42,15 @@ const Resizer = ({ onResize, panelRef }) => {
 
   };
 
+  const handelDeleteCard = () => {
+    dispatch(deleteCardMiddleWare(id));
+  };
+
   return(
     <div>
+      <div className='icon'>
+        <CloseIcon className='icon-delete' onClick={() => handelDeleteCard()}/>
+      </div>
 
       <div className='resizer top-left' onMouseDown={handleMouseDown(Direction.TopLeft)}/>
 
