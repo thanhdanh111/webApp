@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import EditorView from './UI/editor_view';
 import InlineToolbar from '../../components/inline_toolbar/inline_toolbar';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
@@ -104,7 +104,7 @@ const DocsPage = () => {
     };
   }, [editTimestamp, lastUpdateEditTimestamp]);
 
-  useMemo(() => {
+  useEffect(() => {
     const docProjectID = selectedProject?._id ?? '';
     const selectedPageID = selectedPage?._id ?? '';
 
