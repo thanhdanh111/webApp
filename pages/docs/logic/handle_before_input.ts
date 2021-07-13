@@ -3,14 +3,7 @@ import { Modifier, EditorState, SelectionState } from 'draft-js';
 
 export function handleBeforeInput(chars, editorState, handleOnChange) {
   if (chars === ' ') {
-    const oldSelection = editorState?.getSelection();
-    const newContentState = Modifier?.insertText(
-      editorState?.getCurrentContent(),
-      oldSelection,
-      ' ',
-      editorState.getCurrentInlineStyle(),
-    );
-    const addedSpaceEditorState = EditorState.push(editorState, newContentState);
+    const addedSpaceEditorState = insertSpace(editorState);
 
     const newEditorState = findURLInTextOfBlock(addedSpaceEditorState);
 
@@ -20,6 +13,30 @@ export function handleBeforeInput(chars, editorState, handleOnChange) {
   }
 
   return;
+}
+
+function insertSpace(editorState) {
+  const oldSelection = editorState?.getSelection();
+
+  if (!oldSelection.isCollapsed()) {
+    const replaceContentState = Modifier?.replaceText(
+      editorState?.getCurrentContent(),
+      oldSelection,
+      ' ',
+      editorState.getCurrentInlineStyle(),
+    );
+
+    return EditorState.push(editorState, replaceContentState);
+  }
+
+  const newContentState = Modifier?.insertText(
+    editorState?.getCurrentContent(),
+    oldSelection,
+    ' ',
+    editorState.getCurrentInlineStyle(),
+  );
+
+  return EditorState.push(editorState, newContentState);
 }
 
 function findURLInTextOfBlock(editorState) {

@@ -32,7 +32,7 @@ export function handleToolbarActions(editorState, action) {
     newEditorState = EditorState.push(newEditorState, newContentState);
   }
 
-  return EditorState.forceSelection(
+  return EditorState.acceptSelection(
     newEditorState,
     oldSelection.merge({ hasFocus: false }),
   );
