@@ -40,7 +40,6 @@ describe('Home page', () => {
     await page.click('.btn-add-task-board');
 
     await page.waitFor(50000);
-    // await page.waitForSelector('.add-task-board-dialog');
 
     const createTaskBoard = await page.screenshot();
     expect(createTaskBoard).toMatchImageSnapshot();
