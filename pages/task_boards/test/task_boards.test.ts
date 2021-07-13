@@ -18,7 +18,7 @@ beforeAll(async () => {
 
     page = await browser.newPage();
 
-    viewport = await page.setViewport({ width: 1024 , height: 951 });
+    viewport = await page.setViewport({ width: 1853 , height: 951 });
 
     await page.goto('http://localhost:5000');
 
