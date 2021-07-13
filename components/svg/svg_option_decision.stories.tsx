@@ -4,10 +4,6 @@ import SvgOptionDecision from './svg_option_decision';
 
 storiesOf('Svg', module).add('Svg', () => {
   return (
-    <SvgOptionDecision
-      onClickAdd={() => {
-        //
-      }}
-    />
+    <SvgOptionDecision />
   );
 });

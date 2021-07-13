@@ -162,7 +162,12 @@ const TaskBoardUI = () => {
 
   return (
     <div className='nav-click-up-task-board'>
-      <IconButton className='add-task-board' aria-label='light mode' color='inherit' onClick={handleOpenOrClose}>
+      <IconButton
+        className='add-task-board btn-add-task-board'
+        aria-label='light mode'
+        color='inherit'
+        onClick={handleOpenOrClose}
+      >
         <ViewModuleIcon className='nav-click-up-task-board-icon' />
       </IconButton>
       {creatTaskBoardModal()}

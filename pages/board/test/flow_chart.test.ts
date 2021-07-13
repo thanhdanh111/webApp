@@ -29,7 +29,6 @@ beforeAll(async () => {
 });
 
 describe('Board Page', () => {
-
   test('Test UI list board page successfully after login', async () => {
     await page.goto('http://localhost:5000/board');
     await page.waitForSelector('.flowchart');
@@ -55,15 +54,25 @@ describe('Board Page', () => {
     await page.goto('http://localhost:5000/board');
     await page.waitForSelector('.flowchart');
 
-    const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
-
-    await page.waitForSelector('.list-board');
-
     await page.waitForSelector('.btn-primary');
     await page.click('.btn-primary');
 
     await page.waitForSelector('.back-ground');
+
+    const createFlowChart = await page.screenshot();
+    expect(createFlowChart).toMatchImageSnapshot();
+
+  });
+
+  test('Test UI list board page successfully after login', async () => {
+    await page.goto('http://localhost:5000/board');
+    await page.waitForSelector('.flowchart');
+
+    await page.waitForSelector('.create-name-flowchart');
+    await page.click('.create-name-flowchart');
+
+    await page.waitForSelector('.style-page');
+    await page.waitFor(5000);
 
     const createFlowChart = await page.screenshot();
     expect(createFlowChart).toMatchImageSnapshot();

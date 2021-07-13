@@ -7,10 +7,6 @@ enum Arrow {
   OUT_LINE = 'OUT_LINE',
 }
 
-enum Shape {
-  PROCESS = 'PROCESS',
-  DECISION = 'DECISION',
-}
 enum BoardStatus{
     PUBLIC = 'PUBLIC',
     PRIVATE = 'PRIVATE',
@@ -284,6 +280,7 @@ export interface Board {
 export interface BoardsPage {
   boards: Board[];
   selectedBoard: Board;
+  cards: Card[];
   loading: boolean;
   hasNoBoards: boolean;
 }
@@ -294,12 +291,17 @@ export interface ConnectToData {
   arrow: Arrow;
 }
 
+export interface CardPositionData {
+  x: number;
+  y: number;
+}
+
 export interface Card {
   _id: string;
   boardID: string | Board;
   companyID?: string;
   departmentID?: string;
-  shape: Shape;
+  shape: string;
   image?: string;
   textContent?: string;
   border?: string;
@@ -308,7 +310,7 @@ export interface Card {
   rightTo?: ConnectToData;
   bottomTo?: ConnectToData;
   topTo?: ConnectToData;
-  position?: string;
+  position?: 	CardPositionData;
 }
 
 export interface Tag {

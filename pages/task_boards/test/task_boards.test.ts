@@ -18,7 +18,7 @@ beforeAll(async () => {
 
     page = await browser.newPage();
 
-    viewport = await page.setViewport({ width: 1853 , height: 951 });
+    viewport = await page.setViewport({ width: 1024 , height: 951 });
 
     await page.goto('http://localhost:5000');
 
@@ -36,14 +36,11 @@ describe('Home page', () => {
     await page.goto('http://localhost:5000/home');
     await page.waitForSelector('.board');
 
-    const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
-
     await page.waitForSelector('.add-task-board');
-    await page.click('.add-task-board');
+    await page.click('.btn-add-task-board');
 
-    await page.waitFor(5000);
-    await page.waitForSelector('.add-task-board-dialog');
+    await page.waitFor(50000);
+    // await page.waitForSelector('.add-task-board-dialog');
 
     const createTaskBoard = await page.screenshot();
     expect(createTaskBoard).toMatchImageSnapshot();
@@ -70,24 +67,24 @@ describe('Home page', () => {
     const showTaskBoards = await page.screenshot();
     expect(showTaskBoards).toMatchImageSnapshot();
   });
-  // test('Test search tasks by userIDs successfully after login', async () => {
-  //   await page.goto('http://localhost:5000/home');
-  //   await page.waitForSelector('.board');
+  test('Test search tasks by userIDs successfully after login', async () => {
+    await page.goto('http://localhost:5000/home');
+    await page.waitForSelector('.board');
 
-  //   await page.waitForSelector('.status');
-  //   await page.waitFor(5000);
-  //   await page.waitForSelector('.status-left');
-  //   await page.waitForSelector('.action-status-btn-menu-content');
+    await page.waitForSelector('.status');
+    await page.waitFor(5000);
+    await page.waitForSelector('.status-left');
+    await page.waitForSelector('.action-status-btn-menu-content');
 
-  //   await page.click('.action-status-btn-menu-content');
-  //   await page.waitForSelector('.menu-item-users-popup');
+    await page.click('.action-status-btn-menu-content');
+    await page.waitForSelector('.menu-item-users-popup');
 
-  //   await page.click('.menu-item-users-popup');
-  //   await page.waitFor(5000);
+    await page.click('.menu-item-users-popup');
+    await page.waitFor(5000);
 
-  //   const showTaskBoards = await page.screenshot();
-  //   expect(showTaskBoards).toMatchImageSnapshot();
-  // });
+    const showTaskBoards = await page.screenshot();
+    expect(showTaskBoards).toMatchImageSnapshot();
+  });
 });
 
 afterAll(() => {

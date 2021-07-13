@@ -4,10 +4,6 @@ import SvgOptionProcess from './svg_option_process';
 
 storiesOf('Svg', module).add('Svg', () => {
   return (
-    <SvgOptionProcess
-        onClickAdd={() => {
-            //
-        }}
-    />
+    <SvgOptionProcess />
   );
 });
