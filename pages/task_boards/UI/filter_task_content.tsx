@@ -2,7 +2,7 @@ import { Box, Button, IconButton, Popover } from '@material-ui/core';
 import React, { useState } from 'react';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 
 interface InitialProps {
   component: JSX.Element;
@@ -21,7 +21,7 @@ const FilterTaskContentUI: React.FC<InitialProps> = ({ component, valueElement, 
   return (
     <>
       <ul className='input-of-menu-value' >
-        {checkArray(valueElement) ? valueElement : `Filtering tasks by ${filterLabel}`}
+        {checkIfEmptyArray(valueElement) ? valueElement : `Filtering tasks by ${filterLabel}`}
       </ul>
 
       <PopupState variant='popover' popupId='demo-popup-popover'>

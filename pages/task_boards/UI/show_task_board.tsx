@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedTaskBoard } from '../logic/task_boards_action';
 import { createTaskBoardThunkAction, getTagsThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
 import { Close } from '@material-ui/icons';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import { Roles } from 'constants/roles';
 import { RootState } from 'redux/reducers_registration';
 import { UserInfoType } from 'helpers/type';
@@ -176,7 +176,7 @@ const TaskBoardUI = () => {
           onChange={changeSelectedTaskBoard}
           className='nav-click-up-task-board-select'
       >
-        {(checkArray(taskBoards) && !hasNoData) ? taskBoards.map((item, index) => {
+        {(checkIfEmptyArray(taskBoards) && !hasNoData) ? taskBoards.map((item, index) => {
           return (
             <MenuItem
               key={item?._id ?? index}

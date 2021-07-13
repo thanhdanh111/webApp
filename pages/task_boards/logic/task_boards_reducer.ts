@@ -24,8 +24,8 @@ import {
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
-import { checkInObject } from 'helpers/check_in_array';
-import { checkSomeTrueInArray } from 'helpers/check_some_true_object';
+import { checkHasObjectByKey } from 'helpers/check_in_array';
+import { checkIfNotEmpty } from 'helpers/check_if_not_empty';
 import { convertArrayObjectToObject } from 'helpers/convert_array_to_object';
 
 export interface TaskBoardsType {
@@ -358,7 +358,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
     case taskBoardsActionType.SET_SELECT_TAGS:
       const templateSelectedTags = state.selectedTags;
 
-      if (checkInObject(templateSelectedTags, action.payload?._id, '_id')) {
+      if (checkHasObjectByKey(templateSelectedTags, action.payload?._id, '_id')) {
         const removeTag = templateSelectedTags.filter(
           (each) => each !== action.payload);
 
@@ -899,8 +899,8 @@ export const filterTasksThunkAction = () => async (dispatch, getState) => {
 
     const userIDs = convertArrayObjectToObject(tempUserIDs);
 
-    const isValidParams = checkSomeTrueInArray({
-      conditionsArray: [
+    const isValidParams = checkIfNotEmpty({
+      feilds: [
         tags,
         userIDs,
         title,
@@ -926,15 +926,8 @@ export const filterTasksThunkAction = () => async (dispatch, getState) => {
       },
     });
 
-    // if (checkArray(!res?.data?.list)) {
-    //   await dispatch(setLoading(false));
-
-    //   return;
-    // }
-
     await dispatch(filterTasks(res.data.list));
     await dispatch(setLoading(false));
-    await dispatch(setFiltering(true));
   } catch (error) {
     throw error;
   }

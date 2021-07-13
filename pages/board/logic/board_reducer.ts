@@ -13,7 +13,7 @@ import {
   createCardAction,
 } from './board_action';
 import { boardsActionType } from './board_type_action';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import { convertCardData } from './convert_card_data';
 import { hideLoader } from 'pages/event_logs/logic/event_log_action';
 
@@ -336,7 +336,7 @@ export const getDataListCard = (boardID) => async (dispatch) => {
       },
     });
 
-    if (checkArray(res.data.list)) {
+    if (checkIfEmptyArray(res.data.list)) {
       const cards: Card[] = [];
       res.data.list.forEach((item) => {
         cards.push(convertCardData(item));

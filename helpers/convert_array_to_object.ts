@@ -1,7 +1,7 @@
-import { checkArray } from './check_array';
+import { checkIfEmptyArray } from './check_if_empty_array';
 
 export const convertArrayObjectToObject = (array: string[]) => {
-  if (!checkArray(array)) {
+  if (!checkIfEmptyArray(array)) {
     return { };
   }
   const obj = { };

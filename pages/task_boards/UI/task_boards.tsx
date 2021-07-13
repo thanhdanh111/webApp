@@ -12,8 +12,6 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { Roles } from 'constants/roles';
 import { RootState } from 'redux/reducers_registration';
 import { checkValidAccess } from 'helpers/check_valid_access';
-import { checkSomeTrueInArray } from 'helpers/check_some_true_object';
-import { setFiltering } from '../logic/task_boards_action';
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
 
@@ -68,20 +66,8 @@ const BoardTasks: FunctionComponent = () => {
 
   const addStatusStyle = !isAddStatus ? 'no-add-status' : 'add-status-style';
 
-  const checkFilterTasks = checkSomeTrueInArray({
-    conditionsArray: [
-      selectedUserIDs,
-      selectedTags,
-      selectedTitle,
-    ],
-  });
-
   const loadData = () => {
-    if (checkFilterTasks) {
-      return dispatch(filterTasksThunkAction());
-    }
-
-    return dispatch(setFiltering(false));
+    return dispatch(filterTasksThunkAction());
   };
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import UsersPopupUI from '@components/users_popup/users_popup';
 import { Container, Typography } from '@material-ui/core';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
@@ -25,7 +25,7 @@ const FilteringTaskByUserUI: React.FC = () => {
     dispatch(setSelectedUserIDs(removeUser));
   };
 
-  const showUserValue = checkArray(selectedContent) ? selectedContent?.map((each) => {
+  const showUserValue = checkIfEmptyArray(selectedContent) ? selectedContent?.map((each) => {
     return (
         <li className='value-item' key={each?._id}>
           <Typography className='text-value-item'>

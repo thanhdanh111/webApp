@@ -1,15 +1,15 @@
-import { checkArray } from './check_array';
+import { checkIfEmptyArray } from './check_if_empty_array';
 
 export const checkInArrayString = (arr: string[], userID: string) => {
-  if (!checkArray(arr)) {
+  if (!checkIfEmptyArray(arr)) {
     return false;
   }
 
   return arr.includes(userID);
 };
 
-export function checkInObject<T>(arr: T[], userID: string, key: string): boolean {
-  if (!checkArray(arr)) {
+export function checkHasObjectByKey<T>(arr: T[], userID: string, key: string): boolean {
+  if (!checkIfEmptyArray(arr)) {
     return false;
   }
 

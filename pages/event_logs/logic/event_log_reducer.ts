@@ -3,7 +3,7 @@ import { config } from 'helpers/get_config';
 import { EventLogPage, EventLogState } from './event_log_interface';
 import { eventLogsAction } from './event_log_type_action';
 import { getEventLog, getEventLogs,  hasNoEventLogs,  hideLoader } from './event_log_action';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import moment from 'moment';
 import { getLastDay } from 'helpers/get_last_date';
 import { Roles } from 'constants/roles';
@@ -44,7 +44,7 @@ export const eventLogsReducer = (state = initialState, action) => {
       const eventLogs: EventLogState[] = [];
       const environments = {};
 
-      if (checkArray(action.payload.list)) {
+      if (checkIfEmptyArray(action.payload.list)) {
         action?.payload?.list?.map((element) => {
           if (element?.environment) {
             environments[element?.environment] = element?.environment;
@@ -192,7 +192,7 @@ export const getEventLogData = (eventLogsId) => async (dispatch) => {
       return;
     }
 
-    const breadcrumbs = checkArray(res?.data?.breadcrumbs) ?
+    const breadcrumbs = checkIfEmptyArray(res?.data?.breadcrumbs) ?
     res?.data?.breadcrumbs?.map((element) => {
       const description = element.message ? element.message : `${element?.data?.method} ${element.data.url} [${element.data.status_code}]`;
 

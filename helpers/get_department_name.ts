@@ -1,9 +1,9 @@
 import { Department } from './type';
-import { checkArray } from './check_array';
+import { checkIfEmptyArray } from './check_empty_array';
 
 export const getDepartmentsName = (departments) => {
 
-  if (!checkArray(departments)) {
+  if (!checkIfEmptyArray(departments)) {
     return;
   }
 

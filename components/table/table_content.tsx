@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Table, TableBody, TableContainer, Typography } from '@material-ui/core';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import { HeadCell } from 'helpers/type';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -143,7 +143,7 @@ const TableContent = (props: InitialProp) => {
         >
         <Table stickyHeader={needStickyHeader} aria-label='sticky table' className='table-content' >
           <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
-          { !loading &&  (checkArray(data) &&
+          { !loading &&  (checkIfEmptyArray(data) &&
           <TableBody className='table-body'>
                 {data.map((item, index) => {
                   return (

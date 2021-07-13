@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import { config } from 'helpers/get_config';
 import { ProjectsPage } from 'helpers/type';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
@@ -40,7 +40,7 @@ export const projectsReducer = (state = initialState, action) => {
     case projectsActionType.GET_LIST_PROJECTS:
       const channelIDs = {};
 
-      if (checkArray(action.payload.list)) {
+      if (checkIfEmptyArray(action.payload.list)) {
         action.payload.list.map((element) => {
           if (element.channelID) {
             channelIDs[element.channelID] = element.channelID;
@@ -197,7 +197,7 @@ export const getExtendedCompaniesMiddleWare = () => async (dispatch, getState) =
       },
     });
 
-    if (checkArray(res.data.channels)) {
+    if (checkIfEmptyArray(res.data.channels)) {
       const channels = res.data.channels.map((channel) => {
         return {
           _id: channel.id,
