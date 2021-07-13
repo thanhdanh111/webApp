@@ -1,12 +1,11 @@
 import React from 'react';
 import SideToolbarButton from '../../../components/my_editor/side_toolbar_button';
-import { EditorBlock, DefaultDraftBlockRenderMap, convertToRaw } from 'draft-js';
+import { EditorBlock, DefaultDraftBlockRenderMap } from 'draft-js';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import Immutable from 'immutable';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ParagraphStyleSideToolbarBtn from './paragraph_style_toolbar_btn';
-import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
 const blockRenderMap = Immutable.Map({
   'unordered-list-item': {
