@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import EditorView from './UI/editor_view';
 import InlineToolbar from '../../components/inline_toolbar/inline_toolbar';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
@@ -86,6 +86,23 @@ const DocsPage = () => {
       readOnly,
     ],
   });
+
+  const unload = (event) => {
+    if (editTimestamp !== lastUpdateEditTimestamp){
+
+      return event.returnValue = 'Wait a second to save your changes';
+    }
+
+    return;
+  };
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', unload);
+
+    return () => {
+      window.removeEventListener('beforeunload', unload);
+    };
+  }, [editTimestamp, lastUpdateEditTimestamp]);
 
   useMemo(() => {
     const docProjectID = selectedProject?._id ?? '';
