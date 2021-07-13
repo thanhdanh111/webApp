@@ -16,7 +16,7 @@ const CustomDecision = ({ id }) => {
       ref={panelRef}
       onFocus={() => setFocus(true)}
       onBlur={() => setFocus(false)}
-      data-is={id}
+      data-id={id}
     >
       <div className='border' style={focus ? {} : { display: 'none' }}>
         <Resizer id={id} panelRef={panelRef} onResize={handleResize} />
