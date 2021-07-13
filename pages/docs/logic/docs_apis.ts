@@ -72,8 +72,8 @@ export const createNewPage = () => async (dispatch, getState) => {
     pagesInProject[pageID] = {
       title: res?.data?.title,
       _id: res?.data?._id,
-      pageContent: res?.data?.pageContent,
-      entityMap: res?.data?.entityMap,
+      content: JSON.parse(res?.data?.pageContent),
+      entityMap: { ...(JSON.parse(res?.data?.entityMap) ?? []) },
       createdBy: {
         _id: userID,
       },
@@ -138,8 +138,8 @@ export const savePage = () => async (dispatch, getState) => {
     pagesInProject[pageID] = {
       title: res?.data?.title,
       _id: res?.data?._id,
-      pageContent: res?.data?.pageContent,
-      entityMap: res?.data?.entityMap,
+      content: JSON.parse(res?.data?.pageContent),
+      entityMap: { ...(JSON.parse(res?.data?.entityMap) ?? []) },
       createdBy: res?.data?.createdBy,
     };
 
@@ -513,12 +513,12 @@ export const autoSavePage = ({ timestamp, projectID, selectedPageID  }) => async
         !selectedPageID,
         !page,
         !page?.title,
-        !page?.pageContent,
+        !page?.content,
       ],
     });
 
     if (invalidData) {
-      dispatch(updateDocs({ autoSaving: false }));
+      dispatch(updateDocs({ shouldAutoSave: true }));
 
       return;
     }
@@ -527,8 +527,8 @@ export const autoSavePage = ({ timestamp, projectID, selectedPageID  }) => async
       `${config.BASE_URL}/docProjects/${projectID}/docPages/${selectedPageID}`,
       {
         title: page?.title ?? null,
-        pageContent: JSON.parse(page?.pageContent as string) ?? [],
-        entityMap: JSON.parse(page?.entityMap as string) ?? [],
+        pageContent: page?.content,
+        entityMap: Object.values(page?.entityMap ?? []) ?? [],
       },
       {
         headers: {
@@ -537,8 +537,8 @@ export const autoSavePage = ({ timestamp, projectID, selectedPageID  }) => async
         },
       });
 
-    dispatch(updateDocs({ autoSaving: false, lastUpdateEditTimestamp: timestamp }));
+    dispatch(updateDocs({ shouldAutoSave: true, lastUpdateEditTimestamp: timestamp }));
   } catch (error) {
-    dispatch(updateDocs({ autoSaving: false }));
+    dispatch(updateDocs({ shouldAutoSave: true }));
   }
 };

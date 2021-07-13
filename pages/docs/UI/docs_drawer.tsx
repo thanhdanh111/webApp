@@ -57,7 +57,7 @@ const DocsDrawer = () => {
 
     dispatch(updateSelectedItemInDrawer({
       projectID: project?._id,
-      needDisplay: false,
+      displayInlineToolbar: false,
     }));
   }
 
@@ -65,7 +65,7 @@ const DocsDrawer = () => {
     dispatch(updateSelectedItemInDrawer({
       pageID: props?.page?._id,
       projectID: props.project?._id,
-      needDisplay: false,
+      displayInlineToolbar: false,
     }));
   }
 

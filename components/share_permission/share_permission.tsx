@@ -18,7 +18,7 @@ interface ShareComponentData {
   loading: boolean;
   selectedPage: PageContent;
   selectedProject: DocProject;
-  openShare: boolean;
+  displayShare: boolean;
   usersInCompanyMap: UsersInCompanyMap;
   projectAccessOfUsers: ProjectAccessMapOfUsers;
   accountUserID: string;
@@ -43,7 +43,7 @@ const defaultRoles = {
 
 export const SharePermission = ({
   selectedProject,
-  openShare,
+  displayShare,
   usersInCompanyMap,
   loading,
   projectAccessOfUsers,
@@ -60,7 +60,7 @@ export const SharePermission = ({
   const haveWritePermission = checkHaveWriteToShare();
 
   function handleClose() {
-    dispatch(updateDocs({ openShare: false }));
+    dispatch(updateDocs({ displayShare: false }));
   }
 
   function renderUsersToShare() {
@@ -198,7 +198,7 @@ export const SharePermission = ({
   return (
     <div>
       <Dialog
-        open={openShare}
+        open={displayShare}
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
         maxWidth='sm'

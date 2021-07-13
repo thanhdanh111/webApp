@@ -16,10 +16,10 @@ interface UpdateDocs {
   title?: string;
   editorState?: EditorState;
   lastUpdateEditTimestamp?: number;
-  autoSaving?: boolean;
-  needDisplay?: boolean;
+  shouldAutoSave?: boolean;
+  displayInlineToolbar?: boolean;
   selectionRect?: DOMRect;
-  openShare?: boolean;
+  displayShare?: boolean;
   projectAccessOfUsers?: ProjectAccessMapOfUsers;
   usersInCompanyMap?: UsersInCompanyMap;
 }

@@ -34,11 +34,11 @@ export function handleToolbarActions(editorState, action) {
 
   return EditorState.forceSelection(
     newEditorState,
-    oldSelection,
+    oldSelection.merge({ hasFocus: false }),
   );
 }
 
-export function showUpToolbarAndUpdateState(newEditorState, needDisplay, dispatch) {
+export function showUpToolbarAndUpdateState(newEditorState, dispatch) {
   const selection = window.getSelection();
   const selectedText = selection?.toString();
   const haveOtherToolbar =  !!document.getElementById('sideToolbar');
@@ -52,24 +52,22 @@ export function showUpToolbarAndUpdateState(newEditorState, needDisplay, dispatc
     ],
   });
 
-  if (!validSelection && !needDisplay) {
-    dispatch(updateDocs({ editorState: newEditorState }));
-
-    return;
-  }
-
   if (!validSelection) {
-    dispatch(updateDocs({ needDisplay: false, editorState: newEditorState }));
+    dispatch(updateDocs({ editorState: newEditorState, displayInlineToolbar: false }));
 
     return;
   }
 
   const getRange  = selection?.getRangeAt(0);
   const newSelectionRect = getRange?.getBoundingClientRect();
+  const selectionState = newEditorState?.getSelection();
 
   dispatch(updateDocs({
     selectionRect: newSelectionRect,
-    needDisplay: true,
-    editorState: newEditorState,
+    displayInlineToolbar: true,
+    editorState: EditorState.acceptSelection(
+      newEditorState,
+      selectionState,
+    ),
   }));
 }

@@ -17,7 +17,7 @@ import { checkTrueInArray } from 'helpers/check_true_in_array';
 import { getItemSelectedRolesOfUser } from './logic/get_item_selected_roles_of_user';
 
 interface DocsPageData {
-  needDisplay: boolean;
+  displayInlineToolbar: boolean;
   selectionRect:  DOMRect | undefined;
   editorState: EditorState;
   title: string;
@@ -26,9 +26,9 @@ interface DocsPageData {
   selectedProject: DocProject;
   projectAccessOfUsers: ProjectAccessMapOfUsers;
   accountUserID: string;
-  openShare: boolean;
+  displayShare: boolean;
   usersInCompanyMap: UsersInCompanyMap;
-  autoSaving: boolean;
+  shouldAutoSave: boolean;
   editTimestamp: number;
   lastUpdateEditTimestamp: number;
   docProjectsMap: DocProjectMap;
@@ -41,7 +41,7 @@ const docsAutoSaveTimeOut = 10000;
 const DocsPage = () => {
   const dispatch = useDispatch();
   const {
-    needDisplay,
+    displayInlineToolbar,
     selectionRect,
     editorState,
     title,
@@ -50,16 +50,16 @@ const DocsPage = () => {
     selectedProject,
     projectAccessOfUsers,
     accountUserID,
-    openShare,
+    displayShare,
     usersInCompanyMap,
     editTimestamp,
-    autoSaving,
+    shouldAutoSave,
     lastUpdateEditTimestamp,
     docProjectsMap,
   }: DocsPageDataType = useSelector((state: RootState) => {
 
     return {
-      needDisplay: state?.docs?.needDisplay,
+      displayInlineToolbar: state?.docs?.displayInlineToolbar,
       selectionRect: state?.docs?.selectionRect,
       editorState: state?.docs?.editorState,
       title: state?.docs?.title,
@@ -68,10 +68,10 @@ const DocsPage = () => {
       selectedProject: state?.docs?.selectedDocProject,
       accountUserID: state?.userInfo?.userID,
       projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
-      openShare: state?.docs?.openShare,
+      displayShare: state?.docs?.displayShare,
       usersInCompanyMap: state?.docs?.usersInCompanyMap,
       editTimestamp: state?.docs?.editTimestamp,
-      autoSaving: state?.docs?.autoSaving,
+      shouldAutoSave: state?.docs?.shouldAutoSave,
       lastUpdateEditTimestamp:  state?.docs?.lastUpdateEditTimestamp,
       docProjectsMap: state?.docs?.docProjectsMap,
     };
@@ -116,20 +116,20 @@ const DocsPage = () => {
 
     pagesInProject[selectedPageID] = {
       title,
-      pageContent: JSON.stringify(rawBlocks?.blocks),
+      content: rawBlocks?.blocks,
       _id: selectedPageID,
-      entityMap: JSON.stringify(Object.values(rawBlocks?.entityMap)),
+      entityMap: rawBlocks?.entityMap,
       createdBy: selectedPage?.createdBy,
     };
 
     dispatch(updateDocs({ docProjectsMap: newProjectsMap }));
 
-    if (autoSaving) {
+    if (!shouldAutoSave) {
 
       return;
     }
 
-    dispatch(updateDocs({ autoSaving: true }));
+    dispatch(updateDocs({ shouldAutoSave: false }));
 
     setTimeout((timestamp, projectID, pageID) => {
       dispatch(autoSavePage({ timestamp, projectID, selectedPageID: pageID }));
@@ -223,11 +223,11 @@ const DocsPage = () => {
       <EditorView
         readOnly={readOnly}
         editorState={editorState}
-        needDisplay={needDisplay}
+        displayInlineToolbar={displayInlineToolbar}
       />
       <SharePermission
         selectedProject={selectedProject}
-        openShare={openShare}
+        displayShare={displayShare}
         usersInCompanyMap={usersInCompanyMap}
         loading={loading}
         projectAccessOfUsers={projectAccessOfUsers}
@@ -240,7 +240,7 @@ const DocsPage = () => {
       <InlineToolbar
         editorState={editorState}
         onClickOption={onClickOptionInToolbar}
-        needDisplay={needDisplay}
+        displayInlineToolbar={displayInlineToolbar}
         selectionRect={selectionRect}
       />
   </div>;

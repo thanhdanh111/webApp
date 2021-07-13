@@ -9,9 +9,8 @@ import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 import { checkTrueInArray } from 'helpers/check_true_in_array';
 
 interface DocsValue {
-  needDisplay: boolean;
+  displayInlineToolbar: boolean;
   selectionRect: DOMRect | undefined;
-  actionOnCurrent?: string;
   editorState: EditorState;
   title: string;
   selectedDocProject: DocProject;
@@ -20,9 +19,9 @@ interface DocsValue {
   selectedPage?: PageContent;
   editTimestamp: number;
   lastUpdateEditTimestamp: number;
-  autoSaving: boolean;
+  shouldAutoSave: boolean;
   projectAccessOfUsers: ProjectAccessMapOfUsers;
-  openShare: boolean;
+  displayShare: boolean;
   usersInCompanyMap: UsersInCompanyMap;
 }
 
@@ -44,11 +43,46 @@ export interface CreatedBy {
 }
 
 export interface PageContent {
-  pageContent?: string;
+  content?: Content[];
   title?: string;
   _id?: string;
-  entityMap?: string;
+  entityMap?: EntityMap;
   createdBy?: CreatedBy;
+}
+
+interface Content {
+  contentData?: ContentData;
+  depth?: number;
+  entityRanges?: InlineStylesRanges;
+  inlineStyleRanges?: InlineStylesRanges;
+  key: string;
+  text: string;
+  type: string;
+}
+
+interface ContentData {
+  textAlignment: string;
+  renderMediaSize: string;
+  inlineStyleRanges: InlineStylesRanges[];
+}
+
+interface InlineStylesRanges {
+  offset: number;
+  length: number;
+  style: string;
+}
+
+interface EntityMap {
+  [index: string]: Entity;
+}
+
+interface Entity {
+  type: string;
+  mutability: string;
+  data: {
+    href: string;
+    url: string;
+  };
 }
 
 export interface PagesMap {
@@ -71,7 +105,7 @@ export interface DocProject {
 }
 
 const initialState: DocsValue = {
-  needDisplay: false,
+  displayInlineToolbar: false,
   selectionRect: undefined,
   editorState: null,
   title: '',
@@ -81,10 +115,10 @@ const initialState: DocsValue = {
   loading: false,
   editTimestamp: 0,
   lastUpdateEditTimestamp: 0,
-  openShare: false,
+  displayShare: false,
   projectAccessOfUsers: {},
   usersInCompanyMap: {},
-  autoSaving: false,
+  shouldAutoSave: true,
 };
 
 export type DocsValueType = DocsValue;
@@ -123,11 +157,9 @@ function updateSelectedItemInDrawer(data, state: DocsValue) {
   }
 
   if (page) {
-    const convertedBlocks = JSON.parse(page?.pageContent ?? '[]');
-    const convertedEntityMap = JSON.parse(page?.entityMap ?? '[]');
-    const newContentState = convertFromRaw({ blocks: convertedBlocks, entityMap: convertedEntityMap });
+    const newContentState = convertFromRaw({ blocks: page?.content, entityMap: page?.entityMap });
 
-    state.autoSaving = false;
+    state.shouldAutoSave = true;
     state.selectedPage = page;
     state.title = page.title ?? '';
     state.editorState = EditorState.createWithContent(

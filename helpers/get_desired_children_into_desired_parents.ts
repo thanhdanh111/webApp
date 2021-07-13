@@ -6,6 +6,19 @@ function returnDesiredData({  data, fields }) {
   const newData = {  };
 
   fields.forEach((field) =>  {
+    if (field === 'entityMap') {
+      const parsedEntities =  JSON.parse(data[field]);
+      newData[field] = { ...parsedEntities };
+
+      return;
+    }
+
+    if (field === 'pageContent') {
+      newData['content'] = JSON.parse(data[field]);
+
+      return;
+    }
+
     newData[field] = data[field];
   });
 

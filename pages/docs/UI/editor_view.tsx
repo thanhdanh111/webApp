@@ -10,11 +10,11 @@ import { docsImageDecorator } from './decorator_image';
 
 interface EditorView {
   readOnly: boolean;
-  needDisplay: boolean;
+  displayInlineToolbar: boolean;
   editorState: EditorState;
 }
 
-const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState, needDisplay }) => {
+const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState }) => {
   const dispatch = useDispatch();
 
   function onClickSideToolbar(props) {
@@ -32,13 +32,13 @@ const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState, need
     });
 
     dispatch(updateDocs({
-      needDisplay: false,
+      displayInlineToolbar: false,
       editorState: EditorState.forceSelection(editorState, updatedSelection),
     }));
   }
 
   function handleChangeEditorState(newEditorState) {
-    showUpToolbarAndUpdateState(newEditorState, needDisplay, dispatch);
+    showUpToolbarAndUpdateState(newEditorState, dispatch);
   }
 
   function onClickOptionInSideToolbar(action) {

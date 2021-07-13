@@ -5,7 +5,7 @@ import { inlineToolbarButons } from 'constants/toolbar_docs';
 
 const InlineToolbar = ({
   selectionRect,
-  needDisplay = false,
+  displayInlineToolbar = false,
   onClickOption,
   editorState,
 }) => {
@@ -45,7 +45,7 @@ const InlineToolbar = ({
     };
   };
 
-  return <Fade in={needDisplay}>
+  return <Fade in={displayInlineToolbar}>
     <div
       className='inline-toolbar-wrapper'
       style={getPositionToDisplay({ position: selectionRect })}

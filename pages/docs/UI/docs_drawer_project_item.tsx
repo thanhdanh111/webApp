@@ -78,7 +78,7 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
         type: 'normal',
         label: 'Share Project',
         startIcon: <PeopleOutlineIcon />,
-        function: () => dispatch(updateDocs({ openShare: true })),
+        function: () => dispatch(updateDocs({ displayShare: true })),
       },
       {
         type: 'normal',

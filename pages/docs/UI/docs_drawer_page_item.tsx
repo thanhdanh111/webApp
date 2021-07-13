@@ -53,7 +53,7 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
         type: 'normal',
         label: 'Share',
         startIcon: <PeopleOutlineIcon />,
-        function: () => dispatch(updateDocs({ openShare: true })),
+        function: () => dispatch(updateDocs({ displayShare: true })),
       },
       {
         type: 'normal',

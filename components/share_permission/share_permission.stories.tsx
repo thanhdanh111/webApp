@@ -4,7 +4,7 @@ import { SharePermission } from './share_permission';
 storiesOf('Share Permission', module).add('Header', () => {
   return <SharePermission
     selectedProject={{}}
-    openShare={true}
+    displayShare={true}
     usersInCompanyMap={{}}
     loading={false}
     projectAccessOfUsers={{}}
