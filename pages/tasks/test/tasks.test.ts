@@ -11,7 +11,7 @@ beforeAll(async () => {
 
   try {
     browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       slowMo: 0,
       ignoreDefaultArgs: ['--no-sandbox'],
     });
