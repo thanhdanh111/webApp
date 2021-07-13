@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import TasksUI from '../../tasks/UI/tasks';
 import { RootStateOrAny,  useDispatch,  useSelector } from 'react-redux';
-import {  getTaskStatusThunkAction, TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
+import { getTaskStatusThunkAction, TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
 import { DisappearedLoading } from 'react-loadingg';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { UserInfoType } from 'helpers/type';

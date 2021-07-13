@@ -36,12 +36,11 @@
     display: flex;
 
     .nav-click-up-search
-      display: flex;
-      width: 50%;
+      display: inline-flex;
+      width: 28%;
       margin: 0;
       align-items: flex-end;
       float: left;
-      position: absolute;
       left: 1px;
 
       .nav-click-up-task-board
@@ -144,8 +143,11 @@
               color: #7c828d
 
     .show-task
-      display: contents
-      float: right
+      display: inline-flex;
+      width: 12vw;
+      padding: 0;
+      margin: 0;
+      justify-content: flex-end;
 
       .list-actions
         list-style: none
@@ -298,31 +300,75 @@
 
         .icon-add-task
           color: #50ac55
-
-@media screen and ( min-width: 1025px )
-  .board
-    .btn-choose
-      display: none
  
 @media screen and ( max-width: 1024px )
   .board
     margin: auto
     top: 20px
     z-index: 1
+    overflow: hidden;
 
     .nav-click_up
+      width: 100vw;
+      position: relative;
+
       .nav-actions
         display: none
 
       .nav-click-up-search
-        width: 77%
+        position: relative;
+        width: 25%;
+        padding: 0;
+        justify-content: space-around;
 
         .nav-click-up-task-board
-          width: 30%
+          width: 50%;
+          display: inline-flex;
+          position: relative;
+
+          .add-task-board
+            .nav-click-up-task-board-icon
+              width: 20px;
+              height: 20px;
+
+          .nav-click-up-task-board-select
+            .MuiInputBase-input
+              width: 72%;
+              padding: 4px;
+              padding-right: 12px;
+              font-size: 12px;
+
+            svg
+              left: 72px;
+
+        .nav-search
+          width: 45%;
+          display: inline-flex;
+          position: relative;
+          left: 0;
+          top: 0;
+
+          .icon-search
+            display: none;
+
+          .nav-input-search
+            padding: 0 13px 0 5px;
+            font-size: 12px;
+
+      .menu-content-value
+        width: 60%;
+
+        .input-of-menu-value
+          width: 45%;
+          margin: 0;
+
+        .btn-menu-content
+          right: 21rem;
+          top: 0;
 
       .show-task
-        .list-actions
-          display: contents
+        width: 15%;
+        justify-content: initial;
 
 @media screen and ( max-width: 768px )
   .board

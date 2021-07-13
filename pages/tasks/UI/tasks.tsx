@@ -3,7 +3,7 @@ import { Task } from 'helpers/type';
 import { updateAssignUserThunkAction, deletedTaskThunkAction, getTaskByIdThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 import { useDispatch } from 'react-redux';
 import AssignUser from './assign_user';
-import { checkInArrayString } from 'helpers/check_assigned';
+import { checkInArrayString } from 'helpers/check_in_array';
 import React, { FunctionComponent, useState } from 'react';
 import TaskDetail from './task_detail';
 import { getTaskDetail } from 'pages/task_boards/logic/task_boards_action';

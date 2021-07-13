@@ -1,5 +1,5 @@
-import {  createTaskStatusThunkAction, TaskBoardsType, updateTaskById, updateTaskStatusById } from '../logic/task_boards_reducer';
-import React, { FunctionComponent, useState } from 'react';
+import {  createTaskStatusThunkAction, filterTasksThunkAction, TaskBoardsType, updateTaskById, updateTaskStatusById } from '../logic/task_boards_reducer';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
 import TaskStatusUI from '../../task_statuses/UI/task_statuses';
@@ -12,6 +12,8 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { Roles } from 'constants/roles';
 import { RootState } from 'redux/reducers_registration';
 import { checkValidAccess } from 'helpers/check_valid_access';
+import { checkSomeTrueInArray } from 'helpers/check_some_true_object';
+import { setFiltering } from '../logic/task_boards_action';
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
 
@@ -51,6 +53,9 @@ const BoardTasks: FunctionComponent = () => {
     loading,
     currentTaskBoard,
     taskStatus,
+    selectedUserIDs,
+    selectedTags,
+    selectedTitle,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const {
     isAdmin,
@@ -62,6 +67,26 @@ const BoardTasks: FunctionComponent = () => {
   const [title, setTitle] = useState('');
 
   const addStatusStyle = !isAddStatus ? 'no-add-status' : 'add-status-style';
+
+  const checkFilterTasks = checkSomeTrueInArray({
+    conditionsArray: [
+      selectedUserIDs,
+      selectedTags,
+      selectedTitle,
+    ],
+  });
+
+  const loadData = () => {
+    if (checkFilterTasks) {
+      return dispatch(filterTasksThunkAction());
+    }
+
+    return dispatch(setFiltering(false));
+  };
+
+  useEffect(() => {
+    void loadData();
+  }, [selectedUserIDs, selectedTags, selectedTitle]);
 
   const GenerateTaskStatuses = () => {
     if (!currentTaskBoard) {

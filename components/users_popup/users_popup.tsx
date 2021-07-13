@@ -7,8 +7,10 @@ import { getPaginationThunkAction, getSearchAction } from 'pages/users/logic/use
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import UserItem from './user_popup_item';
 import { User } from 'helpers/type';
-import { checkInObjectByID } from 'helpers/check_assigned';
+import { checkInObject } from 'helpers/check_in_array';
 import { useDebounce } from 'helpers/debounce';
+import { RootState } from 'redux/reducers_registration';
+import { TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
 
 interface InitProps {
   usersAssigned?: User[];
@@ -19,6 +21,7 @@ interface InitProps {
 const UsersPopupUI: React.FC<InitProps> = (props) => {
   const dispatch = useDispatch();
   const users = useSelector((state: RootStateOrAny) => state.users);
+  const { selectedUserIDs }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
   const { chooseUser, usersAssigned, type }: InitProps = props;
@@ -39,9 +42,16 @@ const UsersPopupUI: React.FC<InitProps> = (props) => {
     }
 
     if (type === 'reduxAction') {
-      dispatch(chooseUser(user));
+      if (checkInObject(selectedUserIDs, user?.userID?._id, '_id')) {
+        const removeUser = selectedUserIDs?.filter(
+          (each) => each?._id !== user?.userID?._id);
 
-      return;
+        return dispatch(chooseUser(removeUser));
+      }
+
+      const addUser = [...selectedUserIDs, user?.userID];
+
+      return dispatch(chooseUser(addUser));
     }
 
     return chooseUser(user);
@@ -51,7 +61,7 @@ const UsersPopupUI: React.FC<InitProps> = (props) => {
     const user = debouncedSearchTerm ? users.listSearch : users.list;
 
     const renderUser = user?.map((each) => {
-      const checkAssignedOfUser = usersAssigned && checkInObjectByID(usersAssigned, each?.user?.userID?._id);
+      const checkAssignedOfUser = usersAssigned && checkInObject(usersAssigned, each?.user?.userID?._id, '_id');
 
       return (
         <UserItem

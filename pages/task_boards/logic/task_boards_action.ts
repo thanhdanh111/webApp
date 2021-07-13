@@ -158,13 +158,6 @@ export const setTemplateTitleStatus = (templateTitleStatus: string) => {
 };
 
 // filter task
-export const searchTaskByTitle = (tasks) => {
-  return {
-    type: taskBoardsActionType.SEARCH_TASKS_BY_TITLE,
-    payload: tasks,
-  };
-};
-
 export const setHasNoData = (res: boolean) => {
   return {
     type: taskBoardsActionType.HAS_NO_DATA,

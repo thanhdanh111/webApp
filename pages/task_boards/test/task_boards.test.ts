@@ -42,6 +42,7 @@ describe('Home page', () => {
     await page.waitForSelector('.add-task-board');
     await page.click('.add-task-board');
 
+    await page.waitFor(5000);
     await page.waitForSelector('.add-task-board-dialog');
 
     const createTaskBoard = await page.screenshot();
@@ -69,6 +70,24 @@ describe('Home page', () => {
     const showTaskBoards = await page.screenshot();
     expect(showTaskBoards).toMatchImageSnapshot();
   });
+  // test('Test search tasks by userIDs successfully after login', async () => {
+  //   await page.goto('http://localhost:5000/home');
+  //   await page.waitForSelector('.board');
+
+  //   await page.waitForSelector('.status');
+  //   await page.waitFor(5000);
+  //   await page.waitForSelector('.status-left');
+  //   await page.waitForSelector('.action-status-btn-menu-content');
+
+  //   await page.click('.action-status-btn-menu-content');
+  //   await page.waitForSelector('.menu-item-users-popup');
+
+  //   await page.click('.menu-item-users-popup');
+  //   await page.waitFor(5000);
+
+  //   const showTaskBoards = await page.screenshot();
+  //   expect(showTaskBoards).toMatchImageSnapshot();
+  // });
 });
 
 afterAll(() => {

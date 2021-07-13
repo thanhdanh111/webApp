@@ -1,5 +1,4 @@
 import { checkArray } from './check_array';
-import { User } from './type';
 
 export const checkInArrayString = (arr: string[], userID: string) => {
   if (!checkArray(arr)) {
@@ -9,10 +8,10 @@ export const checkInArrayString = (arr: string[], userID: string) => {
   return arr.includes(userID);
 };
 
-export const checkInObjectByID = (arr?: User[], userID?: string) => {
+export function checkInObject<T>(arr: T[], userID: string, key: string): boolean {
   if (!checkArray(arr)) {
     return false;
   }
 
-  return arr?.some((e) => e._id === userID);
-};
+  return arr?.some((e) => e?.[key] === userID);
+}

@@ -8,7 +8,7 @@ import AssignUser from './assign_user';
 import { assignUser, setTypeCreateTask, unassignUser, updateNewTask } from 'pages/task_boards/logic/task_boards_action';
 import { addTaskThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 import DirectNewTask from './direct_new_task';
-import { checkInArrayString } from 'helpers/check_assigned';
+import { checkInArrayString } from 'helpers/check_in_array';
 
 interface InitProps {
   taskStatusID: string;

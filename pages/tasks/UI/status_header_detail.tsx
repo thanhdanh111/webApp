@@ -5,7 +5,7 @@ import OutlinedFlagIcon from '@material-ui/icons/OutlinedFlag';
 import DoneIcon from '@material-ui/icons/Done';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { updateAssignUserThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
-import { checkInArrayString } from 'helpers/check_assigned';
+import { checkInArrayString } from 'helpers/check_in_array';
 
 const StatusDetail = () => {
   const task = useSelector((state: RootStateOrAny) => state.taskBoards.taskDetail);

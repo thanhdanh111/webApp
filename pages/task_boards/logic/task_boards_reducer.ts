@@ -19,12 +19,14 @@ import {
   updateUserAssigned,
   deletedTaskStatus,
   renameTaskStatus,
-  searchTaskByTitle,
+  filterTasks,
+  setFiltering,
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
-import { checkArray } from 'helpers/check_array';
-import { checkInArrayString } from 'helpers/check_assigned';
+import { checkInObject } from 'helpers/check_in_array';
+import { checkSomeTrueInArray } from 'helpers/check_some_true_object';
+import { convertArrayObjectToObject } from 'helpers/convert_array_to_object';
 
 export interface TaskBoardsType {
   loading: boolean;
@@ -44,8 +46,8 @@ export interface TaskBoardsType {
   isFiltering: boolean;
   currentFilterLabel: string;
   selectedTitle: string;
-  selectedTags: string[];
-  selectedUserIDs: string[];
+  selectedTags: Tag[];
+  selectedUserIDs: User[];
 }
 
 export enum NotificationTypes {
@@ -304,7 +306,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         ...state,
         hasNoData: action?.payload,
       };
-    case taskBoardsActionType.SEARCH_TASKS_BY_TITLE:
+    case taskBoardsActionType.FILTER_TASKS:
 
       return {
         ...state,
@@ -356,7 +358,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
     case taskBoardsActionType.SET_SELECT_TAGS:
       const templateSelectedTags = state.selectedTags;
 
-      if (checkInArrayString(templateSelectedTags, action.payload)) {
+      if (checkInObject(templateSelectedTags, action.payload?._id, '_id')) {
         const removeTag = templateSelectedTags.filter(
           (each) => each !== action.payload);
 
@@ -373,23 +375,9 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         selectedTags: addTag,
       };
     case taskBoardsActionType.SET_SELECT_USERIDS:
-      const templateSelectedUsers = state.selectedUserIDs;
-
-      if (checkInArrayString(templateSelectedUsers, action.payload.userID)) {
-        const removeUser = templateSelectedUsers.filter(
-          (each) => each !== action.payload);
-
-        return {
-          ...state,
-          selectedUserIDs: removeUser,
-        };
-      }
-
-      const addUser = [...templateSelectedUsers, action.payload];
-
       return {
         ...state,
-        selectedUserIDs: addUser,
+        selectedUserIDs: action.payload,
       };
     default:
       return state;
@@ -863,41 +851,6 @@ export const deletedTaskThunkAction = (taskID: Task) => async (dispatch, getStat
 };
 
 // filter tasks
-export const searchTasksByTitleThunkAction = (title: string) => async (dispatch, getState) => {
-  try {
-    await dispatch(setLoading(true));
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState().userInfo;
-    const companyID = userInfo.currentCompany._id;
-
-    if (!token || !title?.length) {
-      return;
-    }
-
-    const res = await axios.get(`${config.BASE_URL}/tasks`, {
-      params: {
-        title,
-        companyID,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (checkArray(!res?.data?.list)) {
-      await dispatch(setLoading(false));
-
-      return;
-    }
-
-    await dispatch(searchTaskByTitle(res.data.list));
-    await dispatch(setLoading(false));
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const updateAssignUserThunkAction = (
   taskID: string,
   assignUserIDs?: string[],
@@ -935,21 +888,37 @@ export const updateAssignUserThunkAction = (
 export const filterTasksThunkAction = () => async (dispatch, getState) => {
   try {
     await dispatch(setLoading(true));
+    await dispatch(setFiltering(true));
     const token = localStorage.getItem('access_token');
     const userInfo = getState().userInfo;
-    const companyID = userInfo.currentCompany._id;
+    const companyID = userInfo.currentCompany?._id;
     const { selectedTitle, selectedTags, selectedUserIDs }: TaskBoardsType = getState().taskBoards;
+    const tags = selectedTags?.map((tag) => tag?._id);
+    const tempUserIDs = selectedUserIDs?.map((user) => user?._id);
+    const title = selectedTitle ? selectedTitle : null;
 
-    if (!token) {
+    const userIDs = convertArrayObjectToObject(tempUserIDs);
+
+    const isValidParams = checkSomeTrueInArray({
+      conditionsArray: [
+        tags,
+        userIDs,
+        title,
+      ],
+    });
+
+    if (!token || !isValidParams) {
+      await dispatch(setFiltering(false));
+
       return;
     }
 
     const res = await axios.get(`${config.BASE_URL}/tasks`, {
       params: {
         companyID,
-        title: selectedTitle,
-        tags: selectedTags,
-        userIDs: selectedUserIDs,
+        tags,
+        ...userIDs,
+        title: selectedTitle ? selectedTitle : null,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -957,14 +926,15 @@ export const filterTasksThunkAction = () => async (dispatch, getState) => {
       },
     });
 
-    if (checkArray(!res?.data?.list)) {
-      await dispatch(setLoading(false));
+    // if (checkArray(!res?.data?.list)) {
+    //   await dispatch(setLoading(false));
 
-      return;
-    }
+    //   return;
+    // }
 
-    await dispatch(searchTaskByTitle(res.data.list));
+    await dispatch(filterTasks(res.data.list));
     await dispatch(setLoading(false));
+    await dispatch(setFiltering(true));
   } catch (error) {
     throw error;
   }

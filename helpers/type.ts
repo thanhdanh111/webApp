@@ -73,7 +73,7 @@ export interface Access {
   canRemoveFromDepartment?: boolean;
 }
 
-interface EditingUserData {
+export interface EditingUserData {
   accesses?: Access[];
   companyID?: Company;
   companyIDAndUserID?: string;
