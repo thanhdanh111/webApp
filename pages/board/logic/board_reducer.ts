@@ -26,10 +26,10 @@ export enum NotificationTypes {
   errorFailed = 'Error data. Please update slack token!',
   companyTokenNotification = 'You have not registered any companies for workspace',
   succeedDeleteBoard = 'Delete FlowChart Successfully',
-  failedDeleteBoard = 'Failed Delete FlowChart',
-  failedAddCard = 'Failed to card',
+  failedDeleteBoard = 'Failed to Delete FlowChart',
+  failedAddCard = 'Failed to Add Card',
   failedGetCard = 'Cards not found!',
-  failedDeleteCard = 'Failed Delete Card',
+  failedDeleteCard = 'Failed to Delete Card',
 }
 export const Shape = {
   PROCESS: 'PROCESS',
