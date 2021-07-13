@@ -1,10 +1,12 @@
-import { IconButton, Typography } from '@material-ui/core';
+import { Typography, Backdrop, Modal, IconButton } from '@material-ui/core';
 import { Task } from 'helpers/type';
-import { updateAssignUserThunkAction, deletedTaskThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
+import { updateAssignUserThunkAction, deletedTaskThunkAction, getTaskByIdThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 import { useDispatch } from 'react-redux';
 import AssignUser from './assign_user';
 import { checkAssignedUserID } from 'helpers/check_assigned';
 import React, { FunctionComponent, useState } from 'react';
+import TaskDetail from './task_detail';
+import { getTaskDetail } from 'pages/task_boards/logic/task_boards_action';
 import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -18,6 +20,21 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
   const [open, setOpen] = useState(false);
   const taskName = task?.title?.split('_').join(' ');
   const taskID = task?._id?.slice(0, 6);
+
+  const [openDetail, setOpenDetail] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpenDetail(true);
+    dispatch(getTaskDetail({ title: '', _id: '' }));
+  };
+
+  const handleClose = () => {
+    setOpenDetail(false);
+  };
+
+  const getTask = () => {
+    dispatch(getTaskByIdThunkAction(task?._id));
+  };
 
   const handleAssign = (user) => {
 
@@ -44,10 +61,16 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
   };
 
   return (
+    <>
         <div className='task-item'>
             <Typography className='text-board' component='span'>Team</Typography>
             <div className='task-title'>
-                <Typography component='span' className='task-name'>{taskName}</Typography>
+                <Typography
+                  component='span'
+                  className='task-name'
+                  onClick={() => { getTask(); handleOpen(); }}
+                >{taskName}
+                </Typography>
                 <AssignUser usersAssigned={task?.userIDs} handleAssign={handleAssign} sizes='assigned-user-avatar'/>
             </div>
             <div className='footer-task'>
@@ -65,6 +88,17 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
               />
             </div>
         </div>
+        <Modal
+          open={openDetail}
+          onClose={handleClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{ timeout: 500 }}
+          className='detail-modal'
+        >
+            <TaskDetail close={handleClose}/>
+        </Modal>
+    </>
   );
 };
 

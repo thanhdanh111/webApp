@@ -94,6 +94,41 @@ export const setTasksToTaskStatus = (data: SetTasksToTaskStatus) => {
   };
 };
 
+export const getTaskDetail = (task) => {
+  return {
+    type: taskBoardsActionType.GET_TASK_DETAIL,
+    payload: task,
+  };
+};
+
+export const getTag = (tags) => {
+  return {
+    type: taskBoardsActionType.GET_TAG,
+    payload: tags,
+  };
+};
+
+export const createTag = (tag) => {
+  return {
+    type: taskBoardsActionType.CREATE_TAG,
+    payload: tag,
+  };
+};
+
+export const updateTag = (tag) => {
+  return {
+    type: taskBoardsActionType.UPDATE_TAG,
+    payload: tag,
+  };
+};
+
+export const deleteTag = (id) => {
+  return {
+    type: taskBoardsActionType.DELETE_TAG,
+    payload: id,
+  };
+};
+
 export const updateUserAssigned = (res: object) => {
   return {
     type: taskBoardsActionType.UPDATE_USER_ASSIGN_FOR_TASK,

@@ -3,6 +3,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import Resizer from '../resizer/resize';
 import { handleResize } from '../../../../helpers/handle_resize';
 import SvgProcess from '@components/svg/svg_process';
+
 const CustomProcess = () => {
   const panelRef = useRef<HTMLDivElement>(null);
   const [focus, setFocus] = useState<boolean>(false);
@@ -24,23 +25,23 @@ const CustomProcess = () => {
         <Handle
           type='source'
           position={Position.Right}
-          id='handle-process-right'
+          id='mm'
         />
 
         <Handle
           type='target'
           position={Position.Left}
-          id='handle-process-left'
+          id='mn'
         />
         <Handle
           type='target'
           position={Position.Top}
-          id='handle-process-top'
+          id='mk'
         />
         <Handle
           type='source'
           position={Position.Bottom}
-          id='handle-process-bottom'
+          id='mh'
         />
       </div>
     </div>

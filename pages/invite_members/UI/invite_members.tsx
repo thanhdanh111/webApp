@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Link } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { backToChooseCompany, updateInviteMembers } from '../logic/invite_actions';
+import { updateInviteMembers } from '../logic/invite_actions';
 import { inviteMembersThunkAction } from '../logic/invite_thunk_actions';
 import { InviteStateProps } from '../logic/invite_interface';
 import { InputAndOptionsSelect } from '@components/input_and_options_select/input_and_options_select';
@@ -32,9 +32,9 @@ const roles = [
 const InviteMembersUI: FunctionComponent = () => {
   const dispatch = useDispatch();
   const {
-    inviteCompany,
-    inviteLoading,
+    departments,
     inviteMembers,
+    inviteLoading,
   }: InviteStateProps = useSelector((state: RootState) => state.inviteMembers);
   const inviteMembersLength = inviteMembers.length;
 
@@ -47,7 +47,7 @@ const InviteMembersUI: FunctionComponent = () => {
     </option>,
   );
 
-  const secondOptions = inviteCompany?.departments?.map((department) =>
+  const secondOptions = departments?.map((department) =>
     <option
       key={`${department.departmentID}`}
       value={department.departmentID}
@@ -104,7 +104,6 @@ const InviteMembersUI: FunctionComponent = () => {
     dispatch(
       inviteMembersThunkAction({
         inviteMembersData,
-        companyID: inviteCompany?.companyID,
       }),
     );
   }
@@ -164,19 +163,12 @@ const InviteMembersUI: FunctionComponent = () => {
           + Add another
         </Link>
 
-        <Link
-          component='button'
-          variant='body2'
-          onClick={() => dispatch(backToChooseCompany())}
-          className='invite-sub-content--another'
-        >
-          Choose company
-        </Link>
         </div>
       </div>
 
       <PrimaryButtonUI
         title={inviteLoading ? 'Sending your request' : `Invite ${inviteMembersLength} Person`}
+        disabled={inviteLoading}
         handleClick={() => inviteMembersBtn()}
       />
     </>

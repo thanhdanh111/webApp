@@ -63,13 +63,29 @@ describe('Home page', () => {
     expect(chooseUserAssignImg).toMatchImageSnapshot();
 
     await page.click('.submit-create-status');
-    await page.waitForSelector('.status');
+    await page.waitForSelector('.testing .status');
 
     const confirmAddStatus = await page.screenshot();
     expect(confirmAddStatus).toMatchImageSnapshot();
 
-    await page.waitForSelector('.action-status-btn');
-    await page.click('.action-status-btn');
+    // rename task status
+    await page.waitForSelector('.testing .action-status-btn');
+    await page.click('.testing .action-status-btn');
+
+    await page.waitForSelector('.popper-action-status');
+    await page.waitFor(5000);
+
+    await page.waitForSelector('.rename-status-menu-item');
+    await page.click('.rename-status-menu-item');
+    await page.$eval('.add-status-input', (el) => el.value = '');
+    await page.type('.add-status-input', 'Testing ReTitle');
+    await page.click('.testing .submit-create-status');
+    await page.waitFor(5000);
+
+  // delete status task
+
+    await page.waitForSelector('.testing-retitle .action-status-btn');
+    await page.click('.testing-retitle .action-status-btn');
 
     await page.waitForSelector('.popper-action-status');
     await page.waitFor(5000);
@@ -83,27 +99,6 @@ describe('Home page', () => {
 
     const deleteStatusSuccessImg = await page.screenshot();
     expect(deleteStatusSuccessImg).toMatchImageSnapshot();
-  });
-
-  test('Test rename taskStatus successfully after login', async () => {
-    await page.goto('http://localhost:5000/home');
-    await page.waitForSelector('.board');
-    await page.waitForSelector('.status');
-
-    await page.waitForSelector('.action-status-btn');
-    await page.click('.action-status-btn');
-
-    await page.waitForSelector('.popper-action-status');
-    await page.waitFor(5000);
-
-    await page.waitForSelector('.rename-status-menu-item');
-    await page.click('.rename-status-menu-item');
-    await page.type('.add-status-input', 'Testing ReTitle');
-    await page.click('.submit-create-status');
-    await page.waitFor(5000);
-
-    const actionRetitleStatus = await page.screenshot();
-    expect(actionRetitleStatus).toMatchImageSnapshot();
   });
 
 });

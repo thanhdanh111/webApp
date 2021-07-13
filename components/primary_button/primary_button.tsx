@@ -12,7 +12,12 @@ interface DataType {
 
 type BodyProps = DataType;
 
-const PrimaryButtonUI: FunctionComponent<BodyProps> = ({ title, handleClick, extendClass= '', disabled }) => {
+const PrimaryButtonUI: FunctionComponent<BodyProps> = ({
+  title,
+  handleClick,
+  extendClass= '',
+  disabled = false,
+}) => {
 
   return (
     <div className={`btn-primary-container ${extendClass}`}>
