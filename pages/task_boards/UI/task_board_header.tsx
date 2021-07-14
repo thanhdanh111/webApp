@@ -10,7 +10,7 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import TaskBoardUI from './show_task_board';
 import { TaskBoardsType } from '../logic/task_boards_reducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFiltering, setFilterTaskByUserAction, setSelectedTitle } from '../logic/task_boards_action';
+import { setFilterTaskByUserAction, setSelectedTitle } from '../logic/task_boards_action';
 import { UserInfoType } from 'helpers/type';
 import { RootState } from 'redux/reducers_registration';
 import { checkValidAccess } from 'helpers/check_valid_access';
@@ -49,20 +49,12 @@ const NavClickUp: React.FC = () => {
 
   const getSearchTaskData = async () => {
     if (debouncedSearchTerm) {
-      await Promise.all([
-        dispatch(setFiltering(true)),
-        dispatch(setSelectedTitle(debouncedSearchTerm)),
-      ]);
+      dispatch(setSelectedTitle(debouncedSearchTerm));
 
       return;
     }
 
-    await Promise.all([
-      dispatch(setFiltering(false)),
-      dispatch(setSelectedTitle('')),
-    ]);
-
-    return;
+    return dispatch(setSelectedTitle(''));
   };
 
   const onChangeMe = () => {

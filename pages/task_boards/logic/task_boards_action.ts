@@ -1,4 +1,4 @@
-import { SetTasksToTaskStatus, TaskStatus } from 'helpers/type';
+import { SetTasksToTaskStatus, Task, TaskStatus } from 'helpers/type';
 import { taskBoardsActionType } from './task_board_action_type';
 
 export const setFilterTaskByUserAction = (res: boolean) => {
@@ -165,20 +165,6 @@ export const setHasNoData = (res: boolean) => {
   };
 };
 
-export const setFiltering = (filtering: boolean) => {
-  return {
-    type: taskBoardsActionType.SET_FILTERING,
-    payload: filtering,
-  };
-};
-
-export const setCrrentFilterLabel = (label) => {
-  return {
-    type: taskBoardsActionType.SET_CURRENT_FILTER_LABEL,
-    payload: label,
-  };
-};
-
 export const setSelectedTitle = (title) => {
   return {
     type: taskBoardsActionType.SET_SELECT_TITLE,
@@ -200,9 +186,16 @@ export const setSelectedUserIDs = (userIDs) => {
   };
 };
 
-export const filterTasks = (tasks) => {
+export const getTasks = (tasks: Task[]) => {
   return {
-    type: taskBoardsActionType.FILTER_TASKS,
+    type: taskBoardsActionType.GET_TASKS,
     payload: tasks,
+  };
+};
+
+export const deletedTask = (task) => {
+  return {
+    type: taskBoardsActionType.DELETE_TASK,
+    payload: task,
   };
 };

@@ -1,4 +1,10 @@
-import {  createTaskStatusThunkAction, filterTasksThunkAction, TaskBoardsType, updateTaskById, updateTaskStatusById } from '../logic/task_boards_reducer';
+import {
+  createTaskStatusThunkAction,
+  getTasksThunkAction,
+  TaskBoardsType,
+  updateTaskById,
+  updateTaskStatusById,
+} from '../logic/task_boards_reducer';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
@@ -54,6 +60,7 @@ const BoardTasks: FunctionComponent = () => {
     selectedUserIDs,
     selectedTags,
     selectedTitle,
+    filteringTaskByUser,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
   const {
     isAdmin,
@@ -67,12 +74,12 @@ const BoardTasks: FunctionComponent = () => {
   const addStatusStyle = !isAddStatus ? 'no-add-status' : 'add-status-style';
 
   const loadData = () => {
-    return dispatch(filterTasksThunkAction());
+    return dispatch(getTasksThunkAction());
   };
 
   useEffect(() => {
     void loadData();
-  }, [selectedUserIDs, selectedTags, selectedTitle]);
+  }, [selectedUserIDs, selectedTags, selectedTitle, filteringTaskByUser]);
 
   const GenerateTaskStatuses = () => {
     if (!currentTaskBoard) {

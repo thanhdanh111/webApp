@@ -1,7 +1,7 @@
 import { checkIfEmptyArray } from './check_if_empty_array';
 
 export const checkIfNotEmpty = ({ feilds }) => {
-  if (!feilds || !feilds?.length) {
+  if (!feilds) {
     return;
   }
 
@@ -10,6 +10,6 @@ export const checkIfNotEmpty = ({ feilds }) => {
       return checkIfEmptyArray(field);
     }
 
-    return field;
+    return true;
   });
 };

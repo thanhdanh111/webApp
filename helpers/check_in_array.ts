@@ -8,10 +8,10 @@ export const checkInArrayString = (arr: string[], userID: string) => {
   return arr.includes(userID);
 };
 
-export function checkHasObjectByKey<T>(arr: T[], userID: string, key: string): boolean {
+export function checkHasObjectByKey<T>(arr: T[], value: string, key: string): boolean {
   if (!checkIfEmptyArray(arr)) {
     return false;
   }
 
-  return arr?.some((e) => e?.[key] === userID);
+  return arr?.some((e) => e?.[key] === value);
 }

@@ -60,10 +60,9 @@ describe('Home page', () => {
 
     await page.waitForSelector('.task-status .open');
     await page.waitForSelector('.open .add-task');
-    await page.waitFor(5000);
+
     await page.click('.open .add-task');
     await page.waitForSelector('.task-add');
-    await page.waitFor(5000);
 
     const addTaskImage = await page.screenshot();
     expect(addTaskImage).toMatchImageSnapshot();
@@ -76,7 +75,6 @@ describe('Home page', () => {
     await page.waitForSelector('.save-add');
     await page.click('.save-add');
 
-    await page.waitFor(5000);
     await page.waitForSelector('.open .task-item');
 
     const image = await page.screenshot();
@@ -85,7 +83,6 @@ describe('Home page', () => {
   // task detail
 
     await page.click('.open .task-name');
-    await page.waitFor(5000);
     await page.waitForSelector('.detail-modal');
 
     const taskDetail = await page.screenshot();

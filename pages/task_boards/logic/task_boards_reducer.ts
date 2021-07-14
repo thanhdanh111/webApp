@@ -1,5 +1,5 @@
 import { taskBoardsActionType } from './task_board_action_type';
-import { Tag, Task, TaskBoard, TaskStatus, User } from '../../../helpers/type';
+import { Tag, Task, TaskBoard, TaskStatus, User, UserInfoType } from '../../../helpers/type';
 import axios from 'axios';
 import { config } from 'helpers/get_config';
 import {
@@ -19,14 +19,14 @@ import {
   updateUserAssigned,
   deletedTaskStatus,
   renameTaskStatus,
-  filterTasks,
-  setFiltering,
+  getTasks,
+  deletedTask,
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
 import { checkHasObjectByKey } from 'helpers/check_in_array';
-import { checkIfNotEmpty } from 'helpers/check_if_not_empty';
 import { convertArrayObjectToObject } from 'helpers/convert_array_to_object';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 
 export interface TaskBoardsType {
   loading: boolean;
@@ -42,12 +42,10 @@ export interface TaskBoardsType {
   taskDetail: Task;
   tags: Tag[];
   templateTitleStatus?: string;
-  filterResultTasks: Task[];
-  isFiltering: boolean;
-  currentFilterLabel: string;
   selectedTitle: string;
   selectedTags: Tag[];
   selectedUserIDs: User[];
+  tasks: Task[];
 }
 
 export enum NotificationTypes {
@@ -92,12 +90,10 @@ const initialState: TaskBoardsType = {
   },
   tags: [],
   templateTitleStatus: '',
-  filterResultTasks: [],
-  isFiltering: false,
-  currentFilterLabel: '',
   selectedTitle: '',
   selectedTags: [],
   selectedUserIDs: [],
+  tasks: [],
 };
 
 interface UpdateTaskStatus {
@@ -176,14 +172,11 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         taskStatus: { ...state.taskStatus, ...newTAskStatus },
       };
     case taskBoardsActionType.ADD_TASK:
-      const taskStatusTemp = { ...state.taskStatus };
-      taskStatusTemp[action.payload.taskStatusID]?.taskIDs.unshift(action.payload);
+      const tasksAfterAddTask = [...state.tasks, action.payload];
 
       return {
         ...state,
-        taskStatus: { ...taskStatusTemp },
-        currentTaskStatus: '',
-        usersAssigned: [],
+        tasks: tasksAfterAddTask,
       };
     case taskBoardsActionType.SET_TYPE_CREATE_TASK:
       if (state.currentTaskStatus === action.payload){
@@ -306,49 +299,18 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         ...state,
         hasNoData: action?.payload,
       };
-    case taskBoardsActionType.FILTER_TASKS:
-
-      return {
-        ...state,
-        filterResultTasks: action.payload,
-      };
-    case taskBoardsActionType.SET_FILTERING:
-      return {
-        ...state,
-        isFiltering: action.payload,
-      };
     case taskBoardsActionType.UPDATE_USER_ASSIGN_FOR_TASK:
-      updatedTaskStatuses = state.taskStatus;
-
-      let statusUpdated = updatedTaskStatuses[action?.payload?.taskStatusID?._id];
-      const tasksUpdated = statusUpdated?.taskIDs?.map((task) => {
-        if (task?._id === action?.payload?._id) {
+      const tempTasks = checkIfEmptyArray(state.tasks) ? state.tasks.map((task) => {
+        if (task?._id === action.payload?._id) {
           return action.payload;
         }
 
         return task;
-      });
-
-      if (statusUpdated) {
-        statusUpdated = {
-          ...statusUpdated,
-          taskIDs: tasksUpdated,
-        };
-
-        updatedTaskStatuses = {
-          ...updatedTaskStatuses,
-          [action?.payload?.taskStatusID?._id]: statusUpdated,
-        };
-      }
+      }) : [];
 
       return {
         ...state,
-        taskStatus: updatedTaskStatuses,
-      };
-    case taskBoardsActionType.SET_CURRENT_FILTER_LABEL:
-      return {
-        ...state,
-        currentFilterLabel: action.payload,
+        tasks: tempTasks,
       };
     case taskBoardsActionType.SET_SELECT_TITLE:
       return {
@@ -378,6 +340,18 @@ export  const taskBoardsReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedUserIDs: action.payload,
+      };
+    case taskBoardsActionType.GET_TASKS:
+      return {
+        ...state,
+        tasks: action.payload,
+      };
+    case taskBoardsActionType.DELETE_TASK:
+      const tasksAfterDelete = state.tasks.filter((task) => task?._id !== action.payload?._id);
+
+      return {
+        ...state,
+        tasks: tasksAfterDelete,
       };
     default:
       return state;
@@ -820,14 +794,13 @@ export const deletedTaskThunkAction = (taskID: Task) => async (dispatch, getStat
   try {
     const token = localStorage.getItem('access_token');
     const userInfo = getState()?.userInfo;
-    const taskStatuses: { [key: string]: TaskStatus } = getState()?.taskBoards?.taskStatus;
     const companyID = userInfo?.currentCompany?._id;
 
     if (!token || !taskID || !companyID) {
       return;
     }
 
-    await axios({
+    const res = await axios({
       url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID?._id}`,
       headers: {
         'Content-Type': 'application/json',
@@ -836,17 +809,21 @@ export const deletedTaskThunkAction = (taskID: Task) => async (dispatch, getStat
       method: 'DELETE',
     });
 
-    const taskStatus = taskID?.taskStatusID?._id as string;
-    const listTasks: Task[] = taskStatus ?
-    taskStatuses[taskStatus]?.taskIDs?.filter((item) => item?._id !== taskID?._id) : [];
+    if (res.data) {
+      await dispatch(deletedTask(taskID));
+      await dispatch(setLoading(false));
+      await dispatch(pushNewNotifications({ variant: 'success' , message: 'Deleted task by taskID successfully!' }));
 
-    await dispatch(updateTaskStatusById({ taskStatusID: taskStatus, tasks: listTasks }));
-    await dispatch(setLoading(false));
-    await dispatch(pushNewNotifications({ variant: 'success' , message: 'Deleted task by taskID successfully!' }));
+      return;
+    }
+
+    return;
   } catch (error) {
     const errorNotification = returnNotification({ type: 'failed' });
     await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+    await dispatch(setLoading(false));
 
+    return;
   }
 };
 
@@ -885,31 +862,24 @@ export const updateAssignUserThunkAction = (
   }
 };
 
-export const filterTasksThunkAction = () => async (dispatch, getState) => {
+export const getTasksThunkAction = () => async (dispatch, getState) => {
   try {
     await dispatch(setLoading(true));
-    await dispatch(setFiltering(true));
     const token = localStorage.getItem('access_token');
-    const userInfo = getState().userInfo;
-    const companyID = userInfo.currentCompany?._id;
-    const { selectedTitle, selectedTags, selectedUserIDs }: TaskBoardsType = getState().taskBoards;
+    const { currentCompany, userID }: UserInfoType = getState().userInfo;
+    const companyID = currentCompany?._id;
+    const { selectedTitle, selectedTags, selectedUserIDs, filteringTaskByUser }: TaskBoardsType = getState().taskBoards;
     const tags = selectedTags?.map((tag) => tag?._id);
     const tempUserIDs = selectedUserIDs?.map((user) => user?._id);
     const title = selectedTitle ? selectedTitle : null;
 
+    if (filteringTaskByUser) {
+      tempUserIDs.push(userID);
+    }
+
     const userIDs = convertArrayObjectToObject(tempUserIDs);
 
-    const isValidParams = checkIfNotEmpty({
-      feilds: [
-        tags,
-        userIDs,
-        title,
-      ],
-    });
-
-    if (!token || !isValidParams) {
-      await dispatch(setFiltering(false));
-
+    if (!token) {
       return;
     }
 
@@ -918,7 +888,7 @@ export const filterTasksThunkAction = () => async (dispatch, getState) => {
         companyID,
         tags,
         ...userIDs,
-        title: selectedTitle ? selectedTitle : null,
+        title,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -926,7 +896,13 @@ export const filterTasksThunkAction = () => async (dispatch, getState) => {
       },
     });
 
-    await dispatch(filterTasks(res.data.list));
+    if (!checkIfEmptyArray(res?.data?.list)) {
+      await dispatch(setLoading(false));
+
+      return;
+    }
+
+    await dispatch(getTasks(res?.data?.list));
     await dispatch(setLoading(false));
   } catch (error) {
     throw error;
