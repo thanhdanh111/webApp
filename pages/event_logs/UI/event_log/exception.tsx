@@ -1,4 +1,4 @@
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import { ExceptionState } from 'pages/event_logs/logic/event_log_interface';
 import React, { FunctionComponent } from 'react';
 import ExceptionItem from './exception_item';
@@ -11,7 +11,7 @@ const Exception: FunctionComponent<ExceptionType> = (props: ExceptionState) => {
   return (
     <div className='exception-container'>
         <ul className='exception-detail'>
-            {checkArray(frames) && frames.map((frame) => {
+            {checkIfEmptyArray(frames) && frames.map((frame) => {
               return (
                 <>
                   <ExceptionItem {...frame} />

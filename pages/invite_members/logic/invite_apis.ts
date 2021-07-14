@@ -5,7 +5,7 @@ import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from './invite_error_notifications';
 import { Roles } from 'constants/roles';
 import { checkValidAccess } from 'helpers/check_valid_access';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 type Token = string | null;
 export enum NotificationTypes{
   error403 = 'You don\'t have permission to invite',
@@ -95,7 +95,7 @@ const checkValidDepartment = (department) => {
 
 export const getUserCompaniesApi = (departments) => async (dispatch) => {
   try {
-    if (!checkArray(departments)) {
+    if (!checkIfEmptyArray(departments)) {
       await dispatch(updateInviteMembers({ loading: false }));
 
       return;

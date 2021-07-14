@@ -1,9 +1,9 @@
 import { Access } from './type';
-import { checkArray } from './check_array';
+import { checkIfEmptyArray } from './check_if_empty_array';
 
 export const getRole = (access) => {
 
-  if (!checkArray(access)) {
+  if (!checkIfEmptyArray(access)) {
     return;
   }
 

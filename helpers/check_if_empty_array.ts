@@ -1,4 +1,4 @@
-export const checkArray = (array) => {
+export const checkIfEmptyArray = (array) => {
   if (!array?.length) {
     return false;
   }

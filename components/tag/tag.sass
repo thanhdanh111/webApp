@@ -80,37 +80,6 @@
     margin-right: 8px
     font-size: 20px
 
-.change-color-popup
-  margin-top: 20px
-
-  .change-color
-    width: 300px
-
-    .color-item
-      width: 18px
-      height: 18px
-      margin: 5px
-      border-radius: 50%
-      display: flex;
-      font-size: 14px;
-      align-items: center;
-      justify-content: center;
-
-      &.active
-        .color-checked
-          display: inline
-          color: #fff
-          font-size: 14px
-
-    .color-picker
-      position: relative
-
-      .input-color-picker
-        position: absolute
-        left: 0
-        z-index: -1
-        visibility: hidden
-
 .add-tag-popup
   .tags-selected
     padding: 8px
@@ -132,6 +101,18 @@
       &:hover
         .more-item-icon
           opacity: 1
+
+      &.add-tag
+        flex-direction: column
+
+      .btn-add-tag
+        background-color: #50ac55
+        border-color: #50ac55
+        padding: 2px
+        min-width: 30px
+
+        .icon-add-tag
+          font-size: 12px
 
       .more-item-icon
         opacity: 0

@@ -23,7 +23,8 @@ import {
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
+import { checkHasObjectByKey } from 'helpers/check_in_array';
 
 export interface TaskBoardsType {
   loading: boolean;
@@ -274,7 +275,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
       const taskDetail = { ...state.taskDetail };
       if (taskDetail?.tagIDs){
         const tagIndex = taskDetail?.tagIDs.findIndex((tag) => tag?._id === action.payload._id);
-        if (tagIndex > 0){
+        if (tagIndex >= 0){
           taskDetail.tagIDs[tagIndex] = action.payload;
         }
       }
@@ -286,6 +287,15 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         taskDetail: { ...taskDetail },
       };
     case taskBoardsActionType.DELETE_TAG:
+      if (state.taskDetail?.tagIDs && checkHasObjectByKey(state.taskDetail.tagIDs || [], action.payload, '_id')) {
+
+        return {
+          ...state,
+          tags: state.tags.filter((tag) => action.payload !== tag._id),
+          taskDetail: { ...state.taskDetail, tagIDs: state.taskDetail?.tagIDs.filter((tag) => action.payload !== tag._id) },
+        };
+      }
+
       return {
         ...state,
         tags: state.tags.filter((tag) => action.payload !== tag._id),
@@ -657,12 +667,20 @@ export const getTagsThunkAction = (searchTag, isNewSearchTag) => async (dispatch
   try {
     const token = localStorage.getItem('access_token');
     const companyID = getState()?.userInfo?.currentCompany?._id;
-    const cursor = isNewSearchTag ? '' : getState()?.taskBoards.cursorTag;
-    const tags = isNewSearchTag ? [] : getState()?.taskBoards.tags;
-
     if (!token || !companyID) {
       return;
     }
+    let cursor = '';
+    let tags = [];
+
+    if (!isNewSearchTag) {
+      cursor = getState()?.taskBoards.cursorTag;
+      if (cursor === 'END'){
+        return;
+      }
+      tags = getState()?.taskBoards.tags;
+    }
+
     const res = await axios.get(`${config.BASE_URL}/tags`,
       {
         headers: {
@@ -874,7 +892,7 @@ export const searchTasksByTitleThunkAction = (title: string) => async (dispatch,
       },
     });
 
-    if (checkArray(!res?.data?.list)) {
+    if (checkIfEmptyArray(!res?.data?.list)) {
       await dispatch(setLoading(false));
 
       return;

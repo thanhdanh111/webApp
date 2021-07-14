@@ -1,5 +1,5 @@
 import { Access } from '../../../helpers/type';
-import { checkArray } from '../../../helpers/check_array';
+import { checkIfEmptyArray } from '../../../helpers/check_if_empty_array';
 import { Roles, rolesRender } from 'constants/roles';
 import { checkOnlyTrueInArray } from 'helpers/check_only_true';
 
@@ -18,7 +18,7 @@ export const getRenderingRolesForUsersPage = ({
   rolesInDepartments,
   exceptDeleteMyself,
 }) => {
-  if (!checkArray(accesses)) {
+  if (!checkIfEmptyArray(accesses)) {
     return;
   }
 

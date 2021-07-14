@@ -6,11 +6,11 @@ import { Tag } from 'helpers/type';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import { Box, Button, Grid, InputBase, List, ListItem, Popover } from '@material-ui/core';
 import { ElementsTag, TagMoreAction } from './tag';
-import { checkInclude } from '../../helpers/check_include';
 import { useDebounce } from 'helpers/debounce';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { DisappearedLoading } from 'react-loadingg';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
+import { checkHasObjectByKey } from 'helpers/check_in_array';
 
 interface InitialPropTag {
   selectedTag: Tag[];
@@ -63,16 +63,39 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
   };
 
   const addTag = () => {
+    if (!props.isCreateTag){
+      return;
+    }
     dispatch(createTagThunkAction({ name: inputNameTag }));
     setInputNameTag('');
   };
 
   const renderListTag = () => {
-    const listTag = tags?.map((tag) => {
-      if (checkInclude({ arr: props.selectedTag, obj: tag, key: '_id' })){
-        return;
+    if (!tags.length){
+      if (!props.isCreateTag) {
+        return (<ListItem className='tag-item-list'>
+          No result!
+        </ListItem>);
       }
 
+      return (
+        <ListItem className='tag-item-list add-tag'>
+          <p>Click here to create a new tag</p>
+          <Button variant='contained' color='primary' onClick={addTag} className='btn-add-tag'>
+            <AddOutlinedIcon className='icon-add-tag'/>
+          </Button>
+        </ListItem>);
+    }
+    const notSeletedTag = tags.filter((tag: Tag) => !checkHasObjectByKey(props.selectedTag, tag?._id || '', '_id'));
+
+    if (!notSeletedTag.length){
+      return (
+        <ListItem className='tag-item-list'>
+          Tag already attached
+        </ListItem>);
+    }
+
+    const listTag = notSeletedTag?.map((tag) => {
       return(
         <ListItem
           key={tag?._id}
@@ -96,32 +119,8 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
         </ListItem>
       );
     });
-    if (listTag.length){
-      return listTag;
-    }
 
-    if (!props.isCreateTag) {
-      return (<ListItem className='tag-item-list'>
-        No result!
-      </ListItem>);
-    }
-
-    if (checkInclude({ arr: props.selectedTag, key: 'name', obj: { name: debouncedSearchTerm } })) {
-      return (
-        <ListItem className='tag-item-list'>
-          Tag already attached
-        </ListItem>
-      );
-    }
-
-    return (
-      <ListItem className='tag-item-list'>
-        Click here to create a new tag
-        <Button variant='outlined' color='primary' onClick={addTag}>
-          <AddOutlinedIcon/>
-        </Button>
-      </ListItem>);
-
+    return listTag;
   };
 
   const renderSearchInput = () => (
@@ -181,7 +180,6 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
                   height={200}
                 >
                   {renderListTag()}
-                  {checkInclude({ arr: props.selectedTag, key: 'name', obj: { name: debouncedSearchTerm } }) ? 'true' : 'false'}
                 </InfiniteScroll>
                 </List>
               </Box>

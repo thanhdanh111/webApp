@@ -3,7 +3,7 @@ import { Task } from 'helpers/type';
 import { updateAssignUserThunkAction, deletedTaskThunkAction, getTaskByIdThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 import { useDispatch } from 'react-redux';
 import AssignUser from './assign_user';
-import { checkAssignedUserID } from 'helpers/check_assigned';
+import { checkInArrayString } from 'helpers/check_in_array';
 import React, { FunctionComponent, useState } from 'react';
 import TaskDetail from './task_detail';
 import { getTaskDetail } from 'pages/task_boards/logic/task_boards_action';
@@ -39,7 +39,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
   const handleAssign = (user) => {
 
     let userAssigns = task?.userIDs?.map((each) => each._id) as string[];
-    const checkAssignedOfUser = checkAssignedUserID(userAssigns, user?.userID?._id);
+    const checkAssignedOfUser = checkInArrayString(userAssigns, user?.userID?._id);
 
     if (checkAssignedOfUser) {
       const removedUsers = userAssigns.filter((assignedUser) => user.userID._id !== assignedUser);

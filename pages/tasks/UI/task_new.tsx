@@ -8,7 +8,7 @@ import AssignUser from './assign_user';
 import { assignUser, setTypeCreateTask, unassignUser, updateNewTask } from 'pages/task_boards/logic/task_boards_action';
 import { addTaskThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 import DirectNewTask from './direct_new_task';
-import { checkAssignedUserID } from 'helpers/check_assigned';
+import { checkInArrayString } from 'helpers/check_in_array';
 
 interface InitProps {
   taskStatusID: string;
@@ -31,7 +31,7 @@ const TaskNew: React.FC<InitProps> = (props) => {
   }, []);
 
   const handleAssign = (user) => {
-    const checkAssignedOfUser = checkAssignedUserID(usersAssigned, user?.userID?._id);
+    const checkAssignedOfUser = checkInArrayString(usersAssigned, user?.userID?._id);
 
     if (checkAssignedOfUser){
       dispatch(unassignUser(user?.userID?._id));

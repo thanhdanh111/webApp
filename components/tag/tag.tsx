@@ -11,9 +11,6 @@ import { Tag } from 'helpers/type';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
-import ColorizeIcon from '@material-ui/icons/Colorize';
-import DoneOutlinedIcon from '@material-ui/icons/DoneOutlined';
 import { useDispatch } from 'react-redux';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import { deleteTagThunkAction, updateTagThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
@@ -55,21 +52,21 @@ interface InitialPropTag {
 
 export const TagItem: React.FC<InitialPropTag> = (props) => {
   const dispatch = useDispatch();
-  const [changeNameTag, setChangeNameTag] = useState('');
-
-  const onBlurNameTag = () => {
-    dispatch(updateTagThunkAction(props.tag._id, { name: changeNameTag }));
-    setChangeNameTag('');
-  };
+  const [changeNameTag, setChangeNameTag] = useState({ isChange: false, value: '' });
 
   const onKeyUpNameTag = (event) => {
     if (event.keyCode !== 13){
-      setChangeNameTag(event.target.value);
-
       return;
     }
-    setChangeNameTag('');
-    dispatch(updateTagThunkAction(props.tag._id, { name: changeNameTag }));
+    changeName();
+  };
+
+  const changeName = () => {
+    if (!changeNameTag.value){
+      return;
+    }
+    dispatch(updateTagThunkAction(props.tag._id, { name: changeNameTag.value }));
+    setChangeNameTag({ ...changeNameTag, isChange: false });
   };
 
   return (
@@ -82,18 +79,20 @@ export const TagItem: React.FC<InitialPropTag> = (props) => {
         }}
       />
       <span className='tag-text' style={{ color: props.tag.color }}>{props.tag.name}</span>
-      {changeNameTag && (
+      {changeNameTag.isChange && (
         <input
           defaultValue={props.tag.name}
           id='input-tag-name'
           className='input-name-tag'
-          onBlur={() => onBlurNameTag()}
+          value={changeNameTag.value}
+          onChange={(event) => setChangeNameTag({ ...changeNameTag, value: event.target.value })}
+          onBlur={() => changeName()}
           onKeyUp={(event) => onKeyUpNameTag(event)}
         />
       )}
       <div className='icon-tag' style={{ color: props.tag.color }}>
         <TagMoreAction
-          changeName={() => setChangeNameTag(props.tag.name)}
+          changeName={() => setChangeNameTag({ value: props.tag.name, isChange: true })}
           onDeleteTag={() => dispatch(deleteTagThunkAction(props.tag?._id))}
         />
         <CloseIcon
@@ -128,7 +127,6 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
             Rename
       </ListItem>
       </label>
-      <ChangeColor/>
     </List>
   );
 
@@ -168,51 +166,6 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
     </>
   );
 };
-
-const ChangeColor: React.FC = () => {
-
-  const renderColor = () => {
-    colorDefault.map((color, key) => (
-      <div className='color-item active' key={key} style={{ backgroundColor : color }}>
-        <DoneOutlinedIcon className='color-checked'/>
-      </div>
-    ));
-  };
-
-  return (
-    <PopupState variant='popover' popupId='demo-popup-menu'>
-  {(popupState) => (
-    <>
-    <ListItem button {...bindTrigger(popupState)}>
-      <PaletteOutlinedIcon className='icon-tag-action'/>
-      Change color
-    </ListItem>
-    <Popover
-      {...bindPopover(popupState)}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left',
-      }}
-      className='change-color-popup'
-    >
-      <Box className='change-color' display='flex' flexWrap='wrap'>
-        {renderColor()}
-        <div className='color-picker'>
-          <label htmlFor='color-picker'><ColorizeIcon/></label>
-          <input type='color' id='input-color-picker'/>
-        </div>
-      </Box>
-    </Popover>
-    </>
-     )}
-    </PopupState>
-  );
-};
-
 interface InitialPropElements {
   selectedTag: Tag[];
   getSelectedTag: (tag) => void;
