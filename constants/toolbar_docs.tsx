@@ -10,9 +10,6 @@ export const blockStyles = [
   'code-block',
   'ordered-list-item',
   'unordered-list-item',
-  'header-one',
-  'header-two',
-  'header-three',
 ];
 
 export const inlineStyles = [

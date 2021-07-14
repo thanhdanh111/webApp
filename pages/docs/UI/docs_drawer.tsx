@@ -24,7 +24,6 @@ const DocsDrawer = () => {
   const dispatch = useDispatch();
   const {
     docProjectsMap,
-    loading,
     selectedDocProject,
     selectedPage,
   }: DocsDrawerDataType = useSelector((state: RootState) => {
@@ -113,7 +112,7 @@ const DocsDrawer = () => {
       <List component='nav'>
         {showListTreeOfDocProjects()}
       </List>
-      <CreateNewProjectDialog loading={loading} handleCreate={handleCreate}/>
+      <CreateNewProjectDialog handleCreate={handleCreate}/>
     </>
   );
 };

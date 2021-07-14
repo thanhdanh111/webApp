@@ -9,7 +9,7 @@ import { Grid, IconButton, Typography, Input, ListItem, ListItemIcon, ListItemTe
 import CloseIcon from '@material-ui/icons/Close';
 import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 
-const CreateNewProjectDialog = ({ handleCreate, loading })  => {
+const CreateNewProjectDialog = ({ handleCreate })  => {
   const [state, setState] = React.useState({
     openDialog: false,
     name: '',
@@ -29,7 +29,6 @@ const CreateNewProjectDialog = ({ handleCreate, loading })  => {
       className='docs-drawer--add-new-project'
       button
       onClick={handleClickOpen}
-      disabled={loading}
       disableGutters
     >
       <ListItemIcon>
@@ -40,6 +39,7 @@ const CreateNewProjectDialog = ({ handleCreate, loading })  => {
       <Dialog
         open={state.openDialog}
         onClose={handleClose}
+        className='docs-drawer--new-project-dialog'
         aria-labelledby='form-dialog-title'
         maxWidth='xs'
         fullWidth
