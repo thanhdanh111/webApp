@@ -181,7 +181,7 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
                   height={200}
                 >
                   {renderListTag()}
-                  {checkInclude({ arr: props.selectedTag, key: 'name', obj: { name: debouncedSearchTerm } }) ? 'true':'false'}
+                  {checkInclude({ arr: props.selectedTag, key: 'name', obj: { name: debouncedSearchTerm } }) ? 'true' : 'false'}
                 </InfiniteScroll>
                 </List>
               </Box>
