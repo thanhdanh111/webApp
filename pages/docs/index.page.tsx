@@ -186,6 +186,11 @@ const DocsPage = () => {
     const selectedProjectID = selectedProject?._id ?? '';
     const selectedPageID = selectedPage?._id;
 
+    if (!selectedProjectID?.length && !selectedPageID?.length) {
+
+      return true;
+    }
+
     const rolesOfUser = getItemSelectedRolesOfUser({
       selectedPageID,
       selectedProjectID,

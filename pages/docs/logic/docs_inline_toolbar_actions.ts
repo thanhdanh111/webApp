@@ -42,12 +42,13 @@ export function showUpToolbarAndUpdateState(newEditorState, dispatch) {
   const selection = window.getSelection();
   const selectedText = selection?.toString();
   const haveOtherToolbar =  !!document.getElementById('sideToolbar');
+  const contentStateHasText = newEditorState?.getCurrentContent()?.hasText();
   const validSelection = checkOnlyTrueInArray({
     conditionsArray: [
       selectedText?.length,
       typeof selectedText === 'string',
       selection?.type !== 'Caret',
-      newEditorState?.getCurrentContent()?.hasText(),
+      contentStateHasText,
       !haveOtherToolbar,
     ],
   });
