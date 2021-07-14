@@ -1,14 +1,23 @@
 import { Box, TextareaAutosize } from '@material-ui/core';
 import AttachmentInBody from './attachment_detail';
-import { RootStateOrAny, useSelector } from 'react-redux';
-import TagTask from '../../../components/tag/tag';
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import TagTask, { ElementsTag } from '../../../components/tag/tag';
+import { updateTaskThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 
 const TitleDetail: React.FC = () => {
+  const dispatch = useDispatch();
   const task = useSelector((state: RootStateOrAny) => state.taskBoards?.taskDetail);
+
+  const updateTask = (tags) => {
+    const tagIDs = tags.map((tag) => tag._id);
+    dispatch(updateTaskThunkAction(task?._id, { tagIDs }));
+  };
 
   return (
     <Box display='flex' flexDirection='column' className='attachment-detail'>
-      <TagTask/>
+      <TagTask selectedTag={task.tagIDs} getSelectedTag={(tags) => updateTask(tags)}>
+      <ElementsTag selectedTag={task.tagIDs} getSelectedTag={(tags) => updateTask(tags)}/>
+      </TagTask>
       <Box position='sticky' top='0' className='title-detail' px={2} mt={1}>
         <TextareaAutosize
           className='input-title'

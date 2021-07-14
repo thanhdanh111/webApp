@@ -50,7 +50,7 @@ const TaskBoardUI = () => {
   const fetchData = async () => {
     await Promise.all([
       dispatch(getTaskBoardThunkAction()),
-      dispatch(getTagsThunkAction()),
+      dispatch(getTagsThunkAction('', true)),
       dispatch(getPaginationThunkAction()),
     ]);
   };

@@ -41,6 +41,8 @@ export interface TaskBoardsType {
   templateTitleStatus?: string;
   filterResultTasks: Task[];
   isFiltering: boolean;
+  cursorTag: string;
+  totalCountTag: number;
 }
 
 export enum NotificationTypes {
@@ -87,6 +89,8 @@ const initialState: TaskBoardsType = {
   templateTitleStatus: '',
   filterResultTasks: [],
   isFiltering: false,
+  cursorTag: '',
+  totalCountTag: 0,
 };
 
 interface UpdateTaskStatus {
@@ -226,12 +230,14 @@ export  const taskBoardsReducer = (state = initialState, action) => {
     case taskBoardsActionType.GET_TASK_DETAIL:
       return {
         ...state,
-        taskDetail: action.payload,
+        taskDetail: { ...action.payload },
       };
     case taskBoardsActionType.GET_TAG:
       return {
         ...state,
-        tags: action.payload,
+        tags: action.payload.data,
+        cursorTag: action.payload.cursor,
+        totalCountTag: action.payload.totalCount,
       };
     case taskBoardsActionType.CREATE_TAG:
       return {
@@ -242,10 +248,42 @@ export  const taskBoardsReducer = (state = initialState, action) => {
       const tags = state.tags;
       const indexTag = tags.findIndex((tag) => tag._id === action.payload._id);
       tags[indexTag] = action.payload;
+      const taskStatuses = { ...state.taskStatus };
+      if (taskStatuses !== {}){
+        Object.keys(taskStatuses).map((statusKey) => {
+          if (taskStatuses[statusKey] || taskStatuses[statusKey].taskIDs){
+            return;
+          }
+          const tasks = taskStatuses[statusKey].taskIDs;
+          tasks.map((task, key) => {
+            if (!task.tagIDs){
+              return;
+            }
+            const listTags = task.tagIDs;
+            listTags.map((tagTask, index) => {
+              if (tagTask._id !== action.payload._id) {
+                return;
+              }
+              listTags[index] = action.payload;
+            });
+            tasks[key].tagIDs = listTags;
+          });
+          taskStatuses[statusKey].taskIDs = tasks;
+        });
+      }
+      const taskDetail = { ...state.taskDetail };
+      if (taskDetail?.tagIDs){
+        const tagIndex = taskDetail?.tagIDs.findIndex((tag) => tag?._id === action.payload._id);
+        if (tagIndex > 0){
+          taskDetail.tagIDs[tagIndex] = action.payload;
+        }
+      }
 
       return {
         ...state,
         tags,
+        taskStatus: taskStatuses,
+        taskDetail: { ...taskDetail },
       };
     case taskBoardsActionType.DELETE_TAG:
       return {
@@ -615,10 +653,13 @@ export const getTaskByIdThunkAction = (taskID) => async (dispatch, getState) => 
   }
 };
 
-export const getTagsThunkAction = () => async (dispatch, getState) => {
+export const getTagsThunkAction = (searchTag, isNewSearchTag) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const companyID = getState()?.userInfo?.currentCompany?._id;
+    const cursor = isNewSearchTag ? '' : getState()?.taskBoards.cursorTag;
+    const tags = isNewSearchTag ? [] : getState()?.taskBoards.tags;
+
     if (!token || !companyID) {
       return;
     }
@@ -629,10 +670,14 @@ export const getTagsThunkAction = () => async (dispatch, getState) => {
           Authorization: `Bearer ${token}`,
         },
         params: {
+          cursor,
           companyID,
+          limit: 10,
+          name: searchTag,
         },
       });
-    dispatch(getTag(res.data.list));
+
+    dispatch(getTag({ data: [...tags, ...res.data.list], cursor: res.data.cursor, totalCount : res.data.totalCount }));
   } catch (error) {
     throw error;
   }
@@ -662,14 +707,15 @@ export const createTagThunkAction = (tag) => async (dispatch, getState) => {
   }
 };
 
-export const updateTagThunkAction = (tag) => async (dispatch, getState) => {
+export const updateTagThunkAction = (tagID, dataUpdateTag) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const companyID = getState()?.userInfo?.currentCompany?._id;
     if (!token || !companyID) {
       return;
     }
-    const res = await axios.put(`${config.BASE_URL}/companies/${companyID}/tags/${tag._id}`,
+    const res = await axios.put(`${config.BASE_URL}/companies/${companyID}/tags/${tagID}`,
+    dataUpdateTag,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -872,5 +918,29 @@ export const updateAssignUserThunkAction = (
   } catch (error) {
     const errorNotification = returnNotification({ type: 'failed' });
     await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }));
+  }
+};
+
+export const updateTaskThunkAction = (taskID, dataUpdateTask) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const companyID = getState()?.userInfo?.currentCompany?._id;
+    if (!token || !companyID) {
+      return;
+    }
+    const res = await axios.put(`${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
+      dataUpdateTask,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    if (taskID === getState()?.taskBoards?.taskDetail?._id) {
+      dispatch(getTaskDetail(res.data));
+    }
+    // dispatch(updateTaskInStatus(res.data));
+  } catch (error) {
+    throw error;
   }
 };

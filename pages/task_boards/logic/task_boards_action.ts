@@ -1,4 +1,4 @@
-import { SetTasksToTaskStatus, TaskStatus } from 'helpers/type';
+import { SetTasksToTaskStatus, Task, TaskStatus } from 'helpers/type';
 import { taskBoardsActionType } from './task_board_action_type';
 
 export const setFilterTaskByUserAction = (res: boolean) => {
@@ -176,5 +176,12 @@ export const setFiltering = (filtering: boolean) => {
   return {
     type: taskBoardsActionType.SET_FILTERING,
     payload: filtering,
+  };
+};
+
+export const updateTaskInStatus = (task: Task) => {
+  return {
+    type: taskBoardsActionType.UPDATE_TASK_IN_STATUS,
+    payload: task,
   };
 };

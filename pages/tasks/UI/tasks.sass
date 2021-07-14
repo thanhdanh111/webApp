@@ -212,7 +212,7 @@
           color: #50ac55
           border-color: #50ac55
 
-    .tag-border
+    .border-dashed-icon
       border-radius: 50px
       border: 1px dashed #d3d3d3
       color: #d3d3d3
@@ -241,8 +241,8 @@
 
       .priority-icon
         padding: 6px
-        width: 35px
-        height: 35px
+        width: 30px
+        height: 30px
 
     .header-modal-detail
       border-bottom: 1px solid #dedede
@@ -337,6 +337,54 @@
         position: absolute
         z-index: -1
 
+    .detail-time
+      display: flex
+      align-items: center
+      color: #928f8f
+      padding: 15px 0
+      font-size: 12px
+      border-bottom: 0.5px solid #dedede
+
+      .item-time
+        padding: 0 20px
+        height: 30px
+
+      .detail-tracked
+        border-left: 1px solid
+        border-right: 1px solid
+
+        .tracked-icon
+          font-size: 12px
+          color: #50ac55
+
+      .detail-due-date
+        display: flex
+        align-items: center
+
+        .due-date
+          font-size: 30px
+          padding: 5px
+
+      .text-time
+        margin: 0
+        text-align: center
+    .content-activity
+      .filter-activity
+        opacity: 0
+        &:hover
+          opacity: 1
+        .search-activity
+          height: 30px
+          margin-right: 20px
+
+          .icon-activity
+            padding: 5px
+            .search-icon-activity
+              font-size: 20px
+          .input-activity
+            font-size: 12px
+
+
 .attachment-detail-popup
   .option-attachment
     font-size: 12px
@@ -355,3 +403,5 @@
     width: 25px
     height: 25px
     font-size: 10px
+
+

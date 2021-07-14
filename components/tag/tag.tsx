@@ -1,6 +1,5 @@
 import {
   Box,
-  Grid,
   List,
   ListItem,
   Popover,
@@ -16,63 +15,94 @@ import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import DoneOutlinedIcon from '@material-ui/icons/DoneOutlined';
 import { useDispatch } from 'react-redux';
-import { deleteTagThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
+import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
+import { deleteTagThunkAction, updateTagThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
 import AddTagPopup from './add_tag';
 
-interface InitialPropTag {
-  tag: Tag;
+interface InitialProp {
+  selectedTag: Tag[];
+  getSelectedTag: (tag) => void;
 }
 
 export const colorDefault = ['#81200E', '#F57829', '#F15381', '#F27DAA', '#EC73EA',
   '#C26DEC', '#816CFA', '#05A9F4', '#2760E8', '#82B0FB', '#F57829', '#61CE6F',
   '#F9DA38', '#667684'];
 
-const TagTask: React.FC = () => {
+const TagTask: React.FC<InitialProp> = (props) => {
   return (
     <Box display='flex' ml={4} my='5px'>
-      <Grid container spacing={1} alignItems='center'>
-        <Grid item>
-          <TagItem tag={{ name: 'Snt-app' }} />
-        </Grid>
-        <AddTagPopup/>
-      </Grid>
+      {props.children}
+      <AddTagPopup
+        selectedTag={props.selectedTag}
+        getSelectedTag={(tags) => props.getSelectedTag(tags)}
+        showSelectedTag={true}
+        isCreateTag={true}
+      >
+        <LocalOfferOutlinedIcon
+          key='click-popup'
+          className='border-dashed-icon tag-icon'
+        />
+      </AddTagPopup>
     </Box>
   );
 };
 
+interface InitialPropTag {
+  tag: Tag;
+  removeTag: () => void;
+}
+
 export const TagItem: React.FC<InitialPropTag> = (props) => {
-  const [isChangeName, setIsChangeName] = useState(false);
   const dispatch = useDispatch();
+  const [changeNameTag, setChangeNameTag] = useState('');
+
+  const onBlurNameTag = () => {
+    dispatch(updateTagThunkAction(props.tag._id, { name: changeNameTag }));
+    setChangeNameTag('');
+  };
+
+  const onKeyUpNameTag = (event) => {
+    if (event.keyCode !== 13){
+      setChangeNameTag(event.target.value);
+
+      return;
+    }
+    setChangeNameTag('');
+    dispatch(updateTagThunkAction(props.tag._id, { name: changeNameTag }));
+  };
 
   return (
-    <div
-      className='tag-item'
-      style={{
-        backgroundColor: 'rgba(2, 49, 232, 0.2)',
-        color: 'rgb(2, 49, 232)',
-      }}
-    >
-      <span className='tag-text'>{props.tag.name}</span>
-      {isChangeName && (
+    <Box className='tag-item' m='4px'>
+      <div
+        className='background-opacity'
+        style={{
+          backgroundColor: props.tag.color,
+          opacity: 0.2,
+        }}
+      />
+      <span className='tag-text' style={{ color: props.tag.color }}>{props.tag.name}</span>
+      {changeNameTag && (
         <input
           defaultValue={props.tag.name}
           id='input-tag-name'
           className='input-name-tag'
-          onBlur={() => setIsChangeName(false)}
+          onBlur={() => onBlurNameTag()}
+          onKeyUp={(event) => onKeyUpNameTag(event)}
         />
       )}
-      <div className='icon-tag'>
+      <div className='icon-tag' style={{ color: props.tag.color }}>
         <TagMoreAction
-          changeName={() => setIsChangeName(true)}
+          changeName={() => setChangeNameTag(props.tag.name)}
           onDeleteTag={() => dispatch(deleteTagThunkAction(props.tag?._id))}
         />
         <CloseIcon
           className='icon-item delete'
-          style={{ backgroundColor: 'rgb(2, 49, 232)' }}
+          style={{ backgroundColor: props.tag.color }}
+          onClick={() => props.removeTag()}
         />
       </div>
-    </div>
+    </Box>
   );
 };
 
@@ -107,13 +137,14 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
     <PopupState variant='popover' popupId='demo-popup-menu'>
       {(popupState) => (
         <>
-          <MoreHorizIcon className='more-item-icon' {...bindTrigger(popupState)} />
+          <MoreHorizIcon className='more-item-icon' {...bindTrigger(popupState)}/>
           <Popover
             {...bindPopover(popupState)}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'left',
             }}
+
             transformOrigin={{
               vertical: 'top',
               horizontal: 'left',
@@ -179,5 +210,27 @@ const ChangeColor: React.FC = () => {
     </>
      )}
     </PopupState>
+  );
+};
+
+interface InitialPropElements {
+  selectedTag: Tag[];
+  getSelectedTag: (tag) => void;
+}
+
+export const ElementsTag: React.FC<InitialPropElements> = (props) => {
+  const removeTag = (tag) => {
+    const tags = props.selectedTag.filter((tagItem) => tagItem._id !== tag._id);
+    props.getSelectedTag(tags);
+  };
+
+  return (
+    <Box display='flex' width='auto' alignItems='center' pr='12px'>
+    {
+     props.selectedTag?.map((tag) => (
+        <TagItem key={tag._id} tag={tag} removeTag={() => removeTag(tag)}/>
+      ))
+    }
+    </Box>
   );
 };

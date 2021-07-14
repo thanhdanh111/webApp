@@ -155,7 +155,7 @@ export interface Task {
   companyID?: Company;
   departmentID?: Department;
   taskStatusID: TaskStatus;
-  tagIDs?: string[];
+  tagIDs?: Tag[];
   userIDs?: User[];
   title: string;
   description?: string;

@@ -34,7 +34,7 @@ const StatusDetail = () => {
       </Button>
       <AssignUser usersAssigned={task.userIDs} handleAssign={getAssignUser} sizes='assigned-user-avatar'/>
       <Box className='priority-detail' display='flex' alignItems='center'>
-        <OutlinedFlagIcon className='tag-border priority-icon'/>
+        <OutlinedFlagIcon className='border-dashed-icon priority-icon'/>
       </Box>
     </Box>
   );
