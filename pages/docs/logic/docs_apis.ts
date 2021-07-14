@@ -187,6 +187,41 @@ export const deletePage = () => async (dispatch, getState) => {
   }
 };
 
+function blendProjectWithoutPagesAndHavingPages(docProjects, docPagesIntoDocProjectsMap) {
+  const newProjectsMap = docPagesIntoDocProjectsMap;
+
+  docProjects?.data?.list?.forEach((docProject) => {
+    if (!docProject) {
+
+      return;
+    }
+
+    const projectID = docProject?._id;
+
+    if (docPagesIntoDocProjectsMap[projectID] !== undefined) {
+
+      return;
+    }
+
+    const invalidProject = !projectID || !docProject?.title || !docProject?.companyID;
+
+    if (invalidProject) {
+
+      return;
+    }
+
+    docPagesIntoDocProjectsMap[projectID] = {
+      title: docProject.title,
+      _id: projectID,
+      companyID: docProject.companyID,
+      pages: {},
+      createdBy: docProject.createdBy,
+    };
+  });
+
+  return newProjectsMap;
+}
+
 export const getDocProjects = () => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
@@ -224,7 +259,7 @@ export const getDocProjects = () => async (dispatch, getState) => {
       },
     );
 
-    const docPagesIntoDocProjectsMap = getDesiredChildrenIntoDesiredParents({
+    let docPagesIntoDocProjectsMap = getDesiredChildrenIntoDesiredParents({
       children: docPages?.data?.list,
       fieldsOfParent: ['_id', 'title', 'companyID', 'createdBy'],
       fieldsOfChild: ['_id', 'title', 'pageContent', 'entityMap', 'createdBy'],
@@ -235,35 +270,10 @@ export const getDocProjects = () => async (dispatch, getState) => {
     });
 
     if (docProjects?.data?.list?.length) {
-
-      docProjects?.data?.list?.forEach((docProject) => {
-        if (!docProject) {
-
-          return;
-        }
-
-        const projectID = docProject?._id;
-
-        if (docPagesIntoDocProjectsMap[projectID] !== undefined) {
-
-          return;
-        }
-
-        const invalidProject = !projectID || !docProject?.title || !docProject?.companyID;
-
-        if (invalidProject) {
-
-          return;
-        }
-
-        docPagesIntoDocProjectsMap[projectID] = {
-          title: docProject.title,
-          _id: projectID,
-          companyID: docProject.companyID,
-          pages: {},
-          createdBy: docProject.createdBy,
-        };
-      });
+      docPagesIntoDocProjectsMap = blendProjectWithoutPagesAndHavingPages(
+        docProjects?.data?.list,
+        docPagesIntoDocProjectsMap,
+      );
     }
 
     dispatch(updateDocs({
