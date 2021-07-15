@@ -47,6 +47,8 @@ const LoginUi: FunctionComponent = () => {
     await Promise.resolve(dispatch(GetUserDataThunkAction(accessToken)));
 
     void router.replace('/home', '/home.html');
+
+    setIsLogin(false);
   }
 
   const FormLogin = () => {
