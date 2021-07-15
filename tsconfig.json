@@ -43,6 +43,6 @@
     "components/**/*.tsx",
     "components/**/*.ts",
     "static/**/*.tsx",
-    "static/**/*.ts", "constants/custom_style_map.ts", "helpers/get_desired_children_into_desired_parents.ts"
+    "static/**/*.ts",
   ]
 }
