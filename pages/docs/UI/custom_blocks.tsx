@@ -184,6 +184,7 @@ const Image = ({ src }) => {
 
   return <img
     src={src ?? ''}
+    contentEditable={false}
     style={{
       width: `${defaultWidth}px`,
       height: `${defaultHeight}`,
@@ -199,12 +200,17 @@ const IndexElement = (props) => {
   let orderNumber = 1;
 
   if (!currentContentBlock || !contentState) {
-    return <div>{orderNumber}. </div>;
+    return <div
+      contentEditable={false}
+      className='custom-block--index-element'
+    >
+      {orderNumber}.
+    </div>;
   }
 
   while (true) {
-    const contentBlockBefore = contentState.getBlockBefore(currentKey);
-    const blockTypeOfBefore = contentBlockBefore.getType();
+    const contentBlockBefore = contentState?.getBlockBefore(currentKey);
+    const blockTypeOfBefore = contentBlockBefore?.getType();
 
     if (blockTypeOfBefore !== 'ordered-list-item') {
       break;
@@ -215,13 +221,8 @@ const IndexElement = (props) => {
   }
 
   return <div
-    style={{
-      fontSize: '0.875rem',
-      lineHeight: '1.43',
-      fontWeight: 400,
-      marginLeft: '10px',
-      marginRight: '5px',
-    }}
+    contentEditable={false}
+    className='custom-block--index-element'
   >
     {orderNumber}.
   </div>;
