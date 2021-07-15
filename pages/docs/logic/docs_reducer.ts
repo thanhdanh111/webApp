@@ -181,11 +181,17 @@ const docsReducer = (state = initialState, action) => {
     case DocsActionTypes.UpdateDocs:
       const editContent = checkOnlyTrueInArray({
         conditionsArray: [
+          state?.selectedPage?._id?.length,
           !checkEmptyObject(action?.data?.editorState),
           notChangeFocusOfEditorState(state?.editorState, action?.data?.editorState),
         ],
       });
-      const editTitle = !!action?.data?.title;
+      const editTitle = checkOnlyTrueInArray({
+        conditionsArray: [
+          state?.selectedPage?._id?.length,
+          action?.data?.title?.length,
+        ],
+      });
       if (checkTrueInArray({ conditionsArray: [editContent, editTitle] })) {
         const timestamp = new Date().getTime();
 

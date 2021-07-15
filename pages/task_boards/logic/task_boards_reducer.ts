@@ -377,7 +377,7 @@ export const getTaskBoardThunkAction = () => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const userInfo = getState().userInfo;
-    const companyID = userInfo.currentCompany._id;
+    const companyID = userInfo?.currentCompany?._id;
     const departmentID = userInfo?.currentDepartment?._id;
 
     if (!token || !companyID) {

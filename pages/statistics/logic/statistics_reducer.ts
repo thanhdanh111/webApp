@@ -56,16 +56,14 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
         selectedUserID,
       },
       userInfo: {
-        currentCompany: {
-          _id: companyID,
-        },
+        currentCompany,
         userID,
       },
     }: RootState = state;
     const toTime = new Date();
     const fromTime = new Date(toTime.getTime() - limit * 1000 * 60 * 60 * 24);
+    const companyID = currentCompany?._id;
     let requestUser = '';
-
     if (cursor === 'END') {
       return;
     }
