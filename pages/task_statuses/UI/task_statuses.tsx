@@ -2,15 +2,17 @@ import { Container, Link, Typography } from '@material-ui/core';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import TasksUI from '../../tasks/UI/tasks';
-import { RootStateOrAny,  useDispatch,  useSelector } from 'react-redux';
-import { getTaskStatusThunkAction, TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
+import { useDispatch, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import TaskNew from 'pages/tasks/UI/task_new';
-import { setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
 import ActionTaskStatusUI from './action_task_status';
 import RenameStatusUI from './ui_rename_task_status';
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
+import { getStatusByIDThunkAction, StatusesType } from '../logic/task_statuses_reducer';
+import { RootState } from 'redux/reducers_registration';
+import { TaskType } from 'pages/tasks/logic/task_reducer';
+import { checkHasObjectByKey } from 'helpers/check_in_array';
+import { setCurrentStatus } from '../logic/task_statuses_action';
 
 interface InitProps {
   taskStatusID: string;
@@ -18,22 +20,24 @@ interface InitProps {
 
 const TaskStatusUI = (props: InitProps) => {
   const { taskStatusID }: InitProps = props;
-  const {
-    taskStatus,
-    loading,
-    currentTaskStatus,
-    tasks,
-  }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
+  // const {
+  //   taskStatus,
+  //   loading,
+  //   currentTaskStatus,
+  //   tasks,
+  // }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
+  const { statuses, loading, currentStatusID }: StatusesType = useSelector((state: RootState) => state.statuses);
+  const { tasks }: TaskType = useSelector((state: RootState) => state.tasks);
   const dispatch = useDispatch();
   const newTaskRef = useRef<HTMLTitleElement>(null);
-  const style = taskStatus && taskStatus[taskStatusID]?.title?.split(' ').join('-').toLowerCase();
+  const style = statuses && statuses[taskStatusID]?.title?.split(' ').join('-').toLowerCase();
   const [retitling, setRetitling] = useState(false);
 
   useEffect(() => {
-    dispatch(getTaskStatusThunkAction(taskStatusID));
+    dispatch(getStatusByIDThunkAction(taskStatusID));
   }, []);
 
-  const listTasks = useMemo(() => {
+  const contentTask = useMemo(() => {
     return tasks;
   }, [tasks]);
 
@@ -42,8 +46,6 @@ const TaskStatusUI = (props: InitProps) => {
   };
 
   const TaskStatusContent = () => {
-    const content = checkIfEmptyArray(listTasks) ? listTasks.filter((task) => task.taskStatusID._id === taskStatusID) : [];
-
     const scrollInput = () => {
       if (!newTaskRef.current) {
         return;
@@ -51,9 +53,36 @@ const TaskStatusUI = (props: InitProps) => {
       newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
+    const generateTask = () => {
+      for (const each in contentTask) {
+        if (!checkHasObjectByKey(contentTask[each], taskStatusID, 'taskStatusID')) {
+          continue;
+        }
+
+        return (
+          <Draggable
+            key={each}
+            draggableId={each}
+          >
+            {(provideTask) => {
+              return (
+                <div
+                  ref={provideTask.innerRef}
+                  {...provideTask.draggableProps}
+                  {...provideTask.dragHandleProps}
+                >
+                  <TasksUI key={each} task={contentTask[each]}/>
+                </div>
+              );
+            }}
+          </Draggable>
+        );
+      }
+    };
+
     return (
       <>
-      <Droppable droppableId={taskStatus[taskStatusID]?._id} type='TASK_STATUS'>
+      <Droppable droppableId={statuses[taskStatusID]?._id} type='TASK_STATUS'>
         {(provided) => (
           <div
             className={`task-status ${style}`}
@@ -63,7 +92,7 @@ const TaskStatusUI = (props: InitProps) => {
             <div className='status'>
               <Container className='status-left'>
                   <RenameStatusUI
-                    taskStatusID={taskStatus[taskStatusID]}
+                    taskStatusID={statuses[taskStatusID]}
                     renaming={retitling}
                     setRetitleStatus={setRetitleStatus}
                   />
@@ -75,7 +104,7 @@ const TaskStatusUI = (props: InitProps) => {
                   />
                   <Link
                     className='actions-status add-action'
-                    onClick={() => dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''))}
+                    onClick={() => dispatch(setCurrentStatus(statuses[taskStatusID]?._id || ''))}
                   >
                     <AddIcon />
                   </Link>
@@ -83,39 +112,19 @@ const TaskStatusUI = (props: InitProps) => {
             </div>
             <div className='status-task-list'>
               {
-                currentTaskStatus === taskStatus[taskStatusID]?._id &&
+                currentStatusID === statuses[taskStatusID]?._id &&
                 <TaskNew
-                  companyID={taskStatus[taskStatusID]?.companyID?._id || ''}
-                  taskStatusID={taskStatus[taskStatusID]?._id}
+                  companyID={statuses[taskStatusID]?.companyID?._id || ''}
+                  taskStatusID={statuses[taskStatusID]?._id}
                 />
               }
-              {checkIfEmptyArray(content) && content.map((task, index) => {
-                return (
-                  <Draggable
-                    key={task?._id}
-                    draggableId={task?._id}
-                    index={index}
-                  >
-                    {(provideTask) => {
-                      return (
-                        <div
-                          ref={provideTask.innerRef}
-                          {...provideTask.draggableProps}
-                          {...provideTask.dragHandleProps}
-                        >
-                          <TasksUI key={task._id} task={task}/>
-                        </div>
-                      );
-                    }}
-                  </Draggable>
-                );
-              })}
+              {generateTask()}
               {
-                currentTaskStatus !== taskStatus[taskStatusID]?._id &&
+                currentStatusID !== statuses[taskStatusID]?._id &&
                   <div
                     className='add-task'
                     onClick={() => {
-                      dispatch(setTypeCreateTask(taskStatus[taskStatusID]?._id || ''));
+                      dispatch(setCurrentStatus(statuses[taskStatusID]?._id || ''));
                       scrollInput();
                     }}
                   >

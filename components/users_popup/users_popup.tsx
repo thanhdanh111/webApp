@@ -7,7 +7,7 @@ import { getPaginationThunkAction, getSearchAction } from 'pages/users/logic/use
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import UserItem from './user_popup_item';
 import { User } from 'helpers/type';
-import { checkHasObjectByKey } from 'helpers/check_in_array';
+import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array';
 import { useDebounce } from 'helpers/debounce';
 import { RootState } from 'redux/reducers_registration';
 import { TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
@@ -42,7 +42,7 @@ const UsersPopupUI: React.FC<InitProps> = (props) => {
     }
 
     if (type === 'reduxAction') {
-      if (checkHasObjectByKey(selectedUserIDs, user?.userID?._id, '_id')) {
+      if (checkArrayObjectHasObjectByKey(selectedUserIDs, user?.userID?._id, '_id')) {
         const removeUser = selectedUserIDs?.filter(
           (each) => each?._id !== user?.userID?._id);
 
@@ -61,7 +61,7 @@ const UsersPopupUI: React.FC<InitProps> = (props) => {
     const user = debouncedSearchTerm ? users.listSearch : users.list;
 
     const renderUser = user?.map((each) => {
-      const checkAssignedOfUser = usersAssigned && checkHasObjectByKey(usersAssigned, each?.user?.userID?._id, '_id');
+      const checkAssignedOfUser = usersAssigned && checkArrayObjectHasObjectByKey(usersAssigned, each?.user?.userID?._id, '_id');
 
       return (
         <UserItem

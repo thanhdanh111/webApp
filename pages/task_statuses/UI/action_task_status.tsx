@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import CreateIcon from '@material-ui/icons/Create';
-import { deletedTaskStatusThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
+import { deletedStatusThunkAction } from '../logic/task_statuses_reducer';
 
 const actions = {
   delete: {
@@ -34,7 +34,7 @@ const ActionTaskStatusUI = (props: InitialProps) => {
   };
 
   const handleRemoveStatus = () => {
-    dispatch(deletedTaskStatusThunkAction(taskStatusID));
+    dispatch(deletedStatusThunkAction(taskStatusID));
   };
 
   const actionFunc = {

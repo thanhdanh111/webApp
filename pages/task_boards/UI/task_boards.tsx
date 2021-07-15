@@ -1,10 +1,9 @@
 import {
-  createTaskStatusThunkAction,
-  getTasksThunkAction,
   TaskBoardsType,
   updateTaskById,
   updateTaskStatusById,
 } from '../logic/task_boards_reducer';
+import { getTasksThunkAction } from '../../tasks/logic/task_reducer';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { DisappearedLoading } from 'react-loadingg';
@@ -18,6 +17,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { Roles } from 'constants/roles';
 import { RootState } from 'redux/reducers_registration';
 import { checkValidAccess } from 'helpers/check_valid_access';
+import { createStatusThunkAction } from 'pages/task_statuses/logic/task_statuses_reducer';
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
 
@@ -158,7 +158,7 @@ const BoardTasks: FunctionComponent = () => {
       return;
     }
 
-    dispatch(createTaskStatusThunkAction(title));
+    dispatch(createStatusThunkAction(title));
   };
 
   const addTaskStatusUI = () => {

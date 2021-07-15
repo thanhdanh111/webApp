@@ -1,5 +1,4 @@
 import { Typography } from '@material-ui/core';
-import { renameTaskStatusThunkAction,  TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CheckIcon from '@material-ui/icons/Check';
@@ -7,6 +6,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import { TaskStatus } from 'helpers/type';
 import { setTemplateTitleStatus } from 'pages/task_boards/logic/task_boards_action';
 import { RootState } from 'redux/reducers_registration';
+import { setTempTitleStatus } from '../logic/task_statuses_action';
+import { renameStatusThunkAction, StatusesType } from '../logic/task_statuses_reducer';
 
 interface InitialProps {
   taskStatusID: TaskStatus;
@@ -20,7 +21,7 @@ const RenameStatusUI = (props: InitialProps) => {
     renaming,
     setRetitleStatus,
   }: InitialProps = props;
-  const { templateTitleStatus }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
+  const { tempTitleStatus }: StatusesType = useSelector((state: RootState) => state.statuses);
   const newTaskRef = useRef<HTMLTitleElement>(null);
   const dispatch = useDispatch();
 
@@ -38,27 +39,28 @@ const RenameStatusUI = (props: InitialProps) => {
   }
 
   const submitReTitleTaskStatus = () => {
-    dispatch(renameTaskStatusThunkAction(taskStatusID?._id));
+    setRetitleStatus();
+    dispatch(renameStatusThunkAction(taskStatusID?._id));
   };
 
   const handleChangeTitle = (event) => {
-    if (templateTitleStatus === event?.target?.value) {
+    if (tempTitleStatus === event?.target?.value) {
       return;
     }
 
-    dispatch(setTemplateTitleStatus(event.target.value));
+    dispatch(setTempTitleStatus(event.target.value));
   };
 
   const handleCloseChange = () => {
     setRetitleStatus();
-    dispatch(setTemplateTitleStatus(taskStatusID?.title));
+    dispatch(setTempTitleStatus(taskStatusID?.title));
   };
 
   return (
     <div className='rename-status'>
       <input
         type='text'
-        value={templateTitleStatus}
+        value={tempTitleStatus || taskStatusID?.title}
         className='add-status-input'
         onChange={handleChangeTitle}
       />

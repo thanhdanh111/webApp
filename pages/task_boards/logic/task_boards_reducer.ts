@@ -24,8 +24,8 @@ import {
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
-import { checkHasObjectByKey } from 'helpers/check_in_array';
-import { convertArrayObjectToObject } from 'helpers/convert_array_to_object';
+import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array';
+import { convertArrayStringToObject } from 'helpers/convert_array_to_object';
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 
 export interface TaskBoardsType {
@@ -70,23 +70,13 @@ const initialState: TaskBoardsType = {
   newTask: {
     title: '',
     _id: '',
-    taskStatusID: {
-      _id: '',
-      taskBoardID: '',
-      taskIDs: [],
-      title: '',
-    },
+    taskStatusID: '',
   },
   usersAssigned: [],
   taskDetail: {
     title: '',
     _id: '',
-    taskStatusID: {
-      _id: '',
-      taskBoardID: '',
-      taskIDs: [],
-      title: '',
-    },
+    taskStatusID: '',
   },
   tags: [],
   templateTitleStatus: '',
@@ -320,7 +310,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
     case taskBoardsActionType.SET_SELECT_TAGS:
       const templateSelectedTags = state.selectedTags;
 
-      if (checkHasObjectByKey(templateSelectedTags, action.payload?._id, '_id')) {
+      if (checkArrayObjectHasObjectByKey(templateSelectedTags, action.payload?._id, '_id')) {
         const removeTag = templateSelectedTags.filter(
           (each) => each !== action.payload);
 
@@ -877,7 +867,7 @@ export const getTasksThunkAction = () => async (dispatch, getState) => {
       tempUserIDs.push(userID);
     }
 
-    const userIDs = convertArrayObjectToObject(tempUserIDs);
+    const userIDs = convertArrayStringToObject(tempUserIDs);
 
     if (!token) {
       return;

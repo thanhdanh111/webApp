@@ -4,16 +4,33 @@ import { RootStateOrAny, useSelector } from 'react-redux';
 import GroupUserAssigned from './group_user_assigned';
 import UsersPopupUI from 'components/users_popup/users_popup';
 import { User } from 'helpers/type';
+import { checkHasObjectByKey } from 'helpers/check_in_array';
 
 interface InitialProps {
   usersAssigned?: User[];
-  handleAssign: (user) => void;
+  handleAssign: (users) => void;
   sizes: string;
 }
 
 const AssignUser: React.FC<InitialProps> = (props) => {
   const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
   const { usersAssigned, handleAssign, sizes }: InitialProps = props;
+
+  const handleUsersAssign = (user) => {
+    let tempAssign = usersAssigned || [];
+    const checkAssignedOfUser = checkHasObjectByKey(usersAssigned, user?.userID?._id, '_id');
+
+    if (checkAssignedOfUser && usersAssigned?.length){
+
+      tempAssign = usersAssigned?.filter((each) => user?.userID?._id !== each._id);
+
+      return handleAssign(tempAssign);
+    }
+
+    tempAssign = [...tempAssign, user?.userID];
+
+    return handleAssign(tempAssign);
+  };
 
   return (
     <PopupState variant='popover'>
@@ -27,7 +44,7 @@ const AssignUser: React.FC<InitialProps> = (props) => {
             autoFocus={false}
             className='user-popup'
           >
-            <UsersPopupUI chooseUser={handleAssign} usersAssigned={usersAssigned}/>
+            <UsersPopupUI chooseUser={handleUsersAssign} usersAssigned={usersAssigned}/>
           </Menu>
         </div>
       )}
