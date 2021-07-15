@@ -1,7 +1,7 @@
 import { Box, TextareaAutosize } from '@material-ui/core';
 import AttachmentInBody from './attachment_detail';
 import { RootStateOrAny, useSelector } from 'react-redux';
-import TagTask from '../../../components/tag/tag';
+import TagTask from '../../../pages/tag_tasks/UI/tag';
 
 const TitleDetail: React.FC = () => {
   const task = useSelector((state: RootStateOrAny) => state.taskBoards?.taskDetail);

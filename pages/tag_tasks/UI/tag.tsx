@@ -8,7 +8,6 @@ import {
 import React, { useState } from 'react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import CloseIcon from '@material-ui/icons/Close';
-import { Tag } from 'helpers/type';
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
@@ -16,9 +15,10 @@ import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
 import ColorizeIcon from '@material-ui/icons/Colorize';
 import DoneOutlinedIcon from '@material-ui/icons/DoneOutlined';
 import { useDispatch } from 'react-redux';
-import { deleteTagThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
-import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
+import { ConfirmDialog } from '../../../components/confirm_dialog/confirm_dialog';
 import AddTagPopup from './add_tag';
+import { Tag } from '../../../helpers/type';
+import { deleteTagThunkAction } from '../logic/tag_tasks_reducer';
 
 interface InitialPropTag {
   tag: Tag;

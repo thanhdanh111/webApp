@@ -14,6 +14,7 @@ import { boardsReducer } from 'pages/board/logic/board_reducer';
 import { taskBoardsReducer } from 'pages/task_boards/logic/task_boards_reducer';
 import { statusesReducer } from 'pages/task_statuses/logic/task_statuses_reducer';
 import { tasksReducer } from 'pages/tasks/logic/task_reducer';
+import { tagTasksReducer } from 'pages/tag_tasks/logic/tag_tasks_reducer';
 
 const rootReducer = combineReducers({
   accountReducer,
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   boards: boardsReducer,
   statuses: statusesReducer,
   tasks: tasksReducer,
+  tagTasks: tagTasksReducer,
 });
 
 export default rootReducer;
