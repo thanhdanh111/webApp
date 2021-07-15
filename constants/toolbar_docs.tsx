@@ -1,6 +1,7 @@
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
+import StrikethroughSIcon from '@material-ui/icons/StrikethroughS';
 
 export const blockStyles = [
   'unstyled',
@@ -16,6 +17,7 @@ export const inlineStyles = [
   'BOLD',
   'ITALIC',
   'UNDERLINE',
+  'STRIKETHROUGH',
 ];
 
 export const inlineToolbarButons = [
@@ -23,6 +25,11 @@ export const inlineToolbarButons = [
     functionality: 'BOLD',
     icon: 'B',
     styleName: 'BOLD',
+  },
+  {
+    functionality: 'STRIKETHROUGH',
+    icon: <StrikethroughSIcon />,
+    styleName: 'STRIKETHROUGH',
   },
   {
     functionality: 'ITALIC',

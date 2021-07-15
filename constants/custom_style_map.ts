@@ -5,4 +5,7 @@ export const customStyleMapDraftjs = {
     lineHeight: '1.43',
     fontWeight: 400,
   },
+  STRIKETHROUGH: {
+    textDecoration: 'line-through',
+  },
 };
