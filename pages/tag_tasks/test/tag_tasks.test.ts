@@ -1,14 +1,12 @@
-let qs = require('qs');
 let browser;
 let page;
+// let token;
 let viewport;
 
+const token = process.env.TEST_TOKEN
+
 const puppeteer = require('puppeteer');
-
-const token = process.env.TEST_TOKEN;
-
 beforeAll(async () => {
-
   try {
     browser = await puppeteer.launch({
       headless: true,
@@ -17,7 +15,6 @@ beforeAll(async () => {
     });
 
     page = await browser.newPage();
-
     viewport = await page.setViewport({ width: 1853 , height: 951 });
 
     await page.goto('http://localhost:5000');
@@ -25,47 +22,36 @@ beforeAll(async () => {
     await page.evaluate((token) => {
       localStorage.setItem('access_token', token);
     }, token);
-
   } catch (error) {
     console.log(error);
   }
 });
 
-describe('Home page', () => {
-  test('Test get tasks successfully after login', async () => {
+describe('Pots Page', () => {
+  test('Test statistics page successfully after login', async () => {
     await page.goto('http://localhost:5000/home');
+
     await page.waitForSelector('.board');
     await page.waitForSelector('.board-tasks');
     await page.waitForSelector('.status');
-    await page.waitFor(5000);
-    await page.waitForSelector('.status-left');
 
     await page.waitForSelector('.add-task-text');
     await page.click('.add-task-text');
     await page.waitForSelector('.add-status-modal');
     await page.waitFor(5000);
     await page.click('.add-status-input');
-    await page.type('.add-status-input', 'open');
-
-    const addStatusImage = await page.screenshot();
-    expect(addStatusImage).toMatchImageSnapshot();
+    await page.type('.add-status-input', 'test tag');
 
     await page.click('.submit-create-status');
     await page.waitForSelector('.status');
 
-    const addSuccessStatusImage = await page.screenshot();
-    expect(addSuccessStatusImage).toMatchImageSnapshot();
-
       // add task
 
-    await page.waitForSelector('.task-status .open');
-    await page.waitForSelector('.open .add-task');
+    await page.waitForSelector('.task-status .test-tag');
+    await page.waitForSelector('.test-tag .add-task');
 
-    await page.click('.open .add-task');
+    await page.click('.test-tag .add-task');
     await page.waitForSelector('.task-add');
-
-    const addTaskImage = await page.screenshot();
-    expect(addTaskImage).toMatchImageSnapshot();
 
     await page.waitForSelector('input[name=title]');
 
@@ -75,19 +61,48 @@ describe('Home page', () => {
     await page.waitForSelector('.save-add');
     await page.click('.save-add');
 
-    await page.waitForSelector('.open .task-item');
-
-    const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
+    await page.waitForSelector('.test-tag .task-item');
 
   // task detail
 
-    await page.click('.open .task-name');
+    await page.click('.test-tag .task-name');
     await page.waitForSelector('.detail-modal');
 
     const taskDetail = await page.screenshot();
     expect(taskDetail).toMatchImageSnapshot();
 
+  // add tag
+
+    await page.waitForSelector('.tag-add');
+    await page.click('.tag-add');
+    await page.waitFor(5000);
+
+    const tagAddpopup = await page.screenshot();
+    expect(tagAddpopup).toMatchImageSnapshot();
+
+    await page.waitForSelector('.input-search-tag');
+    await page.click('.input-search-tag');
+    await page.type('.input-search-tag', 'snt-app');
+    await page.keyboard.press('Enter');
+    await page.waitFor(5000);
+    await page.waitForSelector('.tag-item-list');
+
+  // delete tag
+
+    await page.hover('.tag-item-list');
+    await page.waitForSelector('.tag-item-list >.more-item-icon');
+    await page.click('.tag-item-list >.more-item-icon');
+    await page.waitForSelector('.tag-action-popup');
+
+    await page.click('.delete-tag');
+    await page.waitFor(5000);
+    await page.waitForSelector('.confirm-dialog--yes-btn');
+
+    await page.click('.confirm-dialog--yes-btn');
+    await page.waitFor(5000);
+
+    await page.click('.close-detail');
+    await page.waitFor(5000);
     await page.click('.close-detail');
 
   // delete task
@@ -95,9 +110,9 @@ describe('Home page', () => {
     const closeDetailModalImage = await page.screenshot();
     expect(closeDetailModalImage).toMatchImageSnapshot();
 
-    await page.waitForSelector('.open  .footer-task');
-    await page.waitForSelector('.open  .delete-task');
-    await page.click('.open .delete-task');
+    await page.waitForSelector('.test-tag .footer-task');
+    await page.waitForSelector('.test-tag .delete-task');
+    await page.click('.test-tag .delete-task');
     await page.waitFor(5000);
 
     const deletedTaskImage = await page.screenshot();
@@ -114,8 +129,8 @@ describe('Home page', () => {
 
   //delete status
 
-    await page.waitForSelector('.open .action-status-btn');
-    await page.click('.open .action-status-btn');
+    await page.waitForSelector('.test-tag .action-status-btn');
+    await page.click('.test-tag  .action-status-btn');
 
     await page.waitForSelector('.popper-action-status');
     await page.waitFor(5000);
@@ -126,6 +141,7 @@ describe('Home page', () => {
 
     const deleteStatusSuccessImg = await page.screenshot();
     expect(deleteStatusSuccessImg).toMatchImageSnapshot();
+
   });
 
 });

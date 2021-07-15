@@ -12,10 +12,6 @@ import {
   addTask,
   setTasksToTaskStatus,
   getTaskDetail,
-  getTag,
-  createTag,
-  updateTag,
-  deleteTag,
   updateUserAssigned,
   deletedTaskStatus,
   renameTaskStatus,
@@ -25,7 +21,7 @@ import {
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
 import { checkHasObjectByKey } from 'helpers/check_in_array';
-import { convertArrayObjectToObject } from 'helpers/convert_array_to_object';
+import { convertArrayStringToObject } from 'helpers/convert_array_to_object';
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 
 export interface TaskBoardsType {
@@ -231,30 +227,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
       return {
         ...state,
         taskDetail: action.payload,
-      };
-    case taskBoardsActionType.GET_TAG:
-      return {
-        ...state,
-        tags: action.payload,
-      };
-    case taskBoardsActionType.CREATE_TAG:
-      return {
-        ...state,
-        tags: [...state.tags, action.payload],
-      };
-    case taskBoardsActionType.UPDATE_TAG:
-      const tags = state.tags;
-      const indexTag = tags.findIndex((tag) => tag._id === action.payload._id);
-      tags[indexTag] = action.payload;
-
-      return {
-        ...state,
-        tags,
-      };
-    case taskBoardsActionType.DELETE_TAG:
-      return {
-        ...state,
-        tags: state.tags.filter((tag) => action.payload !== tag._id),
       };
     case taskBoardsActionType.DELETE_TASK_STATUS:
       updatedTaskStatuses = state.taskStatus;
@@ -634,102 +606,6 @@ export const getTaskByIdThunkAction = (taskID) => async (dispatch, getState) => 
   }
 };
 
-export const getTagsThunkAction = () => async (dispatch, getState) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    const companyID = getState()?.userInfo?.currentCompany?._id;
-    if (!token || !companyID) {
-      return;
-    }
-    const res = await axios.get(`${config.BASE_URL}/tags`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          companyID,
-        },
-      });
-    dispatch(getTag(res.data.list));
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const createTagThunkAction = (tag) => async (dispatch, getState) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    const companyID = getState()?.userInfo?.currentCompany?._id;
-    const departmentID = getState()?.userInfo?.currentDepartment?._id;
-    if (!token || !companyID) {
-      return;
-    }
-    const res = await axios.post(`${config.BASE_URL}/companies/${companyID}/tags`,
-      { ...tag, departmentID },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    dispatch(createTag(res.data));
-
-  } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failCreateTag }));
-    throw error;
-  }
-};
-
-export const updateTagThunkAction = (tag) => async (dispatch, getState) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    const companyID = getState()?.userInfo?.currentCompany?._id;
-    if (!token || !companyID) {
-      return;
-    }
-    const res = await axios.put(`${config.BASE_URL}/companies/${companyID}/tags/${tag._id}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    dispatch(updateTag(res.data));
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    const companyID = getState()?.userInfo?.currentCompany?._id;
-    if (!token || !companyID) {
-      return;
-    }
-    const res = await axios.delete(`${config.BASE_URL}/companies/${companyID}/tags/${id}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    if (res.data?.isDeleted){
-      dispatch(deleteTag(id));
-    }
-  } catch (error) {
-    dispatch(
-      pushNewNotifications({
-        variant: 'error',
-        message:
-          error?.response?.data?.message || NotificationTypes.failDeleteTag,
-      }),
-    );
-    throw error;
-  }
-};
-
 export const deletedTaskStatusThunkAction = (taskStatusID) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token');
@@ -877,7 +753,7 @@ export const getTasksThunkAction = () => async (dispatch, getState) => {
       tempUserIDs.push(userID);
     }
 
-    const userIDs = convertArrayObjectToObject(tempUserIDs);
+    const userIDs = convertArrayStringToObject(tempUserIDs);
 
     if (!token) {
       return;

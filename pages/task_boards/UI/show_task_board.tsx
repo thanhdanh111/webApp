@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedTaskBoard } from '../logic/task_boards_action';
-import { createTaskBoardThunkAction, getTagsThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
+import { createTaskBoardThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
 import { Close } from '@material-ui/icons';
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import { Roles } from 'constants/roles';
@@ -21,6 +21,7 @@ import { RootState } from 'redux/reducers_registration';
 import { UserInfoType } from 'helpers/type';
 import { checkValidAccess } from 'helpers/check_valid_access';
 import { getPaginationThunkAction } from 'pages/users/logic/users_reducer';
+import { getTagsThunkAction } from 'pages/tag_tasks/logic/tag_tasks_reducer';
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
 
