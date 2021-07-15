@@ -148,9 +148,9 @@ const DocsPage = () => {
 
     dispatch(updateDocs({ shouldAutoSave: false }));
 
-    setTimeout((timestamp, projectID, pageID) => {
-      dispatch(autoSavePage({ timestamp, projectID, selectedPageID: pageID }));
-    }, docsAutoSaveTimeOut, editTimestamp, docProjectID, selectedPageID);
+    setTimeout((projectID, pageID) => {
+      dispatch(autoSavePage({ projectID, selectedPageID: pageID }));
+    }, docsAutoSaveTimeOut, docProjectID, selectedPageID);
 
   }, [editTimestamp, lastUpdateEditTimestamp]);
 

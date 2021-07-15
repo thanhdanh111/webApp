@@ -508,12 +508,13 @@ export const shareDocument = ({ role, userID }) => async (dispatch, getState) =>
   }
 };
 
-export const autoSavePage = ({ timestamp, projectID, selectedPageID  }) => async (dispatch, getState) => {
+export const autoSavePage = ({ projectID, selectedPageID  }) => async (dispatch, getState) => {
   try {
     const token: Token =  localStorage.getItem('access_token');
     const {
       title,
       docProjectsMap,
+      editTimestamp,
     }: DocsValueType = getState()?.docs;
     const page = docProjectsMap?.[projectID]?.pages?.[selectedPageID];
     const invalidData = checkTrueInArray({
@@ -547,7 +548,7 @@ export const autoSavePage = ({ timestamp, projectID, selectedPageID  }) => async
         },
       });
 
-    dispatch(updateDocs({ shouldAutoSave: true, lastUpdateEditTimestamp: timestamp }));
+    dispatch(updateDocs({ shouldAutoSave: true, lastUpdateEditTimestamp: editTimestamp }));
   } catch (error) {
     dispatch(updateDocs({ shouldAutoSave: true }));
   }

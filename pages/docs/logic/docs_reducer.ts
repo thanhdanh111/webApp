@@ -160,6 +160,8 @@ function updateSelectedItemInDrawer(data, state: DocsValue) {
     const newContentState = convertFromRaw({ blocks: page?.content, entityMap: page?.entityMap });
 
     state.shouldAutoSave = true;
+    state.lastUpdateEditTimestamp = 0;
+    state.editTimestamp = 0;
     state.selectedPage = page;
     state.title = page.title ?? '';
     state.editorState = EditorState.createWithContent(
