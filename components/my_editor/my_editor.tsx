@@ -34,10 +34,12 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     handleChangeEditorState(newEditorState);
   }
 
+  const blockType = editorState.getCurrentContent()?.getFirstBlock()?.getType();
+
   return <Editor
     stripPastedStyles={true}
     readOnly={readOnly}
-    placeholder='Write something'
+    placeholder={blockType !== 'unstyled' ? null : 'Write something'}
     customStyleMap={customStyleMapDraftjs}
     handlePastedText={(text, html, state) => handlePastedText({ text, html, state, handleOnChange })}
     handleKeyCommand={(command, state) => handleKeyCommand(command, state, handleOnChange)}
