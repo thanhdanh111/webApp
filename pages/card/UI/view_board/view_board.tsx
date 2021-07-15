@@ -12,32 +12,20 @@ import ReactFlow, {
 import CustomDecision from '../shapes/shape_decision';
 import { initialElements } from './initial_elements';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { createNewCard, getDataListCard } from 'pages/board/logic/board_reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
 import CustomProcess from '../shapes/shape_process';
 import ListOptionCard from './list_option_card';
 import HeaderContentBoard from './header_content_board';
 import { useRouter } from 'next/router';
+import { getDataListCard, createNewCard } from 'pages/card/logic/card_reducer';
 
 const ViewBoard = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [elements, setElements] = useState(initialElements);
-  const dataList = useSelector((state: RootState) => state.boards.cards);
+  const dataList = useSelector((state: RootState) => state.cards.cards);
   const query = router.query;
-  // const selected = useSelector((state: RootState) => state.boards.selectedBoard);
-  // const [textContent, setTextContent] = useState('');
-
-  // const onChangeTextContent = (event) => {
-  //   if (!event.target.value) {
-  //     setTextContent('');
-
-  //     return;
-  //   }
-  //   setTextContent(event.target.value);
-
-  // };
 
   useEffect(() => {
     if (!query.id) {

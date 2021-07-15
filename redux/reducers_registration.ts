@@ -12,6 +12,7 @@ import companyReducer from 'pages/company/logic/company_reducer';
 import { notificationReducer } from './common/notifications/reducer';
 import { boardsReducer } from 'pages/board/logic/board_reducer';
 import { taskBoardsReducer } from 'pages/task_boards/logic/task_boards_reducer';
+import { cardsReducer } from 'pages/card/logic/card_reducer';
 
 const rootReducer = combineReducers({
   accountReducer,
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   company: companyReducer,
   newNotifications: notificationReducer,
   boards: boardsReducer,
+  cards: cardsReducer,
 });
 
 export default rootReducer;

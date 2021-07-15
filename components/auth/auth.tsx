@@ -78,7 +78,7 @@ const Auth = ({ children, publicPages }) => {
       return false;
     });
 
-    if (filteredAccess.length <= 0) {
+    if (filteredAccess?.length <= 0) {
       return false;
     }
 

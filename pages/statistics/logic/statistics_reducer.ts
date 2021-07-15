@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { config } from 'helpers/get_config';
-import { CheckInCheckOut } from 'helpers/type';
+import { CheckInCheckOut, UserInfoType } from 'helpers/type';
 import { statisticsAction } from './statistics_type_action';
 import { getAllStatistics } from './statistics_actions';
 import { RootState } from 'redux/reducers_registration';
-
 interface StatisticsValue {
   checkInCheckOuts: CheckInCheckOut[];
   selectedUserID: string;
@@ -12,7 +11,6 @@ interface StatisticsValue {
   loading: boolean;
   limit: number;
 }
-
 const initialState: StatisticsValue = {
   checkInCheckOuts: [],
   selectedUserID: '',
@@ -20,7 +18,6 @@ const initialState: StatisticsValue = {
   loading: false,
   limit: 7,
 };
-
 const statisticsReducer = (state = initialState, action) => {
   switch (action.type) {
     case statisticsAction.GET_LIST_CHECKIN_CHECKOUT:
@@ -42,62 +39,48 @@ const statisticsReducer = (state = initialState, action) => {
       return state;
   }
 };
-
 export default statisticsReducer;
-
 export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dispatch, getState) => {
   try {
     const state = getState();
     const token = localStorage.getItem('access_token');
+    const { currentCompany, userID }: UserInfoType = getState().userInfo;
+    const companyID = currentCompany?._id;
     const {
       statistics: {
         cursor,
         limit,
         selectedUserID,
       },
-      userInfo: {
-        currentCompany: {
-          _id: companyID,
-        },
-        userID,
-      },
     }: RootState = state;
     const toTime = new Date();
     const fromTime = new Date(toTime.getTime() - limit * 1000 * 60 * 60 * 24);
     let requestUser = '';
-
     if (cursor === 'END') {
       return;
     }
-
     const getParams = () => {
       if (isGetMe) {
         requestUser = userID;
       }
-
       if (selectedUserID) {
         requestUser = selectedUserID?.userID;
       }
-
       const param = {
         companyID,
         fromTime: fromTime.toString(),
         toTime: toTime.toString(),
       };
-
       if (cursor) {
         param['cursor'] = cursor;
       }
-
       if (requestUser) {
         param['userID'] = requestUser;
       }
 
       return param;
     };
-
     const params = getParams();
-
     const res =
     await axios.get(`${config.BASE_URL}/checkinAndCheckouts`, {
       params,
@@ -106,13 +89,11 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
         Authorization: `Bearer ${token}`,
       },
     });
-
     if (res.data.totalCount === 0) {
       await dispatch(getAllStatistics([]));
 
       return;
     }
-
     await dispatch(getAllStatistics(res.data.list));
   } catch (error) {
     throw error;

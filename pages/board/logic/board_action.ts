@@ -35,26 +35,6 @@ export const deleteBoardAction = (id: string) => {
   };
 };
 
-export const createCardAction = (res: object) => {
-  return {
-    type: boardsActionType.CREATE_CARD,
-    payload: res,
-  };
-};
-
-export const getDataListCardAction = (res: object) => {
-  return {
-    type: boardsActionType.GET_DATA_LIST_CARD,
-    payload: res,
-  };
-};
-export const updateCards = (res: object) => {
-  return {
-    type: boardsActionType.UPDATE_CARDS,
-    payload: res,
-  };
-};
-
 export const showLoaderListEventLogs = () => {
   return {
     type: boardsActionType.SHOW_LOADER_LIST,
@@ -78,15 +58,6 @@ export const setSelectedBoard = (res) => {
     type: boardsActionType.SET_SELECTED_BOARD,
     payload: {
       selectedBoard: res,
-    },
-  };
-};
-
-export const setCard = (res) => {
-  return {
-    type: boardsActionType.SET_CARD,
-    payload: {
-      cards: res,
     },
   };
 };

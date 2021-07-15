@@ -10,7 +10,7 @@ const CustomProcess = () => {
 
   return (
     <div
-      className='node-item-process'
+      className='node-item process'
       tabIndex={0}
       ref={panelRef}
       onFocus={() => setFocus(true)}

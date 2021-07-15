@@ -280,7 +280,6 @@ export interface Board {
 export interface BoardsPage {
   boards: Board[];
   selectedBoard: Board;
-  cards: Card[];
   loading: boolean;
   hasNoBoards: boolean;
 }
@@ -311,6 +310,10 @@ export interface Card {
   bottomTo?: ConnectToData;
   topTo?: ConnectToData;
   position?: 	CardPositionData;
+}
+
+export interface CardsPage{
+  cards: Card[];
 }
 
 export interface Tag {
