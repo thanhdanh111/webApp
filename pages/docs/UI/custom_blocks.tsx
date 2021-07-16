@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ParagraphStyleSideToolbarBtn from './paragraph_style_toolbar_btn';
+import { Checkbox } from '@material-ui/core';
 
 const blockRenderMap = Immutable.Map({
   'unordered-list-item': {
@@ -65,6 +66,29 @@ export const UnstyledBlockCustom = (props) => {
       onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
       disableProtal={false}
       children={undefined}
+      actionsNeedToRender={
+        sildeTextToolbarActions({
+          onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
+          handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
+          readOnly: props?.blockProps?.readOnly,
+        })
+      }
+    />,
+    <EditorBlock {...props} />,
+  );
+};
+
+export const CheckedListBlockCustom = (props) => {
+
+  return React.createElement(
+    React.Fragment,
+    { key: `block-${props?.block?.getKey()}` },
+    <SideToolbarButton
+      key={props?.block?.getKey()}
+      contentBlock={props?.block}
+      onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
+      disableProtal={false}
+      children={<CheckListItem />}
       actionsNeedToRender={
         sildeTextToolbarActions({
           onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
@@ -226,4 +250,21 @@ const IndexElement = (props) => {
   >
     {orderNumber}.
   </div>;
+};
+
+const CheckListItem = () => {
+  const [checked, setChecked] = React.useState(true);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
+
+  return (
+    <Checkbox
+      className='check-list-item'
+      checked={checked}
+      onChange={handleChange}
+      inputProps={{ 'aria-label': 'primary checkbox' }}
+    />
+  );
 };

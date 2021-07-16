@@ -13,12 +13,13 @@ export function handleKeyBinding({ state, event }) {
 function handleEnter(state, event) {
   const onSelectBlockKey = state?.getSelection()?.getAnchorKey();
   const oldContentState = state?.getCurrentContent();
+  const blocksNeedUnstyled = ['code-block', 'checked-list-item'];
 
   const blockBeforeOnSelectBlock = oldContentState?.getBlockBefore(onSelectBlockKey);
   const blockOnSelect = oldContentState?.getBlockForKey(onSelectBlockKey);
   const onSelectBlockType = blockOnSelect?.getType();
 
-  if (onSelectBlockType !== 'code-block' || !blockBeforeOnSelectBlock) {
+  if (!blocksNeedUnstyled.includes(onSelectBlockType) || !blockBeforeOnSelectBlock) {
     return getDefaultKeyBinding(event);
   }
 
@@ -30,13 +31,13 @@ function handleEnter(state, event) {
   });
   const bothHaveSameType = checkOnlyTrueInArray({
     conditionsArray: [
-      blockBeforeOnSelectBlock.getType() === 'code-block',
-      onSelectBlockType === 'code-block',
+      blocksNeedUnstyled.includes(blockBeforeOnSelectBlock.getType()),
+      blocksNeedUnstyled.includes(onSelectBlockType),
     ],
   });
 
   if (!beforeOnSelectHaveText && bothHaveSameType) {
-    return 'normalized-code-block';
+    return 'normalized-block';
   }
 
   return  getDefaultKeyBinding(event);

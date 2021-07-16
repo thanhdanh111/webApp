@@ -1,4 +1,5 @@
 import {
+  CheckedListBlockCustom,
   CodeBlockCustom,
   MediaBlockComponent,
   OrderedListItemCustom,
@@ -27,6 +28,18 @@ export default function editorBlockRenderer({
     };
   }
 
+  if (type === 'checked-list-item') {
+    return {
+      component: CheckedListBlockCustom,
+      props: {
+        handleOnChangeLineStyle,
+        onClickSideToolbar,
+        onMoveBlockAction,
+        readOnly,
+      },
+    };
+  }
+
   if (type === 'code-block') {
     return {
       component: CodeBlockCustom,
@@ -45,7 +58,6 @@ export default function editorBlockRenderer({
       props: {
         handleOnChangeLineStyle,
         onClickSideToolbar,
-        onMoveBlockAction,
         readOnly,
       },
     };

@@ -2,6 +2,7 @@ import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import StrikethroughSIcon from '@material-ui/icons/StrikethroughS';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 
 export const blockStyles = [
   'unstyled',
@@ -11,6 +12,7 @@ export const blockStyles = [
   'code-block',
   'ordered-list-item',
   'unordered-list-item',
+  'checked-list-item',
 ];
 
 export const inlineStyles = [
@@ -86,6 +88,12 @@ export const inlineToolbarButons = [
     styleName: 'ordered-list-item',
     name: 'Numbered List',
   },
+  {
+    functionality: 'checked-list-item',
+    icon: <PlaylistAddCheckIcon />,
+    styleName: 'checked-list-item',
+    name: 'Checked List',
+  },
 ];
 
 export const changeLineStyleButons = [
@@ -133,5 +141,11 @@ export const changeLineStyleButons = [
     icon: <FormatListNumberedIcon />,
     styleName: 'ordered-list-item',
     name: 'Numbered List',
+  },
+  {
+    functionality: 'checked-list-item',
+    icon: <PlaylistAddCheckIcon />,
+    styleName: 'checked-list-item',
+    name: 'Checked List',
   },
 ];
