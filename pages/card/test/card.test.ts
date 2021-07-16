@@ -8,8 +8,8 @@ const puppeteer = require('puppeteer');
 beforeAll(async () => {
   try {
     browser = await puppeteer.launch({
-      headless: false,
-      slowMo: 2000,
+      headless: true,
+      slowMo: 0,
       ignoreDefaultArgs: ['--no-sandbox'],
     });
 
