@@ -67,6 +67,8 @@ const SideToolbarButton: FunctionComponent<SideToolbarButton> = ({
   return <>
     <div
       className='block-wrapper--btns'
+      contentEditable={false}
+      onFocus={(event) => event.stopPropagation()}
     >
       <IconButton
         component='div'
@@ -85,6 +87,7 @@ const SideToolbarButton: FunctionComponent<SideToolbarButton> = ({
         anchorEl={anchorEl}
         role={undefined}
         disablePortal={disableProtal}
+        onFocus={(event) => event.stopPropagation()}
       >
           <ClickAwayListener onClickAway={handleClose} disableReactTree>
             <Paper>

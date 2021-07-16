@@ -16,6 +16,7 @@ interface UpdateDocs {
   title?: string;
   editorState?: EditorState;
   lastUpdateEditTimestamp?: number;
+  editTimestamp?: number;
   shouldAutoSave?: boolean;
   displayInlineToolbar?: boolean;
   selectionRect?: DOMRect;

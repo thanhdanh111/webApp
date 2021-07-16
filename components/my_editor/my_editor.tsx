@@ -15,9 +15,9 @@ import { handlePastedFiles } from 'pages/docs/logic/handle_pasted_files';
 interface MyEditor {
   editorState?: EditorState;
   handleChangeEditorState: (newEditorState) => void;
-  handleOnChangeLineStyle?: (action, contentState) => void;
+  handleOnChangeLineStyle?: (action, contentBlock) => void;
   onClickSideToolbar?: (props) => void;
-  onMoveBlockAction?: (action) => void;
+  onMoveBlockAction?: (action, contentBlock) => void;
   readOnly: boolean;
 }
 

@@ -4,7 +4,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { changeLineStyleButons } from 'constants/toolbar_docs';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 
-const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle, readOnly }) => {
+const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle, readOnly, contentBlock }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -15,7 +15,7 @@ const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle, readOnly }) => 
       <div
         key={`list-item-${index}`}
         className='paragraph-style-toolbar--list-item'
-        onClick={() => handleOnChangeLineStyle(button.functionality)}
+        onClick={() => handleOnChangeLineStyle(button.functionality, contentBlock)}
       >
         <div className='paragraph-style-toolbar--list-icon'>
           {button.icon}

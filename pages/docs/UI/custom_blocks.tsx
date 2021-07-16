@@ -23,12 +23,13 @@ const blockRenderMap = Immutable.Map({
   },
 });
 
-function sildeTextToolbarActions({ onMoveBlockAction, handleOnChangeLineStyle, readOnly }) {
+function sildeTextToolbarActions({ onMoveBlockAction, handleOnChangeLineStyle, readOnly, contentBlock }) {
   const sideToolbarActions = [
     {
       type: 'component',
       disabled: readOnly,
       component: <ParagraphStyleSideToolbarBtn
+        contentBlock={contentBlock}
         readOnly={readOnly}
         key='menu-item-index-0'
         handleOnChangeLineStyle={handleOnChangeLineStyle}
@@ -39,14 +40,14 @@ function sildeTextToolbarActions({ onMoveBlockAction, handleOnChangeLineStyle, r
       label: 'Move Up',
       disabled: readOnly,
       startIcon: <ArrowUpwardIcon />,
-      function: () => onMoveBlockAction('UP'),
+      function: () => onMoveBlockAction('UP', contentBlock),
     },
     {
       type: 'normal',
       label: 'Move Down',
       disabled: readOnly,
       startIcon: <ArrowDownwardIcon />,
-      function: () => onMoveBlockAction('DOWN'),
+      function: () => onMoveBlockAction('DOWN', contentBlock),
     },
   ];
 
@@ -71,6 +72,7 @@ export const UnstyledBlockCustom = (props) => {
           onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
           handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
           readOnly: props?.blockProps?.readOnly,
+          contentBlock: props?.block,
         })
       }
     />,
@@ -94,6 +96,7 @@ export const CheckedListBlockCustom = (props) => {
           onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
           handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
           readOnly: props?.blockProps?.readOnly,
+          contentBlock: props?.block,
         })
       }
     />,
@@ -115,6 +118,7 @@ export const CodeBlockCustom = (props) => React.createElement(
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
         readOnly: props?.blockProps?.readOnly,
+        contentBlock: props?.block,
       })
     }
   />,
@@ -144,6 +148,7 @@ export const UnorderedListItemCustom = (props) => React.createElement(
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
         readOnly: props?.blockProps?.readOnly,
+        contentBlock: props?.block,
       })
     }
   />,
@@ -164,6 +169,7 @@ export const OrderedListItemCustom = (props) => React.createElement(
         onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
         handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
         readOnly: props?.blockProps?.readOnly,
+        contentBlock: props?.block,
       })
     }
   />,
@@ -193,6 +199,7 @@ export const MediaBlockComponent = (props) =>  {
           onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
           handleOnChangeLineStyle: props?.blockProps?.handleOnChangeLineStyle,
           readOnly: props?.blockProps?.readOnly,
+          contentBlock: props?.block,
         })
       }
     />,
@@ -253,17 +260,10 @@ const IndexElement = (props) => {
 };
 
 const CheckListItem = () => {
-  const [checked, setChecked] = React.useState(true);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-  };
 
   return (
     <Checkbox
       className='check-list-item'
-      checked={checked}
-      onChange={handleChange}
       inputProps={{ 'aria-label': 'primary checkbox' }}
     />
   );

@@ -74,10 +74,15 @@ function afterMovingPosition(shifttingIndex, onSelectBlockKey , blocks, entityMa
   return convertFromRaw({ entityMap, blocks: newBlocks });
 }
 
-export function onMoveBlockAction({ action, editorState, dispatch }) {
-  const oldSelection = editorState?.getSelection();
+export function onMoveBlockAction({ action, editorState, dispatch, contentBlock }) {
+  const onSelectBlockKey = contentBlock.getKey();
+  const newSelection = SelectionState.createEmpty(onSelectBlockKey);
+  const updatedSelection = newSelection.merge({
+    focusKey: onSelectBlockKey,
+    focusOffset: contentBlock.getLength(),
+    hasFocus: true,
+  });
   const oldContentState = editorState?.getCurrentContent();
-  const onSelectBlockKey = oldSelection?.getAnchorKey();
   const rawData = convertToRaw(oldContentState);
   const blockList = rawData?.blocks;
   const entityMap = rawData?.entityMap;
@@ -109,14 +114,10 @@ export function onMoveBlockAction({ action, editorState, dispatch }) {
   if (!canContinue) return;
 
   const newEditorState = EditorState.push(editorState, newContentState, 'move-block');
-  const newSelection = SelectionState.createEmpty(onSelectBlockKey);
-  const updatedSelection = newSelection.merge({
-    focusKey: onSelectBlockKey,
-    focusOffset: oldContentState.getBlockForKey(onSelectBlockKey).getLength(),
-    hasFocus: true,
-  });
+  const timestamp = new Date().getTime();
 
   dispatch(updateDocs({
-    editorState: EditorState.forceSelection(newEditorState, updatedSelection),
+    editTimestamp: timestamp,
+    editorState: EditorState.acceptSelection(newEditorState, updatedSelection),
   }));
 }

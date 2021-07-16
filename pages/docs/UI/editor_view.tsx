@@ -17,37 +17,41 @@ interface EditorView {
 const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState }) => {
   const dispatch = useDispatch();
 
-  function onClickSideToolbar(props) {
-    const contentBlock = props?.contentBlock;
-    if (!contentBlock || !editorState || readOnly) {
+  function onClickSideToolbar() {
+    if (readOnly) {
       return;
     }
 
+    dispatch(updateDocs({
+      displayInlineToolbar: false,
+    }));
+  }
+
+  function handleChangeEditorState(newEditorState) {
+    console.log(newEditorState.getLastChangeType());
+    showUpToolbarAndUpdateState(newEditorState, dispatch);
+  }
+
+  function onClickOptionInSideToolbar(action, contentBlock) {
+    if (!action) {
+      return;
+    }
+
+    const timestamp = new Date().getTime();
     const blockKey = contentBlock.getKey();
     const newSelection = SelectionState.createEmpty(blockKey);
     const updatedSelection = newSelection.merge({
       focusKey: blockKey,
       focusOffset: contentBlock.getLength(),
-      hasFocus: true,
+      hasFocus: false,
     });
 
     dispatch(updateDocs({
-      displayInlineToolbar: false,
-      editorState: EditorState.forceSelection(editorState, updatedSelection),
-    }));
-  }
-
-  function handleChangeEditorState(newEditorState) {
-    showUpToolbarAndUpdateState(newEditorState, dispatch);
-  }
-
-  function onClickOptionInSideToolbar(action) {
-    if (!action) {
-      return;
-    }
-
-    dispatch(updateDocs({
-      editorState: handleSideToolbarActions(editorState, action),
+      editTimestamp: timestamp,
+      editorState: handleSideToolbarActions(
+        EditorState.forceSelection(editorState, updatedSelection),
+        action,
+      ),
     }));
   }
 
@@ -56,19 +60,21 @@ const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState }) =>
     docsImageDecorator,
   ]);
 
-  return <MyEditor
-    handleOnChangeLineStyle={onClickOptionInSideToolbar}
-    onMoveBlockAction={(action) => onMoveBlockAction({
-      action,
-      dispatch,
-      editorState,
-    })}
-    readOnly={readOnly}
-    key='editor-view'
-    handleChangeEditorState={handleChangeEditorState}
-    editorState={editorState ?? EditorState.createEmpty(decorator)}
-    onClickSideToolbar={onClickSideToolbar}
-  />;
+  return <div className='editor-view'>
+    <MyEditor
+      handleOnChangeLineStyle={onClickOptionInSideToolbar}
+      onMoveBlockAction={(action, contentBlock) => onMoveBlockAction({
+        action,
+        dispatch,
+        editorState,
+        contentBlock,
+      })}
+      readOnly={readOnly}
+      handleChangeEditorState={handleChangeEditorState}
+      editorState={editorState ?? EditorState.createEmpty(decorator)}
+      onClickSideToolbar={onClickSideToolbar}
+    />
+  </div>;
 };
 
 export default EditorView;
