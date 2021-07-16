@@ -17,7 +17,7 @@ const initialState: CardsPage =  {
   cards: [],
 };
 
-export const cardsReducer = (state = initialState, action) =>{
+export const cardsReducer = (state = initialState, action) => {
   switch (action.type) {
     case cardsActionType.CREATE_CARD:
       let newCards: Card[] = JSON.parse(JSON.stringify(state.cards));

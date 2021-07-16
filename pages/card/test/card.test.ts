@@ -8,8 +8,8 @@ const puppeteer = require('puppeteer');
 beforeAll(async () => {
   try {
     browser = await puppeteer.launch({
-      headless: true,
-      slowMo: 0,
+      headless: false,
+      slowMo: 2000,
       ignoreDefaultArgs: ['--no-sandbox'],
     });
 
@@ -33,9 +33,6 @@ describe('Card Page', () => {
     await page.goto('http://localhost:5000/board');
     await page.waitForSelector('.flowchart');
 
-    const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
-
     await page.waitForSelector('.list-board');
     await page.waitFor(5000);
 
@@ -45,14 +42,12 @@ describe('Card Page', () => {
     await page.click('.create-name-flowchart');
 
     await page.waitForSelector('.back-ground');
-    await page.waitFor(5000);
 
-    await page.click('.node-item');
+    await page.click('.div-svg-process');
     await page.waitFor(5000);
 
     const viewBoard = await page.screenshot();
     expect(viewBoard).toMatchImageSnapshot();
-
 
   });
 

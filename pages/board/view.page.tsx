@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getBoardDetailDataMiddleWare } from './logic/board_reducer';
-import ViewBoard from '../card/UI/view_board/view_board';
+import ViewBoard from '../card/UI/view_board';
 
 const View = () => {
   const dispatch = useDispatch();

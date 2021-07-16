@@ -9,14 +9,14 @@ import ReactFlow, {
   updateEdge,
   ArrowHeadType,
 } from 'react-flow-renderer';
-import CustomDecision from '../shapes/shape_decision';
-import { initialElements } from './initial_elements';
+import CustomDecision from './shapes/shape_decision';
+import { initialElements } from './view_board/initial_elements';
 import PrimaryButtonUI from '@components/primary_button/primary_button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/reducers_registration';
-import CustomProcess from '../shapes/shape_process';
-import ListOptionCard from './list_option_card';
-import HeaderContentBoard from './header_content_board';
+import CustomProcess from './shapes/shape_process';
+import ListOptionCard from './view_board/list_option_card';
+import HeaderContentBoard from './view_board/header_content_board';
 import { useRouter } from 'next/router';
 import { getDataListCard, createNewCard } from 'pages/card/logic/card_reducer';
 
