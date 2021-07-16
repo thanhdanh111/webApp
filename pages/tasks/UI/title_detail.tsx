@@ -1,7 +1,7 @@
 import { Box, TextareaAutosize } from '@material-ui/core';
 import AttachmentInBody from './attachment_detail';
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import TagTask, { ElementsTag } from '../../../components/tag/tag';
+import TagTask from '../../../components/tag/tag';
 import { updateTaskThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
 
 const TitleDetail: React.FC = () => {
@@ -15,9 +15,7 @@ const TitleDetail: React.FC = () => {
 
   return (
     <Box display='flex' flexDirection='column' className='attachment-detail'>
-      <TagTask selectedTag={task.tagIDs} getSelectedTag={(tags) => updateTask(tags)}>
-      <ElementsTag selectedTag={task.tagIDs} getSelectedTag={(tags) => updateTask(tags)}/>
-      </TagTask>
+      <TagTask selectedTag={task.tagIDs} getSelectedTag={(tags) => updateTask(tags)}/>
       <Box position='sticky' top='0' className='title-detail' px={2} mt={1}>
         <TextareaAutosize
           className='input-title'

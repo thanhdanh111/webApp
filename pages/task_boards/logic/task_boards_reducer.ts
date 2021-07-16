@@ -692,6 +692,8 @@ export const getTagsThunkAction = (searchTag, isNewSearchTag) => async (dispatch
           companyID,
           limit: 10,
           name: searchTag,
+          sortDirection: 'ASC',
+          sortBy: 'name',
         },
       });
 
@@ -705,12 +707,12 @@ export const createTagThunkAction = (tag) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token');
     const companyID = getState()?.userInfo?.currentCompany?._id;
-    const departmentID = getState()?.userInfo?.currentDepartment?._id;
+
     if (!token || !companyID) {
       return;
     }
     const res = await axios.post(`${config.BASE_URL}/companies/${companyID}/tags`,
-      { ...tag, departmentID },
+      { ...tag },
       {
         headers: {
           'Content-Type': 'application/json',

@@ -29,18 +29,19 @@ export const colorDefault = ['#81200E', '#F57829', '#F15381', '#F27DAA', '#EC73E
 const TagTask: React.FC<InitialProp> = (props) => {
   return (
     <Box display='flex' ml={4} my='5px'>
-      {props.children}
-      <AddTagPopup
-        selectedTag={props.selectedTag}
-        getSelectedTag={(tags) => props.getSelectedTag(tags)}
-        showSelectedTag={true}
-        isCreateTag={true}
-      >
-        <LocalOfferOutlinedIcon
-          key='click-popup'
-          className='border-dashed-icon tag-icon'
-        />
-      </AddTagPopup>
+      <ElementsTag selectedTag={props.selectedTag} getSelectedTag={(tags) => props.getSelectedTag(tags)}>
+        <AddTagPopup
+           selectedTag={props.selectedTag}
+           getSelectedTag={(tags) => props.getSelectedTag(tags)}
+           showSelectedTag={true}
+           isCreateTag={true}
+        >
+           <LocalOfferOutlinedIcon
+             key='click-popup'
+             className='border-dashed-icon tag-icon'
+           />
+        </AddTagPopup>
+      </ElementsTag>
     </Box>
   );
 };
@@ -178,12 +179,13 @@ export const ElementsTag: React.FC<InitialPropElements> = (props) => {
   };
 
   return (
-    <Box display='flex' width='auto' alignItems='center' pr='12px'>
+    <Box display='flex' width='auto' alignItems='center' pr='12px' flexWrap='wrap'>
     {
      props.selectedTag?.map((tag) => (
         <TagItem key={tag._id} tag={tag} removeTag={() => removeTag(tag)}/>
       ))
     }
+    {props.children}
     </Box>
   );
 };
