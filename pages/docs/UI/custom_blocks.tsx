@@ -6,7 +6,6 @@ import Immutable from 'immutable';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ParagraphStyleSideToolbarBtn from './paragraph_style_toolbar_btn';
-import { Checkbox } from '@material-ui/core';
 
 const blockRenderMap = Immutable.Map({
   'unordered-list-item': {
@@ -90,7 +89,7 @@ export const CheckedListBlockCustom = (props) => {
       contentBlock={props?.block}
       onClickSideToolbar={props?.blockProps?.onClickSideToolbar}
       disableProtal={false}
-      children={<CheckListItem />}
+      children={<CheckListItem {...props} />}
       actionsNeedToRender={
         sildeTextToolbarActions({
           onMoveBlockAction: props?.blockProps?.onMoveBlockAction,
@@ -100,7 +99,9 @@ export const CheckedListBlockCustom = (props) => {
         })
       }
     />,
-    <EditorBlock {...props} />,
+    <div>
+      <EditorBlock {...props} />
+    </div>,
   );
 };
 
@@ -259,12 +260,15 @@ const IndexElement = (props) => {
   </div>;
 };
 
-const CheckListItem = () => {
+const CheckListItem = (props) => {
 
   return (
-    <Checkbox
-      className='check-list-item'
-      inputProps={{ 'aria-label': 'primary checkbox' }}
+    <input
+      type='checkbox'
+      key={`checkable-list-item-${props?.block?.getKey()}`}
+      contentEditable={false}
+      id={props.offsetKey}
+      data-offset-key={props.offsetKey}
     />
   );
 };

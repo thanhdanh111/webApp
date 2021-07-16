@@ -28,7 +28,7 @@ export default function editorBlockRenderer({
     };
   }
 
-  if (type === 'checked-list-item') {
+  if (type === 'checkable-list-item') {
     return {
       component: CheckedListBlockCustom,
       props: {

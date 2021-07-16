@@ -28,7 +28,6 @@ const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState }) =>
   }
 
   function handleChangeEditorState(newEditorState) {
-    console.log(newEditorState.getLastChangeType());
     showUpToolbarAndUpdateState(newEditorState, dispatch);
   }
 

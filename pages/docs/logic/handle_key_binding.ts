@@ -13,7 +13,7 @@ export function handleKeyBinding({ state, event }) {
 function handleEnter(state, event) {
   const onSelectBlockKey = state?.getSelection()?.getAnchorKey();
   const oldContentState = state?.getCurrentContent();
-  const blocksNeedUnstyled = ['code-block', 'checked-list-item'];
+  const blocksNeedUnstyled = ['code-block', 'checkable-list-item'];
 
   const blockBeforeOnSelectBlock = oldContentState?.getBlockBefore(onSelectBlockKey);
   const blockOnSelect = oldContentState?.getBlockForKey(onSelectBlockKey);

@@ -12,7 +12,7 @@ export const blockStyles = [
   'code-block',
   'ordered-list-item',
   'unordered-list-item',
-  'checked-list-item',
+  'checkable-list-item',
 ];
 
 export const inlineStyles = [
@@ -89,9 +89,9 @@ export const inlineToolbarButons = [
     name: 'Numbered List',
   },
   {
-    functionality: 'checked-list-item',
+    functionality: 'checkable-list-item',
     icon: <PlaylistAddCheckIcon />,
-    styleName: 'checked-list-item',
+    styleName: 'checkable-list-item',
     name: 'Checked List',
   },
 ];
@@ -143,9 +143,9 @@ export const changeLineStyleButons = [
     name: 'Numbered List',
   },
   {
-    functionality: 'checked-list-item',
+    functionality: 'checkable-list-item',
     icon: <PlaylistAddCheckIcon />,
-    styleName: 'checked-list-item',
+    styleName: 'checkable-list-item',
     name: 'Checked List',
   },
 ];
