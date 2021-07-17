@@ -5,13 +5,6 @@ export interface SetTasksToTaskStatus {
   tasks: { [key: string]: Task}
 }
 
-export const setFilterTaskByUserAction = (res: boolean) => {
-  return {
-    type: taskBoardsActionType.FILTERING_TASK_BY_USER,
-    payload: res,
-  }
-}
-
 export const setLoading = (loading: boolean) => {
   return {
     type: taskBoardsActionType.SET_LOADING,

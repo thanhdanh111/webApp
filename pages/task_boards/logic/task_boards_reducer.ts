@@ -1,5 +1,5 @@
 import { taskBoardsActionType } from './task_board_action_type'
-import { TaskBoard } from '../../../helpers/type'
+import { TaskBoard, TaskStatus } from '../../../helpers/type'
 import axios from 'axios'
 import { config } from 'helpers/get_config'
 import {
@@ -37,11 +37,6 @@ const initialState: TaskBoardsType = {
   hasNoData: false,
   onSendingRequest: false,
 }
-
-// interface UpdateTaskStatus {
-//   taskStatusID: string
-//   tasks: Task[]
-// }
 
 interface UpdateTask {
   taskStatusID: string
@@ -87,8 +82,8 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         taskBoards: [...state.taskBoards, action?.data],
       }
     case taskBoardsActionType.CREATE_TASK_STATUS:
-      const newTaskStatus = action.data
-      const statusesAfterCreate = state?.currentTaskBoard?.taskStatusIDs?.push(newTaskStatus)
+      const newTaskStatus = action.payload
+      const statusesAfterCreate = [...(state?.currentTaskBoard?.taskStatusIDs as TaskStatus[]), newTaskStatus]
 
       return {
         ...state,
@@ -99,7 +94,8 @@ export  const taskBoardsReducer = (state = initialState, action) => {
       }
     case taskBoardsActionType.DELETE_TASK_STATUS:
       const deleteStatusID = action?.payload
-      const updateStatusInTaskBoard = state?.currentTaskBoard?.taskStatusIDs?.filter((statusID) => statusID !== deleteStatusID)
+      const updateStatusInTaskBoard = state?.currentTaskBoard?.taskStatusIDs?.filter(
+        (statusID) => statusID?._id !== deleteStatusID)
 
       return {
         ...state,

@@ -78,7 +78,7 @@ const BoardTasks: FunctionComponent = () => {
 
     return (<>
       {
-        currentTaskBoard?.taskStatusIDs?.map((each) => {
+        checkIfEmptyArray(currentTaskBoard?.taskStatusIDs) && currentTaskBoard?.taskStatusIDs?.map((each) => {
           return (
             <>
               <TaskStatusUI
@@ -91,16 +91,6 @@ const BoardTasks: FunctionComponent = () => {
     </>
     )
   }, [tasks])
-
-  // const onDragEnd = (result) => {
-  //   const { destination, draggableId }: OnDropResult = result
-
-  //   if (!destination) {
-  //     return
-  //   }
-
-  //   dispatch(updateStatusForTaskByIDThunkAction(draggableId, destination.droppableId))
-  // }
 
   const getTasksFromTaskStatus = ({ taskStatusID }) => {
     let tempTaskIDs: string[] = []
@@ -133,13 +123,6 @@ const BoardTasks: FunctionComponent = () => {
         taskIDs: items,
       }))
 
-      // dispatch(updateStatusForTaskByIDThunkAction(draggableId, destination.droppableId))
-
-      // dispatch(updateTaskStatusById({
-      //   taskStatusID: source.droppableId,
-      //   tasks: items,
-      // }))
-
       return
     }
 
@@ -155,7 +138,6 @@ const BoardTasks: FunctionComponent = () => {
 
     const newSourceTasks = movedData[source.droppableId] as string[]
     destinationTasks = movedData[destination.droppableId] as string[]
-    // dispatch(updateStatusForTaskByIDThunkAction(draggableId, destination.droppableId))
     dispatch(updateTaskToTaskStatusByIdThunkAction({
       destinationTasks,
       taskID: draggableId,
@@ -168,7 +150,7 @@ const BoardTasks: FunctionComponent = () => {
     }))
   }
 
-  const submitCreatedTaskStatus = () => {
+  const submitCreatedTaskStatus = async () => {
     if (!checkUserScope) {
       return
     }

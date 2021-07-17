@@ -9,7 +9,6 @@ import {
   setAssigned,
   setLoading,
   setTempararyTask,
-  updateStatusForTask,
   updateUserAssigned,
 } from './task_action'
 import { convertArrayObjectToObject, convertArrayStringToObject } from '../../../helpers/convert_array_to_object'
@@ -19,26 +18,6 @@ import { setCurrentStatus } from 'pages/task_statuses/logic/task_statuses_action
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array'
 import { removeTasksFfromStatus } from 'pages/task_boards/logic/task_boards_action'
-
-// interface UpdateTask {
-//   taskStatusID: string
-//   title?: string
-//   description?: string
-//   dueDate?: string
-//   estimateDate?: string
-//   timeTracked?: string
-//   priority?: string
-//   tagIDs?: string[]
-//   newIndex?: number
-// }
-
-// interface IUpdateTask {
-//   taskID: string
-//   data: UpdateTask
-//   sourceTaskStatusID: string
-//   destinationTasks: Task[]
-//   sourceTasks: Task[]
-// }
 
 export interface TaskType {
   loading: boolean
@@ -170,14 +149,6 @@ export const tasksReducer = (state = initialState, action) => {
         ...state,
         filteringTaskByUser: action.payload,
       }
-    case taskActionType.UPDATE_STATUS_FOR_TASK:
-      return {
-        ...state,
-        tasks: {
-          ...state.tasks,
-          [action.payload?._id]: action.payload,
-        },
-      }
     default:
       return state
   }
@@ -200,7 +171,8 @@ export const getTasksThunkAction = (currentTaskBoard) => async (dispatch, getSta
     const tags = selectedTags?.map((tag) => tag?._id)
     const tempUserIDs = selectedUserIDs?.map((user) => user?._id)
     const title = selectedTitle ? selectedTitle : null
-    const tempStatuses = currentTaskBoard?.taskStatusIDs?.map((each) => each._id) || []
+    const tempStatuses = checkIfEmptyArray(currentTaskBoard?.taskStatusIDs) &&
+      currentTaskBoard?.taskStatusIDs?.map((each) => each?._id)
 
     if (filteringTaskByUser) {
       tempUserIDs.push(userID)
@@ -288,45 +260,6 @@ export const createdTaskThunkAction = (data) => async (dispatch, getState) => {
     )
     await dispatch(setLoading(false))
     throw error
-  }
-}
-
-export const updateStatusForTaskByIDThunkAction = (
-  taskID: string,
-  statusID?: string,
-) => async (dispatch, getState) => {
-  try {
-    const localAccess = localStorage.getItem('access_token')
-    const companyID = getState().userInfo.currentCompany._id
-
-    if (!companyID || !taskID || !statusID) {
-      return
-    }
-
-    const res = await axios({
-      data: {
-        taskStatusID: statusID,
-      },
-      url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localAccess}`,
-      },
-      method: 'PUT',
-    })
-
-    const formatData = {
-      ...res?.data,
-      taskStatusID: res?.data?.taskStatusID?._id || res?.data?.taskStatuaID,
-    }
-
-    await dispatch(updateStatusForTask(formatData))
-
-    await dispatch(setLoading(false))
-    await dispatch(pushNewNotifications({ variant: 'success' , message: 'updated users assigned for task successfully!' }))
-  } catch (error) {
-    const errorNotification = returnNotification({ type: 'failed' })
-    await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }))
   }
 }
 

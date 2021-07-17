@@ -41,11 +41,15 @@ const TaskStatusUI = (props: InitProps) => {
     }
 
     const generateTask = () => {
-      if (!checkIfEmptyArray(taskStatusID.taskIDs)) {
+      if (!checkIfEmptyArray(taskStatusID?.taskIDs)) {
         return
       }
 
       return taskStatusID.taskIDs?.map((key, index) => {
+        if (!tasks[key]) {
+          return
+        }
+
         return (
           <>
             <Draggable
