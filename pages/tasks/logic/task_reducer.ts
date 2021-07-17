@@ -9,6 +9,7 @@ import {
   setAssigned,
   setLoading,
   setTempararyTask,
+  updateStatusForTask,
   updateUserAssigned,
 } from './task_action'
 import { convertArrayObjectToObject, convertArrayStringToObject } from '../../../helpers/convert_array_to_object'
@@ -19,25 +20,25 @@ import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array'
 import { removeTasksFfromStatus } from 'pages/task_boards/logic/task_boards_action'
 
-interface UpdateTask {
-  taskStatusID: string
-  title?: string
-  description?: string
-  dueDate?: string
-  estimateDate?: string
-  timeTracked?: string
-  priority?: string
-  tagIDs?: string[]
-  newIndex?: number
-}
+// interface UpdateTask {
+//   taskStatusID: string
+//   title?: string
+//   description?: string
+//   dueDate?: string
+//   estimateDate?: string
+//   timeTracked?: string
+//   priority?: string
+//   tagIDs?: string[]
+//   newIndex?: number
+// }
 
-interface IUpdateTask {
-  taskID: string
-  data: UpdateTask
-  sourceTaskStatusID: string
-  destinationTasks: Task[]
-  sourceTasks: Task[]
-}
+// interface IUpdateTask {
+//   taskID: string
+//   data: UpdateTask
+//   sourceTaskStatusID: string
+//   destinationTasks: Task[]
+//   sourceTasks: Task[]
+// }
 
 export interface TaskType {
   loading: boolean
@@ -169,14 +170,17 @@ export const tasksReducer = (state = initialState, action) => {
         ...state,
         filteringTaskByUser: action.payload,
       }
+    case taskActionType.UPDATE_STATUS_FOR_TASK:
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [action.payload?._id]: action.payload,
+        },
+      }
     default:
       return state
   }
-}
-
-const notificationsType = {
-  201: 'Updated task to status successfully',
-  400: 'You have no task right now!',
 }
 
 enum NotificationTypes {
@@ -186,35 +190,32 @@ enum NotificationTypes {
   failDeleteTask = 'Failed Delete Task',
 }
 
-export const getTasksThunkAction = () => async (dispatch, getState) => {
+export const getTasksThunkAction = (currentTaskBoard) => async (dispatch, getState) => {
   try {
     await dispatch(setLoading(true))
     const token = localStorage.getItem('access_token')
     const { currentCompany, userID }: UserInfoType = getState().userInfo
     const companyID = currentCompany?._id
-    const { selectedTitle, selectedTags, selectedUserIDs, filteringTaskByUser, limitTasks }: TaskType = getState().tasks
+    const { selectedTitle, selectedTags, selectedUserIDs, filteringTaskByUser }: TaskType = getState().tasks
     const tags = selectedTags?.map((tag) => tag?._id)
     const tempUserIDs = selectedUserIDs?.map((user) => user?._id)
     const title = selectedTitle ? selectedTitle : null
-    const limit = limitTasks
+    const tempStatuses = currentTaskBoard?.taskStatusIDs?.map((each) => each._id) || []
 
     if (filteringTaskByUser) {
       tempUserIDs.push(userID)
     }
 
-    const userIDs = convertArrayStringToObject(tempUserIDs)
-
-    if (!token) {
-      return
-    }
+    const userIDs = convertArrayStringToObject(tempUserIDs, 'userIDs')
+    const taskStatusIDs = convertArrayStringToObject(tempStatuses, 'taskStatusIDs')
 
     const res = await axios.get(`${config.BASE_URL}/tasks`, {
       params: {
-        limit,
         companyID,
         tags,
         ...userIDs,
         title,
+        ...taskStatusIDs,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -290,29 +291,22 @@ export const createdTaskThunkAction = (data) => async (dispatch, getState) => {
   }
 }
 
-export const updateLocationTaskById = ({
-  taskID,
-  data,
-}: IUpdateTask) => async (dispatch, getState) => {
+export const updateStatusForTaskByIDThunkAction = (
+  taskID: string,
+  statusID?: string,
+) => async (dispatch, getState) => {
   try {
     const localAccess = localStorage.getItem('access_token')
     const companyID = getState().userInfo.currentCompany._id
 
-    if (!localAccess || !companyID || !taskID) {
+    if (!companyID || !taskID || !statusID) {
       return
     }
 
-    // dispatch(setTasksToStatus({
-    //   taskStatusID: sourceTaskStatusID,
-    //   tasks: sourceTasks,
-    // }))
-    // dispatch(setTasksToStatus({
-    //   taskStatusID: data.taskStatusID,
-    //   tasks: destinationTasks,
-    // }))
-
     const res = await axios({
-      data,
+      data: {
+        taskStatusID: statusID,
+      },
       url: `${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
       headers: {
         'Content-Type': 'application/json',
@@ -321,9 +315,15 @@ export const updateLocationTaskById = ({
       method: 'PUT',
     })
 
-    const notification = notificationsType[res.status]
+    const formatData = {
+      ...res?.data,
+      taskStatusID: res?.data?.taskStatusID?._id || res?.data?.taskStatuaID,
+    }
+
+    await dispatch(updateStatusForTask(formatData))
+
     await dispatch(setLoading(false))
-    await dispatch(pushNewNotifications({ variant: 'success' , message: notification }))
+    await dispatch(pushNewNotifications({ variant: 'success' , message: 'updated users assigned for task successfully!' }))
   } catch (error) {
     const errorNotification = returnNotification({ type: 'failed' })
     await dispatch(pushNewNotifications({ variant: 'error' , message: errorNotification['message'] }))

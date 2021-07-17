@@ -1,5 +1,5 @@
 import { taskBoardsActionType } from './task_board_action_type'
-import { Task, TaskBoard } from '../../../helpers/type'
+import { TaskBoard } from '../../../helpers/type'
 import axios from 'axios'
 import { config } from 'helpers/get_config'
 import {
@@ -7,6 +7,7 @@ import {
   getTaskBoard,
   createdTaskBoard,
   setSelectedTaskBoard,
+  updateTaskIDsToStatusByID,
 } from './task_boards_action'
 import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications'
@@ -58,8 +59,8 @@ interface IUpdateTask {
   taskID: string
   data: UpdateTask
   sourceTaskStatusID: string
-  destinationTasks: Task[]
-  sourceTasks: Task[]
+  destinationTasks: string[]
+  sourceTasks: string[]
 }
 
 // tslint:disable-next-line: cyclomatic-complexity
@@ -168,6 +169,25 @@ export  const taskBoardsReducer = (state = initialState, action) => {
           taskStatusIDs: upsatedStatusesAfterDeleteTask,
         },
       }
+    case taskBoardsActionType.UPDATE_TASKIDS_TO_STATUS:
+      const updateTaskIDsToStatus = state.currentTaskBoard?.taskStatusIDs?.map((each) => {
+        if (each?._id !== action.payload.statusID) {
+          return each
+        }
+
+        return {
+          ...each,
+          taskIDs: action.payload.taskIDs,
+        }
+      })
+
+      return {
+        ...state,
+        currentTaskBoard: {
+          ...state.currentTaskBoard,
+          taskStatusIDs: updateTaskIDsToStatus,
+        },
+      }
     default:
       return state
   }
@@ -254,12 +274,12 @@ export const createTaskBoardThunkAction = (title, description) => async (dispatc
 }
 
 // drag drop
-export const updateTaskById = ({
+export const updateTaskToTaskStatusByIdThunkAction = ({
   taskID,
   data,
-  // sourceTaskStatusID,
-  // sourceTasks,
-  // destinationTasks,
+  sourceTaskStatusID,
+  sourceTasks,
+  destinationTasks,
 }: IUpdateTask) => async (dispatch, getState) => {
   try {
     const localAccess = localStorage.getItem('access_token')
@@ -268,6 +288,15 @@ export const updateTaskById = ({
     if (!localAccess || !companyID || !taskID) {
       return
     }
+
+    dispatch(updateTaskIDsToStatusByID({
+      statusID: sourceTaskStatusID,
+      taskIDs: sourceTasks,
+    }))
+    dispatch(updateTaskIDsToStatusByID({
+      statusID: data.taskStatusID,
+      taskIDs: destinationTasks,
+    }))
 
     const res = await axios({
       data,

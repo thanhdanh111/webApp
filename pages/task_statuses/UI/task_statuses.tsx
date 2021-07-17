@@ -13,6 +13,7 @@ import { RootState } from 'redux/reducers_registration'
 import { TaskType } from 'pages/tasks/logic/task_reducer'
 import { setCurrentStatus } from '../logic/task_statuses_action'
 import { TaskStatus } from 'helpers/type'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 
 interface InitProps {
   taskStatusID: TaskStatus
@@ -39,33 +40,35 @@ const TaskStatusUI = (props: InitProps) => {
       newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
 
-    const generateTask = Object.keys(tasks).map((key) => {
-
-      if (tasks[key]?.taskStatusID !== taskStatusID?._id) {
+    const generateTask = () => {
+      if (!checkIfEmptyArray(taskStatusID.taskIDs)) {
         return
       }
 
-      return (
-        <>
-          <Draggable
-            key={key}
-            draggableId={key}
-          >
-            {(provideTask) => {
-              return (
-                <div
-                  ref={provideTask.innerRef}
-                  {...provideTask.draggableProps}
-                  {...provideTask.dragHandleProps}
-                >
-                  <TasksUI key={key} task={tasks[key]}/>
-                </div>
-              )
-            }}
-          </Draggable>
-        </>
-      )
-    })
+      return taskStatusID.taskIDs?.map((key, index) => {
+        return (
+          <>
+            <Draggable
+              key={key}
+              draggableId={key}
+              index={index}
+            >
+              {(provideTask) => {
+                return (
+                  <div
+                    ref={provideTask.innerRef}
+                    {...provideTask.draggableProps}
+                    {...provideTask.dragHandleProps}
+                  >
+                    <TasksUI key={key} task={tasks[key]}/>
+                  </div>
+                )
+              }}
+            </Draggable>
+          </>
+        )
+      })
+    }
 
     return (
       <>
@@ -104,7 +107,7 @@ const TaskStatusUI = (props: InitProps) => {
                   taskStatusID={taskStatusID?._id}
                 />
               }
-              {generateTask}
+              {generateTask()}
               {
                 currentStatusID !== taskStatusID?._id &&
                   <div

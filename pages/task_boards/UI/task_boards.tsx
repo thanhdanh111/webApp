@@ -1,6 +1,5 @@
 import {
-  TaskBoardsType,
-  updateTaskById,
+  TaskBoardsType, updateTaskToTaskStatusByIdThunkAction,
 } from '../logic/task_boards_reducer'
 import { TaskType } from '../../tasks/logic/task_reducer'
 import React, { FunctionComponent, useState, useCallback } from 'react'
@@ -11,12 +10,14 @@ import NavClickUp from './task_board_header'
 import { Typography } from '@material-ui/core'
 import CheckIcon from '@material-ui/icons/Check'
 import CloseIcon from '@material-ui/icons/Close'
-import { Task, UserInfoType } from 'helpers/type'
+import { UserInfoType } from 'helpers/type'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { Roles } from 'constants/roles'
 import { RootState } from 'redux/reducers_registration'
 import { checkValidAccess } from 'helpers/check_valid_access'
 import { createStatusThunkAction } from 'pages/task_statuses/logic/task_statuses_reducer'
+import { updateTaskIDsToStatusByID } from '../logic/task_boards_action'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF]
 
@@ -28,15 +29,16 @@ interface IDroppable {
 interface OnDropResult {
   destination: IDroppable
   source: IDroppable
+  draggableId: string
 }
 
-// const reorder = (list, startIndex, endIndex) => {
-//   const result = Array.from(list)
-//   const [removed] = result.splice(startIndex, 1)
-//   result.splice(endIndex, 0, removed)
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list)
+  const [removed] = result.splice(startIndex, 1)
+  result.splice(endIndex, 0, removed)
 
-//   return result
-// }
+  return result
+}
 
 const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source)
@@ -51,6 +53,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
   return resultMove
 }
+
 const BoardTasks: FunctionComponent = () => {
   const {
     loading,
@@ -89,29 +92,48 @@ const BoardTasks: FunctionComponent = () => {
     )
   }, [tasks])
 
-  const getTasksFromTaskStatus = ({ taskStatusId }) => {
-    // if (!taskStatus[taskStatusId]) {
-    //   return
-    // }
+  // const onDragEnd = (result) => {
+  //   const { destination, draggableId }: OnDropResult = result
 
-    // return taskStatus[taskStatusId].taskIDs
+  //   if (!destination) {
+  //     return
+  //   }
 
-    return taskStatusId
+  //   dispatch(updateStatusForTaskByIDThunkAction(draggableId, destination.droppableId))
+  // }
+
+  const getTasksFromTaskStatus = ({ taskStatusID }) => {
+    let tempTaskIDs: string[] = []
+
+    if (!taskStatusID || !checkIfEmptyArray(currentTaskBoard?.taskStatusIDs)) {
+      return tempTaskIDs
+    }
+
+    tempTaskIDs = currentTaskBoard.taskStatusIDs?.find((each) => each?._id === taskStatusID)?.taskIDs || []
+
+    return tempTaskIDs
   }
 
   const onDragEnd = (result) => {
-    const { source, destination }: OnDropResult = result
+    const { source, destination, draggableId }: OnDropResult = result
 
     if (!destination) {
       return
     }
 
     if (source.droppableId === destination.droppableId) {
-      // const items: Task[] = reorder(
-      //   getTasksFromTaskStatus({ taskStatusId: source.droppableId }),
-      //   source.index,
-      //   destination.index,
-      // ) as Task[]
+      const items: string[] = reorder(
+        getTasksFromTaskStatus({ taskStatusID: source.droppableId }),
+        source.index,
+        destination.index,
+      ) as string[]
+
+      dispatch(updateTaskIDsToStatusByID({
+        statusID: destination.droppableId,
+        taskIDs: items,
+      }))
+
+      // dispatch(updateStatusForTaskByIDThunkAction(draggableId, destination.droppableId))
 
       // dispatch(updateTaskStatusById({
       //   taskStatusID: source.droppableId,
@@ -121,8 +143,8 @@ const BoardTasks: FunctionComponent = () => {
       return
     }
 
-    const sourceTasks = getTasksFromTaskStatus({ taskStatusId: source.droppableId }) || []
-    let destinationTasks = getTasksFromTaskStatus({ taskStatusId: destination.droppableId })
+    const sourceTasks = getTasksFromTaskStatus({ taskStatusID: source.droppableId }) || []
+    let destinationTasks = getTasksFromTaskStatus({ taskStatusID: destination.droppableId }) || []
 
     const movedData = move(
       sourceTasks,
@@ -131,11 +153,12 @@ const BoardTasks: FunctionComponent = () => {
       destination,
     )
 
-    const newSourceTasks = movedData[source.droppableId] as Task[]
-    destinationTasks = movedData[destination.droppableId] as Task[]
-    dispatch(updateTaskById({
+    const newSourceTasks = movedData[source.droppableId] as string[]
+    destinationTasks = movedData[destination.droppableId] as string[]
+    // dispatch(updateStatusForTaskByIDThunkAction(draggableId, destination.droppableId))
+    dispatch(updateTaskToTaskStatusByIdThunkAction({
       destinationTasks,
-      taskID: sourceTasks[source.index]?._id,
+      taskID: draggableId,
       data: {
         taskStatusID: destination.droppableId,
         newIndex: destination.index,

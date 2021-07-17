@@ -170,7 +170,7 @@ export interface TaskStatus {
   departmentID?: string
   taskBoardID: string
   title: string
-  taskIDs: Task[]
+  taskIDs: string[]
   description?: string
   createdBy?: User
 }

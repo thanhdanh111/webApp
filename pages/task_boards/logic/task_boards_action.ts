@@ -2,7 +2,7 @@ import { Task } from 'helpers/type'
 import { taskBoardsActionType } from './task_board_action_type'
 export interface SetTasksToTaskStatus {
   taskStatusID: string
-  tasks: Task[]
+  tasks: { [key: string]: Task}
 }
 
 export const setFilterTaskByUserAction = (res: boolean) => {
@@ -74,5 +74,12 @@ export const removeTasksFfromStatus = (res: { taskID: string, taskStatusID: stri
   return {
     type: taskBoardsActionType.REMOVE_TASK_FROM_STATUS,
     payload: res,
+  }
+}
+
+export const updateTaskIDsToStatusByID = (data: {statusID: string, taskIDs: string[]}) => {
+  return {
+    type: taskBoardsActionType.UPDATE_TASKIDS_TO_STATUS,
+    payload: data,
   }
 }

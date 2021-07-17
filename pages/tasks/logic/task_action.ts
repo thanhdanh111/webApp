@@ -84,3 +84,10 @@ export const setFilteringTaskByCurrentUser = (data: boolean) => {
     payload: data,
   }
 }
+
+export const updateStatusForTask = (task) => {
+  return {
+    type: taskActionType.UPDATE_STATUS_FOR_TASK,
+    payload: task,
+  }
+}
