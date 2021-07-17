@@ -1,5 +1,5 @@
 import { taskBoardsActionType } from './task_board_action_type'
-import { Task, TaskBoard, TaskStatus } from '../../../helpers/type'
+import { Task, TaskBoard } from '../../../helpers/type'
 import axios from 'axios'
 import { config } from 'helpers/get_config'
 import {
@@ -13,7 +13,6 @@ import { returnNotification } from 'pages/invite_members/logic/invite_error_noti
 
 export interface TaskBoardsType {
   loading: boolean
-  taskStatus: TaskStatus[]
   currentTaskBoard: TaskBoard
   taskBoards: TaskBoard[]
   hasNoData: boolean
@@ -29,7 +28,6 @@ export enum NotificationTypes {
 
 const initialState: TaskBoardsType = {
   loading: true,
-  taskStatus: [],
   currentTaskBoard: {
     _id: '',
     title: '',
@@ -43,8 +41,6 @@ const initialState: TaskBoardsType = {
 //   taskStatusID: string
 //   tasks: Task[]
 // }
-
-let updatedTaskStatuses: TaskStatus[] = []
 
 interface UpdateTask {
   taskStatusID: string
@@ -101,7 +97,6 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         },
       }
     case taskBoardsActionType.DELETE_TASK_STATUS:
-      updatedTaskStatuses = state.taskStatus
       const deleteStatusID = action?.payload
       const updateStatusInTaskBoard = state?.currentTaskBoard?.taskStatusIDs?.filter((statusID) => statusID !== deleteStatusID)
 
@@ -112,22 +107,21 @@ export  const taskBoardsReducer = (state = initialState, action) => {
           taskStatusIDs: updateStatusInTaskBoard,
         },
       }
-    case taskBoardsActionType.SET_TEMPLATE_TITLE_STATUS:
-      return {
-        ...state,
-        templateTitleStatus: action?.payload,
-      }
     case taskBoardsActionType.RENAME_TASK_STATUS:
-      if (action.payload?._id) {
-        updatedTaskStatuses = {
-          ...updatedTaskStatuses,
-          [action.payload?._id]: action.payload,
+      const updateStatusesAfterRenameStatus = state?.currentTaskBoard?.taskStatusIDs?.map((each) => {
+        if (each?._id !== action.payload._id) {
+          return each
         }
-      }
+
+        return action.payload
+      })
 
       return {
         ...state,
-        taskStatus: updatedTaskStatuses,
+        currentTaskBoard: {
+          ...state.currentTaskBoard,
+          taskStatusIDs: updateStatusesAfterRenameStatus,
+        },
       }
     case taskBoardsActionType.HAS_NO_DATA:
       return {
@@ -274,15 +268,6 @@ export const updateTaskById = ({
     if (!localAccess || !companyID || !taskID) {
       return
     }
-
-    // dispatch(setTasksToTaskStatus({
-    //   taskStatusId: sourceTaskStatusID,
-    //   tasks: sourceTasks,
-    // }))
-    // dispatch(setTasksToTaskStatus({
-    //   taskStatusId: data.taskStatusID,
-    //   tasks: destinationTasks,
-    // }))
 
     const res = await axios({
       data,

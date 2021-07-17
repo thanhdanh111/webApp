@@ -55,7 +55,6 @@ const BoardTasks: FunctionComponent = () => {
   const {
     loading,
     currentTaskBoard,
-    taskStatus,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards)
   const {
     isAdmin,
@@ -91,11 +90,13 @@ const BoardTasks: FunctionComponent = () => {
   }, [tasks])
 
   const getTasksFromTaskStatus = ({ taskStatusId }) => {
-    if (!taskStatus[taskStatusId]) {
-      return
-    }
+    // if (!taskStatus[taskStatusId]) {
+    //   return
+    // }
 
-    return taskStatus[taskStatusId].taskIDs
+    // return taskStatus[taskStatusId].taskIDs
+
+    return taskStatusId
   }
 
   const onDragEnd = (result) => {
