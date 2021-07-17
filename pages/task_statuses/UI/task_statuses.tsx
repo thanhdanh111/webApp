@@ -12,7 +12,7 @@ import TaskNew from 'pages/tasks/UI/task_new';
 import { setTypeCreateTask } from 'pages/task_boards/logic/task_boards_action';
 import ActionTaskStatusUI from './action_task_status';
 import RenameStatusUI from './ui_rename_task_status';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 
 interface InitProps {
   taskStatusID: string;
@@ -111,7 +111,7 @@ const TaskStatusUI = (props: InitProps) => {
                   taskStatusID={taskStatus[taskStatusID]?._id}
                 />
               }
-              {checkArray(taskIDs) && taskIDs?.map((task, index) => {
+              {checkIfEmptyArray(taskIDs) && taskIDs?.map((task, index) => {
                 return (
                   <Draggable
                     key={task?._id}

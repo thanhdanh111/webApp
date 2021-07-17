@@ -7,9 +7,9 @@ export const createCardAction = (res: object) => {
   };
 };
 
-export const getDataListCardAction = (res: object) => {
+export const getCardsAction = (res: object) => {
   return {
-    type: cardsActionType.GET_DATA_LIST_CARD,
+    type: cardsActionType.GET_CARDS,
     payload: res,
   };
 };

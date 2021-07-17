@@ -23,7 +23,7 @@ import {
 } from './task_boards_action';
 import { pushNewNotifications } from 'redux/common/notifications/reducer';
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 
 export interface TaskBoardsType {
   loading: boolean;
@@ -828,7 +828,7 @@ export const searchTasksByTitleThunkAction = (title: string) => async (dispatch,
       },
     });
 
-    if (checkArray(!res?.data?.list)) {
+    if (checkIfEmptyArray(!res?.data?.list)) {
       await dispatch(setLoading(false));
 
       return;

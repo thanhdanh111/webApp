@@ -1,8 +1,8 @@
-import { checkArray } from './check_array';
+import { checkIfEmptyArray } from './check_if_empty_array';
 import { User } from './type';
 
 export const checkAssignedUserID = (arr: string[], userID: string) => {
-  if (!checkArray(arr)) {
+  if (!checkIfEmptyArray(arr)) {
     return false;
   }
 
@@ -10,7 +10,7 @@ export const checkAssignedUserID = (arr: string[], userID: string) => {
 };
 
 export const checkAssignedUserByID = (arr?: User[], userID?: string) => {
-  if (!checkArray(arr)) {
+  if (!checkIfEmptyArray(arr)) {
     return false;
   }
 

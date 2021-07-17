@@ -1,4 +1,4 @@
-import { checkArray } from './check_array';
+import { checkIfEmptyArray } from './check_if_empty_array';
 import { Access } from './type';
 
 interface GetUserCompanies {
@@ -18,7 +18,7 @@ export const getFirstCompanyIDAndDepartmentID = ({
   let companyID;
   let departmentID;
 
-  if (!checkArray(access)) {
+  if (!checkIfEmptyArray(access)) {
     return {
       companyID,
       departmentID,

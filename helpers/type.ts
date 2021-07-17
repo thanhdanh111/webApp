@@ -312,8 +312,12 @@ export interface Card {
   position?: 	CardPositionData;
 }
 
-export interface CardsPage{
-  cards: Card[];
+export interface CardsPage {
+  cards: Cards;
+}
+
+export interface Cards {
+  [key: string] : Card;
 }
 
 export interface Tag {

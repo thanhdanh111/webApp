@@ -5,7 +5,7 @@ import {
     TableRow,
     TableCell,
 } from '@material-ui/core';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import { HeadCell } from 'helpers/type';
 
 interface PropsInitial {
@@ -29,7 +29,7 @@ const HeadTable = (props: PropsInitial) => {
           </TableCell>)
           }
           {hadExpandableRows && <TableCell style={{ border: 'none' }} />}
-          {(checkArray(headCells)) &&
+          {(checkIfEmptyArray(headCells)) &&
           headCells.map((header) => (
                 <TableCell
                     key={header.id}

@@ -3,7 +3,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { Avatar, Badge } from '@material-ui/core';
 import { User, UserInfo } from 'helpers/type';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 
 interface InitProps {
   currentUser: UserInfo;
@@ -20,7 +20,7 @@ const GroupUserAssigned: React.FC<InitProps> = (props) => {
       spacing='medium'
       className='group-avatar-task'
     >
-      {(usersAssigned && checkArray(usersAssigned)) ? (
+      {(usersAssigned && checkIfEmptyArray(usersAssigned)) ? (
         usersAssigned?.map((user) => {
           const fullName = `${user?.firstName} ${user?.lastName}`;
 

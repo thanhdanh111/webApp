@@ -18,7 +18,7 @@ import CustomProcess from './shapes/shape_process';
 import ListOptionCard from './view_board/list_option_card';
 import HeaderContentBoard from './view_board/header_content_board';
 import { useRouter } from 'next/router';
-import { getDataListCard, createNewCard } from 'pages/card/logic/card_reducer';
+import { getCards, createCard } from 'pages/card/logic/card_reducer';
 
 const ViewBoard = () => {
   const router = useRouter();
@@ -32,7 +32,7 @@ const ViewBoard = () => {
       return;
     }
 
-    dispatch(getDataListCard(query.id));
+    dispatch(getCards(query.id));
   }, [query.id]);
 
   useEffect(() => {
@@ -40,15 +40,15 @@ const ViewBoard = () => {
       return;
     }
 
-    const list = dataList.map((each) => {
+    const list = Object.keys(dataList).map((each) => {
       return {
-        id: each._id,
+        id: each,
         position: {
-          x: each.position.x,
-          y: each.position.y,
+          x: dataList[each]?.position?.x,
+          y: dataList[each]?.position?.y,
         },
-        type: each.shape,
-        data: each.textContent,
+        type: dataList[each]?.shape,
+        data: dataList[each]?.textContent,
       };
 
     });
@@ -57,7 +57,7 @@ const ViewBoard = () => {
   }, [dataList]);
 
   function addShape(type: string) {
-    dispatch(createNewCard(type.toUpperCase(), '', ''));
+    dispatch(createCard(type.toUpperCase(), '', ''));
   }
 
   const onElementsRemove = (elementsToRemove) =>

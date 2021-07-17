@@ -1,5 +1,5 @@
 import { Checkbox, MenuItem } from '@material-ui/core';
-import { checkArray } from 'helpers/check_array';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
 import React, { FunctionComponent } from 'react';
 import { EventLogState } from '../logic/event_log_interface';
 import IssuesItem from './issues_item';
@@ -17,7 +17,7 @@ const Issues: FunctionComponent<IssuesType> = (props: InitialProps) => {
   const { eventLogs, loading }: InitialProps = props;
 
   const generateIssuesItem = (list: EventLogState[]) => {
-    if (checkArray(list)) {
+    if (checkIfEmptyArray(list)) {
       const eventLogItems = list.map((event: EventLogState, index: number) => {
         return (
           <IssuesItem key={index} eventLog={event}/>
