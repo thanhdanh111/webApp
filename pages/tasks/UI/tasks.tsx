@@ -33,7 +33,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
   };
 
   const getTask = () => {
-    dispatch(getTaskByIdThunkAction(task?._id));
+    dispatch(getTaskByIdThunkAction(task));
   };
 
   const handleAssign = (user) => {
@@ -69,7 +69,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
                   component='span'
                   className='task-name'
                   onClick={() => { getTask(); handleOpen(); }}
-                >{taskName}
+                >{taskName} task-name
                 </Typography>
                 <AssignUser usersAssigned={task?.userIDs} handleAssign={handleAssign} sizes='assigned-user-avatar'/>
             </div>

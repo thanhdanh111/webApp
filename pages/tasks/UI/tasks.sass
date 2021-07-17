@@ -370,24 +370,20 @@
         text-align: center
 
     .content-activity
-      .filter-activity
-        opacity: 0
+      .tabs-container
+        display: flex
+        justify-content: center
 
-        &:hover
-          opacity: 1
+        .label-icon
+          font-size: 12px
+          width: auto
 
-        .search-activity
-          height: 30px
-          margin-right: 20px
+      .content-log
+        margin: 8px
+        color: #c5c5c5
 
-          .icon-activity
-            padding: 5px
-
-            .search-icon-activity
-              font-size: 20px
-
-          .input-activity
-            font-size: 12px
+        .user-log
+          color: #50ac55
 
 
 .attachment-detail-popup
@@ -409,4 +405,7 @@
     height: 25px
     font-size: 10px
 
-
+@media (min-width: 600px)
+  .content-activity
+    .MuiTab-root
+      min-width: unset

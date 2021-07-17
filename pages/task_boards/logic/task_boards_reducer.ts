@@ -165,7 +165,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
         ...state,
         currentTaskBoard: {
           ...state.currentTaskBoard,
-          taskStatusIDs: [...(state.currentTaskBoard?.taskStatusIDs as string[]), action.data?._id],
+          taskStatusIDs: [...(state.currentTaskBoard?.taskStatusIDs as TaskStatus[]), action.data?._id],
         },
         taskStatus: { ...state.taskStatus, ...newTAskStatus },
       };

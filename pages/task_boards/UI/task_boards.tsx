@@ -72,8 +72,8 @@ const BoardTasks: FunctionComponent = () => {
       return (
           <>
             <TaskStatusUI
-              key={each}
-              taskStatusID={each}
+              key={each?._id}
+              taskStatusID={each?._id}
             />
           </>
       );
