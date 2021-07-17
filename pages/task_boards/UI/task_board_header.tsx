@@ -2,68 +2,80 @@ import {
   Button,
   Container,
   Typography,
-} from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import SearchIcon from '@material-ui/icons/Search';
-import PersonIcon from '@material-ui/icons/Person';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import TaskBoardUI from './show_task_board';
-import { TaskBoardsType } from '../logic/task_boards_reducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { setFilterTaskByUserAction, setSelectedTitle } from '../logic/task_boards_action';
-import { UserInfoType } from 'helpers/type';
-import { RootState } from 'redux/reducers_registration';
-import { checkValidAccess } from 'helpers/check_valid_access';
-import { Roles } from 'constants/roles';
-import { useDebounce } from 'helpers/debounce';
-import FilteringTaskByUserUI from './filtering_tasks_by_users';
+} from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import SearchIcon from '@material-ui/icons/Search'
+import PersonIcon from '@material-ui/icons/Person'
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt'
+import TaskBoardUI from './show_task_board'
+import { useDispatch, useSelector } from 'react-redux'
+import { UserInfoType } from 'helpers/type'
+import { RootState } from 'redux/reducers_registration'
+import { checkValidAccess } from 'helpers/check_valid_access'
+import { Roles } from 'constants/roles'
+import { useDebounce } from 'helpers/debounce'
+import FilteringTaskByUserAssignUI from './filtering_tasks_by_assigned'
+import { setFilteringTaskByCurrentUser, setSelectedTitle } from 'pages/tasks/logic/task_action'
+import { getTasksThunkAction, TaskType } from 'pages/tasks/logic/task_reducer'
 
-const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF]
 
 const NavClickUp: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const {
     filteringTaskByUser,
-  }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
+    selectedUserIDs,
+    selectedTags,
+    selectedTitle,
+  }: TaskType = useSelector((state: RootState) => state.tasks)
   const {
     isAdmin,
     rolesInCompany,
-  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
-  const loadData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
-  const btnShow = filteringTaskByUser ? 'btn-show-me' : 'btn-show-all';
-  const [searchTerm, setSearchTerm] = useState('');
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo)
+  const loadData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses })
+  const btnShow = filteringTaskByUser ? 'btn-show-me' : 'btn-show-all'
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   useEffect(() => {
-    void getSearchTaskData();
-  }, [debouncedSearchTerm]);
+    void getSearchTaskData()
+  }, [debouncedSearchTerm])
 
   useEffect(() => {
     if (loadData) {
-      dispatch(setFilterTaskByUserAction(false));
+      dispatch(setFilteringTaskByCurrentUser(false))
     }
 
-    return;
-  }, []);
+    return
+  }, [])
+
+  useEffect(() => {
+    dispatch(getTasksThunkAction())
+  }, [
+    selectedUserIDs,
+    selectedTags,
+    selectedTitle,
+    filteringTaskByUser,
+  ])
 
   const getSearchTaskData = async () => {
     if (debouncedSearchTerm) {
-      dispatch(setSelectedTitle(debouncedSearchTerm));
+      dispatch(setSelectedTitle(debouncedSearchTerm))
 
-      return;
+      return
     }
 
-    return dispatch(setSelectedTitle(''));
-  };
+    return dispatch(setSelectedTitle(''))
+  }
 
   const onChangeMe = () => {
-    dispatch(setFilterTaskByUserAction(true));
-  };
+    dispatch(setFilteringTaskByCurrentUser(true))
+  }
 
   const onChangeAll = () => {
-    dispatch(setFilterTaskByUserAction(false));
-  };
+    dispatch(setFilteringTaskByCurrentUser(false))
+  }
 
   return (
     <div className='nav-click_up'>
@@ -79,7 +91,7 @@ const NavClickUp: React.FC = () => {
         </div>
       </Container>
       <Container className='menu-content-value'>
-        <FilteringTaskByUserUI />
+        <FilteringTaskByUserAssignUI />
       </Container>
       <Container className='show-task'>
         <ul className='list-actions'>
@@ -111,7 +123,7 @@ const NavClickUp: React.FC = () => {
         </ul>
       </Container>
     </div>
-  );
-};
+  )
+}
 
-export default NavClickUp;
+export default NavClickUp

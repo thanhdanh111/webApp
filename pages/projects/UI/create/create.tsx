@@ -1,62 +1,62 @@
-import SelectOption from '@components/option_select/option_select';
-import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { Box, TextareaAutosize, TextField } from '@material-ui/core';
-import { ProjectsPage } from 'helpers/type';
-import { createProjectMiddleWare, getExtendedCompaniesMiddleWare } from 'pages/projects/logic/projects_reducer';
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'redux/reducers_registration';
+import SelectOption from '@components/option_select/option_select'
+import PrimaryButtonUI from '@components/primary_button/primary_button'
+import { Box, TextareaAutosize, TextField } from '@material-ui/core'
+import { ProjectsPage } from 'helpers/type'
+import { createProjectMiddleWare, getExtendedCompaniesMiddleWare } from 'pages/projects/logic/projects_reducer'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers_registration'
 
 const CreateProject: FunctionComponent = () => {
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const {
     channels,
-  }: ProjectsPage = useSelector((state: RootState) => state.projects);
+  }: ProjectsPage = useSelector((state: RootState) => state.projects)
 
-  const [name, setName] = useState('');
-  const [channelID, setChannel] = useState('');
-  const [description, setDescription] = useState('');
-  const [errorName, setErrorName] = useState(true);
+  const [name, setName] = useState('')
+  const [channelID, setChannel] = useState('')
+  const [description, setDescription] = useState('')
+  const [errorName, setErrorName] = useState(true)
 
   useEffect(() => {
-    void fetchData();
-  }, []);
+    void fetchData()
+  }, [])
 
   const fetchData = () => {
-    dispatch(getExtendedCompaniesMiddleWare());
-  };
+    dispatch(getExtendedCompaniesMiddleWare())
+  }
 
   const changeChannelID = (event) => {
     if (event.target.value === channelID) {
-      return;
+      return
     }
-    setChannel(event.target.value);
-  };
+    setChannel(event.target.value)
+  }
 
   const onChangeNameProject = (event) => {
     if (!event.target.value) {
-      setErrorName(true);
-      setName('');
+      setErrorName(true)
+      setName('')
 
-      return;
+      return
     }
-    setErrorName(false);
-    setName(event.target.value);
+    setErrorName(false)
+    setName(event.target.value)
 
-  };
+  }
 
   const onChangeDescription = (event) => {
-    setDescription(event.target.value);
-  };
+    setDescription(event.target.value)
+  }
 
   function createProjectBtn() {
     if (errorName || !channelID) {
-      setErrorName(true);
+      setErrorName(true)
 
-      return;
+      return
     }
-    dispatch(createProjectMiddleWare(name, channelID, description));
+    dispatch(createProjectMiddleWare(name, channelID, description))
   }
 
   return (
@@ -115,7 +115,7 @@ const CreateProject: FunctionComponent = () => {
         </div>
       </div>
     </Box>
-  );
-};
+  )
+}
 
-export default CreateProject;
+export default CreateProject

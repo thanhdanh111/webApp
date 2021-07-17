@@ -1,45 +1,45 @@
-import React, { FunctionComponent, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'redux/reducers_registration';
-import { Typography } from '@material-ui/core';
-import { getProjectDataMiddleWare } from '../logic/projects_reducer';
-import { useRouter } from 'next/router';
-import PrimaryButtonUI from '@components/primary_button/primary_button';
-import ProjectPageUI from 'pages/projects/UI/project';
-import { UserInfoType } from 'helpers/type';
-import { checkValidAccess } from 'helpers/check_valid_access';
-import { Roles } from 'constants/roles';
+import React, { FunctionComponent, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers_registration'
+import { Typography } from '@material-ui/core'
+import { getProjectDataMiddleWare } from '../logic/projects_reducer'
+import { useRouter } from 'next/router'
+import PrimaryButtonUI from '@components/primary_button/primary_button'
+import ProjectPageUI from 'pages/projects/UI/project'
+import { UserInfoType } from 'helpers/type'
+import { checkValidAccess } from 'helpers/check_valid_access'
+import { Roles } from 'constants/roles'
 
-const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER]
 
 const Projects: FunctionComponent = () => {
-  const dispatch = useDispatch();
-  const project = useSelector((state: RootState) => state.projects);
-  const listProjects = project.projects;
-  const router = useRouter();
-  const pathname = router.pathname;
+  const dispatch = useDispatch()
+  const project = useSelector((state: RootState) => state.projects)
+  const listProjects = project.projects
+  const router = useRouter()
+  const pathname = router.pathname
   const {
     isAdmin,
     rolesInCompany,
     currentCompany,
-  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
-  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
-  const companyName = currentCompany?.name;
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo)
+  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses })
+  const companyName = currentCompany?.name
 
   useEffect(() => {
-    return void fetchDataProject();
-  }, []);
+    return void fetchDataProject()
+  }, [])
 
   const fetchDataProject = () => {
-    dispatch(getProjectDataMiddleWare());
-  };
+    dispatch(getProjectDataMiddleWare())
+  }
 
   const onPushToPage = (url: string) => {
     if (!loadMemberData) {
-      return;
+      return
     }
-    void router.push(`${pathname}/${url}`);
-  };
+    void router.push(`${pathname}/${url}`)
+  }
 
   return (
       <div className='projects'>
@@ -67,12 +67,12 @@ const Projects: FunctionComponent = () => {
             {Array.isArray(listProjects) && listProjects.map((item) => {
               return (
                 <ProjectPageUI key={item._id} project={item}/>
-              );
+              )
             })}
           </div>
         </div>
       </div>
-  );
-};
+  )
+}
 
-export default Projects;
+export default Projects

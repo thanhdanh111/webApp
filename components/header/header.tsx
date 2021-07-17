@@ -1,11 +1,11 @@
-import React from 'react';
-import { AppBar, Toolbar, Hidden, IconButton }from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import DropDown from './popup_avatar';
-import NotificationsUI from './notifications';
+import React from 'react'
+import { AppBar, Toolbar, Hidden, IconButton }from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu'
+import DropDown from './popup_avatar'
+import NotificationsUI from './notifications'
 
 interface Header {
-  changeDrawerOpen: () => void;
+  changeDrawerOpen: () => void
 }
 
 const Header: React.FunctionComponent<Header> = ({ changeDrawerOpen }) => {
@@ -30,7 +30,7 @@ const Header: React.FunctionComponent<Header> = ({ changeDrawerOpen }) => {
           </div>
         </Toolbar>
       </AppBar>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

@@ -12,4 +12,4 @@ export const boardsActionType = {
   HIDE_LOADER_LIST: 'HIDE_LOADER_LIST',
   HAS_NO_DATA: 'HAS_NO_DATA',
   SET_SELECTED_BOARD: 'SET_SELECT_BOARD',
-};
+}

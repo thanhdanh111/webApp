@@ -1,5 +1,5 @@
-import React from 'react';
-import Projects from './UI/projects';
+import React from 'react'
+import Projects from './UI/projects'
 
 const ProjectPage = () => {
 
@@ -7,7 +7,7 @@ const ProjectPage = () => {
     <>
       <Projects />
     </>
-  );
-};
+  )
+}
 
-export default ProjectPage;
+export default ProjectPage

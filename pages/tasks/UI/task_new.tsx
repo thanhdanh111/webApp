@@ -1,74 +1,85 @@
-import { Box, Button, InputBase } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import CloseIcon from '@material-ui/icons/Close';
-import Tooltip from '@material-ui/core/Tooltip';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import Panel from './panel_task';
-import AssignUser from './assign_user';
-import DirectNewTask from './direct_new_task';
-import { setAssigned, setTempararyTask } from '../logic/task_action';
-import { createdTaskThunkAction, TaskType } from '../logic/task_reducer';
-import { setCurrentStatus } from 'pages/task_statuses/logic/task_statuses_action';
+import { Box, Button, InputBase } from '@material-ui/core'
+import React, { useEffect } from 'react'
+import CloseIcon from '@material-ui/icons/Close'
+import Tooltip from '@material-ui/core/Tooltip'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import Panel from './panel_task'
+import AssignUser from './assign_user'
+import DirectNewTask from './direct_new_task'
+import { setAssigned, setTempararyTask } from '../logic/task_action'
+import { createdTaskThunkAction, TaskType } from '../logic/task_reducer'
+import { setCurrentStatus } from 'pages/task_statuses/logic/task_statuses_action'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
+import { UserInfoType } from 'helpers/type'
 
 interface InitProps {
-  taskStatusID: string;
-  companyID: string;
+  taskStatusID: string
 }
 
 const TaskNew: React.FC<InitProps> = (props) => {
-  const dispatch = useDispatch();
-  const usersAssigned = useSelector((state: RootStateOrAny) => state.taskBoards?.usersAssigned);
-  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
-  const { temporaryAssigned, temporaryTask }: TaskType = useSelector((state: RootStateOrAny) => state.tasks);
+  const dispatch = useDispatch()
+  const { userID, profile }: UserInfoType = useSelector((state: RootStateOrAny) => state.userInfo)
+  const { temporaryAssigned, temporaryTask }: TaskType = useSelector((state: RootStateOrAny) => state.tasks)
 
   useEffect(() => {
 
-    const assignDefault = {
-      _id: userInfo?.userID,
-      profilePhoto: userInfo?.profile?.profilePhoto,
-      fullName: `
-        ${userInfo?.profile?.firstName} ${userInfo?.profile?.lastName}`,
-    };
+    if (checkIfEmptyArray(temporaryAssigned)) {
+      return
+    }
 
-    dispatch(setAssigned([...temporaryAssigned, assignDefault]));
-  }, []);
+    const assignDefault = {
+      _id: userID,
+      profilePhoto: profile?.profilePhoto,
+      fullName: `${profile?.firstName} ${profile?.lastName}`,
+    }
+
+    dispatch(setAssigned([...temporaryAssigned, assignDefault]))
+  }, [])
 
   const handleAssign = (users) => {
-    dispatch(setAssigned(users));
-  };
+    dispatch(setAssigned(users))
+  }
 
   const onChangeTitle = (event) => {
-    dispatch(setTempararyTask({ ...temporaryTask, title: event.target.value }));
+    dispatch(setTempararyTask({ ...temporaryTask, title: event.target.value }))
 
     if (event.keyCode !== 13) {
-      return;
+      return
     }
-    addNewTask();
-  };
+    addNewTask()
+  }
 
   const addNewTask = () => {
     if (!temporaryTask?.title) {
-      return;
+      return
     }
-    dispatch(setTempararyTask({
+
+    const temp = {
       ...temporaryTask,
       taskStatusID: props.taskStatusID,
       userIDs: temporaryAssigned?.map((user) => user._id),
-    }));
+    }
 
-    dispatch(createdTaskThunkAction());
-  };
+    dispatch(createdTaskThunkAction(temp))
+  }
+
+  const handleClose = async () => {
+    await Promise.all([
+      dispatch(setCurrentStatus('')),
+      dispatch(setAssigned(''))],
+    )
+  }
 
   return (
     <Box className='task-add' position='relative'>
       <Box display='flex' flexDirection='row' alignItems='center'>
-        <CloseIcon onClick={() => dispatch(setCurrentStatus(''))} className='icon-add close-icon'/>
+        <CloseIcon onClick={handleClose} className='icon-add close-icon'/>
         <InputBase
           placeholder="Task name or type '/' for commands"
           name='title'
           onKeyUp={onChangeTitle}
         />
-        <AssignUser usersAssigned={usersAssigned} handleAssign={handleAssign} sizes='assigned-user-avatar'/>
+        <AssignUser usersAssigned={temporaryAssigned} handleAssign={handleAssign} sizes='assigned-user-avatar'/>
       </Box>
       <Box display='flex' px={2} pb={'10px'} mt={'25px'} fontWeight={100}>
         <Panel/>
@@ -96,7 +107,7 @@ const TaskNew: React.FC<InitProps> = (props) => {
       </Box>
       <DirectNewTask/>
     </Box>
-  );
-};
+  )
+}
 
-export default TaskNew;
+export default TaskNew

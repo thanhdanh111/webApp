@@ -1,68 +1,55 @@
-import { Container, Link, Typography } from '@material-ui/core';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import AddIcon from '@material-ui/icons/Add';
-import TasksUI from '../../tasks/UI/tasks';
-import { useDispatch, useSelector } from 'react-redux';
-import { DisappearedLoading } from 'react-loadingg';
-import { Draggable, Droppable } from 'react-beautiful-dnd';
-import TaskNew from 'pages/tasks/UI/task_new';
-import ActionTaskStatusUI from './action_task_status';
-import RenameStatusUI from './ui_rename_task_status';
-import { getStatusByIDThunkAction, StatusesType } from '../logic/task_statuses_reducer';
-import { RootState } from 'redux/reducers_registration';
-import { TaskType } from 'pages/tasks/logic/task_reducer';
-import { checkHasObjectByKey } from 'helpers/check_in_array';
-import { setCurrentStatus } from '../logic/task_statuses_action';
+import { Container, Link, Typography } from '@material-ui/core'
+import React, { useRef, useState } from 'react'
+import AddIcon from '@material-ui/icons/Add'
+import TasksUI from '../../tasks/UI/tasks'
+import { useDispatch, useSelector } from 'react-redux'
+import { DisappearedLoading } from 'react-loadingg'
+import { Draggable, Droppable } from 'react-beautiful-dnd'
+import TaskNew from 'pages/tasks/UI/task_new'
+import ActionTaskStatusUI from './action_task_status'
+import RenameStatusUI from './ui_rename_task_status'
+import { StatusesType } from '../logic/task_statuses_reducer'
+import { RootState } from 'redux/reducers_registration'
+import { TaskType } from 'pages/tasks/logic/task_reducer'
+import { setCurrentStatus } from '../logic/task_statuses_action'
+import { TaskStatus } from 'helpers/type'
 
 interface InitProps {
-  taskStatusID: string;
+  taskStatusID: TaskStatus
 }
 
 const TaskStatusUI = (props: InitProps) => {
-  const { taskStatusID }: InitProps = props;
-  // const {
-  //   taskStatus,
-  //   loading,
-  //   currentTaskStatus,
-  //   tasks,
-  // }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
-  const { statuses, loading, currentStatusID }: StatusesType = useSelector((state: RootState) => state.statuses);
-  const { tasks }: TaskType = useSelector((state: RootState) => state.tasks);
-  const dispatch = useDispatch();
-  const newTaskRef = useRef<HTMLTitleElement>(null);
-  const style = statuses && statuses[taskStatusID]?.title?.split(' ').join('-').toLowerCase();
-  const [retitling, setRetitling] = useState(false);
-
-  useEffect(() => {
-    dispatch(getStatusByIDThunkAction(taskStatusID));
-  }, []);
-
-  const contentTask = useMemo(() => {
-    return tasks;
-  }, [tasks]);
+  const { taskStatusID }: InitProps = props
+  const { loading, currentStatusID }: StatusesType = useSelector((state: RootState) => state.statuses)
+  const { tasks }: TaskType = useSelector((state: RootState) => state.tasks)
+  const dispatch = useDispatch()
+  const newTaskRef = useRef<HTMLTitleElement>(null)
+  const style = taskStatusID && taskStatusID?.title?.split(' ').join('-').toLowerCase()
+  const [retitling, setRetitling] = useState(false)
 
   const setRetitleStatus = () => {
-    setRetitling(!retitling);
-  };
+    setRetitling(!retitling)
+  }
 
   const TaskStatusContent = () => {
     const scrollInput = () => {
       if (!newTaskRef.current) {
-        return;
+        return
       }
-      newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    };
+      newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
 
-    const generateTask = () => {
-      for (const each in contentTask) {
-        if (!checkHasObjectByKey(contentTask[each], taskStatusID, 'taskStatusID')) {
-          continue;
-        }
+    const generateTask = Object.keys(tasks).map((key) => {
 
-        return (
+      if (tasks[key]?.taskStatusID !== taskStatusID?._id) {
+        return
+      }
+
+      return (
+        <>
           <Draggable
-            key={each}
-            draggableId={each}
+            key={key}
+            draggableId={key}
           >
             {(provideTask) => {
               return (
@@ -71,18 +58,18 @@ const TaskStatusUI = (props: InitProps) => {
                   {...provideTask.draggableProps}
                   {...provideTask.dragHandleProps}
                 >
-                  <TasksUI key={each} task={contentTask[each]}/>
+                  <TasksUI key={key} task={tasks[key]}/>
                 </div>
-              );
+              )
             }}
           </Draggable>
-        );
-      }
-    };
+        </>
+      )
+    })
 
     return (
       <>
-      <Droppable droppableId={statuses[taskStatusID]?._id} type='TASK_STATUS'>
+      <Droppable droppableId={taskStatusID?._id} type='TASK_STATUS'>
         {(provided) => (
           <div
             className={`task-status ${style}`}
@@ -92,19 +79,19 @@ const TaskStatusUI = (props: InitProps) => {
             <div className='status'>
               <Container className='status-left'>
                   <RenameStatusUI
-                    taskStatusID={statuses[taskStatusID]}
+                    taskStatusID={taskStatusID}
                     renaming={retitling}
                     setRetitleStatus={setRetitleStatus}
                   />
               </Container>
               <Container className='status-right'>
                   <ActionTaskStatusUI
-                    taskStatusID={taskStatusID}
+                    taskStatusID={taskStatusID?._id}
                     setRenameStatus={setRetitleStatus}
                   />
                   <Link
                     className='actions-status add-action'
-                    onClick={() => dispatch(setCurrentStatus(statuses[taskStatusID]?._id || ''))}
+                    onClick={() => dispatch(setCurrentStatus(taskStatusID?._id || ''))}
                   >
                     <AddIcon />
                   </Link>
@@ -112,20 +99,19 @@ const TaskStatusUI = (props: InitProps) => {
             </div>
             <div className='status-task-list'>
               {
-                currentStatusID === statuses[taskStatusID]?._id &&
+                currentStatusID === taskStatusID?._id &&
                 <TaskNew
-                  companyID={statuses[taskStatusID]?.companyID?._id || ''}
-                  taskStatusID={statuses[taskStatusID]?._id}
+                  taskStatusID={taskStatusID?._id}
                 />
               }
-              {generateTask()}
+              {generateTask}
               {
-                currentStatusID !== statuses[taskStatusID]?._id &&
+                currentStatusID !== taskStatusID?._id &&
                   <div
                     className='add-task'
                     onClick={() => {
-                      dispatch(setCurrentStatus(statuses[taskStatusID]?._id || ''));
-                      scrollInput();
+                      dispatch(setCurrentStatus(taskStatusID?._id))
+                      scrollInput()
                     }}
                   >
                     <Link className='icon-add-task'><AddIcon /></Link>
@@ -137,8 +123,8 @@ const TaskStatusUI = (props: InitProps) => {
         )}
       </Droppable>
     </>
-    );
-  };
+    )
+  }
 
   return (
     <div className='task-status'>
@@ -147,7 +133,7 @@ const TaskStatusUI = (props: InitProps) => {
       }
       {loading && <DisappearedLoading color={'#67cb48'}/>}
     </div>
-  );
-};
+  )
+}
 
-export default (TaskStatusUI);
+export default (TaskStatusUI)

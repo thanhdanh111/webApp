@@ -1,22 +1,22 @@
-import { checkIfEmptyArray } from './check_if_empty_array';
+import { checkIfEmptyArray } from './check_if_empty_array'
 
 export const convertArrayStringToObject = (array: string[]) => {
   if (!checkIfEmptyArray(array)) {
-    return { };
+    return { }
   }
-  const obj = { };
+  const obj = { }
 
-  array.forEach((value, index) => obj[`userIDs[${index}]`] = value);
+  array.forEach((value, index) => obj[`userIDs[${index}]`] = value)
 
-  return obj;
-};
+  return obj
+}
 
 export function convertArrayObjectToObject<T>(array: T[], key: string){
   if (!checkIfEmptyArray(array)) {
-    return { };
+    return { }
   }
-  const obj = { };
-  array.forEach((item) => obj[item[key]] = item);
+  const obj = { }
+  array.forEach((item) => obj[item[key]] = item)
 
-  return obj;
+  return obj
 }

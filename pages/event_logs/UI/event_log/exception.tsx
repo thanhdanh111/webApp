@@ -1,12 +1,12 @@
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
-import { ExceptionState } from 'pages/event_logs/logic/event_log_interface';
-import React, { FunctionComponent } from 'react';
-import ExceptionItem from './exception_item';
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
+import { ExceptionState } from 'pages/event_logs/logic/event_log_interface'
+import React, { FunctionComponent } from 'react'
+import ExceptionItem from './exception_item'
 
-type ExceptionType = ExceptionState;
+type ExceptionType = ExceptionState
 
 const Exception: FunctionComponent<ExceptionType> = (props: ExceptionState) => {
-  const frames = props.stacktrace ? props.stacktrace.frames : [];
+  const frames = props.stacktrace ? props.stacktrace.frames : []
 
   return (
     <div className='exception-container'>
@@ -16,11 +16,11 @@ const Exception: FunctionComponent<ExceptionType> = (props: ExceptionState) => {
                 <>
                   <ExceptionItem {...frame} />
                 </>
-              );
+              )
             })}
         </ul>
     </div>
-  );
-};
+  )
+}
 
-export default Exception;
+export default Exception

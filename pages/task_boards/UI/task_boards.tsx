@@ -1,146 +1,137 @@
 import {
   TaskBoardsType,
   updateTaskById,
-  updateTaskStatusById,
-} from '../logic/task_boards_reducer';
-import { getTasksThunkAction } from '../../tasks/logic/task_reducer';
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { DisappearedLoading } from 'react-loadingg';
-import TaskStatusUI from '../../task_statuses/UI/task_statuses';
-import NavClickUp from './task_board_header';
-import { Typography } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-import { Task, UserInfoType } from 'helpers/type';
-import { DragDropContext } from 'react-beautiful-dnd';
-import { Roles } from 'constants/roles';
-import { RootState } from 'redux/reducers_registration';
-import { checkValidAccess } from 'helpers/check_valid_access';
-import { createStatusThunkAction } from 'pages/task_statuses/logic/task_statuses_reducer';
+} from '../logic/task_boards_reducer'
+import { TaskType } from '../../tasks/logic/task_reducer'
+import React, { FunctionComponent, useState, useCallback } from 'react'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import { DisappearedLoading } from 'react-loadingg'
+import TaskStatusUI from '../../task_statuses/UI/task_statuses'
+import NavClickUp from './task_board_header'
+import { Typography } from '@material-ui/core'
+import CheckIcon from '@material-ui/icons/Check'
+import CloseIcon from '@material-ui/icons/Close'
+import { Task, UserInfoType } from 'helpers/type'
+import { DragDropContext } from 'react-beautiful-dnd'
+import { Roles } from 'constants/roles'
+import { RootState } from 'redux/reducers_registration'
+import { checkValidAccess } from 'helpers/check_valid_access'
+import { createStatusThunkAction } from 'pages/task_statuses/logic/task_statuses_reducer'
 
-const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF];
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF]
 
 interface IDroppable {
-  droppableId: string;
-  index: number;
+  droppableId: string
+  index: number
 }
 
 interface OnDropResult {
-  destination: IDroppable;
-  source: IDroppable;
+  destination: IDroppable
+  source: IDroppable
 }
 
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+// const reorder = (list, startIndex, endIndex) => {
+//   const result = Array.from(list)
+//   const [removed] = result.splice(startIndex, 1)
+//   result.splice(endIndex, 0, removed)
 
-  return result;
-};
+//   return result
+// }
 
 const move = (source, destination, droppableSource, droppableDestination) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
+  const sourceClone = Array.from(source)
+  const destClone = Array.from(destination)
+  const [removed] = sourceClone.splice(droppableSource.index, 1)
 
-  destClone.splice(droppableDestination.index, 0, removed);
+  destClone.splice(droppableDestination.index, 0, removed)
 
-  const resultMove = {};
-  resultMove[droppableSource.droppableId] = sourceClone;
-  resultMove[droppableDestination.droppableId] = destClone;
+  const resultMove = {}
+  resultMove[droppableSource.droppableId] = sourceClone
+  resultMove[droppableDestination.droppableId] = destClone
 
-  return resultMove;
-};
+  return resultMove
+}
 const BoardTasks: FunctionComponent = () => {
   const {
     loading,
     currentTaskBoard,
     taskStatus,
-    selectedUserIDs,
-    selectedTags,
-    selectedTitle,
-    filteringTaskByUser,
-  }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards);
+  }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards)
   const {
     isAdmin,
     rolesInCompany,
-  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
-  const checkUserScope = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
-  const dispatch = useDispatch();
-  const [isAddStatus, setIsAddStatus] = useState(false);
-  const [title, setTitle] = useState('');
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo)
+  const { tasks } : TaskType =  useSelector((state: RootState) => state?.tasks)
+  const checkUserScope = isAdmin || checkValidAccess({ rolesInCompany, validAccesses })
+  const dispatch = useDispatch()
+  const [isAddStatus, setIsAddStatus] = useState(false)
+  const [title, setTitle] = useState('')
 
-  const addStatusStyle = !isAddStatus ? 'no-add-status' : 'add-status-style';
+  const addStatusStyle = !isAddStatus ? 'no-add-status' : 'add-status-style'
 
-  const loadData = () => {
-    return dispatch(getTasksThunkAction());
-  };
-
-  useEffect(() => {
-    void loadData();
-  }, [selectedUserIDs, selectedTags, selectedTitle, filteringTaskByUser]);
-
-  const GenerateTaskStatuses = () => {
-    if (!currentTaskBoard) {
-      return;
+  const GenerateTaskStatuses = useCallback(() => {
+    if (!currentTaskBoard || !currentTaskBoard?.taskStatusIDs) {
+      return <></>
     }
 
-    return currentTaskBoard?.taskStatusIDs?.map((each) => {
-      return (
-          <>
-            <TaskStatusUI
-              key={each}
-              taskStatusID={each}
-            />
-          </>
-      );
-    },
-    );
-  };
+    return (<>
+      {
+        currentTaskBoard?.taskStatusIDs?.map((each) => {
+          return (
+            <>
+              <TaskStatusUI
+                key={each?._id}
+                taskStatusID={each}
+              />
+            </>
+          )
+        })}
+    </>
+    )
+  }, [tasks])
 
   const getTasksFromTaskStatus = ({ taskStatusId }) => {
     if (!taskStatus[taskStatusId]) {
-      return;
+      return
     }
 
-    return taskStatus[taskStatusId].taskIDs;
-  };
+    return taskStatus[taskStatusId].taskIDs
+  }
 
   const onDragEnd = (result) => {
-    const { source, destination }: OnDropResult = result;
+    const { source, destination }: OnDropResult = result
 
     if (!destination) {
-      return;
+      return
     }
 
     if (source.droppableId === destination.droppableId) {
-      const items: Task[] = reorder(
-        getTasksFromTaskStatus({ taskStatusId: source.droppableId }),
-        source.index,
-        destination.index,
-      ) as Task[];
+      // const items: Task[] = reorder(
+      //   getTasksFromTaskStatus({ taskStatusId: source.droppableId }),
+      //   source.index,
+      //   destination.index,
+      // ) as Task[]
 
-      dispatch(updateTaskStatusById({
-        taskStatusID: source.droppableId,
-        tasks: items,
-      }));
+      // dispatch(updateTaskStatusById({
+      //   taskStatusID: source.droppableId,
+      //   tasks: items,
+      // }))
 
-      return;
+      return
     }
 
-    const sourceTasks = getTasksFromTaskStatus({ taskStatusId: source.droppableId }) || [];
-    let destinationTasks = getTasksFromTaskStatus({ taskStatusId: destination.droppableId });
+    const sourceTasks = getTasksFromTaskStatus({ taskStatusId: source.droppableId }) || []
+    let destinationTasks = getTasksFromTaskStatus({ taskStatusId: destination.droppableId })
 
     const movedData = move(
       sourceTasks,
       destinationTasks,
       source,
       destination,
-    );
+    )
 
-    const newSourceTasks = movedData[source.droppableId] as Task[];
-    destinationTasks = movedData[destination.droppableId] as Task[];
+    const newSourceTasks = movedData[source.droppableId] as Task[]
+    destinationTasks = movedData[destination.droppableId] as Task[]
     dispatch(updateTaskById({
       destinationTasks,
       taskID: sourceTasks[source.index]?._id,
@@ -150,16 +141,16 @@ const BoardTasks: FunctionComponent = () => {
       },
       sourceTasks: newSourceTasks,
       sourceTaskStatusID: source.droppableId,
-    }));
-  };
+    }))
+  }
 
   const submitCreatedTaskStatus = () => {
     if (!checkUserScope) {
-      return;
+      return
     }
 
-    dispatch(createStatusThunkAction(title));
-  };
+    dispatch(createStatusThunkAction(title))
+  }
 
   const addTaskStatusUI = () => {
     return (
@@ -172,8 +163,8 @@ const BoardTasks: FunctionComponent = () => {
           <CheckIcon className='submit-create-status-icon' />
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <div className='board'>
@@ -182,7 +173,7 @@ const BoardTasks: FunctionComponent = () => {
           {!loading &&
           <>
             <DragDropContext onDragEnd={onDragEnd}>
-              {GenerateTaskStatuses()}
+              <GenerateTaskStatuses/>
             </DragDropContext>
             <div className='add-task task-status'>
               <div className='status'>
@@ -198,7 +189,7 @@ const BoardTasks: FunctionComponent = () => {
             {loading && <DisappearedLoading color={'#67cb48'}/>}
         </div>
       </div>
-  );
-};
+  )
+}
 
-export default (BoardTasks);
+export default (BoardTasks)

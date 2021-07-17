@@ -1,6 +1,6 @@
-import { Box, Link } from '@material-ui/core';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import { Box, Link } from '@material-ui/core'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 
 const DirectNewTask: React.FC = () => {
   return (
@@ -29,7 +29,7 @@ const DirectNewTask: React.FC = () => {
         </div>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default DirectNewTask;
+export default DirectNewTask

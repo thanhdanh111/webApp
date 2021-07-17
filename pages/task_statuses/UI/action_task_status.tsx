@@ -1,10 +1,10 @@
-import { ClickAwayListener, Grow, IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
-import CreateIcon from '@material-ui/icons/Create';
-import { deletedStatusThunkAction } from '../logic/task_statuses_reducer';
+import { ClickAwayListener, Grow, IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from '@material-ui/core'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
+import CreateIcon from '@material-ui/icons/Create'
+import { deletedStatusThunkAction } from '../logic/task_statuses_reducer'
 
 const actions = {
   delete: {
@@ -15,32 +15,32 @@ const actions = {
     label: 'Rename status',
     icon: <CreateIcon  fontSize='small' className='rename-status-icon'/>,
   },
-};
+}
 
 interface InitialProps {
-  taskStatusID: string;
-  setRenameStatus: () => void;
+  taskStatusID: string
+  setRenameStatus: () => void
 }
 
 const ActionTaskStatusUI = (props: InitialProps) => {
-  const { taskStatusID, setRenameStatus }: InitialProps = props;
-  const [open, setOpen] = useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const dispatch = useDispatch();
-  const actionList = ['delete', 'rename'];
+  const { taskStatusID, setRenameStatus }: InitialProps = props
+  const [open, setOpen] = useState(false)
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
+  const dispatch = useDispatch()
+  const actionList = ['delete', 'rename']
 
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+    setOpen((prevOpen) => !prevOpen)
+  }
 
   const handleRemoveStatus = () => {
-    dispatch(deletedStatusThunkAction(taskStatusID));
-  };
+    dispatch(deletedStatusThunkAction(taskStatusID))
+  }
 
   const actionFunc = {
     delete: handleRemoveStatus,
     rename: setRenameStatus,
-  };
+  }
 
   function handleReturnActionsList(action, index) {
     return <MenuItem
@@ -53,16 +53,16 @@ const ActionTaskStatusUI = (props: InitialProps) => {
         {actions[action]?.icon}
       </ListItemIcon>
       <ListItemText primary={actions[action]?.label} />
-    </MenuItem>;
+    </MenuItem>
   }
 
   const handleClose = (event: React.MouseEvent<EventTarget>) => {
     if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
-      return;
+      return
     }
 
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
     <div>
@@ -92,7 +92,7 @@ const ActionTaskStatusUI = (props: InitialProps) => {
         )}
       </Popper>
     </div>
-  );
-};
+  )
+}
 
-export default (ActionTaskStatusUI);
+export default (ActionTaskStatusUI)

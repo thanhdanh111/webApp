@@ -1,46 +1,46 @@
 interface Department {
-  departmentID?: string;
-  name: string;
+  departmentID?: string
+  name: string
 }
 
 export interface Company {
-  companyID: string;
-  name: string;
-  departments: Department[];
+  companyID: string
+  name: string
+  departments: Department[]
 }
 
 export const getDepartmentsIntoCompanies = ({ departments }) => {
   if (!departments || !departments.length) {
-    return [];
+    return []
   }
 
-  const storeCompaniesIndice = { };
-  const companies: Company[] = [];
+  const storeCompaniesIndice = { }
+  const companies: Company[] = []
 
-  let indexForNewTempCompany = 0;
+  let indexForNewTempCompany = 0
 
   departments.forEach((department) => {
     if (!department || !department?.companyID) {
-      return;
+      return
     }
 
-    const companyID = department?.companyID?._id ?? department?.companyID;
-    let indexOfTempCompany = storeCompaniesIndice[companyID];
+    const companyID = department?.companyID?._id ?? department?.companyID
+    let indexOfTempCompany = storeCompaniesIndice[companyID]
 
     if (typeof indexOfTempCompany !== 'number') {
-      storeCompaniesIndice[companyID] = indexForNewTempCompany;
-      indexOfTempCompany = indexForNewTempCompany;
+      storeCompaniesIndice[companyID] = indexForNewTempCompany
+      indexOfTempCompany = indexForNewTempCompany
 
       companies[indexForNewTempCompany] = {
         companyID,
         name: department?.companyID?.name,
         departments: [],
-      };
+      }
 
-      indexForNewTempCompany = indexForNewTempCompany + 1;
+      indexForNewTempCompany = indexForNewTempCompany + 1
     }
 
-    let departmentsOfCompany =  companies[indexOfTempCompany]['departments'];
+    let departmentsOfCompany =  companies[indexOfTempCompany]['departments']
 
     departmentsOfCompany = [
       ...departmentsOfCompany,
@@ -48,10 +48,10 @@ export const getDepartmentsIntoCompanies = ({ departments }) => {
         departmentID: department._id,
         name: department.name,
       },
-    ];
+    ]
 
-    companies[indexOfTempCompany]['departments'] = departmentsOfCompany;
-  });
+    companies[indexOfTempCompany]['departments'] = departmentsOfCompany
+  })
 
-  return companies;
-};
+  return companies
+}

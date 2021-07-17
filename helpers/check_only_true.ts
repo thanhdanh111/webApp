@@ -1,7 +1,7 @@
 export const checkOnlyTrueInArray = ({ conditionsArray }) => {
   if (!conditionsArray || !conditionsArray?.length) {
-    return;
+    return
   }
 
-  return conditionsArray.every((condition) => condition);
-};
+  return conditionsArray.every((condition) => condition)
+}

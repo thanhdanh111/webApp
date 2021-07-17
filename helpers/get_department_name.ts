@@ -1,17 +1,17 @@
-import { Department } from './type';
-import { checkIfEmptyArray } from './check_empty_array';
+import { Department } from './type'
+import { checkIfEmptyArray } from './check_empty_array'
 
 export const getDepartmentsName = (departments) => {
 
   if (!checkIfEmptyArray(departments)) {
-    return;
+    return
   }
 
-  const newArray: string[] = [] ;
+  const newArray: string[] = []
 
   departments.map((item: Department) => {
-    newArray.push(item?.name ?? '');
-  });
+    newArray.push(item?.name ?? '')
+  })
 
-  return newArray;
-};
+  return newArray
+}

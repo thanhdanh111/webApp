@@ -8,80 +8,75 @@ import {
   Select,
   TextField,
   Typography,
-} from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedTaskBoard } from '../logic/task_boards_action';
-import { createTaskBoardThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer';
-import { Close } from '@material-ui/icons';
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
-import { Roles } from 'constants/roles';
-import { RootState } from 'redux/reducers_registration';
-import { UserInfoType } from 'helpers/type';
-import { checkValidAccess } from 'helpers/check_valid_access';
-import { getPaginationThunkAction } from 'pages/users/logic/users_reducer';
-import { getTagsThunkAction } from 'pages/tag_tasks/logic/tag_tasks_reducer';
+} from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import ViewModuleIcon from '@material-ui/icons/ViewModule'
+import { useDispatch, useSelector } from 'react-redux'
+import { setSelectedTaskBoard } from '../logic/task_boards_action'
+import { createTaskBoardThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer'
+import { Close } from '@material-ui/icons'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
+import { Roles } from 'constants/roles'
+import { RootState } from 'redux/reducers_registration'
+import { UserInfoType } from 'helpers/type'
+import { checkValidAccess } from 'helpers/check_valid_access'
+import { getPaginationThunkAction } from 'pages/users/logic/users_reducer'
+import { getTagsThunkAction } from 'pages/tag_tasks/logic/tag_tasks_reducer'
 
-const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER]
 
 const TaskBoardUI = () => {
-  const dispatch = useDispatch();
-  const {
-    taskBoards,
-    currentTaskBoard,
-    hasNoData,
-    loading,
-  }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
+  const dispatch = useDispatch()
+  const { taskBoards, currentTaskBoard, loading, hasNoData }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards)
   const {
     isAdmin,
     rolesInCompany,
-  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
-  const checkUserScope = isAdmin || checkValidAccess({ rolesInCompany, validAccesses });
-  const [open, setOpen] = useState(false);
-  const [titleTaskBoard, setTileTaskBoard] = useState('');
-  const [descriptionTaskBoard, setDescriptionTaskBoard] = useState('');
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo)
+  const checkUserScope = isAdmin || checkValidAccess({ rolesInCompany, validAccesses })
+  const [open, setOpen] = useState(false)
+  const [titleTaskBoard, setTileTaskBoard] = useState('')
+  const [descriptionTaskBoard, setDescriptionTaskBoard] = useState('')
 
-  const classRequire = !titleTaskBoard ? 'title-required' : '';
+  const classRequire = !titleTaskBoard ? 'title-required' : ''
 
   useEffect(() => {
-    void fetchData();
-  }, []);
+    void fetchData()
+  }, [])
 
   const fetchData = async () => {
     await Promise.all([
       dispatch(getTaskBoardThunkAction()),
       dispatch(getTagsThunkAction()),
       dispatch(getPaginationThunkAction()),
-    ]);
-  };
+    ])
+  }
 
   const changeSelectedTaskBoard = (event) => {
     if (event.target.value === currentTaskBoard._id) {
-      return;
+      return
     }
 
     taskBoards.map((taskBoard) => {
       if (taskBoard._id === event.target.value) {
-        dispatch(setSelectedTaskBoard(taskBoard));
+        dispatch(setSelectedTaskBoard(taskBoard))
       }
 
-      return;
-    });
+      return
+    })
 
-  };
+  }
 
   const handleOpenOrClose = () => {
-    setOpen(!open);
-  };
+    setOpen(!open)
+  }
 
   const handleChangeTitleTaskBoard = (event) => {
-    setTileTaskBoard(event?.target?.value);
-  };
+    setTileTaskBoard(event?.target?.value)
+  }
 
   const handleChangeDescriptionTaskBoard = (event) => {
-    setDescriptionTaskBoard(event?.target?.value);
-  };
+    setDescriptionTaskBoard(event?.target?.value)
+  }
 
   const generateUIContentCreatTaskBoard = () => {
     return (
@@ -114,16 +109,16 @@ const TaskBoardUI = () => {
           </form>
         </Box>
       </div>
-    );
-  };
+    )
+  }
 
   const onSubmitCreateTaskBoard = () => {
     if (!checkUserScope) {
-      return;
+      return
     }
 
-    dispatch(createTaskBoardThunkAction(titleTaskBoard, descriptionTaskBoard));
-  };
+    dispatch(createTaskBoardThunkAction(titleTaskBoard, descriptionTaskBoard))
+  }
 
   const creatTaskBoardModal = () => {
     return (
@@ -158,8 +153,8 @@ const TaskBoardUI = () => {
           </Button>
         </DialogContent>
       </Dialog>
-    );
-  };
+    )
+  }
 
   return (
     <div className='nav-click-up-task-board'>
@@ -186,7 +181,7 @@ const TaskBoardUI = () => {
             >
               {item?.title}
             </MenuItem>
-          );
+          )
         }) :
         <div className='empty-state'>
           <img alt='logo' width='100px' src='../document.svg'/>
@@ -195,8 +190,8 @@ const TaskBoardUI = () => {
       }
       </Select>
     </div>
-  );
+  )
 
-};
+}
 
-export default TaskBoardUI;
+export default TaskBoardUI

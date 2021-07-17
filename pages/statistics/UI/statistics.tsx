@@ -1,31 +1,31 @@
-import { CircularProgress, Grid, IconButton } from '@material-ui/core';
-import React, { FunctionComponent, useState } from 'react';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import PersonIcon from '@material-ui/icons/Person';
-import Graph from './graph';
-import StatisticsCard from './statistics_card';
-import StatisticsTable from './statistics_table';
-import { useSelector } from 'react-redux';
-import { Roles } from 'constants/roles';
-import { checkValidAccess } from 'helpers/check_valid_access';
-import { RootState } from 'redux/reducers_registration';
+import { CircularProgress, Grid, IconButton } from '@material-ui/core'
+import React, { FunctionComponent, useState } from 'react'
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt'
+import PersonIcon from '@material-ui/icons/Person'
+import Graph from './graph'
+import StatisticsCard from './statistics_card'
+import StatisticsTable from './statistics_table'
+import { useSelector } from 'react-redux'
+import { Roles } from 'constants/roles'
+import { checkValidAccess } from 'helpers/check_valid_access'
+import { RootState } from 'redux/reducers_registration'
 interface DataType {
-  title: string;
+  title: string
 }
 
-type BodyProps = DataType;
-const validAccesses = [Roles.COMPANY_MANAGER];
+type BodyProps = DataType
+const validAccesses = [Roles.COMPANY_MANAGER]
 
 const StatisticsUi: FunctionComponent<BodyProps> = () => {
-  const userInfo = useSelector((state: RootState) => state?.userInfo);
-  const userID = userInfo?.userID;
-  const company = userInfo?.currentCompany;
-  const isAdmin = userInfo?.isAdmin || checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany });
-  const [getMe, setGetMe] = useState(true);
+  const userInfo = useSelector((state: RootState) => state?.userInfo)
+  const userID = userInfo?.userID
+  const company = userInfo?.currentCompany
+  const isAdmin = userInfo?.isAdmin || checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany })
+  const [getMe, setGetMe] = useState(true)
 
   const renderUIByAdmin = () => {
     if (!isAdmin) {
-      return;
+      return
     }
 
     return (
@@ -39,8 +39,8 @@ const StatisticsUi: FunctionComponent<BodyProps> = () => {
       >
         <PeopleAltIcon className='statistics-body-options-icon' fontSize='large' name='members' color={!getMe ? 'secondary' : 'primary'} />
       </IconButton>
-    );
-  };
+    )
+  }
 
   return (
     <div className='statistics-page'>
@@ -94,6 +94,6 @@ const StatisticsUi: FunctionComponent<BodyProps> = () => {
         )}
       </div>
     </div>
-  );
-};
-export default StatisticsUi;
+  )
+}
+export default StatisticsUi

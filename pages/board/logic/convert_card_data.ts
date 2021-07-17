@@ -1,4 +1,4 @@
-import { Card } from 'helpers/type';
+import { Card } from 'helpers/type'
 
 export const convertCardData = (card): Card => {
   return {
@@ -11,5 +11,5 @@ export const convertCardData = (card): Card => {
       x: card.position.x,
       y: card.position.y,
     },
-  };
-};
+  }
+}

@@ -1,7 +1,7 @@
 export const checkIfEmptyArray = (array) => {
   if (!array?.length) {
-    return false;
+    return false
   }
 
-  return true;
-};
+  return true
+}

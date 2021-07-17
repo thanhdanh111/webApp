@@ -1,67 +1,67 @@
-import { Box, Input } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import SearchIcon from '@material-ui/icons/Search';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { DisappearedLoading } from 'react-loadingg';
-import { getPaginationThunkAction, getSearchAction } from 'pages/users/logic/users_reducer';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import UserItem from './user_popup_item';
-import { User } from 'helpers/type';
-import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array';
-import { useDebounce } from 'helpers/debounce';
-import { RootState } from 'redux/reducers_registration';
-import { TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
+import { Box, Input } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import SearchIcon from '@material-ui/icons/Search'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { DisappearedLoading } from 'react-loadingg'
+import { getPaginationThunkAction, getSearchAction } from 'pages/users/logic/users_reducer'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import UserItem from './user_popup_item'
+import { User } from 'helpers/type'
+import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array'
+import { useDebounce } from 'helpers/debounce'
+import { RootState } from 'redux/reducers_registration'
+import { TaskType } from 'pages/tasks/logic/task_reducer'
 
 interface InitProps {
-  usersAssigned?: User[];
-  chooseUser: (user) => void;
-  type?: string;
+  usersAssigned?: User[]
+  chooseUser: (user) => void
+  type?: string
 }
 
 const UsersPopupUI: React.FC<InitProps> = (props) => {
-  const dispatch = useDispatch();
-  const users = useSelector((state: RootStateOrAny) => state.users);
-  const { selectedUserIDs }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
-  const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDebounce(searchTerm, 200);
-  const { chooseUser, usersAssigned, type }: InitProps = props;
+  const dispatch = useDispatch()
+  const users = useSelector((state: RootStateOrAny) => state.users)
+  const { selectedUserIDs }: TaskType = useSelector((state: RootState) => state.tasks)
+  const [searchTerm, setSearchTerm] = useState('')
+  const debouncedSearchTerm = useDebounce(searchTerm, 200)
+  const { chooseUser, usersAssigned, type }: InitProps = props
   const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+    setSearchTerm(event.target.value)
+  }
 
   useEffect(() => {
     if (!debouncedSearchTerm) {
-      return;
+      return
     }
-    dispatch(getSearchAction(debouncedSearchTerm));
-  }, [debouncedSearchTerm]);
+    dispatch(getSearchAction(debouncedSearchTerm))
+  }, [debouncedSearchTerm])
 
   const onHandleAssigned = (user) => {
     if (!chooseUser || !user) {
-      return;
+      return
     }
 
     if (type === 'reduxAction') {
       if (checkArrayObjectHasObjectByKey(selectedUserIDs, user?.userID?._id, '_id')) {
         const removeUser = selectedUserIDs?.filter(
-          (each) => each?._id !== user?.userID?._id);
+          (each) => each?._id !== user?.userID?._id)
 
-        return dispatch(chooseUser(removeUser));
+        return dispatch(chooseUser(removeUser))
       }
 
-      const addUser = [...selectedUserIDs, user?.userID];
+      const addUser = [...selectedUserIDs, user?.userID]
 
-      return dispatch(chooseUser(addUser));
+      return dispatch(chooseUser(addUser))
     }
 
-    return chooseUser(user);
-  };
+    return chooseUser(user)
+  }
 
   const generateUser = () => {
-    const user = debouncedSearchTerm ? users.listSearch : users.list;
+    const user = debouncedSearchTerm ? users.listSearch : users.list
 
     const renderUser = user?.map((each) => {
-      const checkAssignedOfUser = usersAssigned && checkArrayObjectHasObjectByKey(usersAssigned, each?.user?.userID?._id, '_id');
+      const checkAssignedOfUser = usersAssigned && checkArrayObjectHasObjectByKey(usersAssigned, each?.user?.userID?._id, '_id')
 
       return (
         <UserItem
@@ -70,11 +70,11 @@ const UsersPopupUI: React.FC<InitProps> = (props) => {
           handleAssign={() => onHandleAssigned(each?.user)}
           isAssigned={checkAssignedOfUser}
         />
-      );
-    });
+      )
+    })
 
-    return renderUser;
-  };
+    return renderUser
+  }
 
   return (
     <>
@@ -98,7 +98,7 @@ const UsersPopupUI: React.FC<InitProps> = (props) => {
       {generateUser()}
     </InfiniteScroll>
     </>
-  );
-};
+  )
+}
 
-export default UsersPopupUI;
+export default UsersPopupUI

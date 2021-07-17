@@ -1,18 +1,18 @@
-import { Box, TextField, Tooltip } from '@material-ui/core';
-import { DatePicker } from '@material-ui/pickers';
-import moment, { Moment } from 'moment';
-import React, { useState } from 'react';
+import { Box, TextField, Tooltip } from '@material-ui/core'
+import { DatePicker } from '@material-ui/pickers'
+import moment, { Moment } from 'moment'
+import React, { useState } from 'react'
 
 interface InitProps {
-  onChangeDate: (e) => void;
-  title: string;
-  minDate?: string | Moment;
-  name?: string;
+  onChangeDate: (e) => void
+  title: string
+  minDate?: string | Moment
+  name?: string
 }
 
 const DateIconPicker: React.FC<InitProps> = (props) => {
-  const [openDatePicker, setOpenDatePicker] = useState(false);
-  const [date, setDate] = useState('');
+  const [openDatePicker, setOpenDatePicker] = useState(false)
+  const [date, setDate] = useState('')
 
   return (
     <>
@@ -31,8 +31,8 @@ const DateIconPicker: React.FC<InitProps> = (props) => {
         onClose={() => setOpenDatePicker(false)}
         value={date}
         onChange={(event) => {
-          setDate(event?.toString() || '');
-          props.onChangeDate({ name: props?.name, value: event });
+          setDate(event?.toString() || '')
+          props.onChangeDate({ name: props?.name, value: event })
         }}
         minDate={props?.minDate || ''}
         renderInput={(propsDate) => (
@@ -40,7 +40,7 @@ const DateIconPicker: React.FC<InitProps> = (props) => {
         )}
       />
     </>
-  );
-};
+  )
+}
 
-export default DateIconPicker;
+export default DateIconPicker

@@ -1,36 +1,36 @@
-import axios from 'axios';
-import { config } from 'helpers/get_config';
-import { RolesInDepartments, Token } from 'helpers/type';
+import axios from 'axios'
+import { config } from 'helpers/get_config'
+import { RolesInDepartments, Token } from 'helpers/type'
 import {
   updatePaginationTimeOff, updateTimeOffIndexLoading,
   updateStatusTimeOff, updateTimeOffLoadingStatus,
   updateOnSendingTimeOffRequest, updateTimeOffCompaniesToRequest, updateTimeOffsReducer,
   updateTimeOffRequestReducer,
   getTimeOffByID,
-} from './time_off_actions';
-import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValue } from './time_off_interface';
-import moment from 'moment';
-import { getDepartmentsIntoCompanies } from 'helpers/get_the_departments_into_companies';
-import { checkOnlyTrueInArray } from 'helpers/check_only_true';
-import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { dateTimeUiFormat } from 'constants/date_time_ui_format';
-import { checkValidAccess } from 'helpers/check_valid_access';
-import { Roles } from 'constants/roles';
-import { getIDsOfValidAccesses } from 'helpers/get_ids_of_valid_accesses';
-import { checkTrueInObject } from 'helpers/check_true_object';
+} from './time_off_actions'
+import { SelectedTimeOffDataType, TimeOffModel, TimeOffRequestProps, TimeOffValue } from './time_off_interface'
+import moment from 'moment'
+import { getDepartmentsIntoCompanies } from 'helpers/get_the_departments_into_companies'
+import { checkOnlyTrueInArray } from 'helpers/check_only_true'
+import { pushNewNotifications } from 'redux/common/notifications/reducer'
+import { dateTimeUiFormat } from 'constants/date_time_ui_format'
+import { checkValidAccess } from 'helpers/check_valid_access'
+import { Roles } from 'constants/roles'
+import { getIDsOfValidAccesses } from 'helpers/get_ids_of_valid_accesses'
+import { checkTrueInObject } from 'helpers/check_true_object'
 
 const notificationsType = {
   201: 'Sent your letter successfully',
   401: 'Something went wrong with your account',
   403: 'You cannot use this functionality',
-};
+}
 
 interface GetTimeOffsByModel {
-  userID?: string;
-  rolesInCompany?: Roles[];
-  rolesInDepartments?: RolesInDepartments;
-  type: string;
-  isExceptMeInMembers?: boolean;
+  userID?: string
+  rolesInCompany?: Roles[]
+  rolesInDepartments?: RolesInDepartments
+  type: string
+  isExceptMeInMembers?: boolean
 }
 
 function getTimeOffsByModel(
@@ -43,41 +43,41 @@ function getTimeOffsByModel(
     isExceptMeInMembers = true,
   }
 : GetTimeOffsByModel) {
-  const timeOffs: TimeOffModel[] = [];
+  const timeOffs: TimeOffModel[] = []
 
   if (!data || !data.length || typeof data === 'string') {
 
-    return timeOffs;
+    return timeOffs
   }
 
-  const isTypeMembers = !!userID && type === 'members';
+  const isTypeMembers = !!userID && type === 'members'
 
   const checkExceptMember = (timeOff) => {
-    const invalidApiData = checkTrueInObject(timeOff);
-    const exceptMeInMembers = isTypeMembers && userID === timeOff?.createdBy?._id;
+    const invalidApiData = checkTrueInObject(timeOff)
+    const exceptMeInMembers = isTypeMembers && userID === timeOff?.createdBy?._id
 
-    const isValid = !invalidApiData || (isExceptMeInMembers && exceptMeInMembers);
+    const isValid = !invalidApiData || (isExceptMeInMembers && exceptMeInMembers)
 
-    return isValid;
-  };
+    return isValid
+  }
 
   data.forEach((timeOff) => {
     if (checkExceptMember(timeOff)) {
-      return;
+      return
     }
 
     const canEditTimeOffInDepartment = checkValidAccess({
       rolesInDepartments,
       validAccesses: [Roles.DEPARTMENT_MANAGER],
       departmentID: timeOff?.departmentID?._id,
-    });
+    })
 
     const canEditTimeOffInCompany = checkValidAccess({
       rolesInCompany,
       validAccesses: [Roles.COMPANY_MANAGER],
-    });
+    })
 
-    const isManager = type === 'members' || canEditTimeOffInCompany || canEditTimeOffInDepartment;
+    const isManager = type === 'members' || canEditTimeOffInCompany || canEditTimeOffInDepartment
 
     timeOffs.push({
       isManager,
@@ -89,17 +89,17 @@ function getTimeOffsByModel(
       reason: timeOff?.reason ?? '',
       name: `${timeOff?.createdBy?.lastName ?? ''} ${timeOff?.createdBy?.firstName ?? ''}`,
       departmentName: timeOff?.departmentID?.name ?? '',
-    });
-  });
+    })
+  })
 
-  return timeOffs;
+  return timeOffs
 }
 
 interface GetUserDaysOffApi {
-  limit: number;
-  userID: string;
-  cursor?: string;
-  infiniteScroll?: boolean;
+  limit: number
+  userID: string
+  cursor?: string
+  infiniteScroll?: boolean
 }
 
 export const getUserDaysOffApi = ({
@@ -109,16 +109,16 @@ export const getUserDaysOffApi = ({
   infiniteScroll = false,
 }: GetUserDaysOffApi) => async (dispatch, getState) =>  {
   try {
-    const token: Token =  localStorage.getItem('access_token');
-    const state = getState();
-    const userInfo = state?.userInfo;
+    const token: Token =  localStorage.getItem('access_token')
+    const state = getState()
+    const userInfo = state?.userInfo
 
     if (!infiniteScroll) {
       await dispatch(updateTimeOffLoadingStatus({
         loadingStatus: {
           ownTimeOffsLoading: false,
         },
-      }));
+      }))
     }
 
     const params = {
@@ -127,7 +127,7 @@ export const getUserDaysOffApi = ({
       createdBy: userID,
       sortBy: 'createdAt',
       sortDirection: 'DESC',
-    };
+    }
 
     const getDaysoff = await axios.get(
       `${config.BASE_URL}/daysoff`,
@@ -139,16 +139,16 @@ export const getUserDaysOffApi = ({
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
 
     if (!getDaysoff?.data) {
       await dispatch(updateTimeOffLoadingStatus({
         loadingStatus: {
           ownTimeOffsLoading: false,
         },
-      }));
+      }))
 
-      return;
+      return
     }
 
     const timeOffs = getTimeOffsByModel(
@@ -160,7 +160,7 @@ export const getUserDaysOffApi = ({
         type: 'user',
         isExceptMeInMembers: true,
       },
-    );
+    )
 
     await dispatch(
       updatePaginationTimeOff({
@@ -174,22 +174,22 @@ export const getUserDaysOffApi = ({
           ownTimeOffsTotalCount: getDaysoff?.data?.totalCount,
         },
       },
-    ));
+    ))
   } catch (error) {
     await dispatch(updateTimeOffLoadingStatus({
       loadingStatus: {
         ownTimeOffsLoading: false,
       },
-    }));
+    }))
   }
-};
+}
 
 interface GetMembersDaysOffApi {
-  limit: number;
-  cursor?: string;
-  infiniteScroll?: boolean;
-  userID: string;
-  isExceptMeInMembers?: boolean;
+  limit: number
+  cursor?: string
+  infiniteScroll?: boolean
+  userID: string
+  isExceptMeInMembers?: boolean
 }
 
 export const getMembersDaysOffApi = ({
@@ -200,52 +200,52 @@ export const getMembersDaysOffApi = ({
   isExceptMeInMembers = true,
 }: GetMembersDaysOffApi) => async (dispatch, getState) =>  {
   try {
-    const token: Token =  localStorage.getItem('access_token');
-    const state = getState();
-    const userInfo = state?.userInfo;
-    const isAdmin = userInfo?.isAdmin;
-    const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
-    const couldGetDaysOffOfMember = checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany });
+    const token: Token =  localStorage.getItem('access_token')
+    const state = getState()
+    const userInfo = state?.userInfo
+    const isAdmin = userInfo?.isAdmin
+    const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER]
+    const couldGetDaysOffOfMember = checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany })
 
     if (!infiniteScroll) {
       await dispatch(updateTimeOffLoadingStatus({
         loadingStatus: {
           membersTimeOffsLoading: true,
         },
-      }));
+      }))
     }
 
     const queryParams = () => {
-      let queryArrayParams = '';
+      let queryArrayParams = ''
 
       if (!isAdmin && couldGetDaysOffOfMember) {
-        const currentCompanyID = userInfo?.currentCompany?._id;
+        const currentCompanyID = userInfo?.currentCompany?._id
 
         const stringCompanies = [currentCompanyID].
-            map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`);
+            map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`)
 
         const departmentIDs = getIDsOfValidAccesses({
           objectMap: userInfo?.rolesInDepartments,
           validAccesses: [Roles.DEPARTMENT_MANAGER],
-        });
+        })
 
         const stringDepartments = userInfo?.rolesInCompany.includes(Roles.COMPANY_MANAGER)
           ? []
           : departmentIDs.
-            map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`);
+            map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`)
 
-        queryArrayParams = `?${[...stringCompanies, ...stringDepartments].join('&')}`;
+        queryArrayParams = `?${[...stringCompanies, ...stringDepartments].join('&')}`
       }
 
-      return queryArrayParams;
-    };
+      return queryArrayParams
+    }
 
     const params = {
       limit,
       cursor,
       sortBy: 'createdAt',
       sortDirection: 'DESC',
-    };
+    }
 
     const getDaysoff = await axios.get(
       `${config.BASE_URL}/daysoff${queryParams()}`,
@@ -257,16 +257,16 @@ export const getMembersDaysOffApi = ({
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
 
     if (!getDaysoff?.data) {
       await dispatch(updateTimeOffLoadingStatus({
         loadingStatus: {
           membersTimeOffsLoading: false,
         },
-      }));
+      }))
 
-      return;
+      return
     }
 
     const timeOffs = getTimeOffsByModel(
@@ -276,7 +276,7 @@ export const getMembersDaysOffApi = ({
         isExceptMeInMembers,
         type: 'members',
       },
-    );
+    )
 
     await dispatch(
       updatePaginationTimeOff({
@@ -290,22 +290,22 @@ export const getMembersDaysOffApi = ({
           membersTimeOffsTotalCount: getDaysoff?.data?.totalCount,
         },
       },
-    ));
+    ))
   } catch (error) {
     await dispatch(updateTimeOffLoadingStatus({
       loadingStatus: {
         membersTimeOffsLoading: false,
       },
-    }));
+    }))
   }
-};
+}
 
 function shouldHaveChangeStatusTimeOffData({ onSelectTimeOffData }) {
-  let canContinue = false;
-  const { timeOffID, status, timeOffIndex, fieldName }: SelectedTimeOffDataType = onSelectTimeOffData;
+  let canContinue = false
+  const { timeOffID, status, timeOffIndex, fieldName }: SelectedTimeOffDataType = onSelectTimeOffData
 
   if (!onSelectTimeOffData) {
-    return false;
+    return false
   }
 
   canContinue = checkOnlyTrueInArray({
@@ -315,29 +315,29 @@ function shouldHaveChangeStatusTimeOffData({ onSelectTimeOffData }) {
       !!fieldName,
       typeof timeOffIndex === 'number',
     ],
-  });
+  })
 
-  return canContinue;
+  return canContinue
 }
 
 export const changeStatusOfTimeOff = () => async (dispatch, getState) => {
   try {
-    const timeOffState: TimeOffValue = getState()?.timeoff;
-    const haveValidData = shouldHaveChangeStatusTimeOffData({ onSelectTimeOffData: timeOffState?.onSelectTimeOffData });
+    const timeOffState: TimeOffValue = getState()?.timeoff
+    const haveValidData = shouldHaveChangeStatusTimeOffData({ onSelectTimeOffData: timeOffState?.onSelectTimeOffData })
 
     if (!haveValidData || timeOffState.updateStatusLoading) {
-      return;
+      return
     }
 
-    const { timeOffID, status, timeOffIndex, fieldName }: SelectedTimeOffDataType = timeOffState?.onSelectTimeOffData;
+    const { timeOffID, status, timeOffIndex, fieldName }: SelectedTimeOffDataType = timeOffState?.onSelectTimeOffData
 
     await dispatch(updateTimeOffIndexLoading({
       isLoading: true,
       loadingIndex: timeOffIndex,
       loadingOptionName: fieldName,
-    }));
+    }))
 
-    const token: Token = localStorage.getItem('access_token');
+    const token: Token = localStorage.getItem('access_token')
 
     const changeStatus = await axios({
       url: `${config.BASE_URL}/daysoff/${timeOffID}`,
@@ -349,42 +349,42 @@ export const changeStatusOfTimeOff = () => async (dispatch, getState) => {
       data: {
         status,
       },
-    });
+    })
 
     if (!changeStatus?.data?.status) {
       await dispatch(updateTimeOffIndexLoading({
         isLoading: false,
         loadingIndex: undefined,
         loadingOptionName: undefined,
-      }));
+      }))
 
-      return;
+      return
     }
 
-    await dispatch(updateStatusTimeOff({ fieldName, timeOffIndex, status: changeStatus?.data?.status }));
+    await dispatch(updateStatusTimeOff({ fieldName, timeOffIndex, status: changeStatus?.data?.status }))
     await dispatch(updateTimeOffIndexLoading({
       isLoading: false,
       loadingIndex: undefined,
       loadingOptionName: undefined,
-    }));
+    }))
   } catch (error) {
     const handleMessage = notificationsType[error?.response?.data?.statusCode]
-    || 'Something went wrong';
+    || 'Something went wrong'
 
-    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
+    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }))
     await dispatch(updateTimeOffIndexLoading({
       isLoading: false,
       loadingIndex: undefined,
       loadingOptionName: undefined,
-    }));
+    }))
   }
-};
+}
 
 export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
   try {
-    const userInfo = getState()?.userInfo;
+    const userInfo = getState()?.userInfo
 
-    const token: Token =  localStorage.getItem('access_token');
+    const token: Token =  localStorage.getItem('access_token')
 
     const getDepartments = await axios.get(
       `${config.BASE_URL}/departments?companyID[0]=${userInfo?.currentCompany?._id}`,
@@ -395,9 +395,9 @@ export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
 
-    const noData = !getDepartments?.data?.list || !getDepartments?.data?.list?.length;
+    const noData = !getDepartments?.data?.list || !getDepartments?.data?.list?.length
 
     if (noData) {
 
@@ -405,44 +405,44 @@ export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
         companies: [
           { name: 'None' },
         ],
-      }));
+      }))
 
-      return;
+      return
     }
 
-    const companies = getDepartmentsIntoCompanies({ departments: getDepartments?.data?.list });
+    const companies = getDepartmentsIntoCompanies({ departments: getDepartments?.data?.list })
 
     await dispatch(updateTimeOffCompaniesToRequest({
       companies: [
         { name: 'None' },
         ...companies,
       ],
-    }));
+    }))
 
   } catch (error) {
 
     const handleMessage = notificationsType[error?.response?.data?.statusCode]
-      || 'Something went wrong';
+      || 'Something went wrong'
 
-    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
+    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }))
     await dispatch(updateTimeOffCompaniesToRequest({
       companies: [
         { name: 'None' },
       ],
-    }));
+    }))
   }
-};
+}
 
-const messesError = notificationsType[400] || 'Something went wrong';
+const messesError = notificationsType[400] || 'Something went wrong'
 
 export const submitTimeOffRequest = () => async (dispatch, getState) => {
   try {
-    const token: Token =  localStorage.getItem('access_token');
-    const timeOffRequestState: TimeOffRequestProps = getState().timeOffRequest;
-    const timeOffsState = getState()?.timeoff;
+    const token: Token =  localStorage.getItem('access_token')
+    const timeOffRequestState: TimeOffRequestProps = getState().timeOffRequest
+    const timeOffsState = getState()?.timeoff
 
     if (timeOffRequestState.onSendingRequest) {
-      return;
+      return
     }
 
     const haveNeededData = checkOnlyTrueInArray({
@@ -454,28 +454,28 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
         !!timeOffRequestState.selectedCompany?.companyID,
         !!timeOffRequestState?.reason,
       ],
-    });
+    })
 
     if (!haveNeededData) {
-      const handleError = messesError;
-      await dispatch(pushNewNotifications({ variant: 'error' , message: handleError }));
+      const handleError = messesError
+      await dispatch(pushNewNotifications({ variant: 'error' , message: handleError }))
 
-      return;
+      return
     }
 
-    await dispatch(updateOnSendingTimeOffRequest({ onSendingRequest: true }));
+    await dispatch(updateOnSendingTimeOffRequest({ onSendingRequest: true }))
 
-    const startTime = moment(`${timeOffRequestState.startDate}T${timeOffRequestState.startTime}`).toISOString();
-    const endTime =  moment(`${timeOffRequestState.endDate}T${timeOffRequestState.endTime}`).toISOString();
-    const selectedCompany = timeOffRequestState?.selectedCompany;
-    const selectedDepartment = timeOffRequestState?.selectedDepartment;
+    const startTime = moment(`${timeOffRequestState.startDate}T${timeOffRequestState.startTime}`).toISOString()
+    const endTime =  moment(`${timeOffRequestState.endDate}T${timeOffRequestState.endTime}`).toISOString()
+    const selectedCompany = timeOffRequestState?.selectedCompany
+    const selectedDepartment = timeOffRequestState?.selectedDepartment
     const payload = {
       startTime,
       endTime,
       reason: timeOffRequestState?.reason ?? null,
       departmentID: selectedDepartment?.departmentID ?? null,
       companyID: selectedCompany?.companyID ?? null,
-    };
+    }
 
     const res = await axios.post(
       `${config.BASE_URL}/daysoff`,
@@ -485,20 +485,20 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
+      })
 
-    const userInfo = getState()?.userInfo;
-    const timeOff = res?.data;
+    const userInfo = getState()?.userInfo
+    const timeOff = res?.data
     const validRolesInDepartment = checkValidAccess({
       rolesInDepartments: userInfo?.rolesInDepartments,
       validAccesses: [Roles.DEPARTMENT_MANAGER],
       departmentID: selectedDepartment?.departmentID,
-    });
+    })
     const validRolesInCompany = checkValidAccess({
       rolesInCompany: userInfo?.rolesInCompany,
       validAccesses: [Roles.COMPANY_MANAGER],
-    });
-    const isManager = validRolesInCompany || validRolesInDepartment;
+    })
+    const isManager = validRolesInCompany || validRolesInDepartment
 
     const myNewTimeOff = {
       isManager,
@@ -510,28 +510,28 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
       reason: timeOff?.reason ?? '',
       name: `${userInfo?.profile?.lastName ?? ''} ${userInfo?.profile.firstName ?? ''}`,
       departmentName: selectedDepartment?.name ?? '',
-    };
+    }
 
-    const handleMessage = notificationsType[res?.status];
+    const handleMessage = notificationsType[res?.status]
 
-    await dispatch(pushNewNotifications({ variant: 'success' , message: handleMessage }));
-    dispatch(updateTimeOffsReducer({ ownTimeOffs: [myNewTimeOff, ...timeOffsState?.ownTimeOffs] }));
-    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, onRequest: false, reason: '' }));
+    await dispatch(pushNewNotifications({ variant: 'success' , message: handleMessage }))
+    dispatch(updateTimeOffsReducer({ ownTimeOffs: [myNewTimeOff, ...timeOffsState?.ownTimeOffs] }))
+    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, onRequest: false, reason: '' }))
   } catch (error) {
 
-    const handleMessage = notificationsType[error?.response?.data?.statusCode] || 'Something went wrong';
+    const handleMessage = notificationsType[error?.response?.data?.statusCode] || 'Something went wrong'
 
-    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, selectedCompany: undefined, selectedDepartment: undefined }));
-    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }));
+    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, selectedCompany: undefined, selectedDepartment: undefined }))
+    await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }))
   }
-};
+}
 
 export const getTimeoffByIDThunkAction = (timeOffID) => async (dispatch) => {
   try {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token')
 
     if (!token) {
-      return;
+      return
     }
     const res = await axios.get(`${config.BASE_URL}/daysOff/${timeOffID}`,
       {
@@ -539,10 +539,10 @@ export const getTimeoffByIDThunkAction = (timeOffID) => async (dispatch) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-      });
+      })
 
-    dispatch(getTimeOffByID(res.data));
+    dispatch(getTimeOffByID(res.data))
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}

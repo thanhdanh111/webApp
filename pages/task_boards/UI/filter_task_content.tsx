@@ -1,22 +1,22 @@
-import { Box, Button, IconButton, Popover } from '@material-ui/core';
-import React, { useState } from 'react';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
+import { Box, Button, IconButton, Popover } from '@material-ui/core'
+import React, { useState } from 'react'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 
 interface InitialProps {
-  component: JSX.Element;
-  valueElement: JSX.Element[];
-  filterLabel: string;
+  component: JSX.Element
+  valueElement: JSX.Element[]
+  filterLabel: string
 }
 
 const FilterTaskContentUI: React.FC<InitialProps> = ({ component, valueElement, filterLabel }) => {
-  const [open, setOpen] = useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false)
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
 
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+    setOpen((prevOpen) => !prevOpen)
+  }
 
   return (
     <>
@@ -59,7 +59,7 @@ const FilterTaskContentUI: React.FC<InitialProps> = ({ component, valueElement, 
         )}
       </PopupState>
     </>
-  );
-};
+  )
+}
 
-export default FilterTaskContentUI;
+export default FilterTaskContentUI

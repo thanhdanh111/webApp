@@ -1,13 +1,13 @@
-import { Avatar, Box, MenuItem } from '@material-ui/core';
-import { UserAccess } from 'helpers/type';
+import { Avatar, Box, MenuItem } from '@material-ui/core'
+import { UserAccess } from 'helpers/type'
 
 interface InitProps {
-  userAccess: UserAccess;
-  handleAssign?: () => void;
-  isAssigned?: boolean;
+  userAccess: UserAccess
+  handleAssign?: () => void
+  isAssigned?: boolean
 }
 const UserItem: React.FC<InitProps> = (props) => {
-  const { userAccess, handleAssign, isAssigned }: InitProps = props;
+  const { userAccess, handleAssign, isAssigned }: InitProps = props
 
   return (
     <MenuItem onClick={handleAssign} className='menu-item-users-popup'>
@@ -27,6 +27,6 @@ const UserItem: React.FC<InitProps> = (props) => {
         </span>
       </Box>
     </MenuItem>
-  );
-};
-export default UserItem;
+  )
+}
+export default UserItem

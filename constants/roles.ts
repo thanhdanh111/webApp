@@ -11,4 +11,4 @@ export const rolesRender = {
   COMPANY_MANAGER: 'Company Manager',
   DEPARTMENT_STAFF: 'Department Staff',
   DEPARTMENT_MANAGER: 'Deparment Manager',
-};
+}
