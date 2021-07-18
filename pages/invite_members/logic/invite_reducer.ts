@@ -1,5 +1,5 @@
-import { InviteActionTypes } from './invite_actions';
-import { InviteValue } from './invite_interface';
+import { InviteActionTypes } from './invite_actions'
+import { InviteValue } from './invite_interface'
 
 const initialState: InviteValue = {
   inviteMembers: [
@@ -16,7 +16,7 @@ const initialState: InviteValue = {
   ],
   loading: false,
   inviteLoading: false,
-};
+}
 
 const inviteReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -25,10 +25,10 @@ const inviteReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action.data,
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default inviteReducer;
+export default inviteReducer

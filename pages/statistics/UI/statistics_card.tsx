@@ -1,23 +1,23 @@
-import React from 'react';
-import { Card, CardContent, Typography, Grid } from '@material-ui/core';
-import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
+import React from 'react'
+import { Card, CardContent, Typography, Grid } from '@material-ui/core'
+import { ArrowDownward, ArrowUpward } from '@material-ui/icons'
 interface DataType {
-  title: string;
-  numTitle: string;
-  variation: number;
-  lastSync: string;
+  title: string
+  numTitle: string
+  variation: number
+  lastSync: string
 }
 
-type BodyProps = DataType;
+type BodyProps = DataType
 
 const StatisticsCard: React.FunctionComponent<BodyProps> = ({ title, numTitle, variation, lastSync }) => {
   const icon = () => {
     if (variation > 0) {
-      return (<ArrowUpward className={'statistics-increase'} fontSize='small' />);
+      return (<ArrowUpward className={'statistics-increase'} fontSize='small' />)
     }
 
-    return (<ArrowDownward className={'statistics-decrease'} fontSize='small' />);
-  };
+    return (<ArrowDownward className={'statistics-decrease'} fontSize='small' />)
+  }
 
   return (
     <Card className='page-card' style={{ borderRadius: 10 }} >
@@ -42,6 +42,6 @@ const StatisticsCard: React.FunctionComponent<BodyProps> = ({ title, numTitle, v
         </div>
       </CardContent>
     </Card>
-  );
-};
-export default StatisticsCard;
+  )
+}
+export default StatisticsCard

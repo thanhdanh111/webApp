@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react'
 
-import { Handle, Position } from 'react-flow-renderer';
-import Resizer from '../resizer/resize';
-import { handleResize } from '../../../../helpers/handle_resize';
-import SvgDecision from '@components/svg/svg_decision';
+import { Handle, Position } from 'react-flow-renderer'
+import Resizer from '../resizer/resize'
+import { handleResize } from '../../../../helpers/handle_resize'
+import SvgDecision from '@components/svg/svg_decision'
 
 const CustomDecision = () => {
-  const panelRef = useRef<HTMLDivElement>(null);
-  const [focus, setFocus] = useState<boolean>(false);
+  const panelRef = useRef<HTMLDivElement>(null)
+  const [focus, setFocus] = useState<boolean>(false)
 
   return (
     <div
@@ -49,7 +49,7 @@ const CustomDecision = () => {
         style={{ top: '0%', left: '48%' }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default CustomDecision;
+export default CustomDecision

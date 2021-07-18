@@ -1,16 +1,16 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react'
 import {
   Drawer, ListItemIcon, List, ListItem, Hidden, ListItemText, ListSubheader, Typography,
-} from '@material-ui/core';
-import { useRouter } from 'next/router';
-import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
-import PeopleIcon from '@material-ui/icons/People';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import HomeIcon from '@material-ui/icons/Home';
-import { EqualizerOutlined } from '@material-ui/icons';
-import EventNoteIcon from '@material-ui/icons/EventNote';
-import BusinessIcon from '@material-ui/icons/Business';
-import DashboardIcon from '@material-ui/icons/Dashboard';
+} from '@material-ui/core'
+import { useRouter } from 'next/router'
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
+import PeopleIcon from '@material-ui/icons/People'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import HomeIcon from '@material-ui/icons/Home'
+import { EqualizerOutlined } from '@material-ui/icons'
+import EventNoteIcon from '@material-ui/icons/EventNote'
+import BusinessIcon from '@material-ui/icons/Business'
+import DashboardIcon from '@material-ui/icons/Dashboard'
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -23,27 +23,27 @@ const elementIcons = {
   projects: <EventNoteIcon />,
   company: <BusinessIcon />,
   board: <DashboardIcon />,
-};
+}
 
 const drawerElements = {
   general: ['home', 'users', 'statistics'],
   management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects', 'board'],
-};
+}
 
 interface DrawerUi {
-  isDrawerOpen: boolean;
-  onChangeDrawerOpen: () => void;
+  isDrawerOpen: boolean
+  onChangeDrawerOpen: () => void
 }
 
 const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpen }) => {
-  const router = useRouter();
+  const router = useRouter()
 
   function listItems() {
-    const items: JSX.Element[] = [];
+    const items: JSX.Element[] = []
 
     for (const subheaderName in drawerElements) {
       if (!subheaderName || !drawerElements[subheaderName]?.length) {
-        continue;
+        continue
       }
 
       items.push(
@@ -52,11 +52,11 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
             {subheaderName}
           </Typography>
         </ListSubheader>,
-      );
+      )
 
       drawerElements[subheaderName].forEach((elementName) => {
-        const name = elementName;
-        const withoutDashName = name.replace('_', ' ');
+        const name = elementName
+        const withoutDashName = name.replace('_', ' ')
 
         return items.push(
           <ListItem key={name} className='drawer-btn' button onClick={() => handleChangeRoute(name)}>
@@ -65,11 +65,11 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
             </ListItemIcon>
             <ListItemText primary={withoutDashName} className='drawer-btn-text' />
           </ListItem>,
-        );
-      });
+        )
+      })
     }
 
-    return items;
+    return items
   }
 
   const drawer = (
@@ -83,14 +83,14 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
         {listItems()}
       </List>
     </div>
-  );
+  )
 
   async function handleChangeRoute(pathName) {
     if (typeof pathName !== 'string' || !pathName.length) {
-      return;
+      return
     }
 
-    await router.push(`/${pathName}`);
+    await router.push(`/${pathName}`)
   }
 
   return (
@@ -123,7 +123,7 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
         {drawer}
       </Drawer>
     </nav>
-  );
-};
+  )
+}
 
-export default DrawerUi;
+export default DrawerUi

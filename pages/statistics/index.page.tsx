@@ -1,5 +1,5 @@
-import React, { } from 'react';
-import StatisticsUi from './UI/statistics';
+import React, { } from 'react'
+import StatisticsUi from './UI/statistics'
 
 const Home = () => {
 
@@ -7,7 +7,7 @@ const Home = () => {
     <React.Fragment>
       <StatisticsUi title='test' />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

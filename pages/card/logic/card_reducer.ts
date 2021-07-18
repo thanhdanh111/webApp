@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { config } from 'helpers/get_config';
-import { CardsPage, BoardsPage } from 'helpers/type';
-import { cardsActionType } from './card_type_action';
-import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { convertCardData } from './convert_card_data';
-import { createCardAction, getCardsAction } from './card_action';
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
+import axios from 'axios'
+import { config } from 'helpers/get_config'
+import { CardsPage, BoardsPage } from 'helpers/type'
+import { cardsActionType } from './card_type_action'
+import { pushNewNotifications } from 'redux/common/notifications/reducer'
+import { convertCardData } from './convert_card_data'
+import { createCardAction, getCardsAction } from './card_action'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 
 export enum NotificationTypes {
   failedAddCard = 'Failed to add card',
@@ -17,7 +17,7 @@ export enum Arrow {
 }
 const initialState: CardsPage =  {
   cards: {},
-};
+}
 
 export const cardsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -25,44 +25,44 @@ export const cardsReducer = (state = initialState, action) => {
       const newCards = {
         ...state.cards,
         [action?.payload?._id]: action.payload,
-      };
+      }
 
       return {
         ...state,
         cards: newCards,
-      };
+      }
 
     case cardsActionType.GET_CARDS:
       return {
         ...state,
         cards: action.payload,
-      };
+      }
 
     case cardsActionType.SET_CARD:
       return {
         ...state,
         cards: {},
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 export const createCard = (shape: string, textContent: string, position: string) => async (dispatch, getState) => {
 
   try {
-    const token = localStorage.getItem('access_token');
-    const { selectedBoard }: BoardsPage = getState()?.boards;
-    const boardID = selectedBoard?._id;
+    const token = localStorage.getItem('access_token')
+    const { selectedBoard }: BoardsPage = getState()?.boards
+    const boardID = selectedBoard?._id
 
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
 
     if (!companyID || !boardID) {
 
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }))
 
-      return ;
+      return
     }
 
     const res = await axios.post(`${config.BASE_URL}/boards/${boardID}/cards`,
@@ -79,18 +79,18 @@ export const createCard = (shape: string, textContent: string, position: string)
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
 
-    dispatch(createCardAction(res.data));
+    dispatch(createCardAction(res.data))
 
   } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedAddCard }));
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedAddCard }))
   }
-};
+}
 
 export const getCards = (boardID) => async (dispatch) => {
   try {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token')
 
     const res = await axios.get(`${config.BASE_URL}/cards`, {
       headers: {
@@ -100,16 +100,16 @@ export const getCards = (boardID) => async (dispatch) => {
       params: {
         boardID,
       },
-    });
+    })
 
     if (checkIfEmptyArray(res.data.list)) {
-      const cards = convertCardData(res.data.list);
-      await dispatch(getCardsAction(cards));
+      const cards = convertCardData(res.data.list)
+      await dispatch(getCardsAction(cards))
     }
 
-    return;
+    return
   } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedGetCard }));
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedGetCard }))
   }
 
-};
+}

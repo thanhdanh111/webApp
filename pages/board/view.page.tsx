@@ -1,27 +1,27 @@
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { getBoardDetailDataMiddleWare } from './logic/board_reducer';
-import ViewBoard from '../card/UI/view_board';
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { getBoardDetailDataMiddleWare } from './logic/board_reducer'
+import ViewBoard from 'pages/card/UI/view_board'
 
 const View = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const query = router.query;
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const query = router.query
 
   useEffect(() => {
-    void fetchDataProject();
-  }, []);
+    void fetchDataProject()
+  }, [])
 
   const fetchDataProject = () => {
-    dispatch(getBoardDetailDataMiddleWare(query.id));
-  };
+    dispatch(getBoardDetailDataMiddleWare(query.id))
+  }
 
   return (
     <>
       <ViewBoard />
     </>
-  );
-};
+  )
+}
 
-export default View;
+export default View

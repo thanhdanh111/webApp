@@ -1,44 +1,44 @@
-import { Button, Container } from '@material-ui/core';
-import React, { FunctionComponent, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { getTimeoffByIDThunkAction } from 'pages/time_off/logic/time_off_apis';
-import { checkValidAccess } from 'helpers/check_valid_access';
-import { Roles } from 'constants/roles';
+import { Button, Container } from '@material-ui/core'
+import React, { FunctionComponent, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import { getTimeoffByIDThunkAction } from 'pages/time_off/logic/time_off_apis'
+import { checkValidAccess } from 'helpers/check_valid_access'
+import { Roles } from 'constants/roles'
 
 interface InitialProps {
-  targetEntityName: string;
-  daysOffID: string;
+  targetEntityName: string
+  daysOffID: string
 }
 
 const TimeOffNotificationContent: FunctionComponent<InitialProps> = (props: InitialProps) => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const timeOff = useSelector((state: RootStateOrAny) => state.timeoff);
-  const timeOffDetail = timeOff?.timeOffDetail;
-  const userInfo = useSelector((state: RootStateOrAny) => state?.userInfo);
-  const departmentID = userInfo?.currentDepartment?._id;
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const timeOff = useSelector((state: RootStateOrAny) => state.timeoff)
+  const timeOffDetail = timeOff?.timeOffDetail
+  const userInfo = useSelector((state: RootStateOrAny) => state?.userInfo)
+  const departmentID = userInfo?.currentDepartment?._id
   const haveComanyAccess = checkValidAccess({
     rolesInCompany: userInfo?.rolesInCompany,
     validAccesses: [Roles.COMPANY_MANAGER],
-  });
+  })
   const haveDepartmentAccess = checkValidAccess({
     departmentID,
     rolesInDepartments: userInfo?.rolesInDepartments,
     validAccesses: [Roles.DEPARTMENT_MANAGER],
-  });
-  const checkRole = userInfo?.isAdmin || haveComanyAccess || haveDepartmentAccess;
+  })
+  const checkRole = userInfo?.isAdmin || haveComanyAccess || haveDepartmentAccess
 
   useEffect(() => {
-    dispatch(getTimeoffByIDThunkAction(props?.daysOffID));
-  }, []);
+    dispatch(getTimeoffByIDThunkAction(props?.daysOffID))
+  }, [])
 
   const onPushToPage = (path: string) => {
-    return router.push(`/${path}`, `/${path}.html`);
-  };
-  const startDay = (new Date(Date.parse(timeOffDetail?.startTime))).toLocaleDateString('en-GB');
-  const endDate = (new Date(Date.parse(timeOffDetail?.endTime))).toLocaleDateString('en-GB');
-  const name = timeOffDetail?.createdBy && `${timeOffDetail?.createdBy?.firstName} ${timeOffDetail?.createdBy?.lastName}`;
+    return router.push(`/${path}`, `/${path}.html`)
+  }
+  const startDay = (new Date(Date.parse(timeOffDetail?.startTime))).toLocaleDateString('en-GB')
+  const endDate = (new Date(Date.parse(timeOffDetail?.endTime))).toLocaleDateString('en-GB')
+  const name = timeOffDetail?.createdBy && `${timeOffDetail?.createdBy?.firstName} ${timeOffDetail?.createdBy?.lastName}`
 
   return (
     <Container className='content-detail-notification-dayOff'>
@@ -58,7 +58,7 @@ const TimeOffNotificationContent: FunctionComponent<InitialProps> = (props: Init
         : null
       }
     </Container>
-  );
-};
+  )
+}
 
-export default (TimeOffNotificationContent);
+export default (TimeOffNotificationContent)

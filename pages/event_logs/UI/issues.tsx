@@ -1,34 +1,34 @@
-import { Checkbox, MenuItem } from '@material-ui/core';
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
-import React, { FunctionComponent } from 'react';
-import { EventLogState } from '../logic/event_log_interface';
-import IssuesItem from './issues_item';
-import { DisappearedLoading } from 'react-loadingg';
+import { Checkbox, MenuItem } from '@material-ui/core'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
+import React, { FunctionComponent } from 'react'
+import { EventLogState } from '../logic/event_log_interface'
+import IssuesItem from './issues_item'
+import { DisappearedLoading } from 'react-loadingg'
 
 interface InitialProps {
-  eventLogs: EventLogState[];
-  loading: boolean;
+  eventLogs: EventLogState[]
+  loading: boolean
 }
 
-type IssuesType = InitialProps;
+type IssuesType = InitialProps
 
 const Issues: FunctionComponent<IssuesType> = (props: InitialProps) => {
 
-  const { eventLogs, loading }: InitialProps = props;
+  const { eventLogs, loading }: InitialProps = props
 
   const generateIssuesItem = (list: EventLogState[]) => {
     if (checkIfEmptyArray(list)) {
       const eventLogItems = list.map((event: EventLogState, index: number) => {
         return (
           <IssuesItem key={index} eventLog={event}/>
-        );
-      });
+        )
+      })
 
-      return eventLogItems;
+      return eventLogItems
     }
 
-    return;
-  };
+    return
+  }
 
   return (
         <div className='issues'>
@@ -40,7 +40,7 @@ const Issues: FunctionComponent<IssuesType> = (props: InitialProps) => {
                 {loading && <DisappearedLoading color={'#67cb48'}/>}
             </ul>
         </div>
-  );
-};
+  )
+}
 
-export default Issues;
+export default Issues

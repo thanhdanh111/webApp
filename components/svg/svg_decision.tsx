@@ -6,6 +6,6 @@ const SvgDecision = () => {
         <path id='my' className='rhombus' d='M600 0 L0 600 L600 1200 L1200 600z' />
       </svg>
     </>
-  );
-};
-export default SvgDecision;
+  )
+}
+export default SvgDecision

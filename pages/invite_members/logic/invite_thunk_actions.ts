@@ -1,14 +1,14 @@
-import { updateInviteMembers } from './invite_actions';
-import { inviteMembersApi } from './invite_apis';
+import { updateInviteMembers } from './invite_actions'
+import { inviteMembersApi } from './invite_apis'
 
 export const inviteMembersThunkAction = ({ inviteMembersData }) => async (dispatch) => {
   try {
     if (!inviteMembersData || !inviteMembersData?.length) {
-      return;
+      return
     }
 
-    await dispatch(inviteMembersApi({  inviteMembers: inviteMembersData }));
+    await dispatch(inviteMembersApi({  inviteMembers: inviteMembersData }))
   } catch (error) {
-    await dispatch(updateInviteMembers({ isLoading: false }));
+    await dispatch(updateInviteMembers({ isLoading: false }))
   }
-};
+}

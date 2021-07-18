@@ -1,8 +1,8 @@
-import { Card } from 'helpers/type';
+import { Card } from 'helpers/type'
 
 export const convertCardData = (card: Card[]) => {
 
-  const obj = { };
+  const obj = { }
   card.forEach((each) => {
     const objCard = {
       _id: each?._id,
@@ -35,11 +35,11 @@ export const convertCardData = (card: Card[]) => {
         arrow: each?.topTo?.arrow,
       },
 
-    };
+    }
 
-    obj[objCard._id] = objCard;
+    obj[objCard._id] = objCard
 
-  });
+  })
 
-  return obj;
-};
+  return obj
+}

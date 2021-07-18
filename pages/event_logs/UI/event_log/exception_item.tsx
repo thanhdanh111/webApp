@@ -1,27 +1,27 @@
-import { MenuItem, Typography } from '@material-ui/core';
-import { StacktraceFrame } from 'pages/event_logs/logic/event_log_interface';
-import React, { FunctionComponent, useState } from 'react';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import { MenuItem, Typography } from '@material-ui/core'
+import { StacktraceFrame } from 'pages/event_logs/logic/event_log_interface'
+import React, { FunctionComponent, useState } from 'react'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 
-type ExceptionItemType = StacktraceFrame;
+type ExceptionItemType = StacktraceFrame
 
 const ExceptionItem: FunctionComponent<ExceptionItemType> = (props: StacktraceFrame) => {
-  const [select, setSelect] = useState(false);
+  const [select, setSelect] = useState(false)
 
   const generatedContextException = (contexts) => {
     if (contexts) {
       return contexts.map((item) => (
               <li key='' className='item-context'>{item}</li>
-          ));
+          ))
     }
 
-    return;
-  };
+    return
+  }
 
   const showDetailContext = (frame: StacktraceFrame) => {
     if (frame.lineno && frame.pre_context && frame.post_context) {
-      const start = (frame.lineno - frame.pre_context.length);
+      const start = (frame.lineno - frame.pre_context.length)
 
       return (
         <div className='frame-detail'>
@@ -31,28 +31,28 @@ const ExceptionItem: FunctionComponent<ExceptionItemType> = (props: StacktraceFr
                 {generatedContextException(frame.post_context)}
             </ol>
         </div>
-      );
+      )
     }
 
-    return;
-  };
+    return
+  }
 
   const handleClick = () => {
-    setSelect(!select);
-  };
+    setSelect(!select)
+  }
 
   const showButtonDetail = (frame: StacktraceFrame) => {
     if (frame.lineno && frame.pre_context && frame.post_context) {
 
-      const textButton = select ? <ArrowDropUpIcon className='icon-show-context'/> : <ArrowDropDownIcon className='icon-show-context'/>;
+      const textButton = select ? <ArrowDropUpIcon className='icon-show-context'/> : <ArrowDropDownIcon className='icon-show-context'/>
 
       return (
         <button onClick={handleClick} className='btn-detail-exception'>{textButton}</button>
-      );
+      )
     }
 
-    return;
-  };
+    return
+  }
 
   return (
     <MenuItem className='frame' key=''>
@@ -70,7 +70,7 @@ const ExceptionItem: FunctionComponent<ExceptionItemType> = (props: StacktraceFr
         </div>
         {select && showDetailContext(props)}
     </MenuItem>
-  );
-};
+  )
+}
 
-export default ExceptionItem;
+export default ExceptionItem

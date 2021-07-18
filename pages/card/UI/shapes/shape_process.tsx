@@ -1,12 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { Handle, Position } from 'react-flow-renderer';
-import Resizer from '../resizer/resize';
-import { handleResize } from '../../../../helpers/handle_resize';
-import SvgProcess from '@components/svg/svg_process';
+import React, { useState, useRef } from 'react'
+import { Handle, Position } from 'react-flow-renderer'
+import Resizer from '../resizer/resize'
+import { handleResize } from '../../../../helpers/handle_resize'
+import SvgProcess from '@components/svg/svg_process'
 
 const CustomProcess = () => {
-  const panelRef = useRef<HTMLDivElement>(null);
-  const [focus, setFocus] = useState<boolean>(false);
+  const panelRef = useRef<HTMLDivElement>(null)
+  const [focus, setFocus] = useState<boolean>(false)
 
   return (
     <div
@@ -45,7 +45,7 @@ const CustomProcess = () => {
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CustomProcess;
+export default CustomProcess

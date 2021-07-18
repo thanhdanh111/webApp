@@ -1,4 +1,4 @@
-import { UpdateOnConfirmDialog } from './time_off_interface';
+import { UpdateOnConfirmDialog } from './time_off_interface'
 
 export enum TimeOffActionTypes {
   UpdatePaginationTimeOff = 'UpdatePaginationTimeOff',
@@ -26,22 +26,22 @@ export const updatePaginationTimeOff = ({ pagination, loadingStatus }) => {
     pagination,
     loadingStatus,
     type: TimeOffActionTypes.UpdatePaginationTimeOff,
-  };
-};
+  }
+}
 
 export const updateOptionState = ({ optionState }) => {
   return {
     optionState,
     type: TimeOffActionTypes.UpdateOptionState,
-  };
-};
+  }
+}
 
 export const updateTimeOffLoadingStatus = ({ loadingStatus }) => {
   return {
     loadingStatus,
     type: TimeOffActionTypes.UpdateTimeOffLoadingStatus,
-  };
-};
+  }
+}
 
 export const updateStatusTimeOff = ({ timeOffIndex, fieldName, status }) => {
   return {
@@ -49,8 +49,8 @@ export const updateStatusTimeOff = ({ timeOffIndex, fieldName, status }) => {
     timeOffIndex,
     status,
     type: TimeOffActionTypes.UpdateStatusTimeOff,
-  };
-};
+  }
+}
 
 export const updateTimeOffIndexLoading = ({ isLoading, loadingIndex, loadingOptionName }) => {
   return {
@@ -58,72 +58,72 @@ export const updateTimeOffIndexLoading = ({ isLoading, loadingIndex, loadingOpti
     loadingIndex,
     loadingOptionName,
     type: TimeOffActionTypes.UpdateTimeOffIndexLoading,
-  };
-};
+  }
+}
 
 export const updateOnConfirmDialog = ({ onConfirm }: UpdateOnConfirmDialog) => {
   return {
     onConfirm,
     type: TimeOffActionTypes.UpdateOnConfirmDialog,
-  };
-};
+  }
+}
 
 export const updateOnSelectTimeOff = ({ onConfirm, onSelectTimeOffData }: UpdateOnConfirmDialog) => {
   return {
     onConfirm,
     onSelectTimeOffData,
     type: TimeOffActionTypes.UpdateOnSelectTimeOff,
-  };
-};
+  }
+}
 
 export const updateTimeOffCompaniesToRequest = ({ companies }) => {
   return {
     companies,
     type: TimeOffRequestActionTypes.UpdateTimeOffCompaniesToRequest,
-  };
-};
+  }
+}
 
 export const updateContentLetter = ({ selectedContent }) => {
   return {
     data: selectedContent,
     type: TimeOffRequestActionTypes.UpdateContentLetter,
-  };
-};
+  }
+}
 
 export const updateOnSendingTimeOffRequest = ({ onSendingRequest }) => {
   return {
     onSendingRequest,
     type: TimeOffRequestActionTypes.UpdateOnSendingTimeOffRequest,
-  };
-};
+  }
+}
 
 export const updateTimeOffRequestNotifications = ({ notifications, onSendingRequest }) => {
   return {
     notifications,
     onSendingRequest,
     type: TimeOffRequestActionTypes.UpdateTimeOffRequestNotifications,
-  };
-};
+  }
+}
 
 export const updateTimeOffsReducer = (data) => {
   return {
     data,
     type: TimeOffActionTypes.UpdateTimeOffsReducer,
-  };
-};
+  }
+}
 
 export const updateTimeOffRequestReducer = (data) => {
 
   return {
     data,
     type: TimeOffRequestActionTypes.UpdateTimeOffRequestReducer,
-  };
-};
+  }
+}
 
 export const getTimeOffByID = (data) => {
 
   return {
     data,
     type: TimeOffRequestActionTypes.getTimeOffByID,
-  };
-};
+  }
+}

@@ -1,15 +1,10 @@
-import { Box } from '@material-ui/core';
-import StatusDetail from './status_header_detail';
-import TitleDetail from './title_detail';
+import { Box } from '@material-ui/core'
 
-const LeftContentDetail: React.FC = () => {
+const LeftContentDetail: React.FC = ({ children }) => {
   return (
     <Box height='100%' display='flex' flexDirection='column' className='left-content'>
-      <StatusDetail/>
-      <Box className='main-content-detail' height='100%'>
-      <TitleDetail/>
-      </Box>
+      {children}
     </Box>
-  );
-};
-export default LeftContentDetail;
+  )
+}
+export default LeftContentDetail

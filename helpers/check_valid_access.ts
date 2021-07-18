@@ -1,24 +1,24 @@
-import { Roles } from '../constants/roles';
-import { RolesInDepartments } from './type';
-import { compareAccesses } from '../helpers/compare_accesses';
+import { Roles } from '../constants/roles'
+import { RolesInDepartments } from './type'
+import { compareAccesses } from '../helpers/compare_accesses'
 
 interface CheckValidAccess {
-  rolesInCompany?: Roles[];
-  rolesInDepartments?: RolesInDepartments;
-  validAccesses?: Roles[];
-  departmentID?: string;
+  rolesInCompany?: Roles[]
+  rolesInDepartments?: RolesInDepartments
+  validAccesses?: Roles[]
+  departmentID?: string
 }
 
 export function checkValidAccess({ rolesInCompany, rolesInDepartments, validAccesses, departmentID }: CheckValidAccess) {
-  let isValid = false;
+  let isValid = false
 
   if (rolesInCompany?.length) {
-    isValid = compareAccesses({ validAccesses, currentAccesses: rolesInCompany });
+    isValid = compareAccesses({ validAccesses, currentAccesses: rolesInCompany })
   }
 
   if (rolesInDepartments && departmentID?.length) {
-    isValid = compareAccesses({ validAccesses, currentAccesses: rolesInDepartments?.[departmentID] });
+    isValid = compareAccesses({ validAccesses, currentAccesses: rolesInDepartments?.[departmentID] })
   }
 
-  return isValid;
+  return isValid
 }

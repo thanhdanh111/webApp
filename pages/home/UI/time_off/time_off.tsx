@@ -1,13 +1,13 @@
-import { Box, Typography } from '@material-ui/core';
-import React, { FunctionComponent, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'redux/reducers_registration';
-import { getMembersDaysOffApi, getUserDaysOffApi } from 'pages/time_off/logic/time_off_apis';
-import BaseTable from '@components/table/table';
-import { TimeOffValueType } from 'pages/time_off/logic/time_off_interface';
-import { HeadCell, UserInfoType } from 'helpers/type';
-import { Roles } from 'constants/roles';
-import { checkValidAccess } from 'helpers/check_valid_access';
+import { Box, Typography } from '@material-ui/core'
+import React, { FunctionComponent, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers_registration'
+import { getMembersDaysOffApi, getUserDaysOffApi } from 'pages/time_off/logic/time_off_apis'
+import BaseTable from '@components/table/table'
+import { TimeOffValueType } from 'pages/time_off/logic/time_off_interface'
+import { HeadCell, UserInfoType } from 'helpers/type'
+import { Roles } from 'constants/roles'
+import { checkValidAccess } from 'helpers/check_valid_access'
 
 export const headCells: HeadCell[] = [
   { id: 'companyName', numeric: false, disablePadding: true, label: 'Company Name' },
@@ -17,19 +17,19 @@ export const headCells: HeadCell[] = [
   { id: 'status', numeric: false, disablePadding: true, label: 'Status' },
   { id: 'reason', numeric: false, disablePadding: true, label: 'Reason' },
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-];
+]
 
-const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER];
+const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER]
 
 const TimeOffTab: FunctionComponent = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const {
     isAdmin,
     rolesInCompany,
     userID,
-  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo);
-  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses  });
-  const today = new Date();
+  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo)
+  const loadMemberData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses  })
+  const today = new Date()
 
   const {
     ownTimeOffs,
@@ -41,20 +41,20 @@ const TimeOffTab: FunctionComponent = () => {
     loadingOptionStateName,
     notFoundAnyMembersTimeOffs,
     notFoundAnyOwnTimeOffs,
-  }: TimeOffValueType = useSelector((state: RootState) => state.timeoff);
+  }: TimeOffValueType = useSelector((state: RootState) => state.timeoff)
 
   useEffect(() => {
-    void fetchDaysOffData();
-  }, [userID, loadMemberData]);
+    void fetchDaysOffData()
+  }, [userID, loadMemberData])
 
   const fetchDaysOffData = async () => {
     if (loadMemberData) {
-      dispatch(getMembersDaysOffApi({ userID, limit: 30, infiniteScroll: true, isExceptMeInMembers: false }));
+      dispatch(getMembersDaysOffApi({ userID, limit: 30, infiniteScroll: true, isExceptMeInMembers: false }))
 
-      return;
+      return
     }
-    dispatch(getUserDaysOffApi({ userID, limit: 30, infiniteScroll: true }));
-  };
+    dispatch(getUserDaysOffApi({ userID, limit: 30, infiniteScroll: true }))
+  }
 
   return (
     <div className='daysoff-dashboard'>
@@ -93,7 +93,7 @@ const TimeOffTab: FunctionComponent = () => {
         )}
       </Box>
     </div>
-  );
-};
+  )
+}
 
-export default TimeOffTab;
+export default TimeOffTab

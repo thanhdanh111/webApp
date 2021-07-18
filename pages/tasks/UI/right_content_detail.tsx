@@ -1,13 +1,10 @@
-import { Box } from '@material-ui/core';
-import LogDetail from './activity_detail';
-import TimeDetail from './time_header_detail';
+import { Box } from '@material-ui/core'
 
-const RightContentDetail: React.FC = () => {
+const RightContentDetail: React.FC = ({ children }) => {
   return (
     <Box>
-      <TimeDetail/>
-      <LogDetail/>
+      {children}
     </Box>
-  );
-};
-export default RightContentDetail;
+  )
+}
+export default RightContentDetail

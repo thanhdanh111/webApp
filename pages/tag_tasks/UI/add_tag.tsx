@@ -1,54 +1,53 @@
-import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
-import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { randomArray } from '../../helpers/random_array';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { createTagThunkAction, deleteTagThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
-import React, { useState } from 'react';
-import { Tag } from 'helpers/type';
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
-import { Box, Grid, InputBase, List, ListItem, Popover } from '@material-ui/core';
-import { colorDefault, TagItem, TagMoreAction } from './tag';
+import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
+import { Box, Grid, InputBase, List, ListItem, Popover } from '@material-ui/core'
+import { TagItem, TagMoreAction } from './tag'
+import { Tag } from '../../../helpers/type'
+import { pushNewNotifications } from '../../../redux/common/notifications/reducer'
+import { createTagThunkAction, deleteTagThunkAction } from '../logic/tag_tasks_reducer'
 
 const AddTagPopup: React.FC = () => {
-  const dispatch = useDispatch();
-  const [tagChangeName, setTaskChangeName] = useState('');
-  const [newTag, setNewTag] = useState<Tag>({ name: '' });
-  const tags = useSelector((state: RootStateOrAny) => state.taskBoards?.tags);
+  const dispatch = useDispatch()
+  const [tagChangeName, setTaskChangeName] = useState('')
+  const [newTag, setNewTag] = useState<Tag>({ name: '' })
+  const tags : {[key: string]: Tag} = useSelector((state: RootStateOrAny) => state.tagTasks?.tags)
 
   const onKeyUpTagName = (event) => {
     if (event.keyCode !== 13) {
-      return;
+      return
     }
 
     if (!newTag.name) {
-      dispatch(pushNewNotifications({ variant: 'error', message: 'name should not be empty' }));
+      dispatch(pushNewNotifications({ variant: 'error', message: 'name should not be empty' }))
 
-      return;
+      return
     }
-    dispatch(createTagThunkAction({ ...newTag, color: randomArray(colorDefault) }));
-    setNewTag({ name: '' });
-  };
+    dispatch(createTagThunkAction({ ...newTag }))
+    setNewTag({ name: '' })
+  }
 
   const renderListTag = () => {
-    const listTag = tags?.map((tag) => (
-      <ListItem
-        key={tag?._id}
-        className='tag-item-list'
-        style={{ color: tag.color }}
-      >
-        <span>{tag.name}</span>
-        {tagChangeName === tag?._id && (
-          <input className='input-name-tag' />
-        )}
-        <TagMoreAction
-          changeName={() => setTaskChangeName(tag?._id)}
-          onDeleteTag={() => dispatch(deleteTagThunkAction(tag?._id))}
-        />
-      </ListItem>
-    ));
+    const listTag = Object.values(tags)?.map((tag) => (
+        <ListItem
+          key={tag?._id}
+          className='tag-item-list'
+          style={{ color: tag.color }}
+        >
+          <span>{tag.name}</span>
+          {tagChangeName === tag?._id && (
+            <input className='input-name-tag' />
+          )}
+          <TagMoreAction
+            changeName={() => setTaskChangeName(tag?._id || '')}
+            onDeleteTag={() => dispatch(deleteTagThunkAction(tag?._id))}
+          />
+        </ListItem>
+    ))
 
-    return listTag;
-  };
+    return listTag
+  }
 
   const renderElementTag = () => (
     <Grid
@@ -61,7 +60,7 @@ const AddTagPopup: React.FC = () => {
         <TagItem tag={{ name: 'Snt-app' }} />
       </Grid>
     </Grid>
-  );
+  )
 
   const renderSearchInput = () => (
     <Box px={1} className='search-tag'>
@@ -73,7 +72,7 @@ const AddTagPopup: React.FC = () => {
       className='input-search-tag'
     />
   </Box>
-  );
+  )
 
   return (
     <PopupState variant='popover' popupId='demo-popup-menu'>
@@ -110,7 +109,7 @@ const AddTagPopup: React.FC = () => {
         </>
       )}
     </PopupState>
-  );
-};
+  )
+}
 
-export default AddTagPopup;
+export default AddTagPopup

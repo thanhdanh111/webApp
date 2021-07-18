@@ -1,4 +1,4 @@
-import { statisticsAction } from './statistics_type_action';
+import { statisticsAction } from './statistics_type_action'
 
 export const setUserID = (res: string) => {
   return {
@@ -6,8 +6,8 @@ export const setUserID = (res: string) => {
     payload: {
       userID: res,
     },
-  };
-};
+  }
+}
 
 export const limitStatistics = (res: number) => {
   return {
@@ -15,8 +15,8 @@ export const limitStatistics = (res: number) => {
     payload: {
       limit: res,
     },
-  };
-};
+  }
+}
 
 export const getAllStatistics = (res: object[]) => {
   return {
@@ -24,5 +24,5 @@ export const getAllStatistics = (res: object[]) => {
     payload: {
       list: res,
     },
-  };
-};
+  }
+}

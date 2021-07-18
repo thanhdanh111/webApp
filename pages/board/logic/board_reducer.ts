@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { config } from 'helpers/get_config';
-import { BoardsPage } from 'helpers/type';
-import { pushNewNotifications } from 'redux/common/notifications/reducer';
+import axios from 'axios'
+import { config } from 'helpers/get_config'
+import { BoardsPage } from 'helpers/type'
+import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import {
   createBoardAction,
   getBoardAction,
@@ -9,9 +9,9 @@ import {
   updateNameFlowChartAction,
   deleteBoardAction,
   hasNoBoards,
-} from './board_action';
-import { boardsActionType } from './board_type_action';
-import { hideLoader } from 'pages/event_logs/logic/event_log_action';
+} from './board_action'
+import { boardsActionType } from './board_type_action'
+import { hideLoader } from 'pages/event_logs/logic/event_log_action'
 
 export enum NotificationTypes {
   succeedCreateFlowChart = 'Create FlowChart Successfully',
@@ -26,7 +26,7 @@ export enum NotificationTypes {
 export const Shape = {
   PROCESS: 'PROCESS',
   DECISION: 'DECISION',
-};
+}
 
 const initialState: BoardsPage = {
   boards: [],
@@ -38,7 +38,7 @@ const initialState: BoardsPage = {
   },
   loading: true,
   hasNoBoards: false,
-};
+}
 
 // tslint:disable-next-line: cyclomatic-complexity
 export const boardsReducer = (state = initialState, action) => {
@@ -47,68 +47,68 @@ export const boardsReducer = (state = initialState, action) => {
       return {
         ...state,
         boards: action.payload.list,
-      };
+      }
 
     case boardsActionType.SET_BOARD:
       return {
         ...state,
         selectedBoard: action.payload,
-      };
+      }
 
     case boardsActionType.UPDATE_NAME_FLOWCHART:
       return {
         ...state,
         selectedBoard: action.payload,
-      };
+      }
 
     case boardsActionType.CREATE_BOARD:
       return {
         ...state,
         selectedBoard: action.payload,
-      };
+      }
 
     case boardsActionType.DELETE_BOARD:
-      const resolveBoard = state.boards.filter((board) => board._id !== action.payload);
+      const resolveBoard = state.boards.filter((board) => board?._id !== action.payload)
 
       return {
         ...state,
         boards: resolveBoard,
-      };
+      }
 
     case boardsActionType.SHOW_LOADER_LIST:
       return {
         ...state,
         loading: true,
-      };
+      }
     case boardsActionType.HIDE_LOADER_LIST:
       return {
         ...state,
         loading: false,
-      };
+      }
 
     case boardsActionType.HAS_NO_DATA:
       return {
         ...state,
         hasNoBoards: true,
-      };
+      }
 
     case boardsActionType.SET_SELECTED_BOARD:
       return {
         ...state,
         selectedBoard: {},
-      };
+      }
 
     default:
-      return state;
+      return state
   }
-};
+}
 
 export const getBoardDataMiddleWare = () => async (dispatch, getState) => {
 
   try {
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
+    const token = localStorage.getItem('access_token')
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
 
     const res = await axios.get(`${config.BASE_URL}/boards`, {
       headers: {
@@ -118,27 +118,27 @@ export const getBoardDataMiddleWare = () => async (dispatch, getState) => {
       params: {
         companyID,
       },
-    });
+    })
 
     if (!res?.data?.totalCount) {
-      await dispatch(hasNoBoards());
-      await dispatch(hideLoader());
+      await dispatch(hasNoBoards())
+      await dispatch(hideLoader())
     }
 
-    await dispatch(getBoardAction(res.data));
-    await dispatch(hideLoader());
+    await dispatch(getBoardAction(res.data))
+    await dispatch(hideLoader())
 
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 export const getBoardDetailDataMiddleWare = (detailsBoardID) => async (dispatch) => {
   try {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token')
 
     if (!detailsBoardID) {
-      return;
+      return
     }
 
     const res = await axios.get(`${config.BASE_URL}/boards/${detailsBoardID}`, {
@@ -146,27 +146,27 @@ export const getBoardDetailDataMiddleWare = (detailsBoardID) => async (dispatch)
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
 
-    await dispatch(setBoard(res.data));
+    await dispatch(setBoard(res.data))
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 export const createFlowChartMiddleWare = (router, currentPath) => async (dispatch, getState) => {
   try {
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
+    const token = localStorage.getItem('access_token')
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
 
-    const nameNewBoardDefault = 'untitled';
+    const nameNewBoardDefault = 'untitled'
 
     if (!token || !companyID) {
 
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }))
 
-      return ;
+      return
     }
 
     const res = await axios.post(`${config.BASE_URL}/boards`,
@@ -180,28 +180,28 @@ export const createFlowChartMiddleWare = (router, currentPath) => async (dispatc
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
 
-    dispatch(createBoardAction(res.data));
+    dispatch(createBoardAction(res.data))
 
-    router.push({ pathname: `${currentPath}/view`, query: { id: res.data?._id } });
-    dispatch(pushNewNotifications({ variant: 'success', message: 'Create FlowChart successfully' }));
+    router.push({ pathname: `${currentPath}/view`, query: { id: res.data?._id } })
+    dispatch(pushNewNotifications({ variant: 'success', message: 'Create FlowChart successfully' }))
   } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedCreateFlowChart }));
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedCreateFlowChart }))
   }
-};
+}
 
 export const updateNameFlowChartMiddleWare = (boardID: string, name: string) => async (dispatch, getState) => {
   try {
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
+    const token = localStorage.getItem('access_token')
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
 
     if (!companyID || !name || !boardID) {
 
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }))
 
-      return ;
+      return
     }
     const res = await axios.put(`${config.BASE_URL}/boards/${boardID}`,
       {
@@ -214,29 +214,29 @@ export const updateNameFlowChartMiddleWare = (boardID: string, name: string) => 
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
 
     if (res.data) {
-      dispatch(updateNameFlowChartAction);
-      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateNameFlowChart }));
+      dispatch(updateNameFlowChartAction)
+      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateNameFlowChart }))
     }
 
   } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateNameFlowChart }));
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateNameFlowChart }))
   }
-};
+}
 
 export const deleteBoardMiddleWare = (boardID: string) => async (dispatch, getState) => {
   try {
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
+    const token = localStorage.getItem('access_token')
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
 
     if (!token || !companyID || !boardID) {
 
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }))
 
-      return ;
+      return
     }
 
     const res = await axios.delete(`${config.BASE_URL}/boards/${boardID}`,
@@ -246,12 +246,12 @@ export const deleteBoardMiddleWare = (boardID: string) => async (dispatch, getSt
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
     if (res.data) {
-      dispatch(deleteBoardAction(boardID));
-      dispatch(pushNewNotifications({ variant: 'success', message: NotificationTypes.succeedDeleteBoard }));
+      dispatch(deleteBoardAction(boardID))
+      dispatch(pushNewNotifications({ variant: 'success', message: NotificationTypes.succeedDeleteBoard }))
     }
   } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedDeleteBoard }));
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedDeleteBoard }))
   }
-};
+}

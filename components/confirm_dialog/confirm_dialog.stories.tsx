@@ -1,6 +1,6 @@
-import { storiesOf } from '@storybook/react';
-import React from 'react';
-import { ConfirmDialog } from './confirm_dialog';
+import { storiesOf } from '@storybook/react'
+import React from 'react'
+import { ConfirmDialog } from './confirm_dialog'
 
 storiesOf('ConfirmDialog', module).add('Footer', () => {
   return <ConfirmDialog
@@ -9,5 +9,5 @@ storiesOf('ConfirmDialog', module).add('Footer', () => {
     handleNo={() => 'handled'}
     handleYes={() => 'handled'}
     status='CONTINUE'
-  />;
-});
+  />
+})

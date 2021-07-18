@@ -1,11 +1,11 @@
-import React, { FunctionComponent } from 'react';
-import EventNoteIcon from '@material-ui/icons/EventNote';
-import SelectOption from '@components/option_select/option_select';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'redux/reducers_registration';
-import { EventLogPage } from '../logic/event_log_interface';
-import { setSelectedEnv, setSelectedProjectID, setSelectedTime } from '../logic/event_log_action';
-import { ProjectState } from '../logic/project_interface';
+import React, { FunctionComponent } from 'react'
+import EventNoteIcon from '@material-ui/icons/EventNote'
+import SelectOption from '@components/option_select/option_select'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers_registration'
+import { EventLogPage } from '../logic/event_log_interface'
+import { setSelectedEnv, setSelectedProjectID, setSelectedTime } from '../logic/event_log_action'
+import { ProjectState } from '../logic/project_interface'
 
 const projects: ProjectState[] = [
   {
@@ -17,7 +17,7 @@ const projects: ProjectState[] = [
     companyID: '607a8ca4acf0ef00083d009b',
     name: 'Snt-internal-Apis',
   },
-];
+]
 
 const timeRange = [
   {
@@ -40,45 +40,45 @@ const timeRange = [
     name: 'Last 30 days',
     value: 30,
   },
-];
+]
 
 const EventLogHead: FunctionComponent = ({}) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const {
     environments,
     selectedProjectID,
     selectedEnv,
     selectedTime,
-  }: EventLogPage = useSelector((state: RootState) => state.eventLogs);
+  }: EventLogPage = useSelector((state: RootState) => state.eventLogs)
 
   const listEnvironment = Object.keys(environments).map((item) => {
     return {
       _id: item,
       name: item,
-    };
-  });
+    }
+  })
 
   const changeEnvironment = (event) => {
     if (event.target.value === selectedEnv) {
-      return;
+      return
     }
-    dispatch(setSelectedEnv(event.target.value));
-  };
+    dispatch(setSelectedEnv(event.target.value))
+  }
 
   const changeProject = (event) => {
     if (event.target.value === selectedProjectID) {
-      return;
+      return
     }
-    dispatch(setSelectedProjectID(event.target.value));
-  };
+    dispatch(setSelectedProjectID(event.target.value))
+  }
 
   const changeTime = (event) => {
     if (event.target.value === selectedTime) {
-      return;
+      return
     }
-    dispatch(setSelectedTime(event.target.value));
-  };
+    dispatch(setSelectedTime(event.target.value))
+  }
 
   return (
     <div className='event-head'>
@@ -102,7 +102,7 @@ const EventLogHead: FunctionComponent = ({}) => {
         handleChange={changeTime}
       />
     </div>
-  );
-};
+  )
+}
 
-export default EventLogHead;
+export default EventLogHead

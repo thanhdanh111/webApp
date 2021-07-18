@@ -1,11 +1,11 @@
-import { Box } from '@material-ui/core';
+import { Box } from '@material-ui/core'
 
 const LogDetail: React.FC = () => {
   return (
     <Box>
       Log
     </Box>
-  );
-};
+  )
+}
 
-export default LogDetail;
+export default LogDetail

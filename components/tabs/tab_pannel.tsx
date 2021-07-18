@@ -1,13 +1,13 @@
 interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number | string;
-  value: number | string;
+  children?: React.ReactNode
+  index: number | string
+  value: number | string
 }
 
-type TabPanelType = TabPanelProps;
+type TabPanelType = TabPanelProps
 
 const TabPanel = (props: TabPanelType) => {
-  const { value, index, children }: TabPanelType = props;
+  const { value, index, children }: TabPanelType = props
 
   return (
     <div
@@ -17,7 +17,7 @@ const TabPanel = (props: TabPanelType) => {
     >
       {value === index && children}
     </div>
-  );
-};
+  )
+}
 
-export default TabPanel;
+export default TabPanel

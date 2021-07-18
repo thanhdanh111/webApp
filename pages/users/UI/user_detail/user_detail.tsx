@@ -1,23 +1,23 @@
-import { TableCell, TableRow, Avatar, Button } from '@material-ui/core';
-import React from 'react';
-import moment from 'moment';
-import BaseTable from '@components/table/table';
-import { HeadCell } from 'helpers/type';
-import CustomizedControlCell from './customized_control_cell';
-import { updateUsersReducer } from 'pages/users/logic/users_actions';
-import { useDispatch } from 'react-redux';
+import { TableCell, TableRow, Avatar, Button } from '@material-ui/core'
+import React from 'react'
+import moment from 'moment'
+import BaseTable from '@components/table/table'
+import { HeadCell } from 'helpers/type'
+import CustomizedControlCell from './customized_control_cell'
+import { updateUsersReducer } from 'pages/users/logic/users_actions'
+import { useDispatch } from 'react-redux'
 
 const headCells: HeadCell[] = [
   { id: 'departmentName', numeric: false, disablePadding: true, label: 'Department' },
   { id: 'departmentRole', numeric: false, disablePadding: true, label: 'Department Role' },
   { id: 'status', numeric: false, disablePadding: true, label: 'Status' },
   { id: 'action', numeric: true, disablePadding: false, label: 'Action' },
-];
+]
 
 const UserDetail = (props) => {
-  const info = props?.data?.user;
-  const time = moment(info?.userID?.lastAccessAt).utc().format();
-  const dispatch = useDispatch();
+  const info = props?.data?.user
+  const time = moment(info?.userID?.lastAccessAt).utc().format()
+  const dispatch = useDispatch()
 
   function removeUserFromCompany() {
     dispatch(updateUsersReducer({
@@ -31,7 +31,7 @@ const UserDetail = (props) => {
         userName: props?.data?.userName,
         removeUserFrom: 'company',
       },
-    }));
+    }))
   }
 
   function renderDepartmentRoles() {
@@ -55,7 +55,7 @@ const UserDetail = (props) => {
       actions={['delete']}
       redButtonName='delete'
       hadExpandableRows={false}
-    />;
+    />
   }
 
   return (
@@ -89,7 +89,7 @@ const UserDetail = (props) => {
         renderDepartmentRoles()
       }
     </div>
-  );
-};
+  )
+}
 
-export default UserDetail;
+export default UserDetail
