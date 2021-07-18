@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react'
 import ReactFlow, {
   removeElements,
   addEdge,
@@ -8,48 +8,48 @@ import ReactFlow, {
   ConnectionLineType,
   updateEdge,
   ArrowHeadType,
-} from 'react-flow-renderer';
-import CustomDecision from '../shapes/shape_decision';
-import { initialElements } from './initial_elements';
-import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { createNewCard, getDataListCard } from 'pages/board/logic/board_reducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'redux/reducers_registration';
-import CustomProcess from '../shapes/shape_process';
-import ListOptionCard from './list_option_card';
-import HeaderContentBoard from './header_content_board';
-import { useRouter } from 'next/router';
+} from 'react-flow-renderer'
+import CustomDecision from '../shapes/shape_decision'
+import { initialElements } from './initial_elements'
+import PrimaryButtonUI from '@components/primary_button/primary_button'
+import { createNewCard, getDataListCard } from 'pages/board/logic/board_reducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers_registration'
+import CustomProcess from '../shapes/shape_process'
+import ListOptionCard from './list_option_card'
+import HeaderContentBoard from './header_content_board'
+import { useRouter } from 'next/router'
 
 const ViewBoard = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const [elements, setElements] = useState(initialElements);
-  const dataList = useSelector((state: RootState) => state.boards.cards);
-  const query = router.query;
-  // const selected = useSelector((state: RootState) => state.boards.selectedBoard);
-  // const [textContent, setTextContent] = useState('');
+  const router = useRouter()
+  const dispatch = useDispatch()
+  const [elements, setElements] = useState(initialElements)
+  const dataList = useSelector((state: RootState) => state.boards.cards)
+  const query = router.query
+  // const selected = useSelector((state: RootState) => state.boards.selectedBoard)
+  // const [textContent, setTextContent] = useState('')
 
   // const onChangeTextContent = (event) => {
   //   if (!event.target.value) {
-  //     setTextContent('');
+  //     setTextContent('')
 
-  //     return;
+  //     return
   //   }
-  //   setTextContent(event.target.value);
+  //   setTextContent(event.target.value)
 
-  // };
+  // }
 
   useEffect(() => {
     if (!query.id) {
-      return;
+      return
     }
 
-    dispatch(getDataListCard(query.id));
-  }, [query.id]);
+    dispatch(getDataListCard(query.id))
+  }, [query.id])
 
   useEffect(() => {
     if (!dataList) {
-      return;
+      return
     }
 
     const list = dataList.map((each) => {
@@ -61,34 +61,34 @@ const ViewBoard = () => {
         },
         type: each.shape,
         data: each.textContent,
-      };
+      }
 
-    });
+    })
 
-    setElements(list);
-  }, [dataList]);
+    setElements(list)
+  }, [dataList])
 
   function addShape(type: string) {
-    dispatch(createNewCard(type.toUpperCase(), '', ''));
+    dispatch(createNewCard(type.toUpperCase(), '', ''))
   }
 
   const onElementsRemove = (elementsToRemove) =>
-    setElements((els) => removeElements(elementsToRemove, els));
+    setElements((els) => removeElements(elementsToRemove, els))
 
   const onEdgeUpdate = (oldEdge, newConnection) =>
-    setElements((els) => updateEdge(oldEdge, newConnection, els));
+    setElements((els) => updateEdge(oldEdge, newConnection, els))
 
-  const onConnect = (params) => setElements((els) => addEdge({ ...params, arrowHeadType: ArrowHeadType.ArrowClosed }, els));
-  // const onConnectStart = (params) => setOnConnectStart(() => console.log('onConnect start', params));
+  const onConnect = (params) => setElements((els) => addEdge({ ...params, arrowHeadType: ArrowHeadType.ArrowClosed }, els))
+  // const onConnectStart = (params) => setOnConnectStart(() => console.log('onConnect start', params))
 
   const onLoad = (reactFlowInstance) => {
-    reactFlowInstance.fitView();
-  };
+    reactFlowInstance.fitView()
+  }
 
   const nodeTypes = {
     PROCESS: CustomProcess,
     DECISION: CustomDecision,
-  };
+  }
 
   return (
     <Fragment>
@@ -121,10 +121,10 @@ const ViewBoard = () => {
           />
           <MiniMap
             nodeColor={(n) => {
-              if (n.type === 'PROCESS') return '#0041d0';
-              if (n.type === 'DECISION') return '#ff0072';
+              if (n.type === 'PROCESS') return '#0041d0'
+              if (n.type === 'DECISION') return '#ff0072'
 
-              return '#FFCC00';
+              return '#FFCC00'
             }}
           />
           <Controls />
@@ -134,7 +134,7 @@ const ViewBoard = () => {
         </ReactFlow>
       </div>
     </Fragment>
-  );
-};
+  )
+}
 
-export default ViewBoard;
+export default ViewBoard

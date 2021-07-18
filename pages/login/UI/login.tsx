@@ -1,54 +1,54 @@
-import { Box, Button, Container, Grid, Link, Typography } from '@material-ui/core';
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { config } from 'helpers/get_config';
-import * as qs from 'query-string';
-import { useRouter } from 'next/router';
-import { DisappearedLoading } from 'react-loadingg';
-import { GetUserDataThunkAction } from '../logic/login_reducer';
+import { Box, Button, Container, Grid, Link, Typography } from '@material-ui/core'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { config } from 'helpers/get_config'
+import * as qs from 'query-string'
+import { useRouter } from 'next/router'
+import { DisappearedLoading } from 'react-loadingg'
+import { GetUserDataThunkAction } from '../logic/login_reducer'
 const redirectUrl = `${config.BASE_URL}/auth/google/callback&state=${config.STATE}`
   .split(':')
   .join('%3A')
   .split('/')
-  .join('%2F');
-const linkAPILogin = `${config.API_LOGIN}&redirect_uri=${redirectUrl}`;
+  .join('%2F')
+const linkAPILogin = `${config.API_LOGIN}&redirect_uri=${redirectUrl}`
 const LoginUi: FunctionComponent = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const [isLogin, setIsLogin] = useState(false);
+  const router = useRouter()
+  const dispatch = useDispatch()
+  const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
-    void logUserIn();
-  }, []);
+    void logUserIn()
+  }, [])
 
   async function logUserIn() {
-    const localAccess = localStorage.getItem('access_token');
+    const localAccess = localStorage.getItem('access_token')
 
     if (localAccess) {
-      void router.replace('/home', '/home.html');
+      void router.replace('/home', '/home.html')
 
-      return;
+      return
     }
 
-    const query = qs?.parse(window?.location?.search);
-    const token = query?.token;
+    const query = qs?.parse(window?.location?.search)
+    const token = query?.token
 
     if (!token) {
 
-      return;
+      return
     }
 
-    const accessToken = token.replace('?token=', '');
+    const accessToken = token.replace('?token=', '')
 
-    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('access_token', accessToken)
 
-    setIsLogin(true);
+    setIsLogin(true)
 
-    await Promise.resolve(dispatch(GetUserDataThunkAction(accessToken)));
+    await Promise.resolve(dispatch(GetUserDataThunkAction(accessToken)))
 
-    void router.replace('/home', '/home.html');
+    void router.replace('/home', '/home.html')
 
-    setIsLogin(false);
+    setIsLogin(false)
   }
 
   const FormLogin = () => {
@@ -74,8 +74,8 @@ const LoginUi: FunctionComponent = () => {
         </Box>
         </Grid>
       </Grid>
-    );
-  };
+    )
+  }
 
   const ImgLogin = () => {
     return (
@@ -94,8 +94,8 @@ const LoginUi: FunctionComponent = () => {
           </div>
         </Container>
       </Grid>
-    );
-  };
+    )
+  }
 
   return (
     <div className='login-page'>
@@ -107,7 +107,7 @@ const LoginUi: FunctionComponent = () => {
           </div>
         </Container>}
     </div>
-  );
-};
+  )
+}
 
-export default LoginUi;
+export default LoginUi

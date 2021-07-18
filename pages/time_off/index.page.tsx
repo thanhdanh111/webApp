@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
-import TimeOffColumns from './UI/time_off_columns';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMembersDaysOffApi, getUserDaysOffApi } from './logic/time_off_apis';
-import { RootState } from 'redux/reducers_registration';
-import { OptionState, TimeOffValueType } from './logic/time_off_interface';
-import { updateOnSelectTimeOff } from './logic/time_off_actions';
+import React, { useEffect } from 'react'
+import TimeOffColumns from './UI/time_off_columns'
+import { useDispatch, useSelector } from 'react-redux'
+import { getMembersDaysOffApi, getUserDaysOffApi } from './logic/time_off_apis'
+import { RootState } from 'redux/reducers_registration'
+import { OptionState, TimeOffValueType } from './logic/time_off_interface'
+import { updateOnSelectTimeOff } from './logic/time_off_actions'
 
 const TimeOff = () => {
-  const dispatch = useDispatch();
-  const userInfo = useSelector((state: RootState) => state?.userInfo);
-  const userID = userInfo?.userID;
-  const access = userInfo?.access;
+  const dispatch = useDispatch()
+  const userInfo = useSelector((state: RootState) => state?.userInfo)
+  const userID = userInfo?.userID
+  const access = userInfo?.access
   const {
     optionState,
     ownTimeOffs,
@@ -26,37 +26,37 @@ const TimeOff = () => {
     updateStatusLoading,
     notFoundAnyMembersTimeOffs,
     notFoundAnyOwnTimeOffs,
-  }: TimeOffValueType = useSelector((state: RootState) => state.timeoff);
+  }: TimeOffValueType = useSelector((state: RootState) => state.timeoff)
 
   useEffect(() => {
     if (membersTimeOffsLoading || membersTimeOffs.length || !access?.length) {
 
-      return;
+      return
     }
 
-    dispatch(getMembersDaysOffApi({ userID, limit: 30 }));
-  }, [access]);
+    dispatch(getMembersDaysOffApi({ userID, limit: 30 }))
+  }, [access])
 
   useEffect(() => {
     if (ownTimeOffsLoading || !userID || ownTimeOffs.length || !access?.length) {
 
-      return;
+      return
     }
 
-    dispatch(getUserDaysOffApi({ userID, limit: 30, cursor: membersTimeOffsCursor }));
-  }, [userID, access]);
+    dispatch(getUserDaysOffApi({ userID, limit: 30, cursor: membersTimeOffsCursor }))
+  }, [userID, access])
 
   function fetchUserDaysOffData() {
-    dispatch(getUserDaysOffApi({ userID , limit: 30, cursor: ownTimeOffsCursor, infiniteScroll: true }));
+    dispatch(getUserDaysOffApi({ userID , limit: 30, cursor: ownTimeOffsCursor, infiniteScroll: true }))
   }
 
   function fetchMembersDaysOffData() {
-    dispatch(getMembersDaysOffApi({ userID, limit: 30, cursor: membersTimeOffsCursor, infiniteScroll: true }));
+    dispatch(getMembersDaysOffApi({ userID, limit: 30, cursor: membersTimeOffsCursor, infiniteScroll: true }))
   }
 
   function acceptMemberDayOff({ itemIndex, baseTableName, timeOffID }) {
     if (updateStatusLoading) {
-      return;
+      return
     }
 
     dispatch(updateOnSelectTimeOff({
@@ -67,12 +67,12 @@ const TimeOff = () => {
         status: 'ACCEPTED',
         timeOffIndex: itemIndex,
       },
-    }));
+    }))
   }
 
   function rejectMemberDayOff({ itemIndex, baseTableName, timeOffID }) {
     if (updateStatusLoading) {
-      return;
+      return
     }
 
     dispatch(updateOnSelectTimeOff({
@@ -83,13 +83,13 @@ const TimeOff = () => {
         status: 'REJECTED',
         timeOffIndex: itemIndex,
       },
-    }));
+    }))
   }
 
   const actionFunc = {
     accept: acceptMemberDayOff,
     reject: rejectMemberDayOff,
-  };
+  }
 
   if (optionState === OptionState.me) {
     return <TimeOffColumns
@@ -106,7 +106,7 @@ const TimeOff = () => {
       loadingOptionStateName={loadingOptionStateName}
       indexLoading={updateStatusLoading}
       notFoundAnyTimeOffs={notFoundAnyOwnTimeOffs}
-    />;
+    />
   }
 
   return <TimeOffColumns
@@ -123,7 +123,7 @@ const TimeOff = () => {
     loadingOptionStateName={loadingOptionStateName}
     indexLoading={updateStatusLoading}
     notFoundAnyTimeOffs={notFoundAnyMembersTimeOffs}
-  />;
-};
+  />
+}
 
-export default TimeOff;
+export default TimeOff

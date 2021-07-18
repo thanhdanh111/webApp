@@ -36,12 +36,11 @@
     display: flex;
 
     .nav-click-up-search
-      display: flex;
-      width: 50%;
+      display: inline-flex;
+      width: 28%;
       margin: 0;
       align-items: flex-end;
       float: left;
-      position: absolute;
       left: 1px;
 
       .nav-click-up-task-board
@@ -123,6 +122,7 @@
         margin: 0
         float: left
         transform: translateY(5px)
+        align-items: center;
 
         .item-action
           display: flex
@@ -143,8 +143,11 @@
               color: #7c828d
 
     .show-task
-      display: contents
-      float: right
+      display: inline-flex;
+      width: 12vw;
+      padding: 0;
+      margin: 0;
+      justify-content: flex-end;
 
       .list-actions
         list-style: none
@@ -152,6 +155,7 @@
         margin: 0
         float: right
         transform: translateY(5px)
+        align-items: center;
 
         .item-action
           display: flex
@@ -255,12 +259,6 @@
       margin-left: 15px
       margin-top: 15px
       min-height: 50px
-      
-      .in-progress
-        border-top: 2px solid rgb(65, 148, 246)
-
-      .closed
-        border-top: 2px solid rgb(107, 201, 80)
 
       .add-task-text
         font-size: 1em;
@@ -296,197 +294,79 @@
 
         .icon-add-task
           color: #50ac55
-
-@media screen and ( min-width: 1025px )
-  .board
-    .btn-choose
-      display: none
  
-@media screen and ( max-width: 1024px )
+@media screen and ( min-width: 1024px )
   .board
     margin: auto
     top: 20px
-    z-index: 1
-
+    overflow: hidden;
+    
     .nav-click_up
+      max-width: 100%;
+      position: relative;
+      min-height: 40px;
+      font-size: 12px;
+
       .nav-actions
         display: none
 
       .nav-click-up-search
-        width: 77%
-
-        .nav-click-up-task-board
-          width: 30%
-
-      .show-task
-        .list-actions
-          display: contents
-
-@media screen and ( max-width: 768px )
-  .board
-    padding: 0 0 25px
-    margin: auto
-    top: 20px
-    z-index: 1
-
-    .nav-click_up
-      .nav-click-up-search
-        width: 77%
-
-        .nav-search
-          border: none
-
-          .icon-search
-            left: -1.6em;
-            top: -16px;
-
-          .nav-input-search
-            display: none
-
-        .nav-click-up-task-board
-          width: 23%;
-
-          .add-task-board
-            .nav-click-up-task-board-icon
-              font-size: 14px;
-
-          .nav-click-up-task-board-select
-            .MuiInput-input
-              font-size: 12px;
-              padding: 0;
-              white-space: nowrap;
-              width: 81%;
-
-      .btn-choose
+        position: relative;
+        width: 25%;
         padding: 0;
-        font-size: 14px;
-
-        .MuiButton-label
-          padding-left: 39px;
-
-@media screen and ( max-width: 600px )
-  .board
-    padding: 0 0 25px
-    margin: auto
-    top: 20px
-    z-index: 1
-
-    .nav-click_up
-      .nav-click-up-search
-        width: 68%
-
-        .nav-search
-          border: none
-
-          .icon-search
-            left: -1.6em;
-            top: -16px;
-
-          .nav-input-search
-            display: none
-
-        .nav-click-up-task-board
-          width: 40%;
-
-          .add-task-board
-            .nav-click-up-task-board-icon
-              font-size: 14px;
-
-          .nav-click-up-task-board-select
-            .MuiInput-input
-              font-size: 12px;
-              padding: 0;
-              white-space: nowrap;
-              width: 81%;
-
-      .btn-choose
-        padding: 0;
-        font-size: 14px;
-
-        .MuiButton-label
-          padding-left: 39px;
-
-@media screen and ( max-width: 480px )
-  .board
-    padding: 0 0 25px
-    margin: auto
-    top: 20px
-    z-index: 1
-
-    .nav-click_up
-      .nav-click-up-search
-        width: 61%
-
-        .nav-search
-          border: none
-
-          .icon-search
-            left: -2.6em;
-            top: -16px;
-
-          .nav-input-search
-            display: none
+        justify-content: space-around;
 
         .nav-click-up-task-board
           width: 50%;
+          display: inline-flex;
+          position: relative;
+          border-radius: 10px;
 
           .add-task-board
             .nav-click-up-task-board-icon
-              font-size: 14px;
+              width: 20px;
+              height: 20px;
 
           .nav-click-up-task-board-select
-            .MuiInput-input
+            .MuiInputBase-input
+              width: 100%;
+              padding: 4px;
+              padding-right: 12px;
               font-size: 12px;
-              padding: 0;
-              white-space: nowrap;
-              width: 81%;
+              position: relative;
 
-      .btn-choose
-        padding: 0;
-        font-size: 14px;
-
-        .MuiButton-label
-          padding-left: 39px;
-
-@media screen and ( max-width: 360px )
-  .board
-    width: 95%
-    padding: 0 0 25px
-    margin: auto
-    top: 20px
-    z-index: 1
-
-    .nav-click_up
-      .nav-click-up-search
-        width: 50%
+            svg
+              left: 85%
 
         .nav-search
-          border: none
+          width: 45%;
+          display: inline-flex;
+          position: relative;
+          left: 0;
+          top: 0
+          border-radius: 10px;
 
           .icon-search
-            left: -1.6em;
-            top: -16px;
+            display: none;
 
           .nav-input-search
-            display: none
+            padding: 0 13px 0 5px;
+            font-size: 12px;
 
-        .nav-click-up-task-board
-          width: 75%;
+      .menu-content-value
+        width: 60%;
+        position: relative;
 
-          .add-task-board
-            .nav-click-up-task-board-icon
-              font-size: 14px;
+        .input-of-menu-value
+          width: 45%;
+          margin: 0;
+          border-radius: 10px;
+          color: #7c7b7b;
 
-          .nav-click-up-task-board-select
-            .MuiInput-input
-              font-size: 12px;
-              padding: 0;
-              white-space: nowrap;
-              width: 81%;
+        .btn-menu-content
+          left: 42%;
+          top: 0;
 
-      .btn-choose
-        padding: 0;
-        font-size: 14px;
-
-        .MuiButton-label
-          padding-left: 39px;
+      .show-task
+        width: 15%;
+        justify-content: flex-end;

@@ -1,13 +1,13 @@
-import { Box, Typography, Table, TableBody, TableRow, TableCell, Container } from '@material-ui/core';
-import { Company } from 'helpers/type';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/reducers_registration';
+import { Box, Typography, Table, TableBody, TableRow, TableCell, Container } from '@material-ui/core'
+import { Company } from 'helpers/type'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from 'redux/reducers_registration'
 
 const CompanyDetailTab = () => {
 
-  const userInfo  = useSelector((state: RootState) => state?.userInfo);
-  const company: Company = userInfo?.currentCompany;
+  const userInfo  = useSelector((state: RootState) => state?.userInfo)
+  const company: Company = userInfo?.currentCompany
   const infoCompany = [
     {
       name: 'Email',
@@ -21,7 +21,7 @@ const CompanyDetailTab = () => {
       name: 'Address',
       value: company?.address,
     },
-  ];
+  ]
 
   return (
     <Box className='info-detail-company'>
@@ -52,7 +52,7 @@ const CompanyDetailTab = () => {
           </div>
         </Container>
       </Box>
-  );
-};
+  )
+}
 
-export default (CompanyDetailTab);
+export default (CompanyDetailTab)

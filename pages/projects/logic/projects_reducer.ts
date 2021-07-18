@@ -1,15 +1,15 @@
-import axios from 'axios';
-import { checkArray } from 'helpers/check_array';
-import { config } from 'helpers/get_config';
-import { ProjectsPage } from 'helpers/type';
-import { pushNewNotifications } from 'redux/common/notifications/reducer';
+import axios from 'axios'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
+import { config } from 'helpers/get_config'
+import { ProjectsPage } from 'helpers/type'
+import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import {
   getChannelsByCompany,
   getProject,
   getProjectAction,
   shouldShowDescription,
-} from './projects_actions';
-import { projectsActionType } from './projects_type_action';
+} from './projects_actions'
+import { projectsActionType } from './projects_type_action'
 
 export enum NotificationTypes {
   succeedUpdateChannel = 'Update Channel Successfully',
@@ -32,31 +32,31 @@ const initialState: ProjectsPage = {
   selectedChannelID: '',
   channels: [],
   shouldShowDescription: false,
-};
+}
 
 // tslint:disable-next-line: cyclomatic-complexity
 export const projectsReducer = (state = initialState, action) => {
   switch (action.type) {
     case projectsActionType.GET_LIST_PROJECTS:
-      const channelIDs = {};
+      const channelIDs = {}
 
-      if (checkArray(action.payload.list)) {
+      if (checkIfEmptyArray(action.payload.list)) {
         action.payload.list.map((element) => {
           if (element.channelID) {
-            channelIDs[element.channelID] = element.channelID;
+            channelIDs[element.channelID] = element.channelID
           }
 
-          return;
-        });
+          return
+        })
       }
 
       return {
         ...state,
         channelIDs,
         projects: action.payload.list,
-      };
+      }
     case projectsActionType.GET_PROJECT:
-      const variable = action.payload?.project;
+      const variable = action.payload?.project
       const selectedProject = {
         _id: variable?._id,
         name: variable?.name,
@@ -65,37 +65,37 @@ export const projectsReducer = (state = initialState, action) => {
         description: variable?.description,
         channelID: variable?.channelID,
         totalEventLogs: variable?.totalEventLogs,
-      };
+      }
 
       return {
         ...state,
         selectedProject,
-      };
+      }
     case projectsActionType.GET_CHANNELS_BY_COMPANY:
       return {
         ...state,
         channels: action.payload,
-      };
+      }
     case projectsActionType.SET_SELECTED_CHANNEL_ID:
       return {
         ...state,
         selectedChannelID: action.payload.selectedChannelID,
-      };
+      }
     case projectsActionType.SHOULD_SHOW_DESCRIPTION:
       return {
         ...state,
         shouldShowDescription: action.payload,
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 export const getProjectDataMiddleWare = () => async (dispatch, getState) => {
   try {
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
+    const token = localStorage.getItem('access_token')
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
 
     const res = await axios.get(`${config.BASE_URL}/projects`, {
       headers: {
@@ -105,20 +105,20 @@ export const getProjectDataMiddleWare = () => async (dispatch, getState) => {
       params: {
         companyID,
       },
-    });
+    })
 
-    await dispatch(getProjectAction(res.data));
+    await dispatch(getProjectAction(res.data))
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 export const getProjectDetailData = (detailsProjectID) => async (dispatch) => {
   try {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token')
 
     if (!detailsProjectID) {
-      return;
+      return
     }
 
     const res = await axios.get(`${config.BASE_URL}/projects/${detailsProjectID}`, {
@@ -126,26 +126,26 @@ export const getProjectDetailData = (detailsProjectID) => async (dispatch) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
 
-    const shouldShowDescriptionCondition = !!res?.data?.project?.description;
-    await dispatch(shouldShowDescription(shouldShowDescriptionCondition));
+    const shouldShowDescriptionCondition = !!res?.data?.project?.description
+    await dispatch(shouldShowDescription(shouldShowDescriptionCondition))
 
-    await dispatch(getProject(res.data));
+    await dispatch(getProject(res.data))
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 export const updateChannelIDMiddleWare = (projectID: string, channelID: string) => async (dispatch) => {
   try {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token')
 
     if (!channelID || !projectID) {
 
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.errorFailed }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.errorFailed }))
 
-      return ;
+      return
     }
 
     const res = await axios.put(`${config.BASE_URL}/projects/${projectID}`,
@@ -158,36 +158,36 @@ export const updateChannelIDMiddleWare = (projectID: string, channelID: string) 
           Authorization: `Bearer ${token}`,
         },
       },
-     );
+     )
 
     if (res.status !== 200) {
       throw {
         status: res.status,
         response: res,
-      };
+      }
     }
 
     if (res.data) {
 
-      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }));
+      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }))
     }
   } catch (error) {
 
-    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateChannel }));
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateChannel }))
   }
-};
+}
 
 export const getExtendedCompaniesMiddleWare = () => async (dispatch, getState) => {
   try {
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
+    const token = localStorage.getItem('access_token')
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
 
     if (!token || !companyID) {
 
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }))
 
-      return ;
+      return
     }
 
     const res = await axios.get(`${config.BASE_URL}/extendedCompanies/${companyID}/slack`, {
@@ -195,36 +195,36 @@ export const getExtendedCompaniesMiddleWare = () => async (dispatch, getState) =
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
 
-    if (checkArray(res.data.channels)) {
+    if (checkIfEmptyArray(res.data.channels)) {
       const channels = res.data.channels.map((channel) => {
         return {
           _id: channel.id,
           name: channel.name,
-        };
-      });
+        }
+      })
 
-      await dispatch(getChannelsByCompany(channels));
+      await dispatch(getChannelsByCompany(channels))
     }
 
-    return;
+    return
   } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.errorFailed }));
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.errorFailed }))
   }
-};
+}
 
 export const createProjectMiddleWare = (name: string, channelID: string, description: string) => async (dispatch, getState) => {
   try {
-    const token = localStorage.getItem('access_token');
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
+    const token = localStorage.getItem('access_token')
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
 
     if (!token || !companyID || !channelID) {
 
-      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }));
+      dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.companyTokenNotification }))
 
-      return ;
+      return
     }
 
     const res = await axios.post(`${config.BASE_URL}/projects`,
@@ -240,16 +240,16 @@ export const createProjectMiddleWare = (name: string, channelID: string, descrip
           Authorization: `Bearer ${token}`,
         },
       },
-     );
+     )
 
     if (res.data) {
 
-      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }));
+      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }))
     }
 
-    return;
+    return
   } catch (error) {
 
-    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedCreateProject }));
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedCreateProject }))
   }
-};
+}

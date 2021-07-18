@@ -1,56 +1,56 @@
-import { CheckInCheckOut } from './type';
+import { CheckInCheckOut } from './type'
 
 const getTime = (str: string) => {
-  const local = new Date(str);
-  const hour = local.getHours();
-  const min = local.getMinutes();
-  const time = (hour + min / 60);
+  const local = new Date(str)
+  const hour = local.getHours()
+  const min = local.getMinutes()
+  const time = (hour + min / 60)
 
-  return time;
-};
+  return time
+}
 
 const countAvg = (list) => {
-  let sum = 0;
+  let sum = 0
   list.forEach((element) => {
-    sum += element;
-  });
+    sum += element
+  })
 
-  return sum / list.length;
-};
+  return sum / list.length
+}
 
 export const getCheckInOutTime = (list) => {
 
-  const checkTimes: number[][] = [];
-  const groupByDate = new Map();
+  const checkTimes: number[][] = []
+  const groupByDate = new Map()
   if (!list || list.length === 0) {
-    return checkTimes;
+    return checkTimes
   }
   for (const iterator of list) {
     if (iterator == null) {
-      continue;
+      continue
     }
-    const date = new Date(new Date(iterator).setHours(0, 0, 0, 0)).getTime();
+    const date = new Date(new Date(iterator).setHours(0, 0, 0, 0)).getTime()
     if (groupByDate[date] == null) {
-      groupByDate[date] = [getTime(iterator)];
-      continue;
+      groupByDate[date] = [getTime(iterator)]
+      continue
     }
-    groupByDate[date].push(getTime(iterator));
+    groupByDate[date].push(getTime(iterator))
   }
 
-  const keyOfGroupByDate = Object.keys(groupByDate);
+  const keyOfGroupByDate = Object.keys(groupByDate)
 
   keyOfGroupByDate.forEach((key) => {
-    checkTimes.push([Number(key), countAvg(groupByDate[key])]);
-  });
+    checkTimes.push([Number(key), countAvg(groupByDate[key])])
+  })
 
-  return checkTimes;
-};
+  return checkTimes
+}
 
 export const getGraphOptions = (checkInCheckOuts: CheckInCheckOut[]) => {
 
-  const checkIns = checkInCheckOuts.map((element) => element?.checkInAt);
+  const checkIns = checkInCheckOuts.map((element) => element?.checkInAt)
 
-  const checkOuts = checkInCheckOuts.map((element) => element?.checkOutAt);
+  const checkOuts = checkInCheckOuts.map((element) => element?.checkOutAt)
 
   return {
 
@@ -120,13 +120,13 @@ export const getGraphOptions = (checkInCheckOuts: CheckInCheckOut[]) => {
       },
       y: {
         formatter: (value) => {
-          const hour = Math.floor(value);
-          const minutes = Math.floor((value - hour) * 60);
+          const hour = Math.floor(value)
+          const minutes = Math.floor((value - hour) * 60)
           if (minutes < 10) {
-            return `${hour}h0${minutes}`;
+            return `${hour}h0${minutes}`
           }
 
-          return `${hour}h${minutes}`;
+          return `${hour}h${minutes}`
         },
       },
 
@@ -139,5 +139,5 @@ export const getGraphOptions = (checkInCheckOuts: CheckInCheckOut[]) => {
       type: 'solid',
       fillOpacity: 0.7,
     },
-  };
-};
+  }
+}

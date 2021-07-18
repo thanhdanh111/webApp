@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import AccessDenied from './UI/access_denied';
+import React, { useEffect } from 'react'
+import AccessDenied from './UI/access_denied'
 
 const AccessPermission = () => {
 
   useEffect(() => {
-    localStorage.removeItem('access_token');
-  }, []);
+    localStorage.removeItem('access_token')
+  }, [])
 
   return (
     <React.Fragment>
       <AccessDenied />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default AccessPermission;
+export default AccessPermission

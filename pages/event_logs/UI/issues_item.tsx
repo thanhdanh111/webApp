@@ -1,26 +1,26 @@
-import { Checkbox, Container, MenuItem, Typography } from '@material-ui/core';
-import { useRouter } from 'next/router';
-import React, { FunctionComponent } from 'react';
-import { EventLogState } from '../logic/event_log_interface';
+import { Checkbox, Container, MenuItem, Typography } from '@material-ui/core'
+import { useRouter } from 'next/router'
+import React, { FunctionComponent } from 'react'
+import { EventLogState } from '../logic/event_log_interface'
 
 interface InitProps {
-  eventLog: EventLogState;
+  eventLog: EventLogState
 }
 
-type IssuesItemType = InitProps;
+type IssuesItemType = InitProps
 
 const IssuesItem: FunctionComponent<IssuesItemType> = (props: InitProps) => {
 
-  const { eventLog }: InitProps = props;
-  const time = new Date(eventLog.createdAt);
-  const router = useRouter();
-  const pathname = router.pathname;
+  const { eventLog }: InitProps = props
+  const time = new Date(eventLog.createdAt)
+  const router = useRouter()
+  const pathname = router.pathname
 
   const onPushToPage = (url: string) => {
-    void router.push({ pathname: `${pathname}/detail`, query: { id: url } });
-  };
+    void router.push({ pathname: `${pathname}/detail`, query: { id: url } })
+  }
 
-  const showTime = time.toUTCString();
+  const showTime = time.toUTCString()
 
   return (
     <MenuItem className='issus-item'>
@@ -39,7 +39,7 @@ const IssuesItem: FunctionComponent<IssuesItemType> = (props: InitProps) => {
           </Container>
       </div>
     </MenuItem>
-  );
-};
+  )
+}
 
-export default IssuesItem;
+export default IssuesItem

@@ -1,10 +1,11 @@
-import { Box, TextareaAutosize } from '@material-ui/core';
-import AttachmentInBody from './attachment_detail';
-import { RootStateOrAny, useSelector } from 'react-redux';
-import TagTask from '../../../components/tag/tag';
+import { Box, TextareaAutosize } from '@material-ui/core'
+import AttachmentInBody from './attachment_detail'
+import { RootStateOrAny, useSelector } from 'react-redux'
+import TagTask from '../../../pages/tag_tasks/UI/tag'
+import { TaskType } from '../logic/task_reducer'
 
 const TitleDetail: React.FC = () => {
-  const task = useSelector((state: RootStateOrAny) => state.taskBoards?.taskDetail);
+  const { currentTask }: TaskType = useSelector((state: RootStateOrAny) => state.tasks)
 
   return (
     <Box display='flex' flexDirection='column' className='attachment-detail'>
@@ -14,7 +15,7 @@ const TitleDetail: React.FC = () => {
           className='input-title'
           rowsMin={1}
           rowsMax={5}
-          value={task?.title}
+          value={currentTask?.title}
         />
       </Box>
       <Box pb={2} px={2} className='title-detail'>
@@ -22,12 +23,12 @@ const TitleDetail: React.FC = () => {
           className='input-title input-description'
           rowsMin={10}
           placeholder="Description or type '/' for commands"
-          value={task?.description}
+          value={currentTask?.description}
         />
       </Box>
       <AttachmentInBody />
     </Box>
-  );
-};
+  )
+}
 
-export default TitleDetail;
+export default TitleDetail

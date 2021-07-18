@@ -1,16 +1,16 @@
-import { Box } from '@material-ui/core';
-import React, { FC } from 'react';
-import { Shape } from 'pages/board/logic/board_reducer';
-import SvgOptionProcess from '@components/svg/svg_option_process';
-import SvgOptionDecision from '@components/svg/svg_option_decision';
+import { Box } from '@material-ui/core'
+import React, { FC } from 'react'
+import { Shape } from 'pages/board/logic/board_reducer'
+import SvgOptionProcess from '@components/svg/svg_option_process'
+import SvgOptionDecision from '@components/svg/svg_option_decision'
 
 interface InitialProps {
-  onClickAdd: (e: string) => void;
+  onClickAdd: (e: string) => void
 }
 
 const ListOptionCard: FC<InitialProps> = (props: InitialProps) => {
 
-  const { onClickAdd }: InitialProps = props;
+  const { onClickAdd }: InitialProps = props
 
   return (
     <div className='card-shape-all'>
@@ -23,7 +23,7 @@ const ListOptionCard: FC<InitialProps> = (props: InitialProps) => {
         </div>
       </Box>
     </div>
-  );
-};
+  )
+}
 
-export default ListOptionCard;
+export default ListOptionCard

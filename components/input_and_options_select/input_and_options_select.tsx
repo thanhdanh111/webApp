@@ -1,25 +1,25 @@
-import { FunctionComponent } from 'react';
-import { NativeSelect, InputBase, FormControl, IconButton, InputLabel } from '@material-ui/core';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import { FunctionComponent } from 'react'
+import { NativeSelect, InputBase, FormControl, IconButton, InputLabel } from '@material-ui/core'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 
 interface InputAndOptionsSelect {
-  index: number;
-  defaultValues: (string | undefined)[];
-  firstOptions: JSX.Element[];
-  secondOptions: JSX.Element[];
-  firstFormName: string;
-  secondFormName: string;
-  thirdFormName: string;
-  handleFillingInfo: (event, index) => void;
-  onClickCrossButton: (index) => void;
-  firstInputLabel?: string;
-  secondInputLabel?: string;
-  thirdInputLabel?: string;
-  disableButton?: boolean;
-  layoutClassName?: string;
+  index: number
+  defaultValues: (string | undefined)[]
+  firstOptions: JSX.Element[]
+  secondOptions: JSX.Element[]
+  firstFormName: string
+  secondFormName: string
+  thirdFormName: string
+  handleFillingInfo: (event, index) => void
+  onClickCrossButton: (index) => void
+  firstInputLabel?: string
+  secondInputLabel?: string
+  thirdInputLabel?: string
+  disableButton?: boolean
+  layoutClassName?: string
 }
 
-type InputAndOptionsSelectType = InputAndOptionsSelect;
+type InputAndOptionsSelectType = InputAndOptionsSelect
 
 export const InputAndOptionsSelect: FunctionComponent<InputAndOptionsSelectType> = ({
   index,
@@ -115,5 +115,5 @@ export const InputAndOptionsSelect: FunctionComponent<InputAndOptionsSelectType>
       >
         <HighlightOffIcon />
       </IconButton>
-    </div>);
-};
+    </div>)
+}

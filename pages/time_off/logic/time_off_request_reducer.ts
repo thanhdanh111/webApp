@@ -1,8 +1,8 @@
-import moment from 'moment';
-import { TimeOffRequestActionTypes } from './time_off_actions';
-import { TimeOffRequestValue } from './time_off_interface';
+import moment from 'moment'
+import { TimeOffRequestActionTypes } from './time_off_actions'
+import { TimeOffRequestValue } from './time_off_interface'
 
-const currentDateTime = moment();
+const currentDateTime = moment()
 
 const initialTimeOffRequestState: TimeOffRequestValue = {
   onRequest: false,
@@ -14,7 +14,7 @@ const initialTimeOffRequestState: TimeOffRequestValue = {
   endTime: currentDateTime.add(1, 'hour').format('HH:mm'),
   reason: '',
   timeOffRequestNotifications: [],
-};
+}
 
 // tslint:disable-next-line: cyclomatic-complexity
 const timeOffRequestReducer = (state = initialTimeOffRequestState, action) => {
@@ -24,36 +24,36 @@ const timeOffRequestReducer = (state = initialTimeOffRequestState, action) => {
       return {
         ...state,
         companies: action.companies,
-      };
+      }
     case TimeOffRequestActionTypes.UpdateContentLetter:
       if (!action?.data?.onRequest) {
-        state.onSendingRequest = false;
+        state.onSendingRequest = false
       }
 
       return {
         ...state,
         ...action.data,
-      };
+      }
     case TimeOffRequestActionTypes.UpdateOnSendingTimeOffRequest:
       return {
         ...state,
         onSendingRequest: action.onSendingRequest,
-      };
+      }
     case TimeOffRequestActionTypes.UpdateTimeOffRequestNotifications:
       return {
         ...state,
         timeOffRequestNotifications: action.notifications,
         onSendingRequest: action.onSendingRequest,
-      };
+      }
     case TimeOffRequestActionTypes.UpdateTimeOffRequestReducer:
 
       return {
         ...state,
         ...action.data,
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default timeOffRequestReducer;
+export default timeOffRequestReducer

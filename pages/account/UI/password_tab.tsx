@@ -1,9 +1,9 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react'
 import {
   Box, TextField,
-} from '@material-ui/core';
-import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { passwordInputErrors } from '../../../helpers/input_password_cases';
+} from '@material-ui/core'
+import PrimaryButtonUI from '@components/primary_button/primary_button'
+import { passwordInputErrors } from '../../../helpers/input_password_cases'
 
 const labels = [
   {
@@ -25,39 +25,39 @@ const labels = [
     id: 'confirmPassword',
     required: false,
   },
-];
+]
 
 const PasswordTabUi: FunctionComponent = ({}) => {
   const [throwErrorState, setThrowErrorsState] = useState({
     oldPassword: '',
     newPassword: '',
     confirmPassword: '',
-  });
+  })
 
   function handleFilling(event, label) {
     if (label.required && event.target.value) {
       setThrowErrorsState({
         ...throwErrorState,
         [event.target.id]: passwordInputErrors(event.target.value, label),
-      });
+      })
     }
 
-    return;
+    return
   }
 
   function handleSavingChanges() {
-    return 'Saved';
+    return 'Saved'
   }
 
   function warningEmpty(event, label) {
     if (!label.required || (label.required  && event.target.value)) {
-      return;
+      return
     }
 
     setThrowErrorsState({
       ...throwErrorState,
       [event.target.id]: passwordInputErrors(event.target.value, label),
-    });
+    })
   }
 
   const FillOutTextFields = labels.map((label, index) => {
@@ -79,8 +79,8 @@ const PasswordTabUi: FunctionComponent = ({}) => {
           helperText={!!throwErrorState[label.id] ? throwErrorState[label.id] : label.helperText}
         />
       </form>
-    </Box>;
-  });
+    </Box>
+  })
 
   return (
     <Box className='password-tab'>
@@ -90,7 +90,7 @@ const PasswordTabUi: FunctionComponent = ({}) => {
         title='Save Changes'
       />
     </Box>
-  );
-};
+  )
+}
 
-export default PasswordTabUi;
+export default PasswordTabUi

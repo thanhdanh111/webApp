@@ -1,17 +1,17 @@
-import React, { FunctionComponent } from 'react';
-import { FormControl, TextField } from '@material-ui/core';
+import React, { FunctionComponent } from 'react'
+import { FormControl, TextField } from '@material-ui/core'
 
 interface DateTimePickerType {
-  label: string;
-  className?: string;
-  type?: string;
-  value?: string;
-  name?: string;
-  onChoosingValue: ({ event }) => void;
-  error?: boolean;
+  label: string
+  className?: string
+  type?: string
+  value?: string
+  name?: string
+  onChoosingValue: ({ event }) => void
+  error?: boolean
 }
 
-type BodyProps = DateTimePickerType;
+type BodyProps = DateTimePickerType
 
 const DateAndTimePicker: FunctionComponent<BodyProps> = ({
   label,
@@ -42,7 +42,7 @@ const DateAndTimePicker: FunctionComponent<BodyProps> = ({
         }}
       />
     </FormControl>
-  );
-};
+  )
+}
 
-export default DateAndTimePicker;
+export default DateAndTimePicker

@@ -1,5 +1,5 @@
-import React from 'react';
-import Login from './login/index.page';
+import React from 'react'
+import Login from './login/index.page'
 
 const App = () => {
 
@@ -9,7 +9,7 @@ const App = () => {
           <Login/>
       </main>
     </>
-  );
-};
+  )
+}
 
-export default App;
+export default App

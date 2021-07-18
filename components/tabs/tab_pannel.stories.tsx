@@ -1,6 +1,6 @@
-import { storiesOf } from '@storybook/react';
-import React from 'react';
-import TabPanel from './tab_pannel';
+import { storiesOf } from '@storybook/react'
+import React from 'react'
+import TabPanel from './tab_pannel'
 
 storiesOf('Footer', module).add('Footer', () => {
   return (
@@ -9,5 +9,5 @@ storiesOf('Footer', module).add('Footer', () => {
       value={0}
       index={0}
     />
-  );
-});
+  )
+})

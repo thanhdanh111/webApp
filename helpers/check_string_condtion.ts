@@ -1,21 +1,21 @@
 interface Check {
-  variable?: string;
-  equalCondition?: string;
-  notEqualCondition?: string;
+  variable?: string
+  equalCondition?: string
+  notEqualCondition?: string
 }
 
 export function checkStringCondition({ variable, equalCondition, notEqualCondition }: Check): boolean {
   if (!variable || typeof variable !== 'string') {
-    return false;
+    return false
   }
 
   if (equalCondition) {
-    return variable === equalCondition;
+    return variable === equalCondition
   }
 
   if (notEqualCondition) {
-    return variable !== notEqualCondition;
+    return variable !== notEqualCondition
   }
 
-  return false;
+  return false
 }

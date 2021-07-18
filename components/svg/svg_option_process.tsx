@@ -6,7 +6,7 @@ const SvgOptionProcess = () => {
         <rect rx='0' ry='100' height='25' width='30' fill='none'/>
       </svg>
     </>
-  );
-};
+  )
+}
 
-export default SvgOptionProcess;
+export default SvgOptionProcess

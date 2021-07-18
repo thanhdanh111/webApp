@@ -1,4 +1,4 @@
-import { Elements } from 'react-flow-renderer';
+import { Elements } from 'react-flow-renderer'
 export const initialElements: Elements = [
   // {
   //   id: '1' ,
@@ -21,4 +21,4 @@ export const initialElements: Elements = [
   //   isHidden: false,
   // },
 
-];
+]

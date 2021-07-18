@@ -1,42 +1,42 @@
-import { useEffect, useState, useRef } from 'react';
-import { Direction } from './constants';
+import { useEffect, useState, useRef } from 'react'
+import { Direction } from './constants'
 
 const Resizer = ({ onResize, panelRef }) => {
-  const heightRef = useRef(40);
-  const widthRef = useRef(100);
-  const [direction, setDirection] = useState('');
-  const [mouseDown, setMouseDown] = useState(false);
+  const heightRef = useRef(40)
+  const widthRef = useRef(100)
+  const [direction, setDirection] = useState('')
+  const [mouseDown, setMouseDown] = useState(false)
 
   const handleMouseMove = (event) => {
-    if (!direction) return;
-    onResize(panelRef, heightRef, widthRef, direction, event.movementX, event.movementY);
-  };
+    if (!direction) return
+    onResize(panelRef, heightRef, widthRef, direction, event.movementX, event.movementY)
+  }
   useEffect(() => {
 
     if (mouseDown) {
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousemove', handleMouseMove)
     }
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [mouseDown]);
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [mouseDown])
 
   useEffect(() => {
-    const handelMouseUp = () => setMouseDown(false);
+    const handelMouseUp = () => setMouseDown(false)
 
-    window.addEventListener('mouseup', handelMouseUp);
+    window.addEventListener('mouseup', handelMouseUp)
 
     return () => {
-      window.removeEventListener('mouseup', handelMouseUp);
-    };
-  }, []);
+      window.removeEventListener('mouseup', handelMouseUp)
+    }
+  }, [])
 
   const handleMouseDown = (men) => () => {
-    setDirection(men);
-    setMouseDown(true);
+    setDirection(men)
+    setMouseDown(true)
 
-  };
+  }
 
   return(
     <div>
@@ -50,7 +50,7 @@ const Resizer = ({ onResize, panelRef }) => {
       <div className='resizer bottom-left' onMouseDown={handleMouseDown(Direction.BottomLeft)}/>
 
     </div>
-  );
-};
+  )
+}
 
-export default Resizer;
+export default Resizer

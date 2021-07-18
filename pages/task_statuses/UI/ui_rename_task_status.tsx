@@ -1,17 +1,18 @@
-import { Typography } from '@material-ui/core';
-import { renameTaskStatusThunkAction,  TaskBoardsType } from 'pages/task_boards/logic/task_boards_reducer';
-import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-import { TaskStatus } from 'helpers/type';
-import { setTemplateTitleStatus } from 'pages/task_boards/logic/task_boards_action';
-import { RootState } from 'redux/reducers_registration';
+import { Typography } from '@material-ui/core'
+import React, { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import CheckIcon from '@material-ui/icons/Check'
+import CloseIcon from '@material-ui/icons/Close'
+import { TaskStatus } from 'helpers/type'
+// import { setTemplateTitleStatus } from 'pages/task_boards/logic/task_boards_action'
+import { RootState } from 'redux/reducers_registration'
+import { setTempTitleStatus } from '../logic/task_statuses_action'
+import { renameStatusThunkAction, StatusesType } from '../logic/task_statuses_reducer'
 
 interface InitialProps {
-  taskStatusID: TaskStatus;
-  renaming?: boolean;
-  setRetitleStatus: () => void;
+  taskStatusID: TaskStatus
+  renaming?: boolean
+  setRetitleStatus: () => void
 }
 
 const RenameStatusUI = (props: InitialProps) => {
@@ -19,14 +20,14 @@ const RenameStatusUI = (props: InitialProps) => {
     taskStatusID,
     renaming,
     setRetitleStatus,
-  }: InitialProps = props;
-  const { templateTitleStatus }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards);
-  const newTaskRef = useRef<HTMLTitleElement>(null);
-  const dispatch = useDispatch();
+  }: InitialProps = props
+  const { tempTitleStatus }: StatusesType = useSelector((state: RootState) => state.statuses)
+  const newTaskRef = useRef<HTMLTitleElement>(null)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(setTemplateTitleStatus(taskStatusID?.title));
-  }, [taskStatusID]);
+    dispatch(setTempTitleStatus(taskStatusID?.title))
+  }, [taskStatusID])
 
   if (!renaming) {
     return (
@@ -34,31 +35,32 @@ const RenameStatusUI = (props: InitialProps) => {
         <Typography className='name-status' ref={newTaskRef}>{taskStatusID?.title}</Typography>
         <Typography className='quality-task'>{taskStatusID?.taskIDs?.length}</Typography>
       </>
-    );
+    )
   }
 
   const submitReTitleTaskStatus = () => {
-    dispatch(renameTaskStatusThunkAction(taskStatusID?._id));
-  };
+    setRetitleStatus()
+    dispatch(renameStatusThunkAction(taskStatusID?._id))
+  }
 
   const handleChangeTitle = (event) => {
-    if (templateTitleStatus === event?.target?.value) {
-      return;
+    if (tempTitleStatus === event?.target?.value) {
+      return
     }
 
-    dispatch(setTemplateTitleStatus(event.target.value));
-  };
+    dispatch(setTempTitleStatus(event.target.value))
+  }
 
   const handleCloseChange = () => {
-    setRetitleStatus();
-    dispatch(setTemplateTitleStatus(taskStatusID?.title));
-  };
+    setRetitleStatus()
+    dispatch(setTempTitleStatus(taskStatusID?.title))
+  }
 
   return (
     <div className='rename-status'>
       <input
         type='text'
-        value={templateTitleStatus}
+        value={tempTitleStatus || taskStatusID?.title}
         className='add-status-input'
         onChange={handleChangeTitle}
       />
@@ -70,7 +72,7 @@ const RenameStatusUI = (props: InitialProps) => {
       </div>
     </div>
 
-  );
-};
+  )
+}
 
-export default (RenameStatusUI);
+export default (RenameStatusUI)

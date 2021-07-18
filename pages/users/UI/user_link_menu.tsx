@@ -1,5 +1,5 @@
-import { Container, Typography } from '@material-ui/core';
-import React from 'react';
+import { Container, Typography } from '@material-ui/core'
+import React from 'react'
 
 const UserLinkMenu = () => {
   return (
@@ -22,7 +22,7 @@ const UserLinkMenu = () => {
                     </ul>
                 </Container>
             </div>
-  );
-};
+  )
+}
 
-export default(UserLinkMenu);
+export default(UserLinkMenu)

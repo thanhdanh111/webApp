@@ -1,18 +1,18 @@
-import AvatarGroup from '@material-ui/lab/AvatarGroup';
-import Tooltip from '@material-ui/core/Tooltip';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { Avatar, Badge } from '@material-ui/core';
-import { User, UserInfo } from 'helpers/type';
-import { checkArray } from 'helpers/check_array';
+import AvatarGroup from '@material-ui/lab/AvatarGroup'
+import Tooltip from '@material-ui/core/Tooltip'
+import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import { Avatar, Badge } from '@material-ui/core'
+import { User, UserInfo } from 'helpers/type'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 
 interface InitProps {
-  currentUser: UserInfo;
-  usersAssigned?: User[];
-  sizes: string;
+  currentUser: UserInfo
+  usersAssigned?: (User)[]
+  sizes: string
 }
 
 const GroupUserAssigned: React.FC<InitProps> = (props) => {
-  const { usersAssigned, currentUser, sizes }: InitProps = props;
+  const { usersAssigned, currentUser, sizes }: InitProps = props
 
   return (
     <AvatarGroup
@@ -20,9 +20,9 @@ const GroupUserAssigned: React.FC<InitProps> = (props) => {
       spacing='medium'
       className='group-avatar-task'
     >
-      {(usersAssigned && checkArray(usersAssigned)) ? (
+      {(usersAssigned && checkIfEmptyArray(usersAssigned)) ? (
         usersAssigned?.map((user) => {
-          const fullName = `${user?.firstName} ${user?.lastName}`;
+          const fullName = `${user?.firstName} ${user?.lastName}`
 
           return (
             <Badge
@@ -49,14 +49,14 @@ const GroupUserAssigned: React.FC<InitProps> = (props) => {
               </Tooltip>
             </Badge>
 
-          );
+          )
         })) : (
         <Tooltip title='Assign' arrow={true} placement='top'>
           <PersonAddIcon className='no-user-assign' />
         </Tooltip>
       )}
     </AvatarGroup>
-  );
-};
+  )
+}
 
-export default GroupUserAssigned;
+export default GroupUserAssigned

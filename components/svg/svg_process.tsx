@@ -5,7 +5,7 @@ const SvgProcess = () => {
         <rect height='40' width='135' />
       </svg>
     </>
-  );
-};
+  )
+}
 
-export default SvgProcess;
+export default SvgProcess

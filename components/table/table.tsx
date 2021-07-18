@@ -1,36 +1,36 @@
 import {
     Paper,
-} from '@material-ui/core';
-import React from 'react';
-import { HeadCell } from '../../helpers/type';
-import TableContent from './table_content';
+} from '@material-ui/core'
+import React from 'react'
+import { HeadCell } from '../../helpers/type'
+import TableContent from './table_content'
 
 interface CustomizedCellsAtLastColumn {
-  status?: string;
-  itemIndex?: number;
+  status?: string
+  itemIndex?: number
 }
 
 interface InitialProps {
-  headCells: HeadCell[];
-  data: object[];
-  length: number;
-  loading: boolean;
-  actions: string[];
-  fetchData: () => void;
-  needCheckBox?: boolean;
-  redButtonName?: string;
-  actionFunc?: object;
-  baseTableName?: string;
-  loadingIndex?: string;
-  loadingStateName?: string;
-  indexLoading?: boolean;
-  notFoundAnyData?: boolean;
-  notFoundWarning?: string;
-  hadExpandableRows?: boolean;
-  needStickyHeader?: boolean;
-  fixedHeightInfiniteScroll?: number;
-  ComponentDetail?: React.FunctionComponent;
-  CustomizedCellAtLastColumn?: React.FunctionComponent<CustomizedCellsAtLastColumn>;
+  headCells: HeadCell[]
+  data: object[]
+  length: number
+  loading: boolean
+  actions: string[]
+  fetchData: () => void
+  needCheckBox?: boolean
+  redButtonName?: string
+  actionFunc?: object
+  baseTableName?: string
+  loadingIndex?: string
+  loadingStateName?: string
+  indexLoading?: boolean
+  notFoundAnyData?: boolean
+  notFoundWarning?: string
+  hadExpandableRows?: boolean
+  needStickyHeader?: boolean
+  fixedHeightInfiniteScroll?: number
+  ComponentDetail?: React.FunctionComponent
+  CustomizedCellAtLastColumn?: React.FunctionComponent<CustomizedCellsAtLastColumn>
 }
 
 const BaseTable = (props: InitialProps) => {
@@ -44,8 +44,8 @@ const BaseTable = (props: InitialProps) => {
     notFoundWarning, hadExpandableRows = false,
     ComponentDetail, fixedHeightInfiniteScroll,
     needStickyHeader = true,
-  }: InitialProps = props;
-  const emptyState = !loading && !data?.length && notFoundAnyData;
+  }: InitialProps = props
+  const emptyState = !loading && !data?.length && notFoundAnyData
 
   return (
     <Paper className='table-paper'>
@@ -72,7 +72,7 @@ const BaseTable = (props: InitialProps) => {
         CustomizedCellAtLastColumn={props.CustomizedCellAtLastColumn}
       />
     </Paper>
-  );
-};
+  )
+}
 
-export default BaseTable;
+export default BaseTable

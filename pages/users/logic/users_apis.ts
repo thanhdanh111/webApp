@@ -1,17 +1,17 @@
-import axios from 'axios';
-import { checkOnlyTrueInArray } from 'helpers/check_only_true';
-import { config } from 'helpers/get_config';
-import { updateUsersReducer } from './users_actions';
+import axios from 'axios'
+import { checkOnlyTrueInArray } from 'helpers/check_only_true'
+import { config } from 'helpers/get_config'
+import { updateUsersReducer } from './users_actions'
 
 export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getState) => {
   try {
-    const usersState = getState()?.users;
-    const token = localStorage.getItem('access_token');
-    const departmentID  = usersState?.editingUserInfo?.editingDepartment?.departmentID;
-    const departmentRole = usersState?.editingUserInfo?.editingDepartment?.role;
-    const companyID = usersState?.editingUserInfo?.userData?.companyID?._id;
-    const userIndex = usersState?.editingUserInfo?.userIndex;
-    const userRenderID = usersState?.editingUserInfo?.userData?.userID?._id;
+    const usersState = getState()?.users
+    const token = localStorage.getItem('access_token')
+    const departmentID  = usersState?.editingUserInfo?.editingDepartment?.departmentID
+    const departmentRole = usersState?.editingUserInfo?.editingDepartment?.role
+    const companyID = usersState?.editingUserInfo?.userData?.companyID?._id
+    const userIndex = usersState?.editingUserInfo?.userIndex
+    const userRenderID = usersState?.editingUserInfo?.userData?.userID?._id
 
     const validData = checkOnlyTrueInArray({
       conditionsArray: [
@@ -21,15 +21,15 @@ export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
         !!departmentRole,
         userIndex !== undefined,
       ],
-    });
+    })
 
     if (!validData) {
-      dispatch(updateUsersReducer({ onRemovingUser: false }));
+      dispatch(updateUsersReducer({ onRemovingUser: false }))
 
-      return;
+      return
     }
 
-    dispatch(updateUsersReducer({ isLoading: true }));
+    dispatch(updateUsersReducer({ isLoading: true }))
 
     await axios({
       url: `${config.BASE_URL}/companies/${companyID}/department/${departmentID}/members`,
@@ -42,28 +42,28 @@ export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
         Authorization: `Bearer ${token}`,
       },
       method: 'DELETE',
-    });
+    })
 
-    const accessID = usersState?.editingUserInfo?.editingDepartment?._id;
+    const accessID = usersState?.editingUserInfo?.editingDepartment?._id
 
     if (onSearch) {
-      const newListSearch  = usersState?.listSearch;
+      const newListSearch  = usersState?.listSearch
 
       newListSearch[userIndex].departmentRoles =
         newListSearch?.[userIndex]?.departmentRoles?.filter((access) => {
-          return access?._id !== accessID;
-        });
+          return access?._id !== accessID
+        })
 
       const newListAfterEditingSearch = usersState?.list?.map((user) => {
         if (user?.id?.userID === userRenderID) {
           return {
             ...user,
             departmentRoles: newListSearch?.[userIndex]?.departmentRoles,
-          };
+          }
         }
 
-        return user;
-      });
+        return user
+      })
 
       dispatch(updateUsersReducer({
         listSearch: newListSearch,
@@ -71,38 +71,38 @@ export const removeUserFromDepartment = ({ onSearch }) => async (dispatch, getSt
         editingUserInfo: { },
         list: newListAfterEditingSearch,
         isLoading: false,
-      }));
+      }))
 
-      return;
+      return
     }
 
-    const newList  = usersState?.list;
+    const newList  = usersState?.list
 
     newList[userIndex].departmentRoles =
       newList?.[userIndex]?.departmentRoles?.filter((access) => {
-        return access?._id !== accessID;
-      });
+        return access?._id !== accessID
+      })
 
     dispatch(updateUsersReducer({
       list: newList,
       onRemovingUser: false,
       isLoading: false,
       editingUserInfo: { },
-    }));
+    }))
 
-    return;
+    return
   } catch (error) {
-    dispatch(updateUsersReducer({ onRemovingUser: false, isLoading: false }));
+    dispatch(updateUsersReducer({ onRemovingUser: false, isLoading: false }))
   }
-};
+}
 
 export const removeUserFromCompany = ({ onSearch }) => async (dispatch, getState) => {
   try {
-    const usersState = getState()?.users;
-    const token = localStorage.getItem('access_token');
-    const companyID = usersState?.editingUserInfo?.userData?._id?.companyID;
-    const companyRole = usersState?.editingUserInfo?.editingCompany?.companyRole;
-    const userID = usersState?.editingUserInfo?.userData?._id?.userID;
+    const usersState = getState()?.users
+    const token = localStorage.getItem('access_token')
+    const companyID = usersState?.editingUserInfo?.userData?._id?.companyID
+    const companyRole = usersState?.editingUserInfo?.editingCompany?.companyRole
+    const userID = usersState?.editingUserInfo?.userData?._id?.userID
 
     const validData = checkOnlyTrueInArray({
       conditionsArray: [
@@ -110,15 +110,15 @@ export const removeUserFromCompany = ({ onSearch }) => async (dispatch, getState
         !!companyRole,
         !!userID,
       ],
-    });
+    })
 
     if (!validData) {
-      dispatch(updateUsersReducer({ onRemovingUser: false }));
+      dispatch(updateUsersReducer({ onRemovingUser: false }))
 
-      return;
+      return
     }
 
-    dispatch(updateUsersReducer({ isLoading: true }));
+    dispatch(updateUsersReducer({ isLoading: true }))
 
     await axios({
       url: `${config.BASE_URL}/companies/${companyID}/members`,
@@ -130,25 +130,25 @@ export const removeUserFromCompany = ({ onSearch }) => async (dispatch, getState
         Authorization: `Bearer ${token}`,
       },
       method: 'DELETE',
-    });
+    })
 
     if (onSearch) {
       const newListSearch  = usersState?.listSearch?.filter((user) => {
         if (user?.id?.userID === userID) {
-          return false;
+          return false
         }
 
-        return true;
-      });
+        return true
+      })
 
       const newListAfterEditingSearch = usersState?.list?.filter((user) => {
         if (user?.id?.userID === userID) {
 
-          return false;
+          return false
         }
 
-        return true;
-      });
+        return true
+      })
 
       dispatch(updateUsersReducer({
         listSearch: newListSearch,
@@ -156,29 +156,29 @@ export const removeUserFromCompany = ({ onSearch }) => async (dispatch, getState
         editingUserInfo: { },
         list: newListAfterEditingSearch,
         isLoading: false,
-      }));
+      }))
 
-      return;
+      return
     }
 
     const newList  = usersState?.list?.filter((user) => {
       if (user?.id?.userID === userID) {
 
-        return false;
+        return false
       }
 
-      return true;
-    });
+      return true
+    })
 
     dispatch(updateUsersReducer({
       list: newList,
       onRemovingUser: false,
       editingUserInfo: { },
       isLoading: false,
-    }));
+    }))
 
-    return;
+    return
   } catch (error) {
-    dispatch(updateUsersReducer({ onRemovingUser: false, isLoading: false }));
+    dispatch(updateUsersReducer({ onRemovingUser: false, isLoading: false }))
   }
-};
+}

@@ -1,20 +1,20 @@
-import React, { FunctionComponent, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { FunctionComponent, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   Typography, Box, Divider,
-} from '@material-ui/core';
-import InviteMembersUI from './UI/invite_members';
-import { getDepartmentsOfCompany } from './logic/invite_apis';
-import { RootState } from 'redux/reducers_registration';
+} from '@material-ui/core'
+import InviteMembersUI from './UI/invite_members'
+import { getDepartmentsOfCompany } from './logic/invite_apis'
+import { RootState } from 'redux/reducers_registration'
 
 const InviteMembersPage: FunctionComponent = () => {
-  const userInfo = useSelector((state: RootState) => state?.userInfo);
+  const userInfo = useSelector((state: RootState) => state?.userInfo)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(()  =>  {
-    dispatch(getDepartmentsOfCompany());
-  }, []);
+    dispatch(getDepartmentsOfCompany())
+  }, [])
 
   return (
     <>
@@ -34,8 +34,8 @@ const InviteMembersPage: FunctionComponent = () => {
         </Box>
       </div>
     </>
-  );
+  )
 
-};
+}
 
-export default InviteMembersPage;
+export default InviteMembersPage
