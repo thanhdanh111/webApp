@@ -1,20 +1,20 @@
-import React, { FunctionComponent } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { IconButton, Button, Typography, DialogContent } from '@material-ui/core';
-import DoneIcon from '@material-ui/icons/Done';
-import CloseIcon from '@material-ui/icons/Close';
+import React, { FunctionComponent } from 'react'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { IconButton, Button, Typography, DialogContent } from '@material-ui/core'
+import DoneIcon from '@material-ui/icons/Done'
+import CloseIcon from '@material-ui/icons/Close'
 
 interface ConfirmDialog {
-  handleClose: () => void;
-  handleYes?: () => void;
-  handleNo?: () => void;
-  status?: string;
-  onOpen: boolean;
-  title?: string;
-  warning?: string;
-  loading?: boolean;
+  handleClose: () => void
+  handleYes?: () => void
+  handleNo?: () => void
+  status?: string
+  onOpen: boolean
+  title?: string
+  warning?: string
+  loading?: boolean
 }
 
 enum Action {
@@ -26,7 +26,7 @@ enum Action {
   DELETE = 'DELETE',
 }
 
-type ConfirmDialogType = ConfirmDialog;
+type ConfirmDialogType = ConfirmDialog
 
 export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({
   onOpen,
@@ -82,5 +82,5 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({
           </Button>
         </DialogActions>
       </Dialog>
-  );
-};
+  )
+}

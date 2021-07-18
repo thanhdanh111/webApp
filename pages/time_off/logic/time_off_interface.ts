@@ -1,52 +1,52 @@
-import { Company, Department, User } from 'helpers/type';
-import { VariantType } from 'notistack';
+import { Company, Department, User } from 'helpers/type'
+import { VariantType } from 'notistack'
 
 export interface TimeOffValue {
-  ownTimeOffs: TimeOffModel[];
-  ownTimeOffsOffset: number;
-  ownTimeOffsCursor: string;
-  ownTimeOffsLoading: boolean;
-  ownTimeOffsTotalCount: number;
-  membersTimeOffs: TimeOffModel[];
-  membersTimeOffsOffset: number;
-  membersTimeOffsCursor: string;
-  membersTimeOffsLoading: boolean;
-  membersTimeOffsTotalCount: number;
-  optionState: OptionState;
-  updateStatusLoading: boolean;
-  loadingIndex?: number;
-  loadingOptionStateName?: string;
-  notFoundAnyOwnTimeOffs: boolean;
-  notFoundAnyMembersTimeOffs: boolean;
-  onConfirm: boolean;
-  onSelectTimeOffData: SelectedTimeOffData;
-  timeOffDetail: TimeOff;
+  ownTimeOffs: TimeOffModel[]
+  ownTimeOffsOffset: number
+  ownTimeOffsCursor: string
+  ownTimeOffsLoading: boolean
+  ownTimeOffsTotalCount: number
+  membersTimeOffs: TimeOffModel[]
+  membersTimeOffsOffset: number
+  membersTimeOffsCursor: string
+  membersTimeOffsLoading: boolean
+  membersTimeOffsTotalCount: number
+  optionState: OptionState
+  updateStatusLoading: boolean
+  loadingIndex?: number
+  loadingOptionStateName?: string
+  notFoundAnyOwnTimeOffs: boolean
+  notFoundAnyMembersTimeOffs: boolean
+  onConfirm: boolean
+  onSelectTimeOffData: SelectedTimeOffData
+  timeOffDetail: TimeOff
 }
 
 export interface TimeOffRequestValue {
-  onRequest: boolean;
-  onSendingRequest: boolean;
-  companies: Company[];
-  timeOffRequestNotifications: TimeOffNotification[];
-  selectedCompany?: Company;
-  selectedDepartment?: Department;
-  reason: string;
-  startDate: string;
-  endDate: string;
-  startTime: string;
-  endTime: string;
+  onRequest: boolean
+  onSendingRequest: boolean
+  companies: Company[]
+  timeOffRequestNotifications: TimeOffNotification[]
+  selectedCompany?: Company
+  selectedDepartment?: Department
+  reason: string
+  startDate: string
+  endDate: string
+  startTime: string
+  endTime: string
 }
 
 interface TimeOffNotification {
-  message: string;
-  variant: VariantType;
+  message: string
+  variant: VariantType
 }
 
 interface SelectedTimeOffData {
-  timeOffID?: string;
-  status?: string;
-  timeOffIndex?: number;
-  fieldName?: string;
+  timeOffID?: string
+  status?: string
+  timeOffIndex?: number
+  fieldName?: string
 }
 
 export enum OptionState {
@@ -54,37 +54,37 @@ export enum OptionState {
   members = 'member',
 }
 
-export type TimeOffValueType = TimeOffValue;
+export type TimeOffValueType = TimeOffValue
 
 export interface TimeOffModel {
-  id: string;
-  companyName: string;
-  departmentName: string;
-  startTime: string;
-  endTime: string;
-  status: string;
-  reason: string;
-  name: string;
-  isManager: boolean;
+  id: string
+  companyName: string
+  departmentName: string
+  startTime: string
+  endTime: string
+  status: string
+  reason: string
+  name: string
+  isManager: boolean
 }
 
-export type SelectedTimeOffDataType = SelectedTimeOffData;
+export type SelectedTimeOffDataType = SelectedTimeOffData
 
 export interface UpdateOnConfirmDialog {
-  onConfirm?: boolean;
-  onSelectTimeOffData?: SelectedTimeOffData;
+  onConfirm?: boolean
+  onSelectTimeOffData?: SelectedTimeOffData
 }
 
-export type TimeOffRequestProps = TimeOffRequestValue;
+export type TimeOffRequestProps = TimeOffRequestValue
 
 export interface TimeOff {
-  departmentID?: Department;
-  status?: string;
-  reason?: string;
-  description?: string;
-  _id?: string;
-  startTime?: string;
-  endTime?: string;
-  companyID?: Company;
-  createdBy?: User;
+  departmentID?: Department
+  status?: string
+  reason?: string
+  description?: string
+  _id?: string
+  startTime?: string
+  endTime?: string
+  companyID?: Company
+  createdBy?: User
 }

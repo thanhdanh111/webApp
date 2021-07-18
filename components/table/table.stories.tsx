@@ -1,5 +1,5 @@
-import { storiesOf } from '@storybook/react';
-import BaseTable from './table';
+import { storiesOf } from '@storybook/react'
+import BaseTable from './table'
 
 storiesOf('BaseTable', module).add('BaseTable', () => {
   return (
@@ -11,5 +11,5 @@ storiesOf('BaseTable', module).add('BaseTable', () => {
    length={0}
    fetchData={() => {/**/}}
   />
-  );
-});
+  )
+})

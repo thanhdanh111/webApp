@@ -1,13 +1,13 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react'
 import {
   Box, Table, TableBody, TableCell, TableContainer, TableRow, Typography, TableHead,
-} from '@material-ui/core';
+} from '@material-ui/core'
 
-import { RootStateOrAny, useSelector } from 'react-redux';
+import { RootStateOrAny, useSelector } from 'react-redux'
 
 const StatisticsTable: FunctionComponent = () => {
-  const statistics = useSelector((state: RootStateOrAny) => state.statistics);
-  const statisticsList = statistics.checkInCheckOuts;
+  const statistics = useSelector((state: RootStateOrAny) => state.statistics)
+  const statisticsList = statistics.checkInCheckOuts
 
   return (
     <Box className='statistics-table'>
@@ -26,10 +26,10 @@ const StatisticsTable: FunctionComponent = () => {
           <TableBody>
             {statisticsList.map((row, index) => {
               if (row?.checkInAt == null) {
-                return <></>;
+                return <></>
               }
-              const checkInAt = new Date(row.checkInAt);
-              const checkOutAt = new Date(row.checkOutAt);
+              const checkInAt = new Date(row.checkInAt)
+              const checkOutAt = new Date(row.checkOutAt)
 
               return (
                 <TableRow key={index}>
@@ -41,14 +41,14 @@ const StatisticsTable: FunctionComponent = () => {
                   <TableCell align='center'>{checkOutAt.toLocaleTimeString()}</TableCell>
                   <TableCell align='center'>{row.description}</TableCell>
                 </TableRow>
-              );
+              )
             })}
           </TableBody>
         </Table>
       </TableContainer>
     </Box>
 
-  );
-};
+  )
+}
 
-export default StatisticsTable;
+export default StatisticsTable

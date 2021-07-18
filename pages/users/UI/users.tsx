@@ -1,57 +1,57 @@
-import { Container, Toolbar } from '@material-ui/core';
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import UserLinkMenu from './user_link_menu';
-import { useDispatch, useSelector } from 'react-redux';
+import { Container, Toolbar } from '@material-ui/core'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import UserLinkMenu from './user_link_menu'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   headCells,
   actionList,
   getSearchAction,
   getPaginationThunkAction,
-} from '../logic/users_reducer';
-import BaseTable from '@components/table/table';
-import SearchIcon from '@material-ui/icons/Search';
-import { RootState } from 'redux/reducers_registration';
-import UserDetail from './user_detail/user_detail';
-import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
-import { updateUsersReducer } from '../logic/users_actions';
-import { removeUserFromCompany, removeUserFromDepartment } from '../logic/users_apis';
-import { useDebounce } from 'helpers/debounce';
+} from '../logic/users_reducer'
+import BaseTable from '@components/table/table'
+import SearchIcon from '@material-ui/icons/Search'
+import { RootState } from 'redux/reducers_registration'
+import UserDetail from './user_detail/user_detail'
+import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog'
+import { updateUsersReducer } from '../logic/users_actions'
+import { removeUserFromCompany, removeUserFromDepartment } from '../logic/users_apis'
+import { useDebounce } from 'helpers/debounce'
 
 const ListUsers: FunctionComponent = () => {
-  const dispatch = useDispatch();
-  const users = useSelector((state: RootState) => state.users);
-  const loading = users.loadingList;
-  const [searchTerm, setSearchTerm] = useState('');
+  const dispatch = useDispatch()
+  const users = useSelector((state: RootState) => state.users)
+  const loading = users.loadingList
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 200);
+  const debouncedSearchTerm = useDebounce(searchTerm, 200)
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      dispatch(getSearchAction(debouncedSearchTerm));
+      dispatch(getSearchAction(debouncedSearchTerm))
     }
 
-    return;
-  }, [debouncedSearchTerm]);
+    return
+  }, [debouncedSearchTerm])
 
   useEffect(() => {
-    fetchDataUsers();
-  }, []);
+    fetchDataUsers()
+  }, [])
 
   const fetchDataUsers = () => {
-    dispatch(getPaginationThunkAction());
-  };
+    dispatch(getPaginationThunkAction())
+  }
 
   const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+    setSearchTerm(event.target.value)
+  }
 
   const getData = () => {
     if (debouncedSearchTerm) {
-      return users?.listSearch ?? [];
+      return users?.listSearch ?? []
     }
 
-    return users?.list ?? [];
-  };
+    return users?.list ?? []
+  }
 
   function cancelDelete() {
     dispatch(updateUsersReducer({
@@ -60,29 +60,29 @@ const ListUsers: FunctionComponent = () => {
         ...users?.editingUserInfo,
         id: '',
       },
-    }));
+    }))
   }
 
   function agreeToRemoveUser() {
-    const removeFromWhere = users?.editingUserInfo?.removeUserFrom;
+    const removeFromWhere = users?.editingUserInfo?.removeUserFrom
 
     if (removeFromWhere === 'company') {
-      dispatch(removeUserFromCompany({ onSearch: !!debouncedSearchTerm }));
+      dispatch(removeUserFromCompany({ onSearch: !!debouncedSearchTerm }))
 
-      return;
+      return
     }
 
-    dispatch(removeUserFromDepartment({ onSearch: !!debouncedSearchTerm }));
+    dispatch(removeUserFromDepartment({ onSearch: !!debouncedSearchTerm }))
   }
 
   function handleWarningTitle(removeFromWhere) {
     switch (removeFromWhere) {
       case 'department':
-        return `REMOVE ${users?.editingUserInfo?.userName} from department ${users?.editingUserInfo?.editingDepartmentRole?.departmentName ?? ''}?`;
+        return `REMOVE ${users?.editingUserInfo?.userName} from department ${users?.editingUserInfo?.editingDepartmentRole?.departmentName ?? ''}?`
       case 'company':
-        return `REMOVE ${users?.editingUserInfo?.userName} from company ${users?.editingUserInfo?.editingCompany?.name ?? ''}?`;
+        return `REMOVE ${users?.editingUserInfo?.userName} from company ${users?.editingUserInfo?.editingCompany?.name ?? ''}?`
       default:
-        return 'Are you sure you want to CONTINUE?';
+        return 'Are you sure you want to CONTINUE?'
     }
   }
 
@@ -130,7 +130,7 @@ const ListUsers: FunctionComponent = () => {
             status='REMOVE'
           />
         </div>
-  );
-};
+  )
+}
 
-export default ListUsers;
+export default ListUsers

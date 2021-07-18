@@ -1,32 +1,32 @@
-import axios from 'axios';
-import { config } from 'helpers/get_config';
-import { Token } from 'helpers/type';
-import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { updateCompanyOnSending } from './company_actions';
-import { handleEmptyField } from './company_errors';
+import axios from 'axios'
+import { config } from 'helpers/get_config'
+import { Token } from 'helpers/type'
+import { pushNewNotifications } from 'redux/common/notifications/reducer'
+import { updateCompanyOnSending } from './company_actions'
+import { handleEmptyField } from './company_errors'
 
 const notificationsType = {
   200: 'Sent your token successfully',
   400: 'You have no company right now!',
-};
+}
 
 export const sendSlackCompanyToken = () => async (dispatch, getState) => {
   try {
-    const userInfo = getState()?.userInfo;
-    const companyID = userInfo?.currentCompany?._id;
-    const slackToken = getState()?.company?.slackToken;
-    const token: Token =  localStorage.getItem('access_token');
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
+    const slackToken = getState()?.company?.slackToken
+    const token: Token =  localStorage.getItem('access_token')
 
     if (!token || !companyID || !slackToken?.length) {
-      const emptyNotification = handleEmptyField({ contentFields: { companyID, slackToken } });
+      const emptyNotification = handleEmptyField({ contentFields: { companyID, slackToken } })
 
-      await dispatch(updateCompanyOnSending({ loading: false }));
-      await dispatch(pushNewNotifications({ variant: 'error' , message: emptyNotification['message'] }));
+      await dispatch(updateCompanyOnSending({ loading: false }))
+      await dispatch(pushNewNotifications({ variant: 'error' , message: emptyNotification['message'] }))
 
-      return;
+      return
     }
 
-    await dispatch(updateCompanyOnSending({ loading: true }));
+    await dispatch(updateCompanyOnSending({ loading: true }))
 
     const res = await axios({
       url: `${config.BASE_URL}/extendedCompanies/${companyID}`,
@@ -38,14 +38,14 @@ export const sendSlackCompanyToken = () => async (dispatch, getState) => {
       data: {
         slackToken,
       },
-    });
+    })
 
-    const notification = notificationsType[res.status];
-    await dispatch(updateCompanyOnSending({ loading: false }));
-    await dispatch(pushNewNotifications({ variant: 'success' , message: notification }));
+    const notification = notificationsType[res.status]
+    await dispatch(updateCompanyOnSending({ loading: false }))
+    await dispatch(pushNewNotifications({ variant: 'success' , message: notification }))
   } catch (error) {
-    const notification = notificationsType[error?.response?.status] || 'Something went wrong';
-    await dispatch(updateCompanyOnSending({ loading: false }));
-    await dispatch(pushNewNotifications({ variant: 'error' , message: notification }));
+    const notification = notificationsType[error?.response?.status] || 'Something went wrong'
+    await dispatch(updateCompanyOnSending({ loading: false }))
+    await dispatch(pushNewNotifications({ variant: 'error' , message: notification }))
   }
-};
+}

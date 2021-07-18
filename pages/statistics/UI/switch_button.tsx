@@ -1,15 +1,15 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react'
 import {
   Button,
-} from '@material-ui/core';
+} from '@material-ui/core'
 
 interface DataType {
-  title: string;
-  handleClick: () => void;
-  isSelected: boolean;
+  title: string
+  handleClick: () => void
+  isSelected: boolean
 }
 
-type BodyProps = DataType;
+type BodyProps = DataType
 
 const SwitchButton: FunctionComponent<BodyProps> = ({ title, handleClick, isSelected }) => {
 
@@ -19,7 +19,7 @@ const SwitchButton: FunctionComponent<BodyProps> = ({ title, handleClick, isSele
         {title}
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default SwitchButton;
+export default SwitchButton

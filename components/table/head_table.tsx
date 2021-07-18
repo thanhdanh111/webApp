@@ -1,21 +1,21 @@
-import React from 'react';
+import React from 'react'
 import {
     Checkbox,
     TableHead,
     TableRow,
     TableCell,
-} from '@material-ui/core';
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array';
-import { HeadCell } from 'helpers/type';
+} from '@material-ui/core'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
+import { HeadCell } from 'helpers/type'
 
 interface PropsInitial {
-  headCells: HeadCell[];
-  needCheckBox: boolean;
-  hadExpandableRows: boolean;
+  headCells: HeadCell[]
+  needCheckBox: boolean
+  hadExpandableRows: boolean
 }
 
 const HeadTable = (props: PropsInitial) => {
-  const { headCells, needCheckBox = true, hadExpandableRows = false }: PropsInitial = props;
+  const { headCells, needCheckBox = true, hadExpandableRows = false }: PropsInitial = props
 
   return (
     <TableHead className='table-users'>
@@ -43,7 +43,7 @@ const HeadTable = (props: PropsInitial) => {
         </TableRow>
       </TableHead>
 
-  );
-};
+  )
+}
 
-export default (HeadTable);
+export default (HeadTable)

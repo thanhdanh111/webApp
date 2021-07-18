@@ -1,7 +1,7 @@
-import { Access } from '../../../helpers/type';
-import { checkIfEmptyArray } from '../../../helpers/check_if_empty_array';
-import { Roles, rolesRender } from 'constants/roles';
-import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { Access } from '../../../helpers/type'
+import { checkIfEmptyArray } from '../../../helpers/check_if_empty_array'
+import { Roles, rolesRender } from 'constants/roles'
+import { checkOnlyTrueInArray } from 'helpers/check_only_true'
 
 const companyRoles = {
   COMPANY_MANAGER: {
@@ -10,7 +10,7 @@ const companyRoles = {
   COMPANY_STAFF: {
     level: 0,
   },
-};
+}
 
 export const getRenderingRolesForUsersPage = ({
   accesses,
@@ -19,48 +19,48 @@ export const getRenderingRolesForUsersPage = ({
   exceptDeleteMyself,
 }) => {
   if (!checkIfEmptyArray(accesses)) {
-    return;
+    return
   }
 
-  const stringPendingRoles: string[] = [];
-  let companyRole;
-  const departmentRoles: Access[] = [];
-  const companyRoleCouldDelete = rolesInCompany?.includes(Roles.COMPANY_MANAGER) && !exceptDeleteMyself;
+  const stringPendingRoles: string[] = []
+  let companyRole
+  const departmentRoles: Access[] = []
+  const companyRoleCouldDelete = rolesInCompany?.includes(Roles.COMPANY_MANAGER) && !exceptDeleteMyself
 
   const checkRoleCompany = (access) => {
-    const isPendingRole = access?.status !== 'ACCEPTED';
+    const isPendingRole = access?.status !== 'ACCEPTED'
     const notHaveCurrentCompanyRole = checkOnlyTrueInArray({
       conditionsArray: [
         !companyRole,
         companyRoles?.[access?.role] !== undefined,
       ],
-    });
-    const roleGreaterThanCurrentRole = companyRoles[access?.role]?.level > companyRoles[companyRole?.role]?.level;
+    })
+    const roleGreaterThanCurrentRole = companyRoles[access?.role]?.level > companyRoles[companyRole?.role]?.level
 
     if (notHaveCurrentCompanyRole || roleGreaterThanCurrentRole) {
       companyRole = {
         companyRoleCouldDelete,
         ...access,
-      };
+      }
 
-      return false;
+      return false
     }
 
     if (companyRoles?.[access?.role] !== undefined) {
 
-      return false;
+      return false
     }
 
     if (isPendingRole) {
-      stringPendingRoles.push(rolesRender[access?.role]);
+      stringPendingRoles.push(rolesRender[access?.role])
     }
 
-    return true;
-  };
+    return true
+  }
 
   const checkRoleDepartment = (access) => {
-    const departmentID = access?.departmentID?._id;
-    const departmentRolesCouldDelete = rolesInDepartments?.[departmentID]?.includes(Roles.DEPARTMENT_MANAGER);
+    const departmentID = access?.departmentID?._id
+    const departmentRolesCouldDelete = rolesInDepartments?.[departmentID]?.includes(Roles.DEPARTMENT_MANAGER)
 
     return checkOnlyTrueInArray({
       conditionsArray: [
@@ -68,15 +68,15 @@ export const getRenderingRolesForUsersPage = ({
         (companyRoleCouldDelete ||
         (departmentRolesCouldDelete && access.role !== Roles.DEPARTMENT_MANAGER)),
       ],
-    });
-  };
+    })
+  }
 
   for (const access of accesses) {
     if (!checkRoleCompany(access)) {
-      continue;
+      continue
     }
 
-    const canRemoveFromDepartment = checkRoleDepartment(access);
+    const canRemoveFromDepartment = checkRoleDepartment(access)
 
     departmentRoles.push({
       canRemoveFromDepartment,
@@ -84,8 +84,8 @@ export const getRenderingRolesForUsersPage = ({
       departmentID: access?.departmentID?._id,
       departmentName: access?.departmentID?.name,
       departmentRole: rolesRender[access?.role],
-    });
+    })
   }
 
-  return { departmentRoles, companyRole, stringPendingRoles };
-};
+  return { departmentRoles, companyRole, stringPendingRoles }
+}

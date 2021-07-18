@@ -1,39 +1,39 @@
-import { Button, Menu, MenuItem, Typography, Avatar, Grid, Divider } from '@material-ui/core';
-import React from 'react';
-import { Logout } from 'pages/login/logic/login_actions';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import HomeIcon from '@material-ui/icons/Home';
-import PersonIcon from '@material-ui/icons/Person';
-import SettingsIcon from '@material-ui/icons/Settings';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { RootState } from 'redux/reducers_registration';
-import UserAvatar from '@components/user_avatar/info_user';
-import { deleteBrowserToken } from 'helpers/fcm';
-import BusinessIcon from '@material-ui/icons/Business';
+import { Button, Menu, MenuItem, Typography, Avatar, Grid, Divider } from '@material-ui/core'
+import React from 'react'
+import { Logout } from 'pages/login/logic/login_actions'
+import { useDispatch, useSelector } from 'react-redux'
+import { useRouter } from 'next/router'
+import HomeIcon from '@material-ui/icons/Home'
+import PersonIcon from '@material-ui/icons/Person'
+import SettingsIcon from '@material-ui/icons/Settings'
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
+import { RootState } from 'redux/reducers_registration'
+import UserAvatar from '@components/user_avatar/info_user'
+import { deleteBrowserToken } from 'helpers/fcm'
+import BusinessIcon from '@material-ui/icons/Business'
 
 const DropDown = () => {
-  const userInfo = useSelector((state: RootState) => state?.userInfo);
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const userInfo = useSelector((state: RootState) => state?.userInfo)
+  const dispatch = useDispatch()
+  const router = useRouter()
 
   async function logUserOut() {
-    dispatch(Logout());
-    await deleteBrowserToken();
+    dispatch(Logout())
+    await deleteBrowserToken()
     if (typeof localStorage === 'undefined') {
-      return;
+      return
     }
-    localStorage.removeItem('access_token');
-    onPushToPage('login');
+    localStorage.removeItem('access_token')
+    onPushToPage('login')
   }
 
   const onPushToPage = (url: string) => {
 
-    void router.push(`/${url}`, `/${url}.html`);
-  };
+    void router.push(`/${url}`, `/${url}.html`)
+  }
 
   const ActionUser = () => {
-    const tokenAuth = typeof localStorage !== 'undefined' && localStorage.getItem('access_token');
+    const tokenAuth = typeof localStorage !== 'undefined' && localStorage.getItem('access_token')
     if (tokenAuth) {
       return (
         <Button
@@ -43,7 +43,7 @@ const DropDown = () => {
         >
           Logout
         </Button>
-      );
+      )
     }
     if (!tokenAuth) {
       return (
@@ -54,19 +54,19 @@ const DropDown = () => {
         >
           Logout
         </Button>
-      );
+      )
     }
 
     return (
       <Button variant='contained' className='logout_btn' color='primary' onClick={() => onPushToPage('login')}>
         Login
       </Button>
-    );
-  };
+    )
+  }
 
   const InfoUser = () => {
 
-    const userName = ` ${userInfo?.profile?.lastName} ${userInfo?.profile?.firstName}`;
+    const userName = ` ${userInfo?.profile?.lastName} ${userInfo?.profile?.firstName}`
 
     return (
       <Grid className='sublist-item' container wrap='nowrap' spacing={2}>
@@ -78,13 +78,13 @@ const DropDown = () => {
           <Typography >{userInfo?.profile?.email}</Typography>
         </Grid>
       </Grid>
-    );
-  };
+    )
+  }
 
   const InfoCompany = () => {
-    const currentCompany = userInfo?.currentCompany;
+    const currentCompany = userInfo?.currentCompany
     if (!currentCompany?.name) {
-      return <div />;
+      return <div />
     }
 
     return (
@@ -99,8 +99,8 @@ const DropDown = () => {
           {!currentCompany?.emails?.length ? <div /> : <Typography >{currentCompany.emails?.[0]}</Typography>}
         </Grid>
       </Grid>
-    );
-  };
+    )
+  }
 
   return (
     <PopupState variant='popover' popupId='demo-popup-menu'>
@@ -133,7 +133,7 @@ const DropDown = () => {
         </React.Fragment>
       )}
     </PopupState>
-  );
-};
+  )
+}
 
-export default (DropDown);
+export default (DropDown)

@@ -1,9 +1,9 @@
-import TabsUi from '@components/tabs/tabs';
-import { Box } from '@material-ui/core';
-import { useState } from 'react';
-import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined';
-import VerticalSplitIcon from '@material-ui/icons/VerticalSplit';
-import { RootStateOrAny, useSelector } from 'react-redux';
+import TabsUi from '@components/tabs/tabs'
+import { Box } from '@material-ui/core'
+import { useState } from 'react'
+import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined'
+import VerticalSplitIcon from '@material-ui/icons/VerticalSplit'
+import { RootStateOrAny, useSelector } from 'react-redux'
 
 const typeLog = {
   CREATE : 'created this task',
@@ -21,11 +21,11 @@ const typeLog = {
   DELETE : {
     userIDs: 'remove assignee',
   },
-};
+}
 
 const LogDetail: React.FC = () => {
   // const task = useSelector((state: RootStateOrAny) => state.taskBoards?.taskDetail);
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState(0)
 
   return (
     <Box>
@@ -40,13 +40,13 @@ const LogDetail: React.FC = () => {
         />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default LogDetail;
+export default LogDetail
 
 const ContentLogs = () => {
-  const task = useSelector((state: RootStateOrAny) => state.taskBoards?.taskDetail);
+  const task = useSelector((state: RootStateOrAny) => state.taskBoards?.taskDetail)
 
   const renderLogs = () => {
     const logs = task?.logs?.map((log) => {
@@ -57,24 +57,24 @@ const ContentLogs = () => {
             {typeLog[log.action][log.changedField] || typeLog[log.action]}
             <span className='value-log'>{log.value}</span>
         </Box>
-      );
-    });
+      )
+    })
 
-    return logs;
-  };
+    return logs
+  }
 
   return (
     <Box>
       {renderLogs()}
       <Box className='load-log'>Load more...</Box>
     </Box>
-  );
-};
+  )
+}
 
 const ContentComments = () => {
   return (
     <Box>
       Comment
     </Box>
-  );
-};
+  )
+}

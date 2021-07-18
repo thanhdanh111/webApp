@@ -1,107 +1,107 @@
-import { pushNewNotifications } from 'redux/common/notifications/reducer';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { createTagThunkAction, deleteTagThunkAction, getTagsThunkAction, updateTagThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
-import React, { useEffect, useState } from 'react';
-import { Tag } from 'helpers/type';
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
-import { Box, Grid, InputBase, List, ListItem, Popover } from '@material-ui/core';
-import { ElementsTag, TagMoreAction } from './tag';
-import { useDebounce } from 'helpers/debounce';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { DisappearedLoading } from 'react-loadingg';
-import { checkHasObjectByKey } from 'helpers/check_in_array';
-import AddIcon from '@material-ui/icons/Add';
+import { pushNewNotifications } from 'redux/common/notifications/reducer'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { Tag } from 'helpers/type'
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
+import { Box, Grid, InputBase, List, ListItem, Popover } from '@material-ui/core'
+import { ElementsTag, TagMoreAction } from './tag'
+import { useDebounce } from 'helpers/debounce'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { DisappearedLoading } from 'react-loadingg'
+import { checkHasObjectByKey } from 'helpers/check_in_array'
+import AddIcon from '@material-ui/icons/Add'
+import { createTagThunkAction, deleteTagThunkAction, getTagsThunkAction, updateTagThunkAction } from '../logic/tag_tasks_reducer'
 
 interface InitialPropTag {
-  selectedTag: Tag[];
-  getSelectedTag: (tags) => void;
-  showSelectedTag?: boolean;
-  isCreateTag?: boolean;
+  selectedTag: Tag[]
+  getSelectedTag: (tags) => void
+  showSelectedTag?: boolean
+  isCreateTag?: boolean
 }
 
 const AddTagPopup: React.FC<InitialPropTag> = (props) => {
-  const dispatch = useDispatch();
-  const [tagChangeName, setTagChangeName] = useState('');
-  const [inputNameTag, setInputNameTag] = useState('');
+  const dispatch = useDispatch()
+  const [tagChangeName, setTagChangeName] = useState('')
+  const [inputNameTag, setInputNameTag] = useState('')
   const {
     tags,
     totalCountTag,
     cursorTag,
-  }: { tags: Tag[]; totalCountTag: number; cursorTag: string } = useSelector(
-    (state: RootStateOrAny) => state.taskBoards);
-  const [nameTag, setNameTag] = useState('');
-  const debouncedSearchTerm = useDebounce(inputNameTag, 1000);
+  }: { tags: {[key: string]: Tag}; totalCountTag: number; cursorTag: string } = useSelector(
+    (state: RootStateOrAny) => state.tagTasks)
+  const [nameTag, setNameTag] = useState('')
+  const debouncedSearchTerm = useDebounce(inputNameTag, 500)
 
   useEffect(() => {
-    dispatch(getTagsThunkAction(debouncedSearchTerm, true));
-  }, [debouncedSearchTerm]);
+    dispatch(getTagsThunkAction(debouncedSearchTerm, true))
+  }, [debouncedSearchTerm])
 
   const getUser = () => {
-    dispatch(getTagsThunkAction(debouncedSearchTerm, false));
-  };
+    dispatch(getTagsThunkAction(debouncedSearchTerm, false))
+  }
 
   const onBlurChangeNameTag = (tag) => {
-    dispatch(updateTagThunkAction(tag._id, { name: nameTag }));
-    setTagChangeName('');
-  };
+    dispatch(updateTagThunkAction(tag._id, { name: nameTag }))
+    setTagChangeName('')
+  }
 
   const onKeyUpChangeNameTag = (event, tag) => {
     if (event.keyCode !== 13 || !nameTag){
-      return;
+      return
     }
 
-    dispatch(updateTagThunkAction(tag._id, { name: nameTag }));
-    setTagChangeName('');
-  };
+    dispatch(updateTagThunkAction(tag._id, { name: nameTag }))
+    setTagChangeName('')
+  }
 
   const onKeyUpTagName = (event) => {
     if (event.keyCode !== 13) {
-      return;
+      return
     }
 
-    addTag();
-  };
+    addTag()
+  }
 
   const addTag = () => {
     if (!props.isCreateTag){
-      return;
+      return
     }
 
     if (!inputNameTag) {
-      dispatch(pushNewNotifications({ variant: 'error', message: 'name should not be empty' }));
+      dispatch(pushNewNotifications({ variant: 'error', message: 'name should not be empty' }))
 
-      return;
+      return
     }
 
     if (checkHasObjectByKey(tags, inputNameTag, 'name')){
-      dispatch(pushNewNotifications({ variant: 'error', message: 'Tag already exists' }));
+      dispatch(pushNewNotifications({ variant: 'error', message: 'Tag already exists' }))
 
-      return;
+      return
     }
 
-    dispatch(createTagThunkAction({ name: inputNameTag }));
-    setInputNameTag('');
-  };
+    dispatch(createTagThunkAction({ name: inputNameTag }))
+    setInputNameTag('')
+  }
 
   const renderListTag = () => {
-    if (!tags.length){
+    if (!Object.keys(tags)?.length){
       return (<ListItem className='tag-item-list'>
       No tag!
-    </ListItem>);
+    </ListItem>)
     }
 
-    const notSeletedTag = tags.filter((tag: Tag) => !checkHasObjectByKey(props.selectedTag, tag?._id || '', '_id'));
+    const notSeletedTag = Object.values(tags).filter((tag: Tag) => !checkHasObjectByKey(props.selectedTag, tag?._id || '', '_id'))
 
     if (!notSeletedTag.length){
       if (cursorTag !== 'END'){
-        getUser();
+        getUser()
 
       }
 
       return (
         <ListItem className='tag-item-list'>
           No tag
-        </ListItem>);
+        </ListItem>)
     }
 
     const listTag = notSeletedTag?.map((tag) => {
@@ -111,7 +111,7 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
           className='tag-item-list'
           style={{ color: tag.color }}
         >
-        <span onClick={() => { props.getSelectedTag([...props.selectedTag, tag]); }}>{tag.name}</span>
+        <span onClick={() => { props.getSelectedTag([...props.selectedTag, tag]) }}>{tag.name}</span>
         {tagChangeName === tag?._id && (
           <input
             className='input-name-tag'
@@ -122,15 +122,15 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
           />
         )}
         <TagMoreAction
-          changeName={() => { setTagChangeName(tag?._id || ''); setNameTag(tag.name); }}
+          changeName={() => { setTagChangeName(tag?._id || ''); setNameTag(tag.name) }}
           onDeleteTag={() => dispatch(deleteTagThunkAction(tag?._id))}
         />
         </ListItem>
-      );
-    });
+      )
+    })
 
-    return listTag;
-  };
+    return listTag
+  }
 
   const renderSearchInput = () => (
     <Box px={1} className='search-tag'>
@@ -145,11 +145,11 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
       props.isCreateTag && (<AddIcon className='add-icon-tag' />)
     }
   </Box>
-  );
+  )
 
   const renderElementTags = () => {
     if (!props.showSelectedTag || !props.selectedTag?.length){
-      return;
+      return
     }
 
     return (
@@ -160,8 +160,8 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
             props.getSelectedTag(selectedtag)
           }
         />
-      </Box>);
-  };
+      </Box>)
+  }
 
   return (
     <PopupState variant='popover' popupId='demo-popup-menu'>
@@ -191,8 +191,8 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
               <Box px={1}>
                 <List component='nav' className='tag-list'>
                 <InfiniteScroll
-                  dataLength={tags.length}
-                  hasMore={tags.length < totalCountTag}
+                  dataLength={Object.values(tags)?.length}
+                  hasMore={Object.values(tags).length < totalCountTag}
                   next={getUser}
                   loader={<DisappearedLoading color={'#67cb48'} />}
                   scrollThreshold={0.8}
@@ -207,7 +207,7 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
         </>
       )}
     </PopupState>
-  );
-};
+  )
+}
 
-export default AddTagPopup;
+export default AddTagPopup

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Tabs, Tab, Typography } from '@material-ui/core';
-import TabPanel from './tab_pannel';
+import React from 'react'
+import { Tabs, Tab, Typography } from '@material-ui/core'
+import TabPanel from './tab_pannel'
 
 const TabsUi = ({ tabs, tabIcons, tabUIs, currentTabIndex, handleChange }) => {
 
@@ -10,21 +10,21 @@ const TabsUi = ({ tabs, tabIcons, tabUIs, currentTabIndex, handleChange }) => {
         <Tabs value={currentTabIndex} onChange={handleChange} aria-label='account tabs'>
           {
             tabs.map((value, index) => {
-              const TabIcon = tabIcons[index];
+              const TabIcon = tabIcons[index]
               const label =
               <>
                 <div className='tab-label'>
                   <TabIcon className='label-icon' />
                   <Typography variant='body2' className='label-text'>{value}</Typography>
                 </div>
-              </>;
+              </>
 
               return <Tab
                 key={`tab-key-${index}`}
                 className={`tab-class-name-${index}`}
                 label={label}
                 disableRipple
-              />;
+              />
             })
           }
         </Tabs>
@@ -35,7 +35,7 @@ const TabsUi = ({ tabs, tabIcons, tabUIs, currentTabIndex, handleChange }) => {
         </TabPanel>
       ))}
     </>
-  );
-};
+  )
+}
 
-export default TabsUi;
+export default TabsUi

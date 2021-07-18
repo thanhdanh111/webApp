@@ -1,6 +1,6 @@
-import { Box, Tooltip } from '@material-ui/core';
-import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
-import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined';
+import { Box, Tooltip } from '@material-ui/core'
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline'
+import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined'
 
 const TimeDetail: React.FC = () => {
   return (
@@ -21,7 +21,7 @@ const TimeDetail: React.FC = () => {
         <EventAvailableOutlinedIcon className='border-dashed-icon due-date'/>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default TimeDetail;
+export default TimeDetail

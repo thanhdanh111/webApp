@@ -1,5 +1,5 @@
-import React from 'react';
-import { Typography } from '@material-ui/core';
+import React from 'react'
+import { Typography } from '@material-ui/core'
 
 const Footer: React.FunctionComponent = () => {
   return (
@@ -11,7 +11,7 @@ const Footer: React.FunctionComponent = () => {
         Something here to give the footer a purpose!
       </Typography>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

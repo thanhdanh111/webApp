@@ -1,7 +1,7 @@
-import React from 'react';
-import BoardTasks from '../../task_boards/UI/task_boards';
-import CheckInCheckOutStatistics from './statistics/statistics';
-import TimeOffTab from './time_off/time_off';
+import React from 'react'
+import BoardTasks from '../../task_boards/UI/task_boards'
+import CheckInCheckOutStatistics from './statistics/statistics'
+import TimeOffTab from './time_off/time_off'
 
 const HomeUI = () => {
   return (
@@ -10,7 +10,7 @@ const HomeUI = () => {
       <CheckInCheckOutStatistics />
       <TimeOffTab />
     </div>
-  );
-};
+  )
+}
 
-export default HomeUI;
+export default HomeUI

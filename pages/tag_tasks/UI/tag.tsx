@@ -3,28 +3,24 @@ import {
   List,
   ListItem,
   Popover,
-} from '@material-ui/core';
-import React, { useState } from 'react';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import CloseIcon from '@material-ui/icons/Close';
-import { Tag } from 'helpers/type';
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state';
-import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import { useDispatch } from 'react-redux';
-import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
-import { deleteTagThunkAction, updateTagThunkAction } from 'pages/task_boards/logic/task_boards_reducer';
-import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
-import AddTagPopup from './add_tag';
+} from '@material-ui/core'
+import React, { useState } from 'react'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import CloseIcon from '@material-ui/icons/Close'
+import { Tag } from 'helpers/type'
+import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined'
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
+import { useDispatch } from 'react-redux'
+import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined'
+import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog'
+import AddTagPopup from './add_tag'
+import { deleteTagThunkAction, updateTagThunkAction } from '../logic/tag_tasks_reducer'
 
 interface InitialProp {
-  selectedTag: Tag[];
-  getSelectedTag: (tag) => void;
+  selectedTag: Tag[]
+  getSelectedTag: (tag) => void
 }
-
-export const colorDefault = ['#81200E', '#F57829', '#F15381', '#F27DAA', '#EC73EA',
-  '#C26DEC', '#816CFA', '#05A9F4', '#2760E8', '#82B0FB', '#F57829', '#61CE6F',
-  '#F9DA38', '#667684'];
 
 const TagTask: React.FC<InitialProp> = (props) => {
   return (
@@ -43,32 +39,32 @@ const TagTask: React.FC<InitialProp> = (props) => {
         </AddTagPopup>
       </ElementsTag>
     </Box>
-  );
-};
+  )
+}
 
 interface InitialPropTag {
-  tag: Tag;
-  removeTag: () => void;
+  tag: Tag
+  removeTag: () => void
 }
 
 export const TagItem: React.FC<InitialPropTag> = (props) => {
-  const dispatch = useDispatch();
-  const [changeNameTag, setChangeNameTag] = useState({ isChange: false, value: '' });
+  const dispatch = useDispatch()
+  const [changeNameTag, setChangeNameTag] = useState({ isChange: false, value: '' })
 
   const onKeyUpNameTag = (event) => {
     if (event.keyCode !== 13){
-      return;
+      return
     }
-    changeName();
-  };
+    changeName()
+  }
 
   const changeName = () => {
     if (!changeNameTag.value){
-      return;
+      return
     }
-    dispatch(updateTagThunkAction(props.tag._id, { name: changeNameTag.value }));
-    setChangeNameTag({ ...changeNameTag, isChange: false });
-  };
+    dispatch(updateTagThunkAction(props.tag._id, { name: changeNameTag.value }))
+    setChangeNameTag({ ...changeNameTag, isChange: false })
+  }
 
   return (
     <Box className='tag-item' m='4px'>
@@ -103,33 +99,33 @@ export const TagItem: React.FC<InitialPropTag> = (props) => {
         />
       </div>
     </Box>
-  );
-};
+  )
+}
 
-export default TagTask;
+export default TagTask
 
 interface InitialPropMoreAction {
-  changeName: () => void;
-  onDeleteTag: () => void;
+  changeName: () => void
+  onDeleteTag: () => void
 }
 
 export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
-  const [deleteTag, setDeleteTag] = useState(false);
+  const [deleteTag, setDeleteTag] = useState(false)
 
   const renderActionForTag = (popupState) => (
     <List component='nav' className='tag-action-popup'>
-      <ListItem button className='delete-tag' onClick={() => { popupState.close(); setDeleteTag(true); }}>
+      <ListItem button className='delete-tag' onClick={() => { popupState.close(); setDeleteTag(true) }}>
           <DeleteOutlineOutlinedIcon className='icon-tag-action' color='error'/>
           Delete
       </ListItem>
       <label htmlFor='input-tag-name'>
-      <ListItem button onClick={() => { props.changeName(); popupState.close(); }}>
+      <ListItem button onClick={() => { props.changeName(); popupState.close() }}>
           <EditOutlinedIcon className='icon-tag-action'/>
             Rename
       </ListItem>
       </label>
     </List>
-  );
+  )
 
   return (
     <>
@@ -165,18 +161,18 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
         warning='Do you want to delete this tag ?'
     />
     </>
-  );
-};
+  )
+}
 interface InitialPropElements {
-  selectedTag: Tag[];
-  getSelectedTag: (tag) => void;
+  selectedTag: Tag[]
+  getSelectedTag: (tag) => void
 }
 
 export const ElementsTag: React.FC<InitialPropElements> = (props) => {
   const removeTag = (tag) => {
-    const tags = props.selectedTag.filter((tagItem) => tagItem._id !== tag._id);
-    props.getSelectedTag(tags);
-  };
+    const tags = props.selectedTag.filter((tagItem) => tagItem._id !== tag._id)
+    props.getSelectedTag(tags)
+  }
 
   return (
     <Box display='flex' width='auto' alignItems='center' pr='12px' flexWrap='wrap'>
@@ -187,5 +183,5 @@ export const ElementsTag: React.FC<InitialPropElements> = (props) => {
     }
     {props.children}
     </Box>
-  );
-};
+  )
+}

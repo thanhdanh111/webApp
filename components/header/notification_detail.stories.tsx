@@ -1,6 +1,6 @@
-import { storiesOf } from '@storybook/react';
-import React from 'react';
-import NotificationItemUI from './notification_detail';
+import { storiesOf } from '@storybook/react'
+import React from 'react'
+import NotificationItemUI from './notification_detail'
 
 storiesOf('Header', module).add('Header', () => {
   return(
@@ -16,5 +16,5 @@ storiesOf('Header', module).add('Header', () => {
     createdAt=''
     event=''
     receiverUID=''
-  />);
-});
+  />)
+})

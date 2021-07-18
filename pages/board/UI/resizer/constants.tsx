@@ -3,4 +3,4 @@ export const Direction = {
   TopRight: 'topRight',
   BottomLeft: 'bottomLeft',
   BottomRight: 'bottomRight',
-};
+}

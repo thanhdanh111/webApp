@@ -1,21 +1,21 @@
 export const checkTrueInObject = (object: object) => {
   if (!object) {
-    return false;
+    return false
   }
 
-  const keyOfObject = Object.keys(object);
+  const keyOfObject = Object.keys(object)
 
   if (!keyOfObject?.length) {
-    return false;
+    return false
   }
 
   const isValid = keyOfObject.every((each) => {
     if (typeof object[each] === 'object') {
-      return checkTrueInObject(object[each]);
+      return checkTrueInObject(object[each])
     }
 
-    return object[each] ? true : false;
-  });
+    return object[each] ? true : false
+  })
 
-  return isValid;
-};
+  return isValid
+}
