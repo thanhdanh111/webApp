@@ -56,7 +56,6 @@ describe('Home page', () => {
 
     await page.waitForSelector('.status')
     await page.waitFor(5000)
-    await page.waitForSelector('.status-left')
     await page.waitForSelector('.nav-input-search')
 
     await page.click('.nav-input-search')
@@ -72,7 +71,6 @@ describe('Home page', () => {
 
     await page.waitForSelector('.status')
     await page.waitFor(5000)
-    await page.waitForSelector('.status-left')
     await page.waitForSelector('.action-status-btn-menu-content')
 
     await page.click('.action-status-btn-menu-content')

@@ -46,8 +46,7 @@ describe('Pots Page', () => {
     await page.waitForSelector('.status')
 
       // add task
-
-    await page.waitForSelector('.task-status .test-tag')
+    await page.waitFor(5000)
     await page.waitForSelector('.test-tag .add-task')
 
     await page.click('.test-tag .add-task')
@@ -61,10 +60,8 @@ describe('Pots Page', () => {
     await page.waitForSelector('.save-add')
     await page.click('.save-add')
 
-    await page.waitForSelector('.test-tag .task-item')
-
   // task detail
-
+    await page.waitForSelector('.test-tag .task-name')
     await page.click('.test-tag .task-name')
     await page.waitForSelector('.detail-modal')
 

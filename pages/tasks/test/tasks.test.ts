@@ -37,21 +37,21 @@ describe('Home page', () => {
     await page.waitForSelector('.board')
     await page.waitForSelector('.board-tasks')
     await page.waitForSelector('.status')
-    await page.waitFor(5000)
-    await page.waitForSelector('.status-left')
 
     await page.waitForSelector('.add-task-text')
     await page.click('.add-task-text')
     await page.waitForSelector('.add-status-modal')
-    await page.waitFor(5000)
     await page.click('.add-status-input')
     await page.type('.add-status-input', 'open')
+
+    await page.waitForSelector('.status-left')
 
     const addStatusImage = await page.screenshot()
     expect(addStatusImage).toMatchImageSnapshot()
 
     await page.click('.submit-create-status')
     await page.waitForSelector('.status')
+    await page.waitFor(5000)
 
     const addSuccessStatusImage = await page.screenshot()
     expect(addSuccessStatusImage).toMatchImageSnapshot()
@@ -75,13 +75,13 @@ describe('Home page', () => {
     await page.waitForSelector('.save-add')
     await page.click('.save-add')
 
-    await page.waitForSelector('.open .task-item')
+    await page.waitFor(5000)
 
     const image = await page.screenshot()
     expect(image).toMatchImageSnapshot()
 
   // task detail
-
+    await page.waitFor(5000)
     await page.click('.open .task-name')
     await page.waitForSelector('.detail-modal')
 
