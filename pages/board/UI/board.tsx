@@ -8,7 +8,8 @@ import { createFlowChartMiddleWare, getBoardDataMiddleWare } from '../logic/boar
 import { DisappearedLoading } from 'react-loadingg'
 import { BoardsPage } from 'helpers/type'
 import { Typography } from '@material-ui/core'
-import { setSelectedBoard, setCard } from '../logic/board_action'
+import { setSelectedBoard } from '../logic/board_action'
+import { setCard } from 'pages/card/logic/card_action'
 
 interface InitialProps {
   loading: boolean

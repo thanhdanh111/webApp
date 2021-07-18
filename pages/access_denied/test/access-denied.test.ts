@@ -1,4 +1,3 @@
-let qs = require('qs')
 let browser
 let page
 let viewport
