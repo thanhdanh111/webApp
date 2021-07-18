@@ -11,7 +11,7 @@ beforeAll(async () => {
 
   try {
     browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       slowMo: 0,
       ignoreDefaultArgs: ['--no-sandbox'],
     })
@@ -38,27 +38,21 @@ describe('Home page', () => {
     await page.waitForSelector('.board-tasks')
     await page.waitForSelector('.status')
 
-    await page.waitForSelector('.add-task-text')
     await page.click('.add-task-text')
     await page.waitForSelector('.add-status-modal')
     await page.click('.add-status-input')
     await page.type('.add-status-input', 'open')
 
-    await page.waitForSelector('.status-left')
-
     const addStatusImage = await page.screenshot()
     expect(addStatusImage).toMatchImageSnapshot()
 
     await page.click('.submit-create-status')
-    await page.waitForSelector('.status')
-    await page.waitFor(5000)
 
     const addSuccessStatusImage = await page.screenshot()
     expect(addSuccessStatusImage).toMatchImageSnapshot()
 
       // add task
-
-    await page.waitForSelector('.task-status .open')
+    await page.waitForSelector('.task-status-content')
     await page.waitForSelector('.open .add-task')
 
     await page.click('.open .add-task')
@@ -82,7 +76,7 @@ describe('Home page', () => {
 
   // task detail
     await page.waitFor(5000)
-    await page.click('.open .task-name')
+    await page.click('.task-name')
     await page.waitForSelector('.detail-modal')
 
     const taskDetail = await page.screenshot()
@@ -95,8 +89,7 @@ describe('Home page', () => {
     const closeDetailModalImage = await page.screenshot()
     expect(closeDetailModalImage).toMatchImageSnapshot()
 
-    await page.waitForSelector('.open  .footer-task')
-    await page.waitForSelector('.open  .delete-task')
+    await page.waitForSelector('.task-item  .delete-task')
     await page.click('.open .delete-task')
     await page.waitFor(5000)
 

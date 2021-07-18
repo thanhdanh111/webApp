@@ -17,7 +17,7 @@ import { returnNotification } from 'pages/invite_members/logic/invite_error_noti
 import { setCurrentStatus } from 'pages/task_statuses/logic/task_statuses_action'
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array'
-import { removeTasksFfromStatus } from 'pages/task_boards/logic/task_boards_action'
+import { removeTasksFfromStatus, setTasksToStatus } from 'pages/task_boards/logic/task_boards_action'
 
 export interface TaskType {
   loading: boolean
@@ -243,6 +243,7 @@ export const createdTaskThunkAction = (data) => async (dispatch, getState) => {
 
     await Promise.all([
       dispatch(createdTask(res?.data)),
+      dispatch(setTasksToStatus({ taskStatusID: data?.taskStatusID, tasks: res?.data })),
       dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateTask })),
       dispatch(setAssigned('')),
       dispatch(setCurrentStatus('')),

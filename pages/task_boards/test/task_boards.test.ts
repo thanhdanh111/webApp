@@ -39,7 +39,7 @@ describe('Home page', () => {
     await page.waitForSelector('.add-task-board')
     await page.click('.btn-add-task-board')
 
-    await page.waitFor(50000)
+    await page.waitFor(5000)
 
     const createTaskBoard = await page.screenshot()
     expect(createTaskBoard).toMatchImageSnapshot()

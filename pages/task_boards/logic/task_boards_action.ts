@@ -2,7 +2,7 @@ import { Task } from 'helpers/type'
 import { taskBoardsActionType } from './task_board_action_type'
 export interface SetTasksToTaskStatus {
   taskStatusID: string
-  tasks: { [key: string]: Task}
+  tasks: Task
 }
 
 export const setLoading = (loading: boolean) => {

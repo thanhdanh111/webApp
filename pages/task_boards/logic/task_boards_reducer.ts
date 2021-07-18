@@ -128,12 +128,12 @@ export  const taskBoardsReducer = (state = initialState, action) => {
     case taskBoardsActionType.SET_TASKS_TO_STATUS:
       const upsatedStatusesAfterAddTask = state?.currentTaskBoard?.taskStatusIDs?.map((each) => {
         if (each?._id !== action.payload.taskStatusID) {
-          return
+          return each
         }
 
         return {
           ...each,
-          taskIDs: [...each?.taskIDs, action?.data?.tasks?._id],
+          taskIDs: [...each?.taskIDs, action?.payload?.tasks?._id],
         }
       })
 
@@ -147,7 +147,7 @@ export  const taskBoardsReducer = (state = initialState, action) => {
     case taskBoardsActionType.REMOVE_TASK_FROM_STATUS:
       const upsatedStatusesAfterDeleteTask = state?.currentTaskBoard?.taskStatusIDs?.map((each) => {
         if (each?._id !== action.payload.taskStatusID) {
-          return
+          return each
         }
 
         const temporaryTaskIDs = each?.taskIDs?.filter((task) => task !== action.payload?.taskID)

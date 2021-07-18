@@ -34,11 +34,11 @@ describe('Pots Page', () => {
     await page.waitForSelector('.board')
     await page.waitForSelector('.board-tasks')
     await page.waitForSelector('.status')
+    await page.waitFor(5000)
 
     await page.waitForSelector('.add-task-text')
     await page.click('.add-task-text')
     await page.waitForSelector('.add-status-modal')
-    await page.waitFor(5000)
     await page.click('.add-status-input')
     await page.type('.add-status-input', 'test tag')
 
@@ -46,9 +46,7 @@ describe('Pots Page', () => {
     await page.waitForSelector('.status')
 
       // add task
-    await page.waitFor(5000)
     await page.waitForSelector('.test-tag .add-task')
-
     await page.click('.test-tag .add-task')
     await page.waitForSelector('.task-add')
 
@@ -63,13 +61,13 @@ describe('Pots Page', () => {
   // task detail
     await page.waitForSelector('.test-tag .task-name')
     await page.click('.test-tag .task-name')
-    await page.waitForSelector('.detail-modal')
 
     const taskDetail = await page.screenshot()
     expect(taskDetail).toMatchImageSnapshot()
 
   // add tag
-
+    await page.waitForSelector('.test-tag .task-name')
+    await page.click('.test-tag .task-name')
     await page.waitForSelector('.tag-add')
     await page.click('.tag-add')
     await page.waitFor(5000)
