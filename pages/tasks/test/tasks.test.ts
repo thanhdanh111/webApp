@@ -37,11 +37,13 @@ describe('Home page', () => {
     await page.waitForSelector('.board')
     await page.waitForSelector('.board-tasks')
     await page.waitForSelector('.status')
+    await page.waitFor(5000)
 
     await page.click('.add-task-text')
     await page.waitForSelector('.add-status-modal')
     await page.click('.add-status-input')
     await page.type('.add-status-input', 'open')
+    await page.waitFor(5000)
 
     const addStatusImage = await page.screenshot()
     expect(addStatusImage).toMatchImageSnapshot()
@@ -52,7 +54,6 @@ describe('Home page', () => {
     expect(addSuccessStatusImage).toMatchImageSnapshot()
 
       // add task
-    await page.waitForSelector('.task-status-content')
     await page.waitForSelector('.open .add-task')
 
     await page.click('.open .add-task')
