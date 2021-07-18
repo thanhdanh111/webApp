@@ -1,15 +1,15 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react'
 import {
   Typography, Card,
   CardContent, Link, Breadcrumbs,
-} from '@material-ui/core';
+} from '@material-ui/core'
 
 interface DataType {
-  references: string[];
-  heading: string;
+  references: string[]
+  heading: string
 }
 
-type BodyProps = DataType;
+type BodyProps = DataType
 
 const PageCardUi: FunctionComponent<BodyProps> = ({ references, heading }) => {
 
@@ -22,15 +22,15 @@ const PageCardUi: FunctionComponent<BodyProps> = ({ references, heading }) => {
           key={`reference-text-${index}`}
         >
           {value}
-        </Typography>);
+        </Typography>)
     }
 
     return (<Typography variant='body1' key={`reference-text-${index}`} className='reference-text'>
         <Link style={{ color: 'inherit' }} className='reference-text'>
         {value}
         </Link>
-      </Typography>);
-  });
+      </Typography>)
+  })
 
   return (
     <Card elevation={0} className='page-card' style={{ backgroundColor: 'transparent' }} >
@@ -43,7 +43,7 @@ const PageCardUi: FunctionComponent<BodyProps> = ({ references, heading }) => {
         </Breadcrumbs>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default PageCardUi;
+export default PageCardUi

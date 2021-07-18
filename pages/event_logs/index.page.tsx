@@ -1,5 +1,5 @@
-import React from 'react';
-import EventLog from './UI/event_logs';
+import React from 'react'
+import EventLog from './UI/event_logs'
 
 const EventsLog = () => {
 
@@ -7,7 +7,7 @@ const EventsLog = () => {
         <>
             <EventLog />
         </>
-  );
-};
+  )
+}
 
-export default EventsLog;
+export default EventsLog

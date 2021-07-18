@@ -1,17 +1,17 @@
-import { FunctionComponent } from 'react';
-import { NativeSelect, InputBase, FormControl, InputLabel } from '@material-ui/core';
+import { FunctionComponent } from 'react'
+import { NativeSelect, InputBase, FormControl, InputLabel } from '@material-ui/core'
 
 interface OptionsSelect {
-  index?: number;
-  defaultValue?: string ;
-  options: JSX.Element[];
-  formName: string;
-  handleFillingInfo: ({ event }) => void;
-  inputLabel?: string;
-  disabled?: boolean;
+  index?: number
+  defaultValue?: string
+  options: JSX.Element[]
+  formName: string
+  handleFillingInfo: ({ event }) => void
+  inputLabel?: string
+  disabled?: boolean
 }
 
-type OptionsSelectType = OptionsSelect;
+type OptionsSelectType = OptionsSelect
 
 export const OptionsSelect: FunctionComponent<OptionsSelectType> = ({
   defaultValue,
@@ -45,5 +45,5 @@ export const OptionsSelect: FunctionComponent<OptionsSelectType> = ({
       {options}
     </NativeSelect>
   </FormControl>
-  );
-};
+  )
+}

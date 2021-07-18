@@ -1,34 +1,34 @@
 
-import React, { useEffect, useState } from 'react';
-import DrawerUi from '@components/drawer/drawer';
-import Header from '@components/header/header';
-import { DisappearedLoading } from 'react-loadingg';
-import { CssBaseline } from '@material-ui/core';
-import { RootStateOrAny, useSelector } from 'react-redux';
-import { useSnackbar, WithSnackbarProps } from 'notistack';
-import { RootState } from 'redux/reducers_registration';
+import React, { useEffect, useState } from 'react'
+import DrawerUi from '@components/drawer/drawer'
+import Header from '@components/header/header'
+import { DisappearedLoading } from 'react-loadingg'
+import { CssBaseline } from '@material-ui/core'
+import { RootStateOrAny, useSelector } from 'react-redux'
+import { useSnackbar, WithSnackbarProps } from 'notistack'
+import { RootState } from 'redux/reducers_registration'
 
 const Layout = ({ children, withoutPaths }) => {
-  const path = window.location.pathname;
-  const userID = useSelector((state: RootStateOrAny) => state?.userInfo?.userID);
-  const notifications = useSelector((state: RootState) => state.newNotifications);
-  const { enqueueSnackbar }: WithSnackbarProps = useSnackbar();
-  const [isDrawerOpen, setOpenDrawer] = useState(false);
+  const path = window.location.pathname
+  const userID = useSelector((state: RootStateOrAny) => state?.userInfo?.userID)
+  const notifications = useSelector((state: RootState) => state.newNotifications)
+  const { enqueueSnackbar }: WithSnackbarProps = useSnackbar()
+  const [isDrawerOpen, setOpenDrawer] = useState(false)
 
   useEffect(() => {
     if (!notifications || !notifications?.message || !notifications?.variant) {
-      return;
+      return
     }
 
-    enqueueSnackbar(notifications.message, { variant: notifications.variant });
-  }, [notifications]);
+    enqueueSnackbar(notifications.message, { variant: notifications.variant })
+  }, [notifications])
 
   if (withoutPaths.includes(path)) {
-    return <>{children}</>;
+    return <>{children}</>
   }
 
   function changeDrawerOpen() {
-    setOpenDrawer(!isDrawerOpen);
+    setOpenDrawer(!isDrawerOpen)
   }
 
   return (
@@ -47,7 +47,7 @@ const Layout = ({ children, withoutPaths }) => {
         }
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

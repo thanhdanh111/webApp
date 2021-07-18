@@ -1,19 +1,19 @@
-import { AccountActionTypes } from './account_actions';
-import { Notification } from 'helpers/type';
+import { AccountActionTypes } from './account_actions'
+import { Notification } from 'helpers/type'
 
 interface AccountValue {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  country: string;
-  region: string;
-  city: string;
-  zipCode: string;
-  about: string;
-  isPublicProfile: boolean;
-  currentTabIndex: number;
-  accountNotifications: Notification[];
+  name: string
+  email: string
+  phoneNumber: string
+  address: string
+  country: string
+  region: string
+  city: string
+  zipCode: string
+  about: string
+  isPublicProfile: boolean
+  currentTabIndex: number
+  accountNotifications: Notification[]
 }
 
 const initialState: AccountValue = {
@@ -29,9 +29,9 @@ const initialState: AccountValue = {
   isPublicProfile: false,
   currentTabIndex: 0,
   accountNotifications: [],
-};
+}
 
-export type AccountStateType = AccountValue;
+export type AccountStateType = AccountValue
 
 const accountReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -39,20 +39,20 @@ const accountReducer = (state = initialState, action) => {
       return {
         ...state,
         ...action,
-      };
+      }
     case AccountActionTypes.publicProfile:
       return {
         ...state,
         isPublicProfile: !state?.isPublicProfile,
-      };
+      }
     case AccountActionTypes.ChangeCurrentIndexAccountTabs:
       return {
         ...state,
         currentTabIndex: action.currentIndex,
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default accountReducer;
+export default accountReducer

@@ -3,4 +3,4 @@ export const LoginAction = {
   LOGOUT: 'LOGOUT',
   GET_USER_DATA: 'GET_USER_DATA',
   GET_ROLES: 'GET_ROLES',
-};
+}

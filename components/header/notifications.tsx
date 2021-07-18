@@ -1,28 +1,28 @@
-import { Badge, Button, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
-import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import React, { useEffect, useState } from 'react';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { useDispatch, useSelector } from 'react-redux';
-import { getNotificationMiddleware } from 'pages/users/logic/users_reducer';
-import NotificationItemUI from './notification_detail';
-import { RootState } from 'redux/reducers_registration';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { UsersData } from 'helpers/type';
-import { DisappearedLoading } from 'react-loadingg';
+import { Badge, Button, IconButton, Menu, MenuItem, Typography } from '@material-ui/core'
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state'
+import React, { useEffect, useState } from 'react'
+import NotificationsIcon from '@material-ui/icons/Notifications'
+import { useDispatch, useSelector } from 'react-redux'
+import { getNotificationMiddleware } from 'pages/users/logic/users_reducer'
+import NotificationItemUI from './notification_detail'
+import { RootState } from 'redux/reducers_registration'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { UsersData } from 'helpers/type'
+import { DisappearedLoading } from 'react-loadingg'
 
 const NotificationsUI = () => {
-  const dispatch = useDispatch();
-  const { notifications, hasNoData  }: UsersData = useSelector((state: RootState) => state.users);
-  const badgeContent = (notifications.totalUnread) ? notifications.totalUnread : 0;
-  const [loadData, setLoadData] = useState(false);
+  const dispatch = useDispatch()
+  const { notifications, hasNoData  }: UsersData = useSelector((state: RootState) => state.users)
+  const badgeContent = (notifications.totalUnread) ? notifications.totalUnread : 0
+  const [loadData, setLoadData] = useState(false)
 
   useEffect(() => {
-    void fetchData();
-  }, [loadData]);
+    void fetchData()
+  }, [loadData])
 
   const fetchData = () => {
-    dispatch(getNotificationMiddleware());
-  };
+    dispatch(getNotificationMiddleware())
+  }
   const generatedData = () => {
 
     if (!notifications?.list?.length && hasNoData) {
@@ -31,21 +31,21 @@ const NotificationsUI = () => {
             <img alt='logo' width='100px' src='../document.svg'/>
             <Typography color='textSecondary' className='empty-state--text'>Not found any notifications</Typography>
         </div>
-      );
+      )
     }
 
     const generateNotification = notifications.list.map((item) => {
       return (
         <NotificationItemUI key={item?._id} {...item}/>
-      );
-    });
+      )
+    })
 
-    return generateNotification;
-  };
+    return generateNotification
+  }
 
   const handleClickBtn = () => {
-    setLoadData(true);
-  };
+    setLoadData(true)
+  }
 
   return (
     <PopupState variant='popover' popupId='demo-popup-menu'>
@@ -78,7 +78,7 @@ const NotificationsUI = () => {
         </React.Fragment>
     )}
     </PopupState>
-  );
-};
+  )
+}
 
-export default NotificationsUI;
+export default NotificationsUI

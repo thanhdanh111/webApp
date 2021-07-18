@@ -1,37 +1,37 @@
-import { Roles } from '../constants/roles';
-import { compareAccesses } from '../helpers/compare_accesses';
+import { Roles } from '../constants/roles'
+import { compareAccesses } from '../helpers/compare_accesses'
 
 interface ObjectMapOfRoles {
-  [id: string]: Roles[];
+  [id: string]: Roles[]
 }
 
 interface GetIDsOfValidAccesses {
-  objectMap: ObjectMapOfRoles;
-  validAccesses: Roles[];
+  objectMap: ObjectMapOfRoles
+  validAccesses: Roles[]
 }
 
 export function getIDsOfValidAccesses({
   objectMap,
   validAccesses,
 }: GetIDsOfValidAccesses) {
-  const ids: string[] = [];
+  const ids: string[] = []
 
   for (const id in objectMap) {
     if (!id) {
 
-      continue;
+      continue
     }
 
-    const currentAccesses = objectMap[id];
-    const haveValidAccess = compareAccesses({ currentAccesses, validAccesses });
+    const currentAccesses = objectMap[id]
+    const haveValidAccess = compareAccesses({ currentAccesses, validAccesses })
 
     if (!haveValidAccess) {
 
-      continue;
+      continue
     }
 
-    ids.push(id);
+    ids.push(id)
   }
 
-  return ids;
+  return ids
 }

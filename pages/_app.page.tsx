@@ -1,45 +1,45 @@
-import './login/UI/login.sass';
-import './users/UI/users.sass';
-import '../components/table/table.sass';
-import { Provider } from 'react-redux';
-import withRedux from 'next-redux-wrapper';
-import * as Sentry from '@sentry/browser';
-import { ThemeProvider, NoSsr, Button } from '@material-ui/core';
-import '../styles/globals.css';
-import '../styles/sass/index.sass';
-import { config } from '../helpers/get_config';
-import { makeStore } from '../redux/store';
-import theme from '../styles/theme/theme';
-import { SnackbarProvider } from 'notistack';
-import React from 'react';
-import Auth from '../components/auth/auth';
-import Layout from '@components/pages_layout/pages_layout';
-import { LocalizationProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@material-ui/pickers/adapter/date-fns';
+import './login/UI/login.sass'
+import './users/UI/users.sass'
+import '../components/table/table.sass'
+import { Provider } from 'react-redux'
+import withRedux from 'next-redux-wrapper'
+import * as Sentry from '@sentry/browser'
+import { ThemeProvider, NoSsr, Button } from '@material-ui/core'
+import '../styles/globals.css'
+import '../styles/sass/index.sass'
+import { config } from '../helpers/get_config'
+import { makeStore } from '../redux/store'
+import theme from '../styles/theme/theme'
+import { SnackbarProvider } from 'notistack'
+import React from 'react'
+import Auth from '../components/auth/auth'
+import Layout from '@components/pages_layout/pages_layout'
+import { LocalizationProvider } from '@material-ui/pickers'
+import DateFnsUtils from '@material-ui/pickers/adapter/date-fns'
 
 if (['production'].includes(config.ENV)) {
   Sentry.init({
     environment: config.ENV,
     dsn: config.DNS,
     tracesSampleRate: 1.0,
-  });
+  })
 }
 
 const getPaths = (paths: string[]) => {
-  const newPaths: string[] = [];
+  const newPaths: string[] = []
 
   paths.map((path) => {
     if (path === '/') {
-      newPaths.push(path);
+      newPaths.push(path)
 
-      return;
+      return
     }
-    newPaths.push(path);
-    newPaths.push(`${path}.html`);
-  });
+    newPaths.push(path)
+    newPaths.push(`${path}.html`)
+  })
 
-  return newPaths;
-};
+  return newPaths
+}
 
 const publicPages = getPaths([
   '/',
@@ -47,15 +47,15 @@ const publicPages = getPaths([
   '/access_denied',
   '/home',
   '/account',
-]);
+])
 const withoutLayoutPaths = getPaths([
   '/login',
   '/access_denied',
-]);
-const notistackRef = React.createRef<SnackbarProvider>();
+])
+const notistackRef = React.createRef<SnackbarProvider>()
 const onClickDismiss = (key) => {
-  notistackRef?.current?.closeSnackbar(key);
-};
+  notistackRef?.current?.closeSnackbar(key)
+}
 function myApp({ Component, pageProps, store }) {
 
   return (
@@ -86,7 +86,7 @@ function myApp({ Component, pageProps, store }) {
         </LocalizationProvider>
       </ThemeProvider>
     </Provider>
-  );
+  )
 }
 
-export default withRedux(makeStore)(myApp);
+export default withRedux(makeStore)(myApp)

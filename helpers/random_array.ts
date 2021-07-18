@@ -1,7 +1,7 @@
 export const randomArray = (array) => {
   if (!array.length){
-    return;
+    return
   }
 
-  return array[Math.floor(Math.random() * array.length)];
-};
+  return array[Math.floor(Math.random() * array.length)]
+}

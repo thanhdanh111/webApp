@@ -11,7 +11,7 @@ const SvgOptionDecision = () => {
         />
       </svg>
     </>
-  );
-};
+  )
+}
 
-export default SvgOptionDecision;
+export default SvgOptionDecision
