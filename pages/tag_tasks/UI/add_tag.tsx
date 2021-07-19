@@ -84,7 +84,7 @@ const AddTagPopup: React.FC = () => {
           <Grid item className='tag-add' onClick={handleClick} aria-describedby={id}>
             <LocalOfferOutlinedIcon className='tag-border tag-icon' />
           </Grid>
-          <div className={!!anchorEl ? 'popup-tag-close' : 'hidden-close-popup'} onClick={() => setAnchorEl(null)}/>
+          {!!anchorEl && <div className='popup-tag-close' onClick={() => setAnchorEl(null)}/>}
           <Popper
             id={id}
             open={!!anchorEl}

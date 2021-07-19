@@ -12,7 +12,6 @@ interface StatisticsValue {
   loading: boolean
   limit: number
 }
-
 const initialState: StatisticsValue = {
   checkInCheckOuts: [],
   selectedUserID: '',
@@ -65,16 +64,13 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
     if (cursor === 'END') {
       return
     }
-
     const getParams = () => {
       if (isGetMe) {
         requestUser = userID
       }
-
       if (selectedUserID) {
         requestUser = selectedUserID?.userID
       }
-
       const param = {
         companyID,
         fromTime: fromTime.toString(),
@@ -84,7 +80,6 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
       if (cursor) {
         param['cursor'] = cursor
       }
-
       if (requestUser) {
         param['userID'] = requestUser
       }

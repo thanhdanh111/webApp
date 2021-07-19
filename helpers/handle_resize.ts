@@ -1,4 +1,4 @@
-import { Direction } from '../pages/board/UI/resizer/constants'
+import { Direction } from 'pages/card/UI/resizer/constants'
 
 export const handleResize = (
   panelRef,

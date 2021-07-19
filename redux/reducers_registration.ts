@@ -1,3 +1,4 @@
+
 import { combineReducers } from 'redux'
 import { userInfo }  from '../pages/login/logic/login_reducer'
 import { usersReducer } from '../pages/users/logic/users_reducer'
@@ -11,6 +12,7 @@ import { eventLogsReducer } from 'pages/event_logs/logic/event_log_reducer'
 import companyReducer from 'pages/company/logic/company_reducer'
 import { notificationReducer } from './common/notifications/reducer'
 import { boardsReducer } from 'pages/board/logic/board_reducer'
+import { cardsReducer } from 'pages/card/logic/card_reducer'
 import { taskBoardsReducer } from 'pages/task_boards/logic/task_boards_reducer'
 import { statusesReducer } from 'pages/task_statuses/logic/task_statuses_reducer'
 import { tasksReducer } from 'pages/tasks/logic/task_reducer'
@@ -31,6 +33,7 @@ const rootReducer = combineReducers({
   company: companyReducer,
   newNotifications: notificationReducer,
   boards: boardsReducer,
+  cards: cardsReducer,
   statuses: statusesReducer,
   tasks: tasksReducer,
   tagTasks: tagTasksReducer,

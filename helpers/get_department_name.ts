@@ -1,5 +1,5 @@
 import { Department } from './type'
-import { checkIfEmptyArray } from './check_empty_array'
+import { checkIfEmptyArray } from './check_if_empty_array'
 
 export const getDepartmentsName = (departments) => {
 

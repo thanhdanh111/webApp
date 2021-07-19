@@ -9,42 +9,30 @@ import ReactFlow, {
   updateEdge,
   ArrowHeadType,
 } from 'react-flow-renderer'
-import CustomDecision from '../shapes/shape_decision'
-import { initialElements } from './initial_elements'
+import CustomDecision from './shapes/shape_decision'
+import { initialElements } from './view_board/initial_elements'
 import PrimaryButtonUI from '@components/primary_button/primary_button'
-import { createNewCard, getDataListCard } from 'pages/board/logic/board_reducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'redux/reducers_registration'
-import CustomProcess from '../shapes/shape_process'
-import ListOptionCard from './list_option_card'
-import HeaderContentBoard from './header_content_board'
+import CustomProcess from './shapes/shape_process'
+import ListOptionCard from './view_board/list_option_card'
+import HeaderContentBoard from './view_board/header_content_board'
 import { useRouter } from 'next/router'
+import { getCards, createCard } from 'pages/card/logic/card_reducer'
 
 const ViewBoard = () => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [elements, setElements] = useState(initialElements)
-  const dataList = useSelector((state: RootState) => state.boards.cards)
+  const dataList = useSelector((state: RootState) => state.cards.cards)
   const query = router.query
-  // const selected = useSelector((state: RootState) => state.boards.selectedBoard)
-  // const [textContent, setTextContent] = useState('')
-
-  // const onChangeTextContent = (event) => {
-  //   if (!event.target.value) {
-  //     setTextContent('')
-
-  //     return
-  //   }
-  //   setTextContent(event.target.value)
-
-  // }
 
   useEffect(() => {
     if (!query.id) {
       return
     }
 
-    dispatch(getDataListCard(query.id))
+    dispatch(getCards(query.id))
   }, [query.id])
 
   useEffect(() => {
@@ -52,15 +40,15 @@ const ViewBoard = () => {
       return
     }
 
-    const list = dataList.map((each) => {
+    const list = Object.keys(dataList).map((each) => {
       return {
-        id: each._id,
+        id: each,
         position: {
-          x: each.position.x,
-          y: each.position.y,
+          x: dataList[each]?.position?.x,
+          y: dataList[each]?.position?.y,
         },
-        type: each.shape,
-        data: each.textContent,
+        type: dataList[each]?.shape,
+        data: dataList[each]?.textContent,
       }
 
     })
@@ -69,7 +57,7 @@ const ViewBoard = () => {
   }, [dataList])
 
   function addShape(type: string) {
-    dispatch(createNewCard(type.toUpperCase(), '', ''))
+    dispatch(createCard(type.toUpperCase(), '', ''))
   }
 
   const onElementsRemove = (elementsToRemove) =>
