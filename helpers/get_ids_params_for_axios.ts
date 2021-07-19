@@ -1,7 +1,7 @@
 export function getIDsParamsForAxios({ ids, fieldName }) {
   if (!ids?.length) {
-    return '';
+    return ''
   }
 
-  return ids.map((id, index) => `${fieldName}[${index}]=${id}`).join('&');
+  return ids.map((id, index) => `${fieldName}[${index}]=${id}`).join('&')
 }

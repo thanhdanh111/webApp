@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@material-ui/core'
 
 const InlineToolbarButton = ({
   functionality,
@@ -7,10 +7,10 @@ const InlineToolbarButton = ({
   overrideClass = '',
   active,
 }) => {
-  let className = `inline-toolbar-btn ${overrideClass}`;
+  let className = `inline-toolbar-btn ${overrideClass}`
 
   if (active) {
-    className += ' inline-toolbar-btn--active';
+    className += ' inline-toolbar-btn--active'
   }
 
   return <Button
@@ -20,7 +20,7 @@ const InlineToolbarButton = ({
     onClick={() => onClick(functionality)}
   >
     {icon}
-  </Button>;
-};
+  </Button>
+}
 
-export default InlineToolbarButton;
+export default InlineToolbarButton

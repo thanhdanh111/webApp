@@ -1,25 +1,24 @@
-import axios from 'axios';
-import { config } from 'helpers/get_config';
-import { CheckInCheckOut } from 'helpers/type';
-import { statisticsAction } from './statistics_type_action';
-import { getAllStatistics } from './statistics_actions';
-import { RootState } from 'redux/reducers_registration';
+import axios from 'axios'
+import { config } from 'helpers/get_config'
+import { CheckInCheckOut, UserInfoType } from 'helpers/type'
+import { statisticsAction } from './statistics_type_action'
+import { getAllStatistics } from './statistics_actions'
+import { RootState } from 'redux/reducers_registration'
 
 interface StatisticsValue {
-  checkInCheckOuts: CheckInCheckOut[];
-  selectedUserID: string;
-  cursor: string;
-  loading: boolean;
-  limit: number;
+  checkInCheckOuts: CheckInCheckOut[]
+  selectedUserID: string
+  cursor: string
+  loading: boolean
+  limit: number
 }
-
 const initialState: StatisticsValue = {
   checkInCheckOuts: [],
   selectedUserID: '',
   cursor: '',
   loading: false,
   limit: 7,
-};
+}
 
 const statisticsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -27,74 +26,68 @@ const statisticsReducer = (state = initialState, action) => {
       return {
         ...state,
         checkInCheckOuts: action.payload.list,
-      };
+      }
     case statisticsAction.SELECTED_USERID:
       return {
         ...state,
         selectedUserID: action.payload.userID,
-      };
+      }
     case statisticsAction.LIMIT_TRACKING:
       return {
         ...state,
         limit: action.payload.limit,
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default statisticsReducer;
+export default statisticsReducer
 
 export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dispatch, getState) => {
   try {
-    const state = getState();
-    const token = localStorage.getItem('access_token');
+    const state = getState()
+    const token = localStorage.getItem('access_token')
+    const { currentCompany, userID }: UserInfoType = getState().userInfo
+    const companyID = currentCompany?._id
     const {
       statistics: {
         cursor,
         limit,
         selectedUserID,
       },
-      userInfo: {
-        currentCompany,
-        userID,
-      },
-    }: RootState = state;
-    const toTime = new Date();
-    const fromTime = new Date(toTime.getTime() - limit * 1000 * 60 * 60 * 24);
-    const companyID = currentCompany?._id;
-    let requestUser = '';
-    if (cursor === 'END') {
-      return;
-    }
+    }: RootState = state
+    const toTime = new Date()
+    const fromTime = new Date(toTime.getTime() - limit * 1000 * 60 * 60 * 24)
+    let requestUser = ''
 
+    if (cursor === 'END') {
+      return
+    }
     const getParams = () => {
       if (isGetMe) {
-        requestUser = userID;
+        requestUser = userID
       }
-
       if (selectedUserID) {
-        requestUser = selectedUserID?.userID;
+        requestUser = selectedUserID?.userID
       }
-
       const param = {
         companyID,
         fromTime: fromTime.toString(),
         toTime: toTime.toString(),
-      };
+      }
 
       if (cursor) {
-        param['cursor'] = cursor;
+        param['cursor'] = cursor
       }
-
       if (requestUser) {
-        param['userID'] = requestUser;
+        param['userID'] = requestUser
       }
 
-      return param;
-    };
+      return param
+    }
 
-    const params = getParams();
+    const params = getParams()
 
     const res =
     await axios.get(`${config.BASE_URL}/checkinAndCheckouts`, {
@@ -103,16 +96,16 @@ export const getAllCheckInThunkAction = (isGetMe: boolean = false) => async (dis
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
 
     if (res.data.totalCount === 0) {
-      await dispatch(getAllStatistics([]));
+      await dispatch(getAllStatistics([]))
 
-      return;
+      return
     }
 
-    await dispatch(getAllStatistics(res.data.list));
+    await dispatch(getAllStatistics(res.data.list))
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}

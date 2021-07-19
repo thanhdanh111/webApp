@@ -1,14 +1,14 @@
-import { VariantType } from 'notistack';
+import { VariantType } from 'notistack'
 
 interface CompanyNotification {
-  variant: VariantType;
-  message: string;
+  variant: VariantType
+  message: string
 }
 
 export const handleEmptyField = ({ contentFields }): CompanyNotification => {
   for (const field in contentFields) {
     if (contentFields[field]) {
-      continue;
+      continue
     }
 
     switch (field) {
@@ -16,17 +16,17 @@ export const handleEmptyField = ({ contentFields }): CompanyNotification => {
         return {
           variant: 'error',
           message: 'You have not registered any companies for workspace',
-        };
+        }
       case 'slackToken':
         return {
           variant: 'error',
           message: 'You should fill your token',
-        };
+        }
     }
   }
 
   return {
     variant: 'error',
     message: 'Something went wrong',
-  };
-};
+  }
+}

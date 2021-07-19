@@ -1,5 +1,5 @@
-import { storiesOf } from '@storybook/react';
-import InlineToolbar from './inline_toolbar';
+import { storiesOf } from '@storybook/react'
+import InlineToolbar from './inline_toolbar'
 
 storiesOf('Inline Toolbar', module).add('Header', () => {
   return <InlineToolbar
@@ -7,5 +7,5 @@ storiesOf('Inline Toolbar', module).add('Header', () => {
     displayInlineToolbar={true}
     onClickOption={() => 'handled'}
     editorState={{}}
-  />;
-});
+  />
+})

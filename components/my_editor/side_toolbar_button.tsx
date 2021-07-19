@@ -1,26 +1,26 @@
-import React, { FunctionComponent } from 'react';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import React, { FunctionComponent } from 'react'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 import {
   ClickAwayListener, Paper,
   Popper, MenuList, MenuItem, ListItemIcon,
   Typography, IconButton,
-} from '@material-ui/core';
+} from '@material-ui/core'
 
 interface RenderAction {
-  type?: string;
-  label?: string;
-  startIcont?: JSX.Element;
-  component?: JSX.Element;
-  disabled?: boolean;
+  type?: string
+  label?: string
+  startIcont?: JSX.Element
+  component?: JSX.Element
+  disabled?: boolean
 }
 
 interface SideToolbarButton {
-  contentBlock: object;
-  onClickSideToolbar: (props) => void;
-  actionsNeedToRender: RenderAction[];
-  children?: JSX.Element;
-  buttonIcon?: JSX.Element;
-  disableProtal: boolean;
+  contentBlock: object
+  onClickSideToolbar: (props) => void
+  actionsNeedToRender: RenderAction[]
+  children?: JSX.Element
+  buttonIcon?: JSX.Element
+  disableProtal: boolean
 }
 
 const SideToolbarButton: FunctionComponent<SideToolbarButton> = ({
@@ -31,23 +31,23 @@ const SideToolbarButton: FunctionComponent<SideToolbarButton> = ({
   buttonIcon,
   disableProtal = false,
 }) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
   const handlePopperOpen = (event: React.MouseEvent<HTMLElement>) => {
-    onClickSideToolbar({ contentBlock, event });
+    onClickSideToolbar({ contentBlock, event })
 
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
+    setAnchorEl(anchorEl ? null : event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
-  const open = Boolean(anchorEl);
+  const open = Boolean(anchorEl)
 
   function renderAction(action, index) {
     if (action?.type === 'component') {
-      return action?.component ?? <div />;
+      return action?.component ?? <div />
     }
 
     return <MenuItem
@@ -61,7 +61,7 @@ const SideToolbarButton: FunctionComponent<SideToolbarButton> = ({
         {action?.startIcon}
       </ListItemIcon>
       <Typography variant='inherit'>{action?.label}</Typography>
-    </MenuItem>;
+    </MenuItem>
   }
 
   return <>
@@ -98,7 +98,7 @@ const SideToolbarButton: FunctionComponent<SideToolbarButton> = ({
           </ClickAwayListener>
       </Popper>
     </div>
-  </>;
-};
+  </>
+}
 
-export default SideToolbarButton;
+export default SideToolbarButton

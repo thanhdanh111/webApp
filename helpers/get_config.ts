@@ -1,6 +1,6 @@
-import getConfig from 'next/config';
+import getConfig from 'next/config'
 
-const { publicRuntimeConfig } : {publicRuntimeConfig: object} = getConfig();
+const { publicRuntimeConfig } : {publicRuntimeConfig: object} = getConfig()
 
 export const config = {
   ENV: publicRuntimeConfig['CLIENT_ENV'],
@@ -10,4 +10,4 @@ export const config = {
   STATE: publicRuntimeConfig['STATE'],
   API_LOGIN: `${publicRuntimeConfig['API_LOGIN']}${publicRuntimeConfig['CLIENT_ID']}`,
   FCM: publicRuntimeConfig['FCM'],
-};
+}

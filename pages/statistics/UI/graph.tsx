@@ -1,40 +1,40 @@
 
-import dynamic from 'next/dynamic';
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-import { Card, CardContent, Grid, Typography } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import SwitchButton from './switch_button';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { getAllCheckInThunkAction } from '../logic/statistics_reducer';
-import { limitStatistics } from '../logic/statistics_actions';
-import { getGraphOptions } from '../../../helpers/get_statistics_data';
-import UserSelection from './user_selection';
+import dynamic from 'next/dynamic'
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
+import { Card, CardContent, Grid, Typography } from '@material-ui/core'
+import React, { useEffect } from 'react'
+import SwitchButton from './switch_button'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import { getAllCheckInThunkAction } from '../logic/statistics_reducer'
+import { limitStatistics } from '../logic/statistics_actions'
+import { getGraphOptions } from '../../../helpers/get_statistics_data'
+import UserSelection from './user_selection'
 
 interface GraphProps {
-  getMe: boolean;
-  isAdmin: boolean;
+  getMe: boolean
+  isAdmin: boolean
 }
 
 const Graph: React.FunctionComponent<GraphProps> = (props) => {
-  const dispatch = useDispatch();
-  const statistics = useSelector((state: RootStateOrAny) => state.statistics);
-  const limit = statistics.limit;
-  const userID = statistics.selectedUserID;
-  const { getMe, isAdmin }: GraphProps = props;
+  const dispatch = useDispatch()
+  const statistics = useSelector((state: RootStateOrAny) => state.statistics)
+  const limit = statistics.limit
+  const userID = statistics.selectedUserID
+  const { getMe, isAdmin }: GraphProps = props
 
   useEffect(() => {
-    void fetchCheckinData();
-  }, [limit, userID, getMe]);
+    void fetchCheckinData()
+  }, [limit, userID, getMe])
 
   const fetchCheckinData = () => {
-    dispatch(getAllCheckInThunkAction(getMe));
-  };
+    dispatch(getAllCheckInThunkAction(getMe))
+  }
 
   const setLimit = (num: number) => {
-    dispatch(limitStatistics(num));
-  };
+    dispatch(limitStatistics(num))
+  }
 
-  const data = getGraphOptions(statistics.checkInCheckOuts);
+  const data = getGraphOptions(statistics.checkInCheckOuts)
 
   return (
       <Card className='bg-gradient-default' style={{ borderRadius: 10 }}>
@@ -56,7 +56,7 @@ const Graph: React.FunctionComponent<GraphProps> = (props) => {
         </CardContent>
       </Card>
 
-  );
-};
+  )
+}
 
-export default Graph;
+export default Graph

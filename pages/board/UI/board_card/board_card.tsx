@@ -1,36 +1,36 @@
-import { Card, CardContent, Grid, Typography } from '@material-ui/core';
-import { Board } from 'helpers/type';
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { Delete } from '@material-ui/icons';
-import { deleteBoardMiddleWare } from 'pages/board/logic/board_reducer';
-import { useDispatch } from 'react-redux';
-import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog';
+import { Card, CardContent, Grid, Typography } from '@material-ui/core'
+import { Board } from 'helpers/type'
+import React, { useState } from 'react'
+import { useRouter } from 'next/router'
+import { Delete } from '@material-ui/icons'
+import { deleteBoardMiddleWare } from 'pages/board/logic/board_reducer'
+import { useDispatch } from 'react-redux'
+import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog'
 
 interface InitProps {
-  board: Board;
+  board: Board
 }
 
-type BodyProps = InitProps;
+type BodyProps = InitProps
 
 const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
-  const dispatch = useDispatch();
-  const { board }: InitProps = props;
-  const router = useRouter();
-  const pathname = router.pathname;
-  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch()
+  const { board }: InitProps = props
+  const router = useRouter()
+  const pathname = router.pathname
+  const [open, setOpen] = useState(false)
 
   const onPushToContentBoard = () => {
-    void router.push({ pathname: `${pathname}/view`, query: { id: board?._id } });
-  };
+    void router.push({ pathname: `${pathname}/view`, query: { id: board?._id } })
+  }
 
   const handleOpenOrClose = () => {
-    setOpen(!open);
-  };
+    setOpen(!open)
+  }
 
   const handleDeleteBoard = (id: string) => {
-    dispatch(deleteBoardMiddleWare(id));
-  };
+    dispatch(deleteBoardMiddleWare(id))
+  }
 
   return (
     <Grid item xs={12} sm={3} className='board-grid'>
@@ -56,6 +56,6 @@ const BoardCard: React.FunctionComponent<BodyProps> = (props: InitProps) => {
         MINI Map
       </div>
     </Grid>
-  );
-};
-export default BoardCard;
+  )
+}
+export default BoardCard

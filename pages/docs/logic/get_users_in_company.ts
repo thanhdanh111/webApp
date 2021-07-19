@@ -1,18 +1,18 @@
 export function getUsersInCompany({ users }) {
-  const usersMap = { };
+  const usersMap = { }
   if (!users?.length) {
-    return usersMap;
+    return usersMap
   }
 
   users.forEach((user) => {
-    const userID = user?.userID?._id;
+    const userID = user?.userID?._id
 
     if (!userID) {
-      return;
+      return
     }
 
-    usersMap[userID] = user?.userID;
-  });
+    usersMap[userID] = user?.userID
+  })
 
-  return usersMap;
+  return usersMap
 }

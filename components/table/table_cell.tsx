@@ -1,15 +1,15 @@
-import { TableCell } from '@material-ui/core';
+import { TableCell } from '@material-ui/core'
 
 interface PropsInitial {
-  style?: string;
-  content?: JSX.Element;
-  padding?: 'none' | 'default' | 'checkbox';
-  align?: 'left' | 'center' | 'right' | 'justify' | 'inherit';
+  style?: string
+  content?: JSX.Element
+  padding?: 'none' | 'default' | 'checkbox'
+  align?: 'left' | 'center' | 'right' | 'justify' | 'inherit'
 }
 
 export const BodyTable = (props: PropsInitial) => {
 
-  const { style, content, padding, align }: PropsInitial = props;
+  const { style, content, padding, align }: PropsInitial = props
 
   return (
         <TableCell
@@ -21,5 +21,5 @@ export const BodyTable = (props: PropsInitial) => {
         >
             {content}
         </TableCell>
-  );
-};
+  )
+}

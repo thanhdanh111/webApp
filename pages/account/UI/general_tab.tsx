@@ -1,14 +1,14 @@
-import React, { FunctionComponent } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import React, { FunctionComponent } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto'
 import {
 Box, Typography, FormControlLabel, Switch,
   TextField,
-} from '@material-ui/core';
-import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { publicProfile, saveAccountInfo } from '../logic/account_actions';
-import { RootState } from 'redux/reducers_registration';
-import UserAvatar from '@components/user_avatar/info_user';
+} from '@material-ui/core'
+import PrimaryButtonUI from '@components/primary_button/primary_button'
+import { publicProfile, saveAccountInfo } from '../logic/account_actions'
+import { RootState } from 'redux/reducers_registration'
+import UserAvatar from '@components/user_avatar/info_user'
 
 const labels = [
   {
@@ -47,26 +47,26 @@ const labels = [
     fieldName: 'About',
     stateName: 'about',
   },
-];
+]
 
 const GeneralTabUi: FunctionComponent = ({}) => {
-  const accountState = useSelector((state: RootState) => state.account);
-  const userProfile = useSelector((state: RootState) => state?.userInfo?.profile);
-  const dispatch = useDispatch();
-  const newState = { };
+  const accountState = useSelector((state: RootState) => state.account)
+  const userProfile = useSelector((state: RootState) => state?.userInfo?.profile)
+  const dispatch = useDispatch()
+  const newState = { }
 
   function handleSaveChanges() {
-    return dispatch(saveAccountInfo({ changedInfo: newState }));
+    return dispatch(saveAccountInfo({ changedInfo: newState }))
   }
 
   function uploadImage() {
-    return 'uploaded';
+    return 'uploaded'
   }
 
   function onFilling(event: React.ChangeEvent<HTMLInputElement>) {
-    newState[event.target.id] = event.target.value;
+    newState[event.target.id] = event.target.value
 
-    return;
+    return
   }
 
   const FillOutTextFields = labels.map((label, index) => {
@@ -85,7 +85,7 @@ const GeneralTabUi: FunctionComponent = ({}) => {
             defaultValue={accountState[label.stateName]}
           />
         </form>
-      </Box>;
+      </Box>
     }
 
     return <Box key={`${label.fieldName}-${index}`} className={'text-field-container'} >
@@ -100,8 +100,8 @@ const GeneralTabUi: FunctionComponent = ({}) => {
           defaultValue={accountState[label.stateName]}
         />
       </form>
-    </Box>;
-  });
+    </Box>
+  })
 
   return (
     <Box className='general-tab'>
@@ -131,7 +131,7 @@ const GeneralTabUi: FunctionComponent = ({}) => {
         <PrimaryButtonUI handleClick={() => handleSaveChanges()} title='Save Changes' />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default GeneralTabUi;
+export default GeneralTabUi

@@ -8,4 +8,4 @@ export const customStyleMapDraftjs = {
   STRIKETHROUGH: {
     textDecoration: 'line-through',
   },
-};
+}

@@ -1,36 +1,36 @@
-import React from 'react';
-import EditorView from './UI/editor_view';
-import InlineToolbar from '../../components/inline_toolbar/inline_toolbar';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { updateDocs } from './logic/docs_actions';
-import { RootState } from 'redux/reducers_registration';
-import { handleToolbarActions } from './logic/docs_inline_toolbar_actions';
-import { Input } from '@material-ui/core';
-import PrimaryButtonUI from '@components/primary_button/primary_button';
-import { createNewPage, savePage } from './logic/docs_apis';
-import { handleKeyCombination } from './logic/handle_combination_key';
-import { EditorState } from 'draft-js';
-import { DocProject, PageContent } from './logic/docs_reducer';
-import { DocsRole, ProjectAccessMapOfUsers } from './logic/get_folder_access';
-import { checkTrueInArray } from 'helpers/check_true_in_array';
-import { getItemSelectedRolesOfUser } from './logic/get_item_selected_roles_of_user';
+import React from 'react'
+import EditorView from './UI/editor_view'
+import InlineToolbar from '../../components/inline_toolbar/inline_toolbar'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { updateDocs } from './logic/docs_actions'
+import { RootState } from 'redux/reducers_registration'
+import { handleToolbarActions } from './logic/docs_inline_toolbar_actions'
+import { Input } from '@material-ui/core'
+import PrimaryButtonUI from '@components/primary_button/primary_button'
+import { createNewPage, savePage } from './logic/docs_apis'
+import { handleKeyCombination } from './logic/handle_combination_key'
+import { EditorState } from 'draft-js'
+import { DocProject, PageContent } from './logic/docs_reducer'
+import { DocsRole, ProjectAccessMapOfUsers } from './logic/get_folder_access'
+import { checkTrueInArray } from 'helpers/check_true_in_array'
+import { getItemSelectedRolesOfUser } from './logic/get_item_selected_roles_of_user'
 
 interface DocsPageData {
-  displayInlineToolbar: boolean;
-  selectionRect:  DOMRect | undefined;
-  editorState: EditorState;
-  title: string;
-  loading: boolean;
-  selectedPage: PageContent;
-  selectedProject: DocProject;
-  projectAccessOfUsers: ProjectAccessMapOfUsers;
-  accountUserID: string;
+  displayInlineToolbar: boolean
+  selectionRect:  DOMRect | undefined
+  editorState: EditorState
+  title: string
+  loading: boolean
+  selectedPage: PageContent
+  selectedProject: DocProject
+  projectAccessOfUsers: ProjectAccessMapOfUsers
+  accountUserID: string
 }
 
-type DocsPageDataType = DocsPageData;
+type DocsPageDataType = DocsPageData
 
 const DocsPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const {
     displayInlineToolbar,
     selectionRect,
@@ -53,10 +53,10 @@ const DocsPage = () => {
       selectedProject: state?.docs?.selectedDocProject,
       accountUserID: state?.userInfo?.userID,
       projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
-    };
-  }, shallowEqual);
-  const onEditPage = !!selectedPage?._id || !!selectedPage?.title;
-  const readOnly = !checkHavePermissionToEdit();
+    }
+  }, shallowEqual)
+  const onEditPage = !!selectedPage?._id || !!selectedPage?.title
+  const readOnly = !checkHavePermissionToEdit()
   const cannotClickButton = checkTrueInArray({
     conditionsArray: [
       loading,
@@ -64,43 +64,43 @@ const DocsPage = () => {
       !selectedProject._id,
       readOnly,
     ],
-  });
+  })
 
   function onClickOptionInToolbar(action) {
     if (!action) {
-      return;
+      return
     }
 
     dispatch(updateDocs({
       editorState: handleToolbarActions(editorState, action),
-    }));
+    }))
   }
 
   function onChangeTitle(event) {
     if (typeof event?.target?.value !== 'string') {
-      return;
+      return
     }
 
-    dispatch(updateDocs({ title: event.target.value }));
+    dispatch(updateDocs({ title: event.target.value }))
   }
 
   function handleClickHeadingButton() {
     if (onEditPage) {
-      dispatch(savePage());
+      dispatch(savePage())
 
-      return;
+      return
     }
 
-    dispatch(createNewPage());
+    dispatch(createNewPage())
   }
 
   function checkHavePermissionToEdit() {
-    const selectedProjectID = selectedProject?._id ?? '';
-    const selectedPageID = selectedPage?._id;
+    const selectedProjectID = selectedProject?._id ?? ''
+    const selectedPageID = selectedPage?._id
 
     if (!selectedProjectID?.length && !selectedPageID?.length) {
 
-      return true;
+      return true
     }
 
     const rolesOfUser = getItemSelectedRolesOfUser({
@@ -108,9 +108,9 @@ const DocsPage = () => {
       selectedProjectID,
       projectAccessOfUsers,
       userID: accountUserID,
-    });
+    })
 
-    return rolesOfUser.includes(DocsRole.WRITE);
+    return rolesOfUser.includes(DocsRole.WRITE)
   }
 
   return <div className='docs-layout'>
@@ -149,7 +149,7 @@ const DocsPage = () => {
         displayInlineToolbar={displayInlineToolbar}
         selectionRect={selectionRect}
       />
-  </div>;
-};
+  </div>
+}
 
-export default DocsPage;
+export default DocsPage

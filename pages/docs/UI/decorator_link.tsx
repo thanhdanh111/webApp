@@ -1,33 +1,33 @@
-import { urlWithHttpRegex } from 'constants/docs_regex';
+import { urlWithHttpRegex } from 'constants/docs_regex'
 
 function findLinkEntities(contentBlock, callback, contentState) {
   contentBlock.findEntityRanges(
     (character) => {
-      const entityKey = character?.getEntity();
+      const entityKey = character?.getEntity()
 
       return (
         entityKey !== null &&
         contentState?.getEntity(entityKey)?.getType() === 'LINK'
-      );
+      )
     },
     callback,
-  );
+  )
 }
 
 const Link = (props) => {
-  const url = props?.contentState?.getEntity(props?.entityKey)?.getData()?.url;
+  const url = props?.contentState?.getEntity(props?.entityKey)?.getData()?.url
 
   function openNewTab() {
-    const urlWithHttpRegexFunc = new RegExp(urlWithHttpRegex);
-    const isUrlWithHttp = urlWithHttpRegexFunc.test(url);
+    const urlWithHttpRegexFunc = new RegExp(urlWithHttpRegex)
+    const isUrlWithHttp = urlWithHttpRegexFunc.test(url)
 
     if (!isUrlWithHttp) {
-      window.open(`//${url}`);
+      window.open(`//${url}`)
 
-      return;
+      return
     }
 
-    window.open(url);
+    window.open(url)
   }
 
   return (
@@ -41,10 +41,10 @@ const Link = (props) => {
     >
       {props.children}
     </a>
-  );
-};
+  )
+}
 
 export const docsLinkDecorator = {
   strategy: findLinkEntities,
   component: Link,
-};
+}

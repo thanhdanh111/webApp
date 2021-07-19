@@ -1,8 +1,7 @@
-import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
-import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import StrikethroughSIcon from '@material-ui/icons/StrikethroughS';
-import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted'
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
+import TextFieldsIcon from '@material-ui/icons/TextFields'
+import StrikethroughSIcon from '@material-ui/icons/StrikethroughS'
 
 export const blockStyles = [
   'unstyled',
@@ -12,15 +11,14 @@ export const blockStyles = [
   'code-block',
   'ordered-list-item',
   'unordered-list-item',
-  'checkable-list-item',
-];
+]
 
 export const inlineStyles = [
   'BOLD',
   'ITALIC',
   'UNDERLINE',
   'STRIKETHROUGH',
-];
+]
 
 export const inlineToolbarButons = [
   {
@@ -88,13 +86,7 @@ export const inlineToolbarButons = [
     styleName: 'ordered-list-item',
     name: 'Numbered List',
   },
-  {
-    functionality: 'checkable-list-item',
-    icon: <PlaylistAddCheckIcon />,
-    styleName: 'checkable-list-item',
-    name: 'Checked List',
-  },
-];
+]
 
 export const changeLineStyleButons = [
   {
@@ -142,10 +134,4 @@ export const changeLineStyleButons = [
     styleName: 'ordered-list-item',
     name: 'Numbered List',
   },
-  {
-    functionality: 'checkable-list-item',
-    icon: <PlaylistAddCheckIcon />,
-    styleName: 'checkable-list-item',
-    name: 'Checked List',
-  },
-];
+]

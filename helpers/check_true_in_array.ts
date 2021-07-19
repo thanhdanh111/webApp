@@ -1,7 +1,7 @@
 export function checkTrueInArray({ conditionsArray }) {
   if (!conditionsArray || !conditionsArray?.length) {
-    return;
+    return
   }
 
-  return conditionsArray.some((condition) => condition);
+  return conditionsArray.some((condition) => condition)
 }

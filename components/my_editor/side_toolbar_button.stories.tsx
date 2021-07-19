@@ -1,5 +1,5 @@
-import { storiesOf } from '@storybook/react';
-import SideToolbarButton  from './side_toolbar_button';
+import { storiesOf } from '@storybook/react'
+import SideToolbarButton  from './side_toolbar_button'
 
 storiesOf('SideToolbarButton', module).add('Header', () => {
   return   <SideToolbarButton
@@ -8,5 +8,5 @@ storiesOf('SideToolbarButton', module).add('Header', () => {
     onClickSideToolbar={() => 'handled'}
     disableProtal={false}
     actionsNeedToRender={[]}
-  />;
-});
+  />
+})

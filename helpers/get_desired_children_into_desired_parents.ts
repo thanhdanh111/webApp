@@ -1,32 +1,32 @@
 function returnDesiredData({  data, fields }) {
   if (!data || !fields?.length) {
-    return null;
+    return null
   }
 
-  const newData = {  };
+  const newData = {  }
 
   fields.forEach((field) =>  {
     if (field === 'entityMap') {
-      const parsedEntities =  JSON.parse(data[field]);
-      newData[field] = { ...parsedEntities };
+      const parsedEntities =  JSON.parse(data[field])
+      newData[field] = { ...parsedEntities }
 
-      return;
+      return
     }
 
     if (field === 'pageContent') {
-      newData['content'] = JSON.parse(data[field]);
+      newData['content'] = JSON.parse(data[field])
 
-      return;
+      return
     }
 
-    newData[field] = data[field];
-  });
+    newData[field] = data[field]
+  })
 
-  return newData;
+  return newData
 }
 
 interface DesiredMap {
-  [id: string]: object;
+  [id: string]: object
 }
 
 export function getDesiredChildrenIntoDesiredParents({
@@ -41,41 +41,41 @@ export function getDesiredChildrenIntoDesiredParents({
   if (!childName) {
     return {
       desiredMap: { },
-    };
+    }
   }
 
-  const desiredMap: DesiredMap = {};
+  const desiredMap: DesiredMap = {}
 
   children.forEach((child) => {
     if (!child) {
-      return;
+      return
     }
 
     const parentData = returnDesiredData({
       data: child[parentFieldInChild],
       fields: fieldsOfParent,
-    });
+    })
 
     const childData = returnDesiredData({
       data: child,
       fields: fieldsOfChild,
-    });
+    })
 
     if (!parentData || !childData) {
-      return;
+      return
     }
 
-    const parentID = child?.[parentFieldInChild]?.[parentFieldID];
-    const childID = child?.[childFieldID];
+    const parentID = child?.[parentFieldInChild]?.[parentFieldID]
+    const childID = child?.[childFieldID]
     const parentDataInMap = desiredMap?.[parentID] ?? {
       ...parentData,
       [childName]: {},
-    };
+    }
 
-    parentDataInMap[childName][childID] = childData;
+    parentDataInMap[childName][childID] = childData
 
-    desiredMap[parentID] = parentDataInMap;
-  });
+    desiredMap[parentID] = parentDataInMap
+  })
 
-  return desiredMap;
+  return desiredMap
 }

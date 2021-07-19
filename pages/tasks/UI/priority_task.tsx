@@ -1,9 +1,9 @@
-import { Menu, Tooltip } from '@material-ui/core';
-import React from 'react';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import OutlinedFlagIcon from '@material-ui/icons/OutlinedFlag';
-import { RootStateOrAny, useSelector } from 'react-redux';
-import PriorityItem from './priority_item';
+import { Menu, Tooltip } from '@material-ui/core'
+import React from 'react'
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
+import OutlinedFlagIcon from '@material-ui/icons/OutlinedFlag'
+import { RootStateOrAny, useSelector } from 'react-redux'
+import PriorityItem from './priority_item'
 
 enum TypePiority {
   URGENT = 'urgent-icon',
@@ -38,10 +38,10 @@ const priorityLevels = [
     value: '',
     color: '#F8B6B1',
   },
-];
+]
 
 const Priority: React.FC = () => {
-  const newTask = useSelector((state: RootStateOrAny) => state.taskBoards?.newTask);
+  const newTask = useSelector((state: RootStateOrAny) => state.taskBoards?.newTask)
 
   return (
     <PopupState variant='popover'>
@@ -66,7 +66,7 @@ const Priority: React.FC = () => {
       </React.Fragment>
     )}
   </PopupState>
-  );
-};
+  )
+}
 
-export default Priority;
+export default Priority

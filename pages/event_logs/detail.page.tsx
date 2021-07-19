@@ -1,34 +1,34 @@
-import { Container, Typography } from '@material-ui/core';
-import { EventLogPage, EventLogState } from 'pages/event_logs/logic/event_log_interface';
-import React, { useEffect } from 'react';
-import moment from 'moment';
-import Exception from './UI/event_log/exception';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import { getEventLogData } from './logic/event_log_reducer';
-import { RootState } from 'redux/reducers_registration';
-import EventLogHead from './UI/event_log_head';
-import { DisappearedLoading } from 'react-loadingg';
-import BreadcrumbsTable from './UI/event_log/breadcrumbs';
+import { Container, Typography } from '@material-ui/core'
+import { EventLogPage, EventLogState } from 'pages/event_logs/logic/event_log_interface'
+import React, { useEffect } from 'react'
+import moment from 'moment'
+import Exception from './UI/event_log/exception'
+import { useRouter } from 'next/router'
+import { useDispatch, useSelector } from 'react-redux'
+import { getEventLogData } from './logic/event_log_reducer'
+import { RootState } from 'redux/reducers_registration'
+import EventLogHead from './UI/event_log_head'
+import { DisappearedLoading } from 'react-loadingg'
+import BreadcrumbsTable from './UI/event_log/breadcrumbs'
 
 const EventLogDetail = (props: EventLogState) => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const time = moment(props.createdAt).utc().format('LLL Z');
+  const router = useRouter()
+  const dispatch = useDispatch()
+  const time = moment(props.createdAt).utc().format('LLL Z')
   const {
     selectedEventLog,
     loading,
-  }: EventLogPage = useSelector((state: RootState) => state.eventLogs);
+  }: EventLogPage = useSelector((state: RootState) => state.eventLogs)
 
-  const query = router.query;
+  const query = router.query
 
   useEffect(() => {
-    void fetchData();
-  }, []);
+    void fetchData()
+  }, [])
 
   const fetchData = () => {
-    dispatch(getEventLogData(query.id));
-  };
+    dispatch(getEventLogData(query.id))
+  }
 
   return (
     <div className='event-log-detail'>
@@ -59,7 +59,7 @@ const EventLogDetail = (props: EventLogState) => {
           </div>
       </div>}
     </div>
-  );
-};
+  )
+}
 
-export default EventLogDetail;
+export default EventLogDetail

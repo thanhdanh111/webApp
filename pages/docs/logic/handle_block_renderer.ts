@@ -1,11 +1,10 @@
 import {
-  CheckedListBlockCustom,
   CodeBlockCustom,
   MediaBlockComponent,
   OrderedListItemCustom,
   UnorderedListItemCustom,
   UnstyledBlockCustom,
-} from '../UI/custom_blocks';
+} from '../UI/custom_blocks'
 
 export default function editorBlockRenderer({
   contentBlock,
@@ -14,7 +13,7 @@ export default function editorBlockRenderer({
   onMoveBlockAction,
   readOnly,
 }) {
-  const type = contentBlock.getType();
+  const type = contentBlock.getType()
 
   if (type === 'unordered-list-item') {
     return {
@@ -25,19 +24,7 @@ export default function editorBlockRenderer({
         onMoveBlockAction,
         readOnly,
       },
-    };
-  }
-
-  if (type === 'checkable-list-item') {
-    return {
-      component: CheckedListBlockCustom,
-      props: {
-        handleOnChangeLineStyle,
-        onClickSideToolbar,
-        onMoveBlockAction,
-        readOnly,
-      },
-    };
+    }
   }
 
   if (type === 'code-block') {
@@ -49,7 +36,7 @@ export default function editorBlockRenderer({
         onMoveBlockAction,
         readOnly,
       },
-    };
+    }
   }
 
   if (type === 'ordered-list-item') {
@@ -60,7 +47,7 @@ export default function editorBlockRenderer({
         onClickSideToolbar,
         readOnly,
       },
-    };
+    }
   }
 
   if (type === 'atomic') {
@@ -73,7 +60,7 @@ export default function editorBlockRenderer({
         onMoveBlockAction,
         readOnly,
       },
-    };
+    }
   }
 
   return {
@@ -84,5 +71,5 @@ export default function editorBlockRenderer({
       onMoveBlockAction,
       readOnly,
     },
-  };
+  }
 }

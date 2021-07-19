@@ -1,24 +1,24 @@
-import React, { FunctionComponent } from 'react';
-import { Editor, EditorState } from 'draft-js';
-import { customStyleMapDraftjs } from 'constants/custom_style_map';
-import editorBlockRenderer from '../../pages/docs/logic/handle_block_renderer';
-import { extendedBlockRenderMap } from '../../pages/docs/UI/custom_blocks';
-import _immutable from 'immutable';
-import handlePastedText from 'pages/docs/logic/handle_pasted_text';
-import myBlockStyleFn from 'pages/docs/logic/handle_return_styles';
-import handleKeyCommand from 'pages/docs/logic/handle_key_command';
-import { handleKeyBinding } from 'pages/docs/logic/handle_key_binding';
-import { handleBeforeInput } from 'pages/docs/logic/handle_before_input';
-import { handleDroppedFiles } from 'pages/docs/logic/handle_dropped_files';
-import { handlePastedFiles } from 'pages/docs/logic/handle_pasted_files';
+import React, { FunctionComponent } from 'react'
+import { Editor, EditorState } from 'draft-js'
+import { customStyleMapDraftjs } from 'constants/custom_style_map'
+import editorBlockRenderer from '../../pages/docs/logic/handle_block_renderer'
+import { extendedBlockRenderMap } from '../../pages/docs/UI/custom_blocks'
+import _immutable from 'immutable'
+import handlePastedText from 'pages/docs/logic/handle_pasted_text'
+import myBlockStyleFn from 'pages/docs/logic/handle_return_styles'
+import handleKeyCommand from 'pages/docs/logic/handle_key_command'
+import { handleKeyBinding } from 'pages/docs/logic/handle_key_binding'
+import { handleBeforeInput } from 'pages/docs/logic/handle_before_input'
+import { handleDroppedFiles } from 'pages/docs/logic/handle_dropped_files'
+import { handlePastedFiles } from 'pages/docs/logic/handle_pasted_files'
 
 interface MyEditor {
-  editorState?: EditorState;
-  handleChangeEditorState: (newEditorState) => void;
-  handleOnChangeLineStyle?: (action, contentBlock) => void;
-  onClickSideToolbar?: (props) => void;
-  onMoveBlockAction?: (action, contentBlock) => void;
-  readOnly: boolean;
+  editorState?: EditorState
+  handleChangeEditorState: (newEditorState) => void
+  handleOnChangeLineStyle?: (action, contentBlock) => void
+  onClickSideToolbar?: (props) => void
+  onMoveBlockAction?: (action, contentBlock) => void
+  readOnly: boolean
 }
 
 const MyEditor: FunctionComponent<MyEditor> = ({
@@ -31,10 +31,10 @@ const MyEditor: FunctionComponent<MyEditor> = ({
 }) => {
 
   function handleOnChange(newEditorState) {
-    handleChangeEditorState(newEditorState);
+    handleChangeEditorState(newEditorState)
   }
 
-  const blockType = editorState.getCurrentContent()?.getFirstBlock()?.getType();
+  const blockType = editorState.getCurrentContent()?.getFirstBlock()?.getType()
 
   return <Editor
     stripPastedStyles={true}
@@ -60,7 +60,7 @@ const MyEditor: FunctionComponent<MyEditor> = ({
     handleBeforeInput={(chars, state) => handleBeforeInput(chars, state, handleOnChange)}
     handleDroppedFiles={(selectionState, files) => handleDroppedFiles(selectionState, files, editorState, handleOnChange)}
     handlePastedFiles={(files) => handlePastedFiles(files, editorState, handleOnChange)}
-  />;
-};
+  />
+}
 
-export default MyEditor;
+export default MyEditor

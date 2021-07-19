@@ -1,16 +1,16 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react'
 import {
   Button,
-} from '@material-ui/core';
+} from '@material-ui/core'
 
 interface DataType {
-  title: string;
-  handleClick: () => void;
-  disabled?: boolean;
-  extendClass?: string;
+  title: string
+  handleClick: () => void
+  disabled?: boolean
+  extendClass?: string
 }
 
-type BodyProps = DataType;
+type BodyProps = DataType
 
 const PrimaryButtonUI: FunctionComponent<BodyProps> = ({
   title,
@@ -31,7 +31,7 @@ const PrimaryButtonUI: FunctionComponent<BodyProps> = ({
         {title}
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default PrimaryButtonUI;
+export default PrimaryButtonUI

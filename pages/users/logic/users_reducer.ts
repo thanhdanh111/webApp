@@ -1,18 +1,18 @@
-import axios from 'axios';
-import { search, setLoading, pagination, hasNoNotification, getNotificationsAction, updateUnreadNotifications } from './users_actions';
-import { UsersData, HeadCell, ParamGetUser, Data, UserAccess, Access } from '../../../helpers/type';
-import { config } from 'helpers/get_config';
-import { usersAction } from './users_type_action';
-import { rolesRender } from 'constants/roles';
-import { getRenderingRolesForUsersPage } from './users_rendering_roles';
+import axios from 'axios'
+import { search, setLoading, pagination, hasNoNotification, getNotificationsAction, updateUnreadNotifications } from './users_actions'
+import { UsersData, HeadCell, ParamGetUser, Data, UserAccess, Access } from '../../../helpers/type'
+import { config } from 'helpers/get_config'
+import { usersAction } from './users_type_action'
+import { rolesRender } from 'constants/roles'
+import { getRenderingRolesForUsersPage } from './users_rendering_roles'
 
 export const headCells: HeadCell[] = [
   { id: 'userName', numeric: false, disablePadding: true, label: 'User Name' },
   { id: 'companyRoleRender', numeric: false, disablePadding: true, label: 'Company Role' },
   { id: 'stringPendingRoles', numeric: false, disablePadding: true, label: 'Pending Roles' },
-];
+]
 
-export const actionList: string[] = [];
+export const actionList: string[] = []
 
 const initialState: UsersData = {
   cursor: '',
@@ -46,7 +46,7 @@ const initialState: UsersData = {
   editingUserInfo: {},
   onRemovingUser: false,
   isLoading: false,
-};
+}
 
 // tslint:disable-next-line: cyclomatic-complexity
 export const usersReducer = (state = initialState, action) => {
@@ -55,13 +55,13 @@ export const usersReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingList: action.payload,
-      };
+      }
     case usersAction.PAGINATION:
-      let cursor = action.payload.cursor;
-      const listNewUsers = action.payload.listNewUsers;
+      let cursor = action.payload.cursor
+      const listNewUsers = action.payload.listNewUsers
 
       if (listNewUsers?.length >= action.payload.totalCount) {
-        cursor = 'END';
+        cursor = 'END'
       }
 
       return {
@@ -69,11 +69,11 @@ export const usersReducer = (state = initialState, action) => {
         cursor,
         totalCount: action.payload.totalCount,
         list: [...state.list, ...listNewUsers],
-      };
+      }
     case usersAction.SEARCH:
-      let newCursor = action.payload.cursor;
+      let newCursor = action.payload.cursor
       if (action.payload.totalCount <= state.userLimit) {
-        newCursor = 'END';
+        newCursor = 'END'
       }
 
       return {
@@ -81,18 +81,18 @@ export const usersReducer = (state = initialState, action) => {
         cursor: newCursor,
         totalCount: action.payload.totalCount,
         listSearch: action.payload.listSearchUsers,
-      };
+      }
     case usersAction.HAS_NO_NOTIFICATION:
       return {
         ...state,
         hasNoData: true,
-      };
+      }
     case usersAction.GET_NOTIFICATIONS:
-      const listNotification = [...action.payload.list, ...state.notifications.list];
-      let cursorNotification = action.payload.cursor;
+      const listNotification = [...action.payload.list, ...state.notifications.list]
+      let cursorNotification = action.payload.cursor
 
       if (listNotification >= action.payload.totalCount) {
-        cursorNotification = 'END';
+        cursorNotification = 'END'
       }
 
       return {
@@ -104,11 +104,11 @@ export const usersReducer = (state = initialState, action) => {
           totalUnread: action.payload.totalUnread,
         },
         hasNoData: true,
-      };
+      }
     case usersAction.UPDATE_NOTIFICATION:
-      const notifications = [...state.notifications?.list];
-      const index = notifications.findIndex((notification) => notification._id === action.payload.selectNotification?._id);
-      notifications[index].isRead = true;
+      const notifications = [...state.notifications?.list]
+      const index = notifications.findIndex((notification) => notification._id === action.payload.selectNotification?._id)
+      notifications[index].isRead = true
 
       return {
         ...state,
@@ -118,7 +118,7 @@ export const usersReducer = (state = initialState, action) => {
           list: [...notifications],
           totalUnread: action.payload.totalUnread,
         },
-      };
+      }
     case usersAction.GET_NOTIFICATIONS_FCM:
       return {
         ...state,
@@ -127,28 +127,28 @@ export const usersReducer = (state = initialState, action) => {
           list: [action.payload, ...state.notifications.list],
           totalCount: state.notifications.totalCount + 1,
         },
-      };
+      }
     case usersAction.UPDATE_USERS_REDUCER:
       return {
         ...state,
         ...action.data,
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
 export const getPaginationThunkAction = () => async (dispatch, getState) => {
   try {
-    const userInfo = getState()?.userInfo;
-    const token = localStorage.getItem('access_token');
-    const cursor = getState().users?.cursor;
-    const userLimit = getState().users?.userLimit;
-    const accountUserID = userInfo?.userID;
-    const companyID = userInfo?.currentCompany?._id;
+    const userInfo = getState()?.userInfo
+    const token = localStorage.getItem('access_token')
+    const cursor = getState().users?.cursor
+    const userLimit = getState().users?.userLimit
+    const accountUserID = userInfo?.userID
+    const companyID = userInfo?.currentCompany?._id
 
     if (cursor === 'END' || !token || !companyID) {
-      return;
+      return
     }
 
     const res =
@@ -157,12 +157,12 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
            'Content-Type': 'application/json',
            Authorization: `Bearer ${token}`,
          },
-       });
+       })
 
     if (res.data.totalCount === 0){
-      dispatch(setLoading(true));
+      dispatch(setLoading(true))
 
-      return;
+      return
     }
 
     const listNewUsers = renderData({
@@ -170,32 +170,32 @@ export const getPaginationThunkAction = () => async (dispatch, getState) => {
       users: res?.data?.list,
       rolesInCompany: userInfo?.rolesInCompany,
       rolesInDepartments: userInfo?.rolesInDepartments,
-    });
+    })
 
-    dispatch(pagination({ listNewUsers, ...res.data }));
-    dispatch(setLoading(false));
+    dispatch(pagination({ listNewUsers, ...res.data }))
+    dispatch(setLoading(false))
   } catch (error) {
-    dispatch(setLoading(false));
+    dispatch(setLoading(false))
   }
-};
+}
 
 export const getSearchAction = (fullName) => async (dispatch, getState) => {
   try {
-    const userInfo = getState()?.userInfo;
-    const token = localStorage.getItem('access_token');
-    const companyID = userInfo?.currentCompany?._id;
-    const accountUserID = userInfo?.userID;
+    const userInfo = getState()?.userInfo
+    const token = localStorage.getItem('access_token')
+    const companyID = userInfo?.currentCompany?._id
+    const accountUserID = userInfo?.userID
 
     if (!token || !companyID) {
-      return;
+      return
     }
 
-    dispatch(setLoading(true));
+    dispatch(setLoading(true))
 
     const params: ParamGetUser = {
       companyID,
       fullName,
-    };
+    }
 
     const res =
      await axios.get(`${config.BASE_URL}/userAccesses`, {
@@ -204,21 +204,21 @@ export const getSearchAction = (fullName) => async (dispatch, getState) => {
          'Content-Type': 'application/json',
          Authorization: `Bearer ${token}`,
        },
-     });
+     })
 
     const listSearchUsers = renderData({
       accountUserID,
       users: res?.data?.list,
       rolesInCompany: userInfo?.rolesInCompany,
       rolesInDepartments: userInfo?.rolesInDepartments,
-    });
+    })
 
-    dispatch(search({ listSearchUsers, ...res.data }));
-    dispatch(setLoading(false));
+    dispatch(search({ listSearchUsers, ...res.data }))
+    dispatch(setLoading(false))
   } catch (error) {
-    dispatch(setLoading(false));
+    dispatch(setLoading(false))
   }
-};
+}
 
 function createData(
   id: string,
@@ -240,7 +240,7 @@ function createData(
     companyRoleRender,
     stringPendingRoles,
     companyRoleCouldDelete,
-  };
+  }
 }
 
 export const renderData = ({
@@ -250,15 +250,15 @@ export const renderData = ({
   rolesInDepartments,
 }) => {
   return users.map((user: UserAccess) => {
-    const exceptDeleteMyself = accountUserID === user.userID._id;
+    const exceptDeleteMyself = accountUserID === user.userID._id
     const roles = getRenderingRolesForUsersPage({
       exceptDeleteMyself,
       rolesInCompany,
       rolesInDepartments,
       accesses: user.accesses,
-    });
-    const fullName = user?.userID?.status === 'INACTIVE' ? 'Inactive User' : `${user.userID.firstName} ${user.userID.lastName}`;
-    const id = user._id;
+    })
+    const fullName = user?.userID?.status === 'INACTIVE' ? 'Inactive User' : `${user.userID.firstName} ${user.userID.lastName}`
+    const id = user._id
 
     return createData(
       id,
@@ -269,23 +269,23 @@ export const renderData = ({
       roles?.departmentRoles || [],
       roles?.stringPendingRoles || [],
       roles?.companyRole?.companyRoleCouldDelete,
-    );
-  });
-};
+    )
+  })
+}
 
 export const getNotificationMiddleware = () => async (dispatch, getState) => {
   try {
 
-    const userInfo = getState()?.userInfo;
-    const receiverID = userInfo?.userID;
-    const token = localStorage.getItem('access_token');
-    const cursor = getState()?.users?.notifications?.cursor;
-    const notificationLimit = getState()?.users?.notificationLimit;
+    const userInfo = getState()?.userInfo
+    const receiverID = userInfo?.userID
+    const token = localStorage.getItem('access_token')
+    const cursor = getState()?.users?.notifications?.cursor
+    const notificationLimit = getState()?.users?.notificationLimit
 
     if (!token || !receiverID || cursor === 'END') {
-      await dispatch(setLoading(true));
+      await dispatch(setLoading(true))
 
-      return;
+      return
     }
 
     const res = await axios.get(`${config.BASE_URL}/notifications`, {
@@ -300,29 +300,29 @@ export const getNotificationMiddleware = () => async (dispatch, getState) => {
         sortBy: 'createdAt',
         limit: notificationLimit,
       },
-    });
+    })
 
     if (!res.data.totalCount) {
-      await dispatch(hasNoNotification());
-      await dispatch(setLoading(false));
+      await dispatch(hasNoNotification())
+      await dispatch(setLoading(false))
 
-      return;
+      return
     }
 
-    await dispatch(getNotificationsAction(res.data));
-    await dispatch(setLoading(false));
+    await dispatch(getNotificationsAction(res.data))
+    await dispatch(setLoading(false))
   } catch (error) {
-    await dispatch(setLoading(false));
+    await dispatch(setLoading(false))
   }
-};
+}
 
 export const updateUnreadNotificationMiddleware = (notificationID: string, isRead: boolean) => async (dispatch, getState) => {
   try {
-    const state = getState();
-    const token = localStorage.getItem('access_token');
+    const state = getState()
+    const token = localStorage.getItem('access_token')
 
     if (!token || !notificationID) {
-      return;
+      return
     }
 
     const res = await axios.put(`${config.BASE_URL}/notifications/${notificationID}`,
@@ -335,15 +335,15 @@ export const updateUnreadNotificationMiddleware = (notificationID: string, isRea
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
 
     const resultUpdateUnreadNotification = {
       selectNotification: res.data,
       totalUnread: state?.notifications?.totalUnread - 1,
-    };
+    }
 
-    dispatch(updateUnreadNotifications(resultUpdateUnreadNotification));
+    dispatch(updateUnreadNotifications(resultUpdateUnreadNotification))
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}

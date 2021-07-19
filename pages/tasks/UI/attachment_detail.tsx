@@ -1,15 +1,15 @@
-import { Box, Button, Menu, MenuItem } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import AttachFileOutlinedIcon from '@material-ui/icons/AttachFileOutlined';
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
-import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import FilterDramaIcon from '@material-ui/icons/FilterDrama';
-import FolderOpenIcon from '@material-ui/icons/FolderOpen';
-import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
+import { Box, Button, Menu, MenuItem } from '@material-ui/core'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted'
+import ViewModuleIcon from '@material-ui/icons/ViewModule'
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state'
+import AttachFileOutlinedIcon from '@material-ui/icons/AttachFileOutlined'
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
+import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined'
+import ArchiveIcon from '@material-ui/icons/Archive'
+import FilterDramaIcon from '@material-ui/icons/FilterDrama'
+import FolderOpenIcon from '@material-ui/icons/FolderOpen'
+import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined'
 
 const attachmentOption = [
   {
@@ -48,7 +48,7 @@ const attachmentOption = [
     title: 'New Google Doc',
   },
 
-];
+]
 
 const AttachmentInBody: React.FC = () => {
   const renderMenuOption = (popupState) => (
@@ -69,7 +69,7 @@ const AttachmentInBody: React.FC = () => {
         ))
       }
     </Menu>
-  );
+  )
 
   return (
     <Box px={4} display='flex' justifyContent='space-between' alignItems='center'>
@@ -92,10 +92,10 @@ const AttachmentInBody: React.FC = () => {
         <FormatListBulletedIcon className='veiw-attachment'/>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default AttachmentInBody;
+export default AttachmentInBody
 
 export const AttachmentInFooter: React.FC = () => {
   return (
@@ -107,5 +107,5 @@ export const AttachmentInFooter: React.FC = () => {
        <input type='file' className='attachment-browse' id='attachment-upload' />
       </Box>
     </Box>
-  );
-};
+  )
+}

@@ -1,52 +1,52 @@
 import { IconButton, ClickAwayListener, Popper, MenuItem, Grow,
   Paper, MenuList, ListItemIcon, ListItemText,
-} from '@material-ui/core';
-import React, { useState } from 'react';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import { updateUsersReducer } from 'pages/users/logic/users_actions';
-import { useDispatch } from 'react-redux';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+} from '@material-ui/core'
+import React, { useState } from 'react'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import { updateUsersReducer } from 'pages/users/logic/users_actions'
+import { useDispatch } from 'react-redux'
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
 
 const actions = {
   delete: {
     label: 'Remove from department',
     icon: <RemoveCircleIcon fontSize='small' />,
   },
-};
+}
 
 const CustomizedControlCell = (departmentProps) => {
-  let actionList: string[] = [];
-  const currentDepartmentIndex = departmentProps?.itemIndex;
-  const [open, setOpen] = useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
-  const dispatch = useDispatch();
+  let actionList: string[] = []
+  const currentDepartmentIndex = departmentProps?.itemIndex
+  const [open, setOpen] = useState(false)
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
+  const dispatch = useDispatch()
 
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+    setOpen((prevOpen) => !prevOpen)
+  }
 
   const handleClose = (event: React.MouseEvent<EventTarget>) => {
     if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
-      return;
+      return
     }
 
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   if (
     departmentProps?.status === 'ACCEPTED' &&
     departmentProps?.userData?.departmentRoles?.[currentDepartmentIndex]?.canRemoveFromDepartment
     ) {
-    actionList = ['delete'];
+    actionList = ['delete']
   }
 
   if (!actionList?.length) {
-    return <div />;
+    return <div />
   }
 
   const actionFunc = {
     delete: removeUserFromDepartment,
-  };
+  }
 
   function handleReturnActionsList(action, index) {
 
@@ -59,7 +59,7 @@ const CustomizedControlCell = (departmentProps) => {
         {actions[action].icon}
       </ListItemIcon>
       <ListItemText primary={actions[action].label} />
-    </MenuItem>;
+    </MenuItem>
   }
 
   function removeUserFromDepartment(departmentIndex) {
@@ -73,7 +73,7 @@ const CustomizedControlCell = (departmentProps) => {
         removeUserFrom: 'department',
         userName: departmentProps?.userData?.userName,
       },
-    }));
+    }))
   }
 
   return (
@@ -103,7 +103,7 @@ const CustomizedControlCell = (departmentProps) => {
         )}
       </Popper>
     </div>
-  );
-};
+  )
+}
 
-export default CustomizedControlCell;
+export default CustomizedControlCell

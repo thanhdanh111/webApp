@@ -1,14 +1,14 @@
-import React from 'react';
-import { ListItemIcon, MenuItem, Popper, Typography } from '@material-ui/core';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { changeLineStyleButons } from 'constants/toolbar_docs';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
+import React from 'react'
+import { ListItemIcon, MenuItem, Popper, Typography } from '@material-ui/core'
+import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+import { changeLineStyleButons } from 'constants/toolbar_docs'
+import TextFieldsIcon from '@material-ui/icons/TextFields'
 
 const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle, readOnly, contentBlock }) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
+    setAnchorEl(anchorEl ? null : event.currentTarget)
+  }
 
   const lists = () => {
     return changeLineStyleButons.map((button, index) =>
@@ -22,8 +22,8 @@ const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle, readOnly, conte
         </div>
           {button.name}
       </div>,
-    );
-  };
+    )
+  }
 
   return (
     <div>
@@ -60,7 +60,7 @@ const ParagraphStyleSideToolbarBtn = ({ handleOnChangeLineStyle, readOnly, conte
       </Popper>
 
     </div>
-  );
-};
+  )
+}
 
-export default ParagraphStyleSideToolbarBtn;
+export default ParagraphStyleSideToolbarBtn

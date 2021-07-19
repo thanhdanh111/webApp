@@ -1,30 +1,28 @@
-import React from 'react';
+import React from 'react'
 import {
   ListItem, ListItemIcon, ListItemText,
-} from '@material-ui/core';
-import DescriptionIcon from '@material-ui/icons/Description';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import SideToolbarButton from '@components/my_editor/side_toolbar_button';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { deletePage } from '../logic/docs_apis';
-import { RootState } from 'redux/reducers_registration';
-import { PageContent } from '../logic/docs_reducer';
-import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
-import { updateDocs } from '../logic/docs_actions';
-import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access';
-import { getItemSelectedRolesOfUser } from '../logic/get_item_selected_roles_of_user';
+} from '@material-ui/core'
+import DescriptionIcon from '@material-ui/icons/Description'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import SideToolbarButton from '@components/my_editor/side_toolbar_button'
+import DeleteIcon from '@material-ui/icons/Delete'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { deletePage } from '../logic/docs_apis'
+import { RootState } from 'redux/reducers_registration'
+import { PageContent } from '../logic/docs_reducer'
+import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access'
+import { getItemSelectedRolesOfUser } from '../logic/get_item_selected_roles_of_user'
 
 interface DocsDrawerPageData {
-  selectedPage: PageContent;
-  projectAccessOfUsers: ProjectAccessMapOfUsers;
-  accountUserID: string;
+  selectedPage: PageContent
+  projectAccessOfUsers: ProjectAccessMapOfUsers
+  accountUserID: string
 }
 
-type DocsDrawerPageDataType = DocsDrawerPageData;
+type DocsDrawerPageDataType = DocsDrawerPageData
 
 const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const {
     selectedPage,
     projectAccessOfUsers,
@@ -35,26 +33,20 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
       selectedPage: state?.docs?.selectedPage,
       projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
       accountUserID: state?.userInfo?.userID,
-    };
-  }, shallowEqual);
+    }
+  }, shallowEqual)
 
   function sildePageDrawerToolbarActions() {
-    const projectID = project?._id ?? '';
-    const pageID = page?._id ?? '';
+    const projectID = project?._id ?? ''
+    const pageID = page?._id ?? ''
     const rolesOfUser = getItemSelectedRolesOfUser({
       projectAccessOfUsers,
       userID: accountUserID,
       selectedPageID: pageID,
       selectedProjectID: projectID,
-    });
+    })
 
     const sideToolbarActions = [
-      {
-        type: 'normal',
-        label: 'Share',
-        startIcon: <PeopleOutlineIcon />,
-        function: () => dispatch(updateDocs({ displayShare: true })),
-      },
       {
         type: 'normal',
         label: 'Delete',
@@ -62,9 +54,9 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
         disabled: !rolesOfUser.includes(DocsRole.WRITE),
         function: () => dispatch(deletePage()),
       },
-    ];
+    ]
 
-    return sideToolbarActions;
+    return sideToolbarActions
   }
 
   return <ListItem
@@ -90,14 +82,14 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
         sildePageDrawerToolbarActions()
       }
     />
-  </ListItem>;
-};
-
-function areEqual(prevProps, nextProps) {
-  const sameID = prevProps?.page?._id === nextProps?.page?._id;
-  const sameTitle = prevProps?.page?.title === nextProps?.page?.title;
-
-  return sameID && sameTitle;
+  </ListItem>
 }
 
-export default React.memo(DocsDrawerPageUI, areEqual);
+function areEqual(prevProps, nextProps) {
+  const sameID = prevProps?.page?._id === nextProps?.page?._id
+  const sameTitle = prevProps?.page?.title === nextProps?.page?.title
+
+  return sameID && sameTitle
+}
+
+export default React.memo(DocsDrawerPageUI, areEqual)

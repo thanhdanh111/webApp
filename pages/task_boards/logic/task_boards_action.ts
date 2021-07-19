@@ -1,26 +1,16 @@
-import { SetTasksToTaskStatus, TaskStatus } from 'helpers/type';
-import { taskBoardsActionType } from './task_board_action_type';
-
-export const setFilterTaskByUserAction = (res: boolean) => {
-  return {
-    type: taskBoardsActionType.FILTERING_TASK_BY_USER,
-    payload: res,
-  };
-};
-
-export const getTaskStatus = (res: object) => {
-  return {
-    type: taskBoardsActionType.GET_TASK_STATUS,
-    payload: res,
-  };
-};
+import { Task } from 'helpers/type'
+import { taskBoardsActionType } from './task_board_action_type'
+export interface SetTasksToTaskStatus {
+  taskStatusID: string
+  tasks: Task
+}
 
 export const setLoading = (loading: boolean) => {
   return {
     type: taskBoardsActionType.SET_LOADING,
     payload: loading,
-  };
-};
+  }
+}
 
 export const setSelectedTaskBoard = (res: object) => {
   return {
@@ -28,153 +18,61 @@ export const setSelectedTaskBoard = (res: object) => {
     payload: {
       currentTaskBoard: res,
     },
-  };
-};
+  }
+}
 
 export const getTaskBoard = (data: object) => {
   return {
     data,
     type: taskBoardsActionType.GET_TASK_BOARD,
-  };
-};
+  }
+}
 
 export const createdTaskBoard = (data: object) => {
   return {
     data,
     type: taskBoardsActionType.CREATE_TASK_BOARD,
-  };
-};
+  }
+}
 
-export const createdTaskStatus = (data: object) => {
+export const renameStatus = (status) => {
   return {
-    data,
+    type: taskBoardsActionType.RENAME_TASK_STATUS,
+    payload: status,
+  }
+}
+
+export const createdStatus = (status) => {
+  return {
     type: taskBoardsActionType.CREATE_TASK_STATUS,
-  };
-};
-
-export const addTask = (data) => {
-  return {
-    type: taskBoardsActionType.ADD_TASK,
-    payload: data,
-  };
-};
-
-export const setTypeCreateTask = (data) => {
-  return {
-    type: taskBoardsActionType.SET_TYPE_CREATE_TASK,
-    payload: data,
-  };
-};
-
-export const updateNewTask = (newTask) => {
-  return {
-    type: taskBoardsActionType.UPDATE_NEW_TASK,
-    payload: newTask,
-  };
-};
-
-export const assignUser = (user) => {
-  return {
-    type: taskBoardsActionType.ASSIGN_USER,
-    payload: user,
-  };
-};
-
-export const unassignUser = (userID) => {
-  return {
-    type: taskBoardsActionType.UNASSIGN_USER,
-    payload: userID,
-  };
-};
-
-export const setTasksToTaskStatus = (data: SetTasksToTaskStatus) => {
-  return {
-    data,
-    type: taskBoardsActionType.SET_TASKS_TO_TASK_STATUS,
-  };
-};
-
-export const getTaskDetail = (task) => {
-  return {
-    type: taskBoardsActionType.GET_TASK_DETAIL,
-    payload: task,
-  };
-};
-
-export const getTag = (tags) => {
-  return {
-    type: taskBoardsActionType.GET_TAG,
-    payload: tags,
-  };
-};
-
-export const createTag = (tag) => {
-  return {
-    type: taskBoardsActionType.CREATE_TAG,
-    payload: tag,
-  };
-};
-
-export const updateTag = (tag) => {
-  return {
-    type: taskBoardsActionType.UPDATE_TAG,
-    payload: tag,
-  };
-};
-
-export const deleteTag = (id) => {
-  return {
-    type: taskBoardsActionType.DELETE_TAG,
-    payload: id,
-  };
-};
-
-export const updateUserAssigned = (res: object) => {
-  return {
-    type: taskBoardsActionType.UPDATE_USER_ASSIGN_FOR_TASK,
-    payload: res,
-  };
-};
+    payload: status,
+  }
+}
 
 export const deletedTaskStatus = (taskStatusID) => {
   return {
     type: taskBoardsActionType.DELETE_TASK_STATUS,
     payload: taskStatusID,
-  };
-};
+  }
+}
 
-export const renameTaskStatus = (taskStatus: TaskStatus) => {
+export const setTasksToStatus = (data: SetTasksToTaskStatus) => {
   return {
-    type: taskBoardsActionType.RENAME_TASK_STATUS,
-    payload: taskStatus,
-  };
-};
+    payload: data,
+    type: taskBoardsActionType.SET_TASKS_TO_STATUS,
+  }
+}
 
-export const setTemplateTitleStatus = (templateTitleStatus: string) => {
+export const removeTasksFfromStatus = (res: { taskID: string, taskStatusID: string }) => {
   return {
-    type: taskBoardsActionType.SET_TEMPLATE_TITLE_STATUS,
-    payload: templateTitleStatus,
-  };
-};
-
-// filter task
-export const searchTaskByTitle = (tasks) => {
-  return {
-    type: taskBoardsActionType.SEARCH_TASKS_BY_TITLE,
-    payload: tasks,
-  };
-};
-
-export const setHasNoData = (res: boolean) => {
-  return {
-    type: taskBoardsActionType.HAS_NO_DATA,
+    type: taskBoardsActionType.REMOVE_TASK_FROM_STATUS,
     payload: res,
-  };
-};
+  }
+}
 
-export const setFiltering = (filtering: boolean) => {
+export const updateTaskIDsToStatusByID = (data: {statusID: string, taskIDs: string[]}) => {
   return {
-    type: taskBoardsActionType.SET_FILTERING,
-    payload: filtering,
-  };
-};
+    type: taskBoardsActionType.UPDATE_TASKIDS_TO_STATUS,
+    payload: data,
+  }
+}

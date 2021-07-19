@@ -1,27 +1,27 @@
-import { Avatar, Card, CardContent, Grid, Tooltip, Button } from '@material-ui/core';
-import React from 'react';
-import { useRouter } from 'next/router';
-import { ProjectState } from 'helpers/type';
+import { Avatar, Card, CardContent, Grid, Tooltip, Button } from '@material-ui/core'
+import React from 'react'
+import { useRouter } from 'next/router'
+import { ProjectState } from 'helpers/type'
 interface InitProps {
-  project: ProjectState;
+  project: ProjectState
 }
 
-type BodyProps = InitProps;
+type BodyProps = InitProps
 
 const ProjectPageUI: React.FunctionComponent<BodyProps> = (props: InitProps) => {
-  const { project }: InitProps = props;
-  const char = project?.name?.charAt(0);
-  const router = useRouter();
-  const pathname = router.pathname;
+  const { project }: InitProps = props
+  const char = project?.name?.charAt(0)
+  const router = useRouter()
+  const pathname = router.pathname
 
   const onPushToPage = (url: string) => {
-    void router.push(`/${url}`, `/${url}.html`);
-  };
+    void router.push(`/${url}`, `/${url}.html`)
+  }
 
   const onPushToDetail = () => {
-    void router.push({ pathname: `${pathname}/detail`, query: { id: project._id } });
+    void router.push({ pathname: `${pathname}/detail`, query: { id: project._id } })
 
-  };
+  }
 
   return (
     <Grid item xs={12} sm={3} className='project-card'>
@@ -45,7 +45,7 @@ const ProjectPageUI: React.FunctionComponent<BodyProps> = (props: InitProps) => 
         </CardContent>
       </Card>
     </Grid>
-  );
-};
+  )
+}
 
-export default ProjectPageUI;
+export default ProjectPageUI

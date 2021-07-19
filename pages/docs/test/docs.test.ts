@@ -74,20 +74,6 @@ describe('docs page', () => {
     await page.click('.confirm-dialog--close-btn');
     await page.waitFor(5000);
   });
-
-  test('open share permission dialog', async () => {
-    await page.waitFor('.doc-project-item');
-    await page.waitForSelector('.block-wrapper--btns');
-    await page.click('.block-wrapper--btns');
-    const selectOptionForFolder = await page.screenshot();
-    expect(selectOptionForFolder).toMatchImageSnapshot();
-
-    await page.waitForSelector('.side-toolbar-wrapper');
-    await page.click('.MuiList-root .side-toolbar--menu-item');
-    await page.waitFor(5000);
-    const sharePermission = await page.screenshot();
-    expect(sharePermission).toMatchImageSnapshot();
-  });
 });
 
 afterAll(() => {

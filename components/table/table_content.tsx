@@ -1,40 +1,40 @@
-import { Button, CircularProgress, Table, TableBody, TableContainer, Typography } from '@material-ui/core';
-import { checkArray } from 'helpers/check_array';
-import { HeadCell } from 'helpers/type';
-import React from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import TableRowBase from './table_row';
-import HeadTable from './head_table';
-import { DisappearedLoading } from 'react-loadingg';
-import { checkStringCondition } from 'helpers/check_string_condtion';
-import { checkOnlyTrueInArray } from 'helpers/check_only_true';
+import { Button, CircularProgress, Table, TableBody, TableContainer, Typography } from '@material-ui/core'
+import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
+import { HeadCell } from 'helpers/type'
+import React from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import TableRowBase from './table_row'
+import HeadTable from './head_table'
+import { DisappearedLoading } from 'react-loadingg'
+import { checkStringCondition } from 'helpers/check_string_condtion'
+import { checkOnlyTrueInArray } from 'helpers/check_only_true'
 
 interface CustomizedCellsAtLastColumn {
-  status?: string;
-  itemIndex?: number;
+  status?: string
+  itemIndex?: number
 }
 
 interface InitialProp {
-  headCells: HeadCell[];
-  data: object[];
-  length: number;
-  loading: boolean;
-  actions: string[];
-  fetchData: () => void;
-  needCheckBox?: boolean;
-  redButtonName?: string;
-  actionFunc?: object;
-  baseTableName?: string;
-  loadingIndex?: string;
-  loadingStateName?: string;
-  indexLoading?: boolean;
-  emptyState?: boolean;
-  notFoundWarning?: string;
-  hadExpandableRows?: boolean;
-  needStickyHeader?: boolean;
-  fixedHeightInfiniteScroll?: number;
-  ComponentDetail?: React.FunctionComponent;
-  CustomizedCellAtLastColumn?: React.FunctionComponent<CustomizedCellsAtLastColumn>;
+  headCells: HeadCell[]
+  data: object[]
+  length: number
+  loading: boolean
+  actions: string[]
+  fetchData: () => void
+  needCheckBox?: boolean
+  redButtonName?: string
+  actionFunc?: object
+  baseTableName?: string
+  loadingIndex?: string
+  loadingStateName?: string
+  indexLoading?: boolean
+  emptyState?: boolean
+  notFoundWarning?: string
+  hadExpandableRows?: boolean
+  needStickyHeader?: boolean
+  fixedHeightInfiniteScroll?: number
+  ComponentDetail?: React.FunctionComponent
+  CustomizedCellAtLastColumn?: React.FunctionComponent<CustomizedCellsAtLastColumn>
 }
 
 const TableContent = (props: InitialProp) => {
@@ -48,7 +48,7 @@ const TableContent = (props: InitialProp) => {
     hadExpandableRows = false, emptyState,
     ComponentDetail, fixedHeightInfiniteScroll,
     needStickyHeader = true, notFoundWarning,
-  }: InitialProp = props;
+  }: InitialProp = props
 
   const emptyData = () => {
     if (emptyState) {
@@ -56,15 +56,15 @@ const TableContent = (props: InitialProp) => {
         <div className='empty-state'>
           <Typography color='textSecondary' className='empty-state-table--text'>{notFoundWarning}</Typography>
         </div>
-      );
+      )
     }
 
-    return;
-  };
+    return
+  }
 
   function actionDefaultFunc({ itemIndex, action  }) {
 
-    return { itemIndex, action };
+    return { itemIndex, action }
   }
 
   const renderAction = ({
@@ -74,24 +74,24 @@ const TableContent = (props: InitialProp) => {
     isManager,
   }) => {
     if (props?.CustomizedCellAtLastColumn) {
-      const CellAtLastColumn = props?.CustomizedCellAtLastColumn;
+      const CellAtLastColumn = props?.CustomizedCellAtLastColumn
 
-      return  <CellAtLastColumn status={itemStatus} itemIndex={itemIndex}/>;
+      return  <CellAtLastColumn status={itemStatus} itemIndex={itemIndex}/>
     }
 
     const notPendingStatus = checkStringCondition({
       variable: itemStatus,
       notEqualCondition: 'PENDING',
-    });
+    })
 
     if (itemStatus && (notPendingStatus || !isManager)) {
-      return <div />;
+      return <div />
     }
 
     const equalLoadingStateName = checkStringCondition({
       variable: loadingStateName,
       equalCondition: baseTableName,
-    });
+    })
     const loadingActionAtIndex = checkOnlyTrueInArray({
       conditionsArray: [
         equalLoadingStateName,
@@ -100,19 +100,19 @@ const TableContent = (props: InitialProp) => {
         typeof loadingIndex === 'number',
         loadingIndex === itemIndex,
       ],
-    });
+    })
 
     if (loadingActionAtIndex) {
       return <div style={{ display: 'flex', justifyContent: 'center' }}>
         <CircularProgress disableShrink  style={{ width: '30px', height: '30px' }} />
-      </div>;
+      </div>
     }
 
     return (
       <div className='list-action'>
         {actionList.map((action, index) => {
-          const colorButton = (action.toUpperCase() === 'DELETE' || action.toUpperCase() === redButtonName) ? 'redButton' : '';
-          const func = actionFunc?.[action] ?? actionDefaultFunc;
+          const colorButton = (action.toUpperCase() === 'DELETE' || action.toUpperCase() === redButtonName) ? 'redButton' : ''
+          const func = actionFunc?.[action] ?? actionDefaultFunc
 
           return (
             <div className='action-item' key={index}>
@@ -125,11 +125,11 @@ const TableContent = (props: InitialProp) => {
                 {action}
               </Button>
             </div>
-          );
+          )
         })}
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <TableContainer className='table-list'>
@@ -143,7 +143,7 @@ const TableContent = (props: InitialProp) => {
         >
         <Table stickyHeader={needStickyHeader} aria-label='sticky table' className='table-content' >
           <HeadTable headCells={headCells} needCheckBox={needCheckBox} hadExpandableRows={hadExpandableRows}/>
-          { !loading &&  (checkArray(data) &&
+          { !loading &&  (checkIfEmptyArray(data) &&
           <TableBody className='table-body'>
                 {data.map((item, index) => {
                   return (
@@ -158,7 +158,7 @@ const TableContent = (props: InitialProp) => {
                       index={index}
                       ComponentDetail={ComponentDetail}
                     />
-                  );
+                  )
                 })}
           </TableBody>
         )}
@@ -169,7 +169,7 @@ const TableContent = (props: InitialProp) => {
             loading && <DisappearedLoading color={'#67cb48'} />
           }
       </TableContainer>
-  );
-};
+  )
+}
 
-export default (TableContent);
+export default (TableContent)

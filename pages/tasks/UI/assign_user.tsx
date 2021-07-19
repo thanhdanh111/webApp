@@ -1,25 +1,36 @@
-import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import { Menu } from '@material-ui/core';
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
-import { getPaginationThunkAction } from 'pages/users/logic/users_reducer';
-import GroupUserAssigned from './group_user_assigned';
-import AssignUserPopup from './assign_user_popup';
-import { User } from 'helpers/type';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state'
+import { Menu } from '@material-ui/core'
+import { RootStateOrAny, useSelector } from 'react-redux'
+import GroupUserAssigned from './group_user_assigned'
+import UsersPopupUI from 'components/users_popup/users_popup'
+import { User } from 'helpers/type'
+import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array'
 
 interface InitialProps {
-  usersAssigned?: User[];
-  handleAssign: (user) => void;
-  sizes: string;
+  usersAssigned: (User)[]
+  handleAssign: (users) => void
+  sizes: string
 }
 
 const AssignUser: React.FC<InitialProps> = (props) => {
-  const dispatch = useDispatch();
-  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo);
-  const { usersAssigned, handleAssign, sizes }: InitialProps = props;
+  const userInfo = useSelector((state: RootStateOrAny) => state.userInfo)
+  const { usersAssigned, handleAssign, sizes }: InitialProps = props
 
-  const getUser = () => {
-    dispatch(getPaginationThunkAction());
-  };
+  const handleUsersAssign = (user) => {
+    let tempAssign = usersAssigned || []
+    const checkAssignedOfUser = checkArrayObjectHasObjectByKey(usersAssigned, user?.userID?._id, '_id')
+
+    if (checkAssignedOfUser && usersAssigned?.length){
+
+      tempAssign = usersAssigned?.filter((each) => user?.userID?._id !== each._id)
+
+      return handleAssign(tempAssign)
+    }
+
+    tempAssign = [...tempAssign, user?.userID]
+
+    return handleAssign(tempAssign)
+  }
 
   return (
     <PopupState variant='popover'>
@@ -33,12 +44,12 @@ const AssignUser: React.FC<InitialProps> = (props) => {
             autoFocus={false}
             className='user-popup'
           >
-            <AssignUserPopup handleAssign={handleAssign} getUser={getUser} usersAssigned={usersAssigned}/>
+            <UsersPopupUI chooseUser={handleUsersAssign} usersAssigned={usersAssigned}/>
           </Menu>
         </div>
       )}
     </PopupState>
-  );
-};
+  )
+}
 
-export default AssignUser;
+export default AssignUser

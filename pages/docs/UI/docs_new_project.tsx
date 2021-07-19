@@ -1,27 +1,27 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import FolderSharedIcon from '@material-ui/icons/FolderShared';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { Grid, IconButton, Typography, Input, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
+import React from 'react'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import FolderSharedIcon from '@material-ui/icons/FolderShared'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { Grid, IconButton, Typography, Input, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder'
 
 const CreateNewProjectDialog = ({ handleCreate })  => {
   const [state, setState] = React.useState({
     openDialog: false,
     name: '',
-  });
+  })
 
   const handleClickOpen = () => {
-    setState({ ...state, openDialog: true });
-  };
+    setState({ ...state, openDialog: true })
+  }
 
   const handleClose = () => {
-    setState({ ...state, openDialog: false });
-  };
+    setState({ ...state, openDialog: false })
+  }
 
   return (
     <>
@@ -91,7 +91,7 @@ const CreateNewProjectDialog = ({ handleCreate })  => {
           </DialogActions>
       </Dialog>
     </>
-  );
-};
+  )
+}
 
-export default CreateNewProjectDialog;
+export default CreateNewProjectDialog
