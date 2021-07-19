@@ -1,7 +1,6 @@
 import {
   TaskBoardsType, updateTaskToTaskStatusByIdThunkAction,
 } from '../logic/task_boards_reducer'
-import { TaskType } from '../../tasks/logic/task_reducer'
 import React, { FunctionComponent, useState, useCallback } from 'react'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import { DisappearedLoading } from 'react-loadingg'
@@ -63,7 +62,6 @@ const BoardTasks: FunctionComponent = () => {
     isAdmin,
     rolesInCompany,
   }: UserInfoType =  useSelector((state: RootState) => state?.userInfo)
-  const { tasks } : TaskType =  useSelector((state: RootState) => state?.tasks)
   const checkUserScope = isAdmin || checkValidAccess({ rolesInCompany, validAccesses })
   const dispatch = useDispatch()
   const [isAddStatus, setIsAddStatus] = useState(false)
@@ -90,7 +88,7 @@ const BoardTasks: FunctionComponent = () => {
         })}
     </>
     )
-  }, [tasks])
+  }, [currentTaskBoard])
 
   const getTasksFromTaskStatus = ({ taskStatusID }) => {
     let tempTaskIDs: string[] = []
