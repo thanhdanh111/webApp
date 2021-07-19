@@ -38,14 +38,14 @@ describe('Pots Page', () => {
     await page.waitForSelector('.add-status-modal')
 
     await page.click('.add-status-input')
-    await page.type('.add-status-input', 'close')
+    await page.type('.add-status-input', 'test tag')
 
     await page.click('.submit-create-status')
     await page.click('.close-create-status')
 
-    await page.waitForSelector('.close .add-task')
+    await page.waitForSelector('.test-tag .add-task')
 
-    await page.click('.close .add-task')
+    await page.click('.test-tag .add-task')
     await page.waitForSelector('.task-add')
 
     await page.waitForSelector('input[name=title]')
@@ -70,6 +70,10 @@ describe('Pots Page', () => {
     await page.click('.input-search-tag')
     await page.type('.input-search-tag', 'snt-app')
     await page.keyboard.press('Enter')
+
+    const addTagSuccess = await page.screenshot()
+    expect(addTagSuccess).toMatchImageSnapshot()
+
     await page.waitFor(5000)
     await page.waitForSelector('.tag-item-list')
 
@@ -78,14 +82,20 @@ describe('Pots Page', () => {
     await page.waitForSelector('.tag-item-list >.more-item-icon')
     await page.click('.tag-item-list >.more-item-icon')
     await page.waitForSelector('.tag-action-popup')
+    await page.waitFor(5000)
+
+    const deleteTag = await page.screenshot()
+    expect(deleteTag).toMatchImageSnapshot()
 
     await page.click('.delete-tag')
     await page.waitForSelector('.confirm-dialog--yes-btn')
     await page.click('.confirm-dialog--yes-btn')
-    await page.click('.confirm-dialog--no-btn')
+    await page.waitFor(5000)
+
+    const deleteTagSuccess = await page.screenshot()
+    expect(deleteTagSuccess).toMatchImageSnapshot()
 
     await page.waitForSelector('.close-detail')
-    await page.click('.close-detail')
     await page.click('.close-detail')
 
     const closeDetailModalImage = await page.screenshot()
@@ -93,24 +103,18 @@ describe('Pots Page', () => {
 
     // delete task
     await page.waitFor(5000)
-    await page.waitForSelector('.task-item  .delete-task')
-    await page.click('.close .delete-task')
-
-    const deletedTaskImage = await page.screenshot()
-    expect(deletedTaskImage).toMatchImageSnapshot()
+    await page.waitForSelector('.test-tag .task-item  .delete-task')
+    await page.click('.test-tag .delete-task')
 
     await page.waitForSelector('.deleted-task-dialog .confirm-dialog-actions')
     await page.click('.confirm-dialog--yes-btn')
     await page.waitFor(5000)
     await page.waitForSelector('.board-tasks')
 
-    const confirmDeletedTaskImage = await page.screenshot()
-    expect(confirmDeletedTaskImage).toMatchImageSnapshot()
-
   // delete status
 
-    await page.waitForSelector('.close .action-status-btn')
-    await page.click('.close .action-status-btn')
+    await page.waitForSelector('.test-tag .action-status-btn')
+    await page.click('.test-tag .action-status-btn')
 
     await page.waitForSelector('.popper-action-status')
     await page.waitFor(5000)
@@ -119,8 +123,6 @@ describe('Pots Page', () => {
     await page.click('.delete-status-menu-item')
     await page.waitFor(5000)
 
-    const deleteStatusSuccessImg = await page.screenshot()
-    expect(deleteStatusSuccessImg).toMatchImageSnapshot()
   })
 
 })

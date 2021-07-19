@@ -62,6 +62,7 @@
   .tag-icon
     font-size: 20px
     padding: 3px
+    cursor: pointer
 
 .tag-action-popup
   font-size: 12px
@@ -100,6 +101,20 @@
         left: 0
         z-index: -1
         visibility: hidden
+
+.popup-tag-close
+  position: absolute
+  inset: 0
+  display: block
+  z-index: 1300
+
+.hidden-close-popup
+  display: none
+
+.popup-tag
+  z-index: 1300
+  box-shadow: 0 0 5px 0 #c5c5c5
+  background-color: #fff
 
 .add-tag-popup
   .tags-selected
