@@ -5,15 +5,9 @@ import {
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import FolderIcon from '@material-ui/icons/Folder'
-import MoreHoriz from '@material-ui/icons/MoreHoriz'
-import DeleteIcon from '@material-ui/icons/Delete'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import DocsDrawerPageUI from './docs_drawer_page_item'
-import SideToolbarButton from '@components/my_editor/side_toolbar_button'
-import { deleteDocProject } from '../logic/docs_apis'
 import { checkEmptyObject } from 'helpers/check_empty_object'
 import { DocProject, PageContent, PagesMap } from '../logic/docs_reducer'
-import { RootState } from 'redux/reducers_registration'
 
 interface DocsDrawerProject {
   project: DocProject
@@ -23,12 +17,6 @@ interface DocsDrawerProject {
   selected: boolean
 }
 
-interface DocsDrawerData {
-  accountUserID: string
-}
-
-type DocsDrawerDataType = DocsDrawerData
-
 const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   project,
   pages,
@@ -37,14 +25,7 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   selected,
 }) => {
   const [open, setOpen] = React.useState(true)
-  const { accountUserID }: DocsDrawerDataType = useSelector((state: RootState) => {
-
-    return {
-      accountUserID: state?.userInfo?.userID,
-    }
-  }, shallowEqual)
   let renderPages: null | JSX.Element[] = null
-  const dispatch = useDispatch()
 
   const handleClick = () => {
     setOpen(!open)
@@ -63,7 +44,6 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   }
 
   function renderEndIcons() {
-    const canDeleteProject = (project?.createdBy?.['_id'] ?? project?.createdBy) === accountUserID
 
     const expandedIcon = renderPages !== null ?
       (open ?
@@ -71,27 +51,7 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
         <ExpandMore className='doc-project-expanded-icon' />
       ) : <div />
 
-    const sideToolbarActions = [
-      {
-        type: 'normal',
-        label: 'Delete Project',
-        startIcon: <DeleteIcon />,
-        disabled: !canDeleteProject,
-        function: () => dispatch(deleteDocProject({ projectID: project?._id })),
-      },
-    ]
-
-    return <SideToolbarButton
-      contentBlock={{}}
-      onClickSideToolbar={() => 'handed'}
-      disableProtal={true}
-      children={undefined}
-      buttonIcon={<div className='doc-project-start-icons'>
-        {expandedIcon}
-        <MoreHoriz className='doc-project-hover-icon-options' />
-      </div>}
-      actionsNeedToRender={sideToolbarActions}
-    />
+    return expandedIcon
   }
 
   return <>
