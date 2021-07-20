@@ -111,9 +111,9 @@ const initialState: DocsValue = {
 export type DocsValueType = DocsValue
 
 function updateSelectedItemInDrawer(data, state: DocsValue) {
-  const { pageID, projectID, ...restData }: UpdateSelectedItemInDrawerType  = data
-  const project = state?.docProjectsMap?.[projectID ?? '']
-  const page = project?.pages?.[pageID ?? '']
+  const { pageID = '', projectID = '', ...restData }: UpdateSelectedItemInDrawerType  = data
+  const project = state?.docProjectsMap?.[projectID]
+  const page = project?.pages?.[pageID]
 
   if (project) {
     state.selectedDocProject = project

@@ -190,7 +190,7 @@ export const deletePage = () => async (dispatch, getState) => {
 function blendProjectWithoutPagesAndHavingPages(docProjects, docPagesIntoDocProjectsMap) {
   const newProjectsMap = docPagesIntoDocProjectsMap
 
-  docProjects?.data?.list?.forEach((docProject) => {
+  docProjects.forEach((docProject) => {
     if (!docProject) {
 
       return
