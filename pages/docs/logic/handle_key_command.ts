@@ -1,12 +1,6 @@
 import { RichUtils } from 'draft-js'
 
 export default function handleKeyCommand(command, state, handleOnChange) {
-  if (command === 'normalized-block') {
-    handleOnChange(RichUtils.toggleBlockType(state, 'unstyled'))
-
-    return 'handled'
-  }
-
   const newState = RichUtils.handleKeyCommand(state, command)
 
   if (!newState) {

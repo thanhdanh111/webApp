@@ -10,48 +10,28 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { deletePage } from '../logic/docs_apis'
 import { RootState } from 'redux/reducers_registration'
 import { PageContent } from '../logic/docs_reducer'
-import { DocsRole, ProjectAccessMapOfUsers } from '../logic/get_folder_access'
-import { getItemSelectedRolesOfUser } from '../logic/get_item_selected_roles_of_user'
 
 interface DocsDrawerPageData {
   selectedPage: PageContent
-  projectAccessOfUsers: ProjectAccessMapOfUsers
-  accountUserID: string
 }
 
 type DocsDrawerPageDataType = DocsDrawerPageData
 
 const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
   const dispatch = useDispatch()
-  const {
-    selectedPage,
-    projectAccessOfUsers,
-    accountUserID,
-  }: DocsDrawerPageDataType = useSelector((state: RootState) => {
+  const { selectedPage }: DocsDrawerPageDataType = useSelector((state: RootState) => {
 
     return {
       selectedPage: state?.docs?.selectedPage,
-      projectAccessOfUsers: state?.docs?.projectAccessOfUsers,
-      accountUserID: state?.userInfo?.userID,
     }
   }, shallowEqual)
 
   function sildePageDrawerToolbarActions() {
-    const projectID = project?._id ?? ''
-    const pageID = page?._id ?? ''
-    const rolesOfUser = getItemSelectedRolesOfUser({
-      projectAccessOfUsers,
-      userID: accountUserID,
-      selectedPageID: pageID,
-      selectedProjectID: projectID,
-    })
-
     const sideToolbarActions = [
       {
         type: 'normal',
         label: 'Delete',
         startIcon: <DeleteIcon />,
-        disabled: !rolesOfUser.includes(DocsRole.WRITE),
         function: () => dispatch(deletePage()),
       },
     ]
