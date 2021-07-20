@@ -16,6 +16,7 @@ import Auth from '../components/auth/auth'
 import Layout from '@components/pages_layout/pages_layout'
 import { LocalizationProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@material-ui/pickers/adapter/date-fns'
+import { ModalTaskDetail } from './tasks/UI/modal_task_detail'
 
 if (['production'].includes(config.ENV)) {
   Sentry.init({
@@ -79,6 +80,7 @@ function myApp({ Component, pageProps, store }) {
             <Auth publicPages={publicPages} >
               <Layout withoutPaths={withoutLayoutPaths}>
                 <Component {...pageProps} />
+                <ModalTaskDetail/>
               </Layout>
             </Auth>
           </SnackbarProvider>

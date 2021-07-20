@@ -39,7 +39,7 @@ const initialState: TaskType = {
   limitTasks: 100,
   temporaryTask: {
     _id: '',
-    taskStatusID: '',
+    taskStatusID: { _id: '', taskIDs: [], taskBoardID: '', title: '' },
     title: '',
   },
   temporaryAssigned: [],
@@ -50,7 +50,7 @@ const initialState: TaskType = {
   currentTask: {
     _id: '',
     title: '',
-    taskStatusID: '',
+    taskStatusID: { _id: '', taskIDs: [], taskBoardID: '', title: '' },
   },
 }
 
@@ -205,7 +205,7 @@ export const getTasksThunkAction = (currentTaskBoard) => async (dispatch, getSta
     const formatData = res.data?.list.map((each) => {
       return {
         ...each,
-        taskStatusID: each?.taskStatusID?._id || each?.taskStatuaID,
+        taskStatusID: each?.taskStatusID?._id || each?.taskStatusID,
       }
     })
 
@@ -314,6 +314,7 @@ export const updateAssignUserThunkAction = (
   try {
     const localAccess = localStorage.getItem('access_token')
     const companyID = getState().userInfo.currentCompany._id
+    const currentTask = getState().tasks.currentTask
 
     if (!companyID || !taskID) {
       return
@@ -336,6 +337,9 @@ export const updateAssignUserThunkAction = (
       taskStatusID: res?.data?.taskStatusID?._id || res?.data?.taskStatuaID,
     }
 
+    if (taskID === currentTask?._id){
+      dispatch(getTaskByID(res.data))
+    }
     await dispatch(updateUserAssigned(formatData))
     await dispatch(setLoading(false))
     await dispatch(pushNewNotifications({ variant: 'success' , message: 'updated users assigned for task successfully!' }))
@@ -421,6 +425,8 @@ export const updateTaskThunkAction = (taskID, dataUpdateTask) => async (dispatch
   try {
     const token = localStorage.getItem('access_token')
     const companyID = getState()?.userInfo?.currentCompany?._id
+    const { tasks }: {tasks: {[key: string]: Task}} = getState().tasks
+
     if (!token || !companyID) {
       return
     }
@@ -435,7 +441,8 @@ export const updateTaskThunkAction = (taskID, dataUpdateTask) => async (dispatch
     if (taskID === getState()?.tasks?.currentTask?._id) {
       dispatch(getTaskByID(res.data))
     }
-    // dispatch(updateTaskInStatus(res.data));
+    tasks[res.data?._id] = res.data
+    dispatch(getTasks(tasks))
   } catch (error) {
     throw error
   }

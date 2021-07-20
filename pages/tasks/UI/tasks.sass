@@ -96,30 +96,6 @@
   .grid-icon
     height: 40px
 
-    .icon-add
-      .date-text
-        font-size: 11px
-
-    .urgent-icon
-      color: #f24423
-
-    .high-icon
-      color: #ffcd37
-
-    .normal-icon
-      color: #70dcfc
-
-    .low-icon
-      color: #d8d8d8
-
-    .clear-icon
-      color: #f8b6b1
-
-  .date-add
-    width: 0
-    height: 0
-    visibility: hidden
-
   .save-add
     background-color: #50ac55
     font-size: 10px
@@ -404,6 +380,31 @@
     width: 25px
     height: 25px
     font-size: 10px
+
+.date-time-picker
+  .icon-add
+    .date-text
+      font-size: 11px
+
+  .date-add
+    position: absolute
+    z-index: -111
+    visibility: hidden;
+
+.popup-status-detail
+  z-index: 1300
+  background-color: #fff
+  box-shadow: 0 0 5px #c5c5c5
+  max-height: 150px
+  overflow: auto
+
+  .list-status
+    .item-status
+      text-align: center
+
+      &:hover
+        background-color: #50ac55
+        color: #fff
 
 @media (min-width: 600px)
   .content-activity

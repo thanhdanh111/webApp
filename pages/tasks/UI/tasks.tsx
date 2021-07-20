@@ -1,28 +1,21 @@
 import { Typography, IconButton } from '@material-ui/core'
 import { Task } from 'helpers/type'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import AssignUser from './assign_user'
 import React, { FunctionComponent, useState } from 'react'
 import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog'
 import DeleteIcon from '@material-ui/icons/Delete'
-import { deletedTaskThunkAction, getTaskByIDThunkAction, TaskType, updateAssignUserThunkAction } from '../logic/task_reducer'
-import { getTaskByID } from '../logic/task_action'
-import { RootState } from 'redux/reducers_registration'
-import { ModalTaskDetail } from './modal_task_detail'
-
+import { deletedTaskThunkAction, getTaskByIDThunkAction, updateAssignUserThunkAction } from '../logic/task_reducer'
 interface InitialProp {
   task: Task
 }
 
 const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
-  const { currentTask }: TaskType = useSelector((state: RootState) => state.tasks)
   const dispatch = useDispatch()
   const { task }: InitialProp = props
   const [open, setOpen] = useState(false)
   const taskName = task?.title?.split('_').join(' ')
   const taskID = task?._id?.slice(0, 6)
-
-  const [openDetail, setOpenDetail] = useState(false)
 
   const handleAssign = (users) => {
     const userAssigns = users?.map((each) => each?._id)
@@ -35,12 +28,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
   }
 
   const handleDeleteTask = () => {
-    dispatch(deletedTaskThunkAction({ taskID: task?._id, taskStatusID: task?.taskStatusID }))
-  }
-
-  const handleClose = () => {
-    setOpenDetail(false)
-    dispatch(getTaskByID({ title: '', _id: '' }))
+    dispatch(deletedTaskThunkAction({ taskID: task?._id, taskStatusID: task?.taskStatusID._id }))
   }
 
   const getTask = () => {
@@ -57,7 +45,6 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
                   className='task-name'
                   onClick={() => {
                     getTask()
-                    setOpenDetail(true)
                   }}
                 >{taskName}
                 </Typography>
@@ -78,7 +65,6 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
               />
             </div>
         </div>
-        {currentTask && <ModalTaskDetail open={openDetail} handleClose={handleClose}/>}
     </>
   )
 }

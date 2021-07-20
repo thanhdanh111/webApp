@@ -1,11 +1,11 @@
-import { Tag } from '../../../helpers/type'
+import { Tag, Task } from '../../../helpers/type'
 import { createTag, deleteTag, getTag, updateTag } from './tag_tasks_action'
 import { tagTasksActionType } from './tag_tasks_type_action'
 import axios from 'axios'
 import { config } from '../../../helpers/get_config'
 import { pushNewNotifications } from '../../../redux/common/notifications/reducer'
 import { convertArrayObjectToObject } from 'helpers/convert_array_to_object'
-// import { convertArrayObjectToObject } from 'helpers/convert_array_to_object'
+import { getTaskByID, getTasks } from 'pages/tasks/logic/task_action'
 
 export interface TagTaksType {
   tags: {[key: string]: Tag}
@@ -63,14 +63,14 @@ export const getTagsThunkAction = (searchTag, isNewSearchTag) => async (dispatch
       return
     }
     let cursor = ''
-    let tags = []
+    let listTags = {}
 
     if (!isNewSearchTag) {
-      cursor = getState()?.taskBoards.cursorTag
+      cursor = getState()?.tagTasks.cursor
       if (cursor === 'END'){
         return
       }
-      tags = getState()?.taskBoards.tags
+      listTags = getState()?.tagTasks.tags
     }
 
     const res = await axios.get(`${config.BASE_URL}/tags`,
@@ -88,8 +88,8 @@ export const getTagsThunkAction = (searchTag, isNewSearchTag) => async (dispatch
           sortBy: 'name',
         },
       })
-    const dataConvert = convertArrayObjectToObject([...tags, ...res.data.list], '_id')
-    dispatch(getTag({ tags: dataConvert, cursor: res.data.cursor, totalCount : res.data.totalCount }))
+    const dataConvert = convertArrayObjectToObject(res.data.list, '_id')
+    dispatch(getTag({ tags: { ...listTags, ...dataConvert }, cursor: res.data.cursor, totalCount : res.data.totalCount }))
   } catch (error) {
     throw error
   }
@@ -123,6 +123,8 @@ export const updateTagThunkAction = (tagID, dataUpdateTag) => async (dispatch, g
   try {
     const token = localStorage.getItem('access_token')
     const companyID = getState()?.userInfo?.currentCompany?._id
+    const { tasks, currentTask }: {tasks: {[key: string] : Task}, currentTask: Task} = getState()?.tasks
+
     if (!token || !companyID) {
       return
     }
@@ -135,6 +137,12 @@ export const updateTagThunkAction = (tagID, dataUpdateTag) => async (dispatch, g
         },
       })
     dispatch(updateTag(res.data))
+    currentTask.tagIDs = updateTagInTags(currentTask?.tagIDs || [], res.data)
+    dispatch(getTaskByID(currentTask))
+    Object.keys(tasks).map((key) => {
+      tasks[key].tagIDs = updateTagInTags(tasks[key]?.tagIDs || [], res.data)
+    })
+    dispatch(getTasks(tasks))
   } catch (error) {
     throw error
   }
@@ -144,6 +152,8 @@ export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
     const companyID = getState()?.userInfo?.currentCompany?._id
+    const { tasks, currentTask }: {tasks: {[key: string] : Task}, currentTask: Task} = getState()?.tasks
+
     if (!token || !companyID) {
       return
     }
@@ -156,6 +166,13 @@ export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
       })
     if (res.data?.isDeleted){
       dispatch(deleteTag(id))
+      currentTask.tagIDs = currentTask?.tagIDs?.filter((tag) => tag._id !== id)
+      dispatch(getTaskByID(currentTask))
+      Object.keys(tasks).map((key) => {
+        tasks[key].tagIDs = tasks[key]?.tagIDs?.filter((tag) => tag._id !== id)
+      })
+      dispatch(getTasks(tasks))
+
     }
   } catch (error) {
     dispatch(
@@ -167,4 +184,8 @@ export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
     )
     throw error
   }
+}
+
+const updateTagInTags = (tags: Tag[], tagUpdate: Tag) => {
+  return tags.map((tag) => tag._id === tagUpdate._id ? tagUpdate : tag)
 }

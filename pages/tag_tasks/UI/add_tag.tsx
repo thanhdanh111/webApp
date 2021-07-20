@@ -8,7 +8,7 @@ import { ElementsTag, TagMoreAction } from './tag'
 import { useDebounce } from 'helpers/debounce'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { DisappearedLoading } from 'react-loadingg'
-import { checkHasObjectByKey } from 'helpers/check_in_array'
+import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array'
 import AddIcon from '@material-ui/icons/Add'
 import { createTagThunkAction, deleteTagThunkAction, getTagsThunkAction, updateTagThunkAction } from '../logic/tag_tasks_reducer'
 
@@ -25,9 +25,9 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
   const [inputNameTag, setInputNameTag] = useState('')
   const {
     tags,
-    totalCountTag,
-    cursorTag,
-  }: { tags: {[key: string]: Tag}; totalCountTag: number; cursorTag: string } = useSelector(
+    totalCount,
+    cursor,
+  }: { tags: {[key: string]: Tag}; totalCount: number; cursor: string } = useSelector(
     (state: RootStateOrAny) => state.tagTasks)
   const [nameTag, setNameTag] = useState('')
   const debouncedSearchTerm = useDebounce(inputNameTag, 500)
@@ -36,7 +36,7 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
     dispatch(getTagsThunkAction(debouncedSearchTerm, true))
   }, [debouncedSearchTerm])
 
-  const getUser = () => {
+  const getData = () => {
     dispatch(getTagsThunkAction(debouncedSearchTerm, false))
   }
 
@@ -73,7 +73,7 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
       return
     }
 
-    if (checkHasObjectByKey(tags, inputNameTag, 'name')){
+    if (checkArrayObjectHasObjectByKey(Object.values(tags), inputNameTag, 'name')){
       dispatch(pushNewNotifications({ variant: 'error', message: 'Tag already exists' }))
 
       return
@@ -90,18 +90,20 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
     </ListItem>)
     }
 
-    const notSeletedTag = Object.values(tags).filter((tag: Tag) => !checkHasObjectByKey(props.selectedTag, tag?._id || '', '_id'))
+    const notSeletedTag = Object.values(tags).filter((tag: Tag) => !checkArrayObjectHasObjectByKey(props.selectedTag, tag?._id || '', '_id'))
 
-    if (!notSeletedTag.length){
-      if (cursorTag !== 'END'){
-        getUser()
+    if (notSeletedTag.length < 5){
+      if (cursor !== 'END'){
+        getData()
 
+        return
       }
-
-      return (
-        <ListItem className='tag-item-list'>
-          No tag
-        </ListItem>)
+      if (notSeletedTag.length === 0){
+        return (
+          <ListItem className='tag-item-list'>
+            No tag
+          </ListItem>)
+      }
     }
 
     const listTag = notSeletedTag?.map((tag) => {
@@ -142,7 +144,7 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
       className='input-search-tag'
     />
     {
-      props.isCreateTag && (<AddIcon className='add-icon-tag' />)
+      props.isCreateTag && (<AddIcon className='add-icon-tag' onClick={() => addTag()}/>)
     }
   </Box>
   )
@@ -192,8 +194,8 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
                 <List component='nav' className='tag-list'>
                 <InfiniteScroll
                   dataLength={Object.values(tags)?.length}
-                  hasMore={Object.values(tags).length < totalCountTag}
-                  next={getUser}
+                  hasMore={Object.values(tags).length < totalCount}
+                  next={getData}
                   loader={<DisappearedLoading color={'#67cb48'} />}
                   scrollThreshold={0.8}
                   height={200}

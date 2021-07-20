@@ -5,7 +5,7 @@ import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined'
 import VerticalSplitIcon from '@material-ui/icons/VerticalSplit'
 import { RootStateOrAny, useSelector } from 'react-redux'
 
-const typeLog = {
+export const typeLog = {
   CREATE : 'created this task',
   UPDATE :  {
     tagIDs : 'added',
@@ -24,19 +24,17 @@ const typeLog = {
 }
 
 const LogDetail: React.FC = () => {
-  // const task = useSelector((state: RootStateOrAny) => state.taskBoards?.taskDetail);
   const [currentTab, setCurrentTab] = useState(0)
 
   return (
     <Box>
       <Box className='content-activity' m={'15px'} alignItems='center'>
         <TabsUi
-          tabs={['logs', 'comments']}
-          tabIcons={[VerticalSplitIcon, SmsOutlinedIcon]}
-          tabUIs={[ContentLogs, ContentComments]}
+          tabs={['comments', 'logs']}
+          tabIcons={[SmsOutlinedIcon, VerticalSplitIcon]}
+          tabUIs={[ContentComments, ContentLogs]}
           currentTabIndex={currentTab}
           handleChange={(_: React.ChangeEvent<{}>, newValue: number) => setCurrentTab(newValue)}
-
         />
       </Box>
     </Box>
@@ -46,7 +44,7 @@ const LogDetail: React.FC = () => {
 export default LogDetail
 
 const ContentLogs = () => {
-  const task = useSelector((state: RootStateOrAny) => state.taskBoards?.taskDetail)
+  const task = useSelector((state: RootStateOrAny) => state.tasks.currentTask)
 
   const renderLogs = () => {
     const logs = task?.logs?.map((log) => {
@@ -54,8 +52,8 @@ const ContentLogs = () => {
       return (
         <Box key={log._id} className='content-log'>
             <span className='user-log'>You </span>
-            {typeLog[log.action][log.changedField] || typeLog[log.action]}
-            <span className='value-log'>{log.value}</span>
+             {typeLog[log.action][log.changedField] || typeLog[log.action]}
+            {/* <span className='value-log'>{log.changeValue}</span> */}
         </Box>
       )
     })
@@ -66,7 +64,7 @@ const ContentLogs = () => {
   return (
     <Box>
       {renderLogs()}
-      <Box className='load-log'>Load more...</Box>
+      <Box className='load-log' display='flex' ><span className='text-load-more'>Load more...</span></Box>
     </Box>
   )
 }
