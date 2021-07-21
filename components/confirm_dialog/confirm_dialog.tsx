@@ -15,6 +15,7 @@ interface ConfirmDialog {
   title?: string
   warning?: string
   loading?: boolean
+  style?: string
 }
 
 enum Action {
@@ -36,6 +37,7 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({
   title,
   warning,
   loading = false,
+  style,
 }) => {
 
   return (
@@ -44,6 +46,7 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogType> = ({
         onClose={handleClose}
         fullWidth
         maxWidth='sm'
+        className={style}
       >
         <DialogTitle>
           <div>
