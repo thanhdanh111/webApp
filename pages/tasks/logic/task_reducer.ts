@@ -205,7 +205,7 @@ export const getTasksThunkAction = (currentTaskBoard) => async (dispatch, getSta
     const formatData = res.data?.list.map((each) => {
       return {
         ...each,
-        taskStatusID: each?.taskStatusID?._id || each?.taskStatusID,
+        taskStatusID: each?.taskStatusID?._id || each?.taskStatuaID,
       }
     })
 

@@ -1,4 +1,3 @@
-let qs = require('qs')
 let browser
 let page
 let viewport
@@ -35,25 +34,18 @@ describe('Home page', () => {
   test('Test get tasks successfully after login', async () => {
     await page.goto('http://localhost:5000/home')
     await page.waitForSelector('.board')
-    await page.waitForSelector('.board-tasks')
     await page.waitForSelector('.status')
-    await page.waitFor(5000)
 
+    await page.waitForSelector('.add-task-text')
     await page.click('.add-task-text')
     await page.waitForSelector('.add-status-modal')
+
     await page.click('.add-status-input')
     await page.type('.add-status-input', 'open')
-    await page.waitFor(5000)
-
-    const addStatusImage = await page.screenshot()
-    expect(addStatusImage).toMatchImageSnapshot()
 
     await page.click('.submit-create-status')
+    await page.click('.close-create-status')
 
-    const addSuccessStatusImage = await page.screenshot()
-    expect(addSuccessStatusImage).toMatchImageSnapshot()
-
-      // add task
     await page.waitForSelector('.open .add-task')
 
     await page.click('.open .add-task')

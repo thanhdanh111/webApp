@@ -119,7 +119,7 @@ export const TagMoreAction: React.FC<InitialPropMoreAction> = (props) => {
           Delete
       </ListItem>
       <label htmlFor='input-tag-name'>
-      <ListItem button onClick={() => { props.changeName(); popupState.close() }}>
+      <ListItem button onClick={() => { props.changeName(); popupState.close() }} className='rename-tag-action'>
           <EditOutlinedIcon className='icon-tag-action'/>
             Rename
       </ListItem>

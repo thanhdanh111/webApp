@@ -1,4 +1,3 @@
-let qs = require('qs')
 let browser
 let page
 let viewport
@@ -8,7 +7,7 @@ const puppeteer = require('puppeteer')
 const token = process.env.TEST_TOKEN
 
 beforeAll(async () => {
-  
+
   try {
     browser = await puppeteer.launch({
       headless: true,

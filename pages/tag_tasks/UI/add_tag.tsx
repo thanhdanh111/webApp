@@ -2,8 +2,7 @@ import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import React, { useEffect, useState } from 'react'
 import { Tag } from 'helpers/type'
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
-import { Box, Grid, InputBase, List, ListItem, Popover } from '@material-ui/core'
+import { Box, Grid, InputBase, List, ListItem, Popper } from '@material-ui/core'
 import { ElementsTag, TagMoreAction } from './tag'
 import { useDebounce } from 'helpers/debounce'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -31,6 +30,12 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
     (state: RootStateOrAny) => state.tagTasks)
   const [nameTag, setNameTag] = useState('')
   const debouncedSearchTerm = useDebounce(inputNameTag, 500)
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const id = !!anchorEl ? 'simple-popper' : undefined
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget)
+  }
 
   useEffect(() => {
     dispatch(getTagsThunkAction(debouncedSearchTerm, true))
@@ -166,22 +171,17 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
   }
 
   return (
-    <PopupState variant='popover' popupId='demo-popup-menu'>
-      {(popupState) => (
         <>
-          <Grid item className='tag-add' {...bindTrigger(popupState)}>
+          <Grid item className='tag-add' onClick={handleClick} aria-describedby={id}>
             {props.children}
           </Grid>
-          <Popover
-            {...bindPopover(popupState)}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
+          {!!anchorEl && <div className='popup-tag-close' onClick={() => setAnchorEl(null)}/>}
+          <Popper
+            id={id}
+            open={!!anchorEl}
+            anchorEl={anchorEl}
+            className='popup-tag'
+            placement='bottom-start'
           >
             <Box
               display='flex'
@@ -205,10 +205,8 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
                 </List>
               </Box>
             </Box>
-          </Popover>
+          </Popper>
         </>
-      )}
-    </PopupState>
   )
 }
 

@@ -9,7 +9,7 @@ const puppeteer = require('puppeteer')
 beforeAll(async () => {
   try {
     browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       slowMo: 0,
       ignoreDefaultArgs: ['--no-sandbox'],
     })
@@ -30,11 +30,8 @@ beforeAll(async () => {
 describe('Pots Page', () => {
   test('Test statistics page successfully after login', async () => {
     await page.goto('http://localhost:5000/home')
-
     await page.waitForSelector('.board')
-    await page.waitForSelector('.board-tasks')
     await page.waitForSelector('.status')
-    await page.waitFor(5000)
 
     await page.waitForSelector('.add-task-text')
     await page.click('.add-task-text')
@@ -43,10 +40,10 @@ describe('Pots Page', () => {
     await page.type('.add-status-input', 'test tag')
 
     await page.click('.submit-create-status')
-    await page.waitForSelector('.status')
+    await page.click('.close-create-status')
 
-      // add task
     await page.waitForSelector('.test-tag .add-task')
+
     await page.click('.test-tag .add-task')
     await page.waitForSelector('.task-add')
 
@@ -59,18 +56,11 @@ describe('Pots Page', () => {
     await page.click('.save-add')
 
   // task detail
-    await page.waitForSelector('.test-tag .task-name')
-    await page.click('.test-tag .task-name')
-
-    const taskDetail = await page.screenshot()
-    expect(taskDetail).toMatchImageSnapshot()
-
-  // add tag
-    await page.waitForSelector('.test-tag .task-name')
-    await page.click('.test-tag .task-name')
+    await page.waitFor(5000)
+    await page.click('.task-name')
+    await page.waitForSelector('.detail-modal')
     await page.waitForSelector('.tag-add')
     await page.click('.tag-add')
-    await page.waitFor(5000)
 
     const tagAddpopup = await page.screenshot()
     expect(tagAddpopup).toMatchImageSnapshot()
@@ -79,53 +69,111 @@ describe('Pots Page', () => {
     await page.click('.input-search-tag')
     await page.type('.input-search-tag', 'snt-app')
     await page.keyboard.press('Enter')
+
+    const addTagSuccess = await page.screenshot()
+    expect(addTagSuccess).toMatchImageSnapshot()
+
     await page.waitFor(5000)
     await page.waitForSelector('.tag-item-list')
 
-  // delete tag
+  //add tag to task
+    await page.click('.tag-item-list >span')
+    await page.waitFor(5000)
+    const addTagToTask = await page.screenshot()
+    expect(addTagToTask).toMatchImageSnapshot()
 
+  // remove tag from task
+    await page.waitFor('.add-tag-popup .tag-item')
+
+    await page.hover('.add-tag-popup .tag-item', () => {
+      page.waitFor('.add-tag-popup .icon-tag .delete')
+      page.click('.add-tag-popup .icon-tag .delete')
+    })
+    await page.waitFor(5000)
+
+  // rename tag
     await page.hover('.tag-item-list')
     await page.waitForSelector('.tag-item-list >.more-item-icon')
     await page.click('.tag-item-list >.more-item-icon')
     await page.waitForSelector('.tag-action-popup')
+    await page.waitFor(5000)
+    await page.click('.rename-tag-action')
+
+    const renameTag = await page.screenshot()
+    expect(renameTag).toMatchImageSnapshot()
+
+    await page.$eval('.input-name-tag', (e) => e.value = '')
+    await page.type('.input-name-tag', 'rename tag')
+    await page.keyboard.press('Enter')
+
+    const renameTagSuccess = await page.screenshot()
+    expect(renameTagSuccess).toMatchImageSnapshot()
+
+  // delete tag
+    await page.hover('.tag-item-list')
+    await page.waitForSelector('.tag-item-list >.more-item-icon')
+    await page.click('.tag-item-list >.more-item-icon')
+    await page.waitForSelector('.tag-action-popup')
+    await page.waitFor(5000)
+
+    const deleteTag = await page.screenshot()
+    expect(deleteTag).toMatchImageSnapshot()
 
     await page.click('.delete-tag')
-    await page.waitFor(5000)
     await page.waitForSelector('.confirm-dialog--yes-btn')
-
     await page.click('.confirm-dialog--yes-btn')
     await page.waitFor(5000)
 
-    await page.click('.close-detail')
-    await page.waitFor(5000)
-    await page.click('.close-detail')
+    const deleteTagSuccess = await page.screenshot()
+    expect(deleteTagSuccess).toMatchImageSnapshot()
 
-  // delete task
+    await page.waitForSelector('.close-detail')
+    await page.click('.close-detail')
 
     const closeDetailModalImage = await page.screenshot()
     expect(closeDetailModalImage).toMatchImageSnapshot()
 
-    await page.waitForSelector('.test-tag .footer-task')
-    await page.waitForSelector('.test-tag .delete-task')
-    await page.click('.test-tag .delete-task')
+    // delete task
     await page.waitFor(5000)
+    await page.waitForSelector('.test-tag .task-item  .delete-task')
+    await page.click('.test-tag .delete-task')
 
-    const deletedTaskImage = await page.screenshot()
-    expect(deletedTaskImage).toMatchImageSnapshot()
-
-    await page.waitForSelector('.confirm-dialog--yes-btn')
+    await page.waitForSelector('.deleted-task-dialog .confirm-dialog-actions')
     await page.click('.confirm-dialog--yes-btn')
-    await page.click('.confirm-dialog--no-btn')
     await page.waitFor(5000)
     await page.waitForSelector('.board-tasks')
 
-    const confirmDeletedTaskImage = await page.screenshot()
-    expect(confirmDeletedTaskImage).toMatchImageSnapshot()
+    // Change title description
+    await page.type('.input-title', 'change title')
+    await page.type('.input-description', 'change description')
 
+    const changeTitleDescription = await page.screenshot()
+    expect(changeTitleDescription).toMatchImageSnapshot()
+
+  // Change priority
+    await page.click('.priority-icon')
+    await page.waitForSelector('.priority-Urgent')
+    await page.click('.priority-Urgent')
+    await page.click('.priority-icon')
+
+  //remove assign user
+
+    await page.click('.choose-assign-user')
+    await page.waitForSelector('.menu-item-users-popup')
+    await page.click('.menu-item-users-popup')
+    await page.click('.choose-assign-user')
+
+  // assign user
+    await page.click('.choose-assign-user')
+    await page.waitForSelector('.menu-item-users-popup')
+    await page.click('.menu-item-users-popup')
+    await page.click('.choose-assign-user')
+
+  //
   // delete status
 
     await page.waitForSelector('.test-tag .action-status-btn')
-    await page.click('.test-tag  .action-status-btn')
+    await page.click('.test-tag .action-status-btn')
 
     await page.waitForSelector('.popper-action-status')
     await page.waitFor(5000)
@@ -133,9 +181,6 @@ describe('Pots Page', () => {
     await page.waitForSelector('.delete-status-menu-item')
     await page.click('.delete-status-menu-item')
     await page.waitFor(5000)
-
-    const deleteStatusSuccessImg = await page.screenshot()
-    expect(deleteStatusSuccessImg).toMatchImageSnapshot()
 
   })
 

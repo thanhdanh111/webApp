@@ -8,9 +8,9 @@ import { convertArrayObjectToObject } from 'helpers/convert_array_to_object'
 import { getTaskByID, getTasks } from 'pages/tasks/logic/task_action'
 
 export interface TagTaksType {
-  tags: {[key: string]: Tag}
-  cursor: string
-  totalCount: number
+  tags: {[key: string]: Tag},
+  cursor: string,
+  totalCount: number,
 }
 
 export enum NotificationTypes {
@@ -99,7 +99,6 @@ export const createTagThunkAction = (tag) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
     const companyID = getState()?.userInfo?.currentCompany?._id
-
     if (!token || !companyID) {
       return
     }
@@ -137,10 +136,10 @@ export const updateTagThunkAction = (tagID, dataUpdateTag) => async (dispatch, g
         },
       })
     dispatch(updateTag(res.data))
-    currentTask.tagIDs = updateTagInTags(currentTask?.tagIDs || [], res.data)
+    currentTask.tagIDs = updateTagInTags(currentTask?.tagIDs as Tag[] || [], res.data)
     dispatch(getTaskByID(currentTask))
     Object.keys(tasks).map((key) => {
-      tasks[key].tagIDs = updateTagInTags(tasks[key]?.tagIDs || [], res.data)
+      tasks[key].tagIDs = updateTagInTags(tasks[key]?.tagIDs as Tag[] || [], res.data)
     })
     dispatch(getTasks(tasks))
   } catch (error) {
@@ -166,10 +165,10 @@ export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
       })
     if (res.data?.isDeleted){
       dispatch(deleteTag(id))
-      currentTask.tagIDs = currentTask?.tagIDs?.filter((tag) => tag._id !== id)
+      currentTask.tagIDs = (currentTask?.tagIDs as Tag[])?.filter((tag) => tag._id !== id)
       dispatch(getTaskByID(currentTask))
       Object.keys(tasks).map((key) => {
-        tasks[key].tagIDs = tasks[key]?.tagIDs?.filter((tag) => tag._id !== id)
+        tasks[key].tagIDs = (tasks[key]?.tagIDs as Tag[])?.filter((tag) => tag._id !== id)
       })
       dispatch(getTasks(tasks))
 

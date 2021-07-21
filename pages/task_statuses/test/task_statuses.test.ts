@@ -1,4 +1,3 @@
-let qs = require('qs')
 let browser
 let page
 let viewport
@@ -46,7 +45,6 @@ describe('Home page', () => {
     await page.goto('http://localhost:5000/home')
     await page.waitForSelector('.board')
     await page.waitForSelector('.status')
-    await page.waitFor(5000)
 
     await page.waitForSelector('.add-task-text')
     await page.click('.add-task-text')
@@ -64,11 +62,13 @@ describe('Home page', () => {
 
     await page.click('.submit-create-status')
     await page.waitForSelector('.testing .status')
+    await page.click('.close-create-status')
 
     const confirmAddStatus = await page.screenshot()
     expect(confirmAddStatus).toMatchImageSnapshot()
 
     // rename task status
+    await page.waitForSelector('.task-status-content')
     await page.waitForSelector('.testing .action-status-btn')
     await page.click('.testing .action-status-btn')
 

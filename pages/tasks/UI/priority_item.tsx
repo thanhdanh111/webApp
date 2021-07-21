@@ -16,6 +16,7 @@ const PriorityItem: React.FC<InitProps> = (props) => {
   return (
     <MenuItem
      onClick={() => props.changePriority()}
+     className={`priority-${props.priorityLevel.text}`}
     >
      <Box display='flex' alignItems='center'>
        {props.priorityLevel.value === '' ? (

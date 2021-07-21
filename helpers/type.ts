@@ -151,7 +151,7 @@ export interface Task {
   companyID?: Company
   departmentID?: Department
   taskStatusID: TaskStatus
-  tagIDs?: Tag[]
+  tagIDs?: Tag[] | string[]
   userIDs?: User[]
   title: string
   description?: string
@@ -280,7 +280,6 @@ export interface Board {
 export interface BoardsPage {
   boards: Board[]
   selectedBoard: Board
-  cards: Card[]
   loading: boolean
   hasNoBoards: boolean
 }
@@ -311,6 +310,14 @@ export interface Card {
   bottomTo?: ConnectToData
   topTo?: ConnectToData
   position?: 	CardPositionData
+}
+
+export interface CardsPage {
+  cards: Cards
+}
+
+export interface Cards {
+  [key: string] : Card
 }
 
 export interface Tag {

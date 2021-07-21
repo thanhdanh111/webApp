@@ -17,6 +17,7 @@ export const typeLog = {
     startDate: 'set due date to',
     timeTracked: 'tracked',
     startTime: 'set start time to',
+    description: 'changed description to',
   },
   DELETE : {
     userIDs: 'remove assignee',
@@ -52,7 +53,7 @@ const ContentLogs = () => {
       return (
         <Box key={log._id} className='content-log'>
             <span className='user-log'>You </span>
-             {typeLog[log.action][log.changedField] || typeLog[log.action]}
+             {typeLog[log.action][log.changedField || ''] || typeLog[log.action]}
             {/* <span className='value-log'>{log.changeValue}</span> */}
         </Box>
       )

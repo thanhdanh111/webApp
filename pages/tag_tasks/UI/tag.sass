@@ -18,6 +18,8 @@
       align-items: center
       position: absolute
       right: 0
+      z-index: 0
+      opacity: 1
 
       .icon-item
         font-size: 14px
@@ -48,7 +50,9 @@
     border-radius: 2px 9px 9px 2px
 
   .icon-tag
-    display: none
+    position: absolute
+    opacity: 0
+    z-index: -111
 
   .tag-text
     width: 100%
@@ -72,6 +76,7 @@
   .tag-icon
     font-size: 20px
     padding: 3px
+    cursor: pointer
 
 .tag-action-popup
   font-size: 12px
@@ -79,6 +84,17 @@
   .icon-tag-action
     margin-right: 8px
     font-size: 20px
+
+.popup-tag-close
+  position: absolute
+  inset: 0
+  display: block
+  z-index: 1300
+
+.popup-tag
+  z-index: 1300
+  box-shadow: 0 0 5px 0 #c5c5c5
+  background-color: #fff
 
 .add-tag-popup
   .tags-selected

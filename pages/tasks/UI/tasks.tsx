@@ -62,6 +62,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
                 handleNo={cancelDelete}
                 handleYes={handleDeleteTask}
                 status='REMOVE'
+                style='deleted-task-dialog'
               />
             </div>
         </div>

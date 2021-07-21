@@ -5,6 +5,7 @@ import TagTask from '../../../pages/tag_tasks/UI/tag'
 import { TaskType, updateTaskThunkAction } from '../logic/task_reducer'
 import { useEffect, useState } from 'react'
 import { useDebounce } from 'helpers/debounce'
+import { Tag } from 'helpers/type'
 
 const TitleDetail: React.FC = () => {
   const dispatch = useDispatch()
@@ -33,7 +34,7 @@ const TitleDetail: React.FC = () => {
 
   return (
     <Box display='flex' flexDirection='column' className='attachment-detail'>
-      <TagTask selectedTag={currentTask.tagIDs || []} getSelectedTag={(tags) => updateTask(tags)}/>
+      <TagTask selectedTag={currentTask.tagIDs as Tag[] || []} getSelectedTag={(tags) => updateTask(tags)}/>
       <Box position='sticky' top='0' className='title-detail' px={2} mt={1}>
         <TextareaAutosize
           className='input-title'

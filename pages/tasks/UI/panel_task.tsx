@@ -97,5 +97,4 @@ const Panel: React.FC = () => {
     </Grid>
   )
 }
-
 export default Panel
