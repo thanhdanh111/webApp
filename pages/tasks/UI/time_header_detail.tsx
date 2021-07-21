@@ -30,7 +30,7 @@ const TimeDetail: React.FC = () => {
       <Box className='item-time detail-due-date'>
         <DatetimeIconPicker
           title='Due date'
-          minDateTime={task?.createdAt || moment()}
+          minDateTime={moment()}
           onChangeDate={(dateTime) =>
             dispatch(updateTaskThunkAction(task._id, { dueDate: dateTime.toString() }))
           }

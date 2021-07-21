@@ -9,7 +9,7 @@ const puppeteer = require('puppeteer')
 beforeAll(async () => {
   try {
     browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       slowMo: 0,
       ignoreDefaultArgs: ['--no-sandbox'],
     })
@@ -57,7 +57,7 @@ describe('Pots Page', () => {
 
   // task detail
     await page.waitFor(5000)
-    await page.click('.task-name')
+    await page.click('.test-tag .task-name')
     await page.waitForSelector('.detail-modal')
     await page.waitForSelector('.tag-add')
     await page.click('.tag-add')
@@ -85,10 +85,9 @@ describe('Pots Page', () => {
   // remove tag from task
     await page.waitFor('.add-tag-popup .tag-item')
 
-    await page.hover('.add-tag-popup .tag-item', () => {
-      page.waitFor('.add-tag-popup .icon-tag .delete')
-      page.click('.add-tag-popup .icon-tag .delete')
-    })
+    await page.hover('.add-tag-popup .tag-item')
+    await  page.waitFor('.add-tag-popup .icon-tag .delete')
+    await  page.click('.add-tag-popup .icon-tag .delete')
     await page.waitFor(5000)
 
   // rename tag
@@ -143,34 +142,7 @@ describe('Pots Page', () => {
     await page.waitFor(5000)
     await page.waitForSelector('.board-tasks')
 
-    // Change title description
-    await page.type('.input-title', 'change title')
-    await page.type('.input-description', 'change description')
-
-    const changeTitleDescription = await page.screenshot()
-    expect(changeTitleDescription).toMatchImageSnapshot()
-
-  // Change priority
-    await page.click('.priority-icon')
-    await page.waitForSelector('.priority-Urgent')
-    await page.click('.priority-Urgent')
-    await page.click('.priority-icon')
-
-  //remove assign user
-
-    await page.click('.choose-assign-user')
-    await page.waitForSelector('.menu-item-users-popup')
-    await page.click('.menu-item-users-popup')
-    await page.click('.choose-assign-user')
-
-  // assign user
-    await page.click('.choose-assign-user')
-    await page.waitForSelector('.menu-item-users-popup')
-    await page.click('.menu-item-users-popup')
-    await page.click('.choose-assign-user')
-
-  //
-  // delete status
+  // delete status 'open'
 
     await page.waitForSelector('.test-tag .action-status-btn')
     await page.click('.test-tag .action-status-btn')

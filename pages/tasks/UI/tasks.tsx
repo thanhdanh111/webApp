@@ -28,6 +28,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
   }
 
   const handleDeleteTask = () => {
+    setOpen(false)
     dispatch(deletedTaskThunkAction({ taskID: task?._id, taskStatusID: task?.taskStatusID._id }))
   }
 

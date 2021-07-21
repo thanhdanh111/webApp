@@ -37,7 +37,7 @@ const StatusDetail = () => {
         <ListItem
           button
           key={status._id}
-          className='item-status'
+          className={`item-status item-${status.title.toLowerCase().replace(' ', '-')}`}
           onClick={() => {
             changeStatus(status._id)
             setAnchorEl(null)
