@@ -14,6 +14,7 @@ interface DocsValue {
   selectedPage?: PageContent
   projectAccessOfUsers: ProjectAccessMapOfUsers
   usersInCompanyMap: UsersInCompanyMap
+  drawerLoading: boolean
 }
 
 export interface UsersInCompanyMap {
@@ -106,6 +107,7 @@ const initialState: DocsValue = {
   loading: false,
   projectAccessOfUsers: {},
   usersInCompanyMap: {},
+  drawerLoading: false,
 }
 
 export type DocsValueType = DocsValue
@@ -146,13 +148,6 @@ const docsReducer = (state = initialState, action) => {
         ...state,
         ...action.data,
       }
-    case DocsActionTypes.UpdateDocsInDrawer:
-
-      return {
-        ...state,
-        ...action.data,
-      }
-
     case DocsActionTypes.UpdateSelectedItemInDrawer:
 
       return updateSelectedItemInDrawer(action.data, state)

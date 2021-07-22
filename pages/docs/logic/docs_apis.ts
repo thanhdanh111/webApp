@@ -40,7 +40,7 @@ export const createNewPage = () => async (dispatch, getState) => {
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
+    dispatch(updateDocs({ drawerLoading: true }))
 
     const rawBlocks = convertToRaw(editorState?.getCurrentContent())
 
@@ -64,7 +64,7 @@ export const createNewPage = () => async (dispatch, getState) => {
     const pagesInProject = newProjectsMap?.[docProjectID]?.pages
 
     if (!pagesInProject) {
-      dispatch(updateDocs({ loading: false }))
+      dispatch(updateDocs({ drawerLoading: false }))
 
       return
     }
@@ -83,9 +83,9 @@ export const createNewPage = () => async (dispatch, getState) => {
 
     accessForNewPage[pageID] = [DocsRole.WRITE, DocsRole.READ]
 
-    dispatch(updateDocs({ projectAccessOfUsers, loading: false, docProjectsMap: newProjectsMap }))
+    dispatch(updateDocs({ projectAccessOfUsers, drawerLoading: false, docProjectsMap: newProjectsMap }))
   } catch (error) {
-    dispatch(updateDocs({ loading: false }))
+    dispatch(updateDocs({ drawerLoading: false }))
   }
 }
 
@@ -303,7 +303,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
+    dispatch(updateDocs({ drawerLoading: true }))
 
     const res = await axios.post(
       `${config.BASE_URL}/docProjects`,
@@ -330,7 +330,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
     })
 
     if (!validNewData) {
-      dispatch(updateDocs({ loading: false }))
+      dispatch(updateDocs({ drawerLoading: false }))
 
       return
     }
@@ -357,9 +357,9 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
 
     projectAccessOfUsers[userID] = accessOfUser
 
-    dispatch(updateDocs({ projectAccessOfUsers, loading: false, docProjectsMap: newDocProjectsMap }))
+    dispatch(updateDocs({ projectAccessOfUsers, drawerLoading: false, docProjectsMap: newDocProjectsMap }))
   } catch (error) {
-    dispatch(updateDocs({ loading: false }))
+    dispatch(updateDocs({ drawerLoading: false }))
   }
 }
 

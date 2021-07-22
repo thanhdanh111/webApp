@@ -15,6 +15,7 @@ const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState }) =>
 
   function onClickSideToolbar() {
     if (readOnly) {
+
       return
     }
 

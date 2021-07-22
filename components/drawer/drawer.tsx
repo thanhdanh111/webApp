@@ -102,13 +102,17 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
     </div>
   }
 
+  const drawer = handleDrawer()
+  const container = window !== undefined ? () => window.document.body : undefined
+
   return (
     <nav className='drawer-nav' aria-label='mailbox folders'>
-      <Hidden mdUp implementation='css'>
+      <Hidden mdUp implementation='js'>
         <Drawer
           className='temporary-drawer'
           onClose={() => onChangeDrawerOpen()}
           variant='temporary'
+          container={container}
           anchor='left'
           open={isDrawerOpen}
           classes={{
@@ -118,7 +122,7 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          {handleDrawer()}
+          {drawer}
         </Drawer>
       </Hidden>
       <Drawer
@@ -129,7 +133,7 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
         variant='permanent'
         open
       >
-        {handleDrawer()}
+        {drawer}
       </Drawer>
     </nav>
   )

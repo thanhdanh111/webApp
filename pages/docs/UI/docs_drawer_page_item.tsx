@@ -3,23 +3,8 @@ import {
   ListItem, ListItemIcon, ListItemText,
 } from '@material-ui/core'
 import DescriptionIcon from '@material-ui/icons/Description'
-import { useSelector, shallowEqual } from 'react-redux'
-import { RootState } from 'redux/reducers_registration'
-import { PageContent } from '../logic/docs_reducer'
 
-interface DocsDrawerPageData {
-  selectedPage: PageContent
-}
-
-type DocsDrawerPageDataType = DocsDrawerPageData
-
-const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
-  const { selectedPage }: DocsDrawerPageDataType = useSelector((state: RootState) => {
-
-    return {
-      selectedPage: state?.docs?.selectedPage,
-    }
-  }, shallowEqual)
+const DocsDrawerPageUI = ({ project, page, onClickPage, selected }) => {
 
   return <ListItem
     key={page?._id}
@@ -28,7 +13,7 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
     disableGutters
     ContainerComponent='div'
     classes={{ selected: 'docs-page-selected' }}
-    selected={selectedPage?._id === page?._id}
+    selected={selected}
   >
     <ListItemIcon>
       <DescriptionIcon style={{ width: '20px', height: '20px' }} />
@@ -40,8 +25,9 @@ const DocsDrawerPageUI = ({ project, page, onClickPage }) => {
 function areEqual(prevProps, nextProps) {
   const sameID = prevProps?.page?._id === nextProps?.page?._id
   const sameTitle = prevProps?.page?.title === nextProps?.page?.title
+  const sameSelected = prevProps?.selected === nextProps?.selected
 
-  return sameID && sameTitle
+  return sameID && sameTitle && sameSelected
 }
 
 export default React.memo(DocsDrawerPageUI, areEqual)
