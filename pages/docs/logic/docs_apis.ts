@@ -231,8 +231,6 @@ export const getDocProjects = () => async (dispatch, getState) => {
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
-
     const docPages = await axios.get(`${config.BASE_URL}/docPages`,
       {
         params: {
@@ -276,10 +274,7 @@ export const getDocProjects = () => async (dispatch, getState) => {
       )
     }
 
-    dispatch(updateDocs({
-      loading: false,
-      docProjectsMap: docPagesIntoDocProjectsMap,
-    }))
+    dispatch(updateDocs({ docProjectsMap: docPagesIntoDocProjectsMap }))
   } catch (error) {
     dispatch(updateDocs({ loading: false }))
   }
