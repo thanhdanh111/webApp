@@ -5,7 +5,7 @@ import CustomProcess from './shape_process'
 storiesOf('ShapeProcess Scripts', module).add('ShapeProcess Scripts', () => {
   return (
     <>
-      <CustomProcess />
+      <CustomProcess id/>
     </>
   )
 })
