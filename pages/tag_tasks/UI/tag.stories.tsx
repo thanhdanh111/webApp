@@ -1,9 +1,9 @@
 import { storiesOf } from '@storybook/react'
 import React from 'react'
-import Tag from './tag'
+import TagTask from './tag'
 
 storiesOf('Tag', module).add('Tag', () => {
   return (
-    <Tag/>
+    <TagTask selectedTag={[]} getSelectedTag={() => 'selected'}/>
   )
 })

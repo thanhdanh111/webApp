@@ -36,7 +36,6 @@ describe('Pots Page', () => {
     await page.waitForSelector('.add-task-text')
     await page.click('.add-task-text')
     await page.waitForSelector('.add-status-modal')
-
     await page.click('.add-status-input')
     await page.type('.add-status-input', 'test tag')
 
@@ -58,7 +57,7 @@ describe('Pots Page', () => {
 
   // task detail
     await page.waitFor(5000)
-    await page.click('.task-name')
+    await page.click('.test-tag .task-name')
     await page.waitForSelector('.detail-modal')
     await page.waitForSelector('.tag-add')
     await page.click('.tag-add')
@@ -76,6 +75,38 @@ describe('Pots Page', () => {
 
     await page.waitFor(5000)
     await page.waitForSelector('.tag-item-list')
+
+  //add tag to task
+    await page.click('.tag-item-list >span')
+    await page.waitFor(5000)
+    const addTagToTask = await page.screenshot()
+    expect(addTagToTask).toMatchImageSnapshot()
+
+  // remove tag from task
+    await page.waitFor('.add-tag-popup .tag-item')
+
+    await page.hover('.add-tag-popup .tag-item')
+    await  page.waitFor('.add-tag-popup .icon-tag .delete')
+    await  page.click('.add-tag-popup .icon-tag .delete')
+    await page.waitFor(5000)
+
+  // rename tag
+    await page.hover('.tag-item-list')
+    await page.waitForSelector('.tag-item-list >.more-item-icon')
+    await page.click('.tag-item-list >.more-item-icon')
+    await page.waitForSelector('.tag-action-popup')
+    await page.waitFor(5000)
+    await page.click('.rename-tag-action')
+
+    const renameTag = await page.screenshot()
+    expect(renameTag).toMatchImageSnapshot()
+
+    await page.$eval('.input-name-tag', (e) => e.value = '')
+    await page.type('.input-name-tag', 'rename tag')
+    await page.keyboard.press('Enter')
+
+    const renameTagSuccess = await page.screenshot()
+    expect(renameTagSuccess).toMatchImageSnapshot()
 
   // delete tag
     await page.hover('.tag-item-list')
@@ -111,7 +142,7 @@ describe('Pots Page', () => {
     await page.waitFor(5000)
     await page.waitForSelector('.board-tasks')
 
-  // delete status
+  // delete status 'open'
 
     await page.waitForSelector('.test-tag .action-status-btn')
     await page.click('.test-tag .action-status-btn')

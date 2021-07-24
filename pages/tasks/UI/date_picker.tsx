@@ -8,18 +8,18 @@ interface InitProps {
   title: string
   minDate?: string | Moment
   name?: string
+  date: string
 }
 
 const DateIconPicker: React.FC<InitProps> = (props) => {
   const [openDatePicker, setOpenDatePicker] = useState(false)
-  const [date, setDate] = useState('')
 
   return (
-    <>
+    <div className='date-time-picker'>
       <Tooltip title={props.title} arrow={true} placement='top'>
         <Box className='icon-add' onClick={() => setOpenDatePicker(true)}>
-          {date ? (
-            <span className='date-text'>{moment(date).format('MMM Do')}</span>
+          {props.date ? (
+            <span className='date-text'>{moment(props.date).format('MMM Do')}</span>
           ) : (
             props.children
           )}
@@ -29,9 +29,8 @@ const DateIconPicker: React.FC<InitProps> = (props) => {
         open={openDatePicker}
         onOpen={() => setOpenDatePicker(true)}
         onClose={() => setOpenDatePicker(false)}
-        value={date}
+        value={props.date}
         onChange={(event) => {
-          setDate(event?.toString() || '')
           props.onChangeDate({ name: props?.name, value: event })
         }}
         minDate={props?.minDate || ''}
@@ -39,7 +38,7 @@ const DateIconPicker: React.FC<InitProps> = (props) => {
           <TextField className='date-add' variant='outlined' {...propsDate} />
         )}
       />
-    </>
+    </div>
   )
 }
 

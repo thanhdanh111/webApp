@@ -1,10 +1,10 @@
 import { Tag } from 'helpers/type'
 import { tagTasksActionType } from './tag_tasks_type_action'
 
-export const getTag = (tags: { [key: string]: Tag}) => {
+export const getTag = (data : { tags: { [key: string]: Tag}, cursor: string, totalCount: number }) => {
   return {
     type: tagTasksActionType.GET_TAG,
-    payload: tags,
+    payload: data,
   }
 }
 

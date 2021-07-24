@@ -8,7 +8,7 @@
   font-size: 10px
   font-weight: 700
   position: relative
-  min-width: 35px
+  min-width: 50px
   height: 17px
 
   &:hover
@@ -18,6 +18,8 @@
       align-items: center
       position: absolute
       right: 0
+      z-index: 0
+      opacity: 1
 
       .icon-item
         font-size: 14px
@@ -33,12 +35,24 @@
         padding: 2px
 
     .tag-text
-      width: calc(100% - 25px)
+      width: calc(100% - 32px)
       white-space: nowrap
       overflow: hidden
 
+  .background-opacity
+    display: block
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    opacity: 0.2
+    border-radius: 2px 9px 9px 2px
+
   .icon-tag
-    display: none
+    position: absolute
+    opacity: 0
+    z-index: -111
 
   .tag-text
     width: 100%
@@ -71,37 +85,6 @@
     margin-right: 8px
     font-size: 20px
 
-.change-color-popup
-  margin-top: 20px
-
-  .change-color
-    width: 300px
-
-    .color-item
-      width: 18px
-      height: 18px
-      margin: 5px
-      border-radius: 50%
-      display: flex;
-      font-size: 14px;
-      align-items: center;
-      justify-content: center;
-
-      &.active
-        .color-checked
-          display: inline
-          color: #fff
-          font-size: 14px
-
-    .color-picker
-      position: relative
-
-      .input-color-picker
-        position: absolute
-        left: 0
-        z-index: -1
-        visibility: hidden
-
 .popup-tag-close
   position: absolute
   inset: 0
@@ -119,6 +102,15 @@
 
   .search-tag
     border-top: 1px solid #d3d3d3
+    position: relative
+
+    .add-icon-tag
+      color: #50ac55
+      position: absolute
+      top: 0
+      bottom: 0
+      right: 5px
+      cursor: pointer
 
   .tag-list
     padding-top: 0
@@ -129,6 +121,7 @@
       justify-content: space-between
       padding: 4px 0
       border-top: 1px solid #d3d3d3
+      cursor: pointer
 
       &:hover
         .more-item-icon
