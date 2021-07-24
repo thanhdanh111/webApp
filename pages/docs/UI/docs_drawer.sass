@@ -1,0 +1,127 @@
+.doc-page-item
+  user-select: none
+  -webkit-user-select: none
+  -ms-user-select: none
+  cursor: pointer
+  width: 240px !important
+  border-radius: 16px
+  height: 30px
+  margin: 8px 30px
+  padding-right: 25px
+  padding-left: 15px
+
+  .MuiTypography-root
+    text-overflow: clip
+    overflow: hidden
+    white-space: nowrap
+
+  .side-toolbar--menu-item
+    width: 82px
+
+  .side-toolbar--menu-icon
+    min-width: 25px !important
+
+    .MuiSvgIcon-root
+      width: 20px
+      height: 20px
+
+  .MuiListItemIcon-root
+    min-width: 30px
+
+  .block-wrapper--btn
+    height: 10px
+    width: 20px
+    align-items: center
+    opacity: 0
+    margin-left: 10px
+
+  &:hover
+    background-color: rgb(224, 224, 224)
+
+    .block-wrapper--btn
+      opacity: 1
+
+.docs-drawer--add-new-project
+  color: #000
+  padding-left: 10px !important
+
+  .MuiListItemIcon-root
+    color: #000
+
+  .MuiListItemText-root
+    .MuiTypography-root
+      font-weight: 600
+      font-size: 16px
+
+.docs-drawer-back-home-layout
+  display: flex
+  align-items: center
+  margin-bottom: 20px
+  margin-top: 10px
+  margin-left: 8px
+
+.docs-drawer--icon-layout
+  border-radius: 6px
+  margin-left: 5px
+  height: 32px
+  width: 32px
+  padding-top: 3px
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08)
+  user-select: none
+  display: flex
+  justify-content: center
+
+.docs-project-selected
+  background-color: rgba(13, 134, 143, 0.15) !important
+
+.docs-page-selected
+  background-color: rgba(13, 134, 143, 0.15) !important
+
+.arrow-back-home
+  align-items: center
+  width: 15px
+  height: 15px
+
+.docs-drawer-delete-project-btn
+  width: 40px
+  height: 40px
+  color: #ff0
+
+.doc-project-item
+  user-select: none
+  cursor: pointer
+  padding-left: 5px !important
+
+  .MuiTypography-root
+    text-overflow: clip
+    overflow: hidden
+    white-space: nowrap
+
+  .MuiListItemIcon-root
+    min-width: 40px
+
+  .block-wrapper--btns
+    .block-wrapper--btn
+      width: 35px
+      height: 35px
+      margin-right: 5px
+
+  .block-wrapper--btn
+    .doc-project-expanded-icon
+      width: 30px
+      height: 30px
+      margin-top: 5px
+
+    .doc-project-hover-icon-options
+      width: 20px
+      height: 20px
+      display: none
+
+  &:hover
+    .block-wrapper--btn
+      .doc-project-expanded-icon
+        display: none
+    
+      .doc-project-hover-icon-options
+        display: inline-block
+

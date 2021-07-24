@@ -16,6 +16,7 @@ import { taskBoardsReducer } from 'pages/task_boards/logic/task_boards_reducer'
 import { statusesReducer } from 'pages/task_statuses/logic/task_statuses_reducer'
 import { tasksReducer } from 'pages/tasks/logic/task_reducer'
 import { tagTasksReducer } from 'pages/tag_tasks/logic/tag_tasks_reducer'
+import docsReducer from 'pages/docs/logic/docs_reducer'
 
 const rootReducer = combineReducers({
   accountReducer,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   projects: projectsReducer,
   timeOffRequest: timeOffRequestReducer,
   eventLogs: eventLogsReducer,
+  docs: docsReducer,
   company: companyReducer,
   newNotifications: notificationReducer,
   boards: boardsReducer,
