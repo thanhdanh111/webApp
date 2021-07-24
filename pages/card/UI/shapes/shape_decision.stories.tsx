@@ -5,7 +5,7 @@ import CustomDecision from './shape_decision'
 storiesOf('ShapeDecision Scripts', module).add('ShapeDecision Scripts', () => {
   return (
     <>
-      <CustomDecision />
+      <CustomDecision id/>
     </>
   )
 })

@@ -30,10 +30,12 @@ beforeAll(async () => {
 describe('Card Page', () => {
   test('Test UI list card page successfully after login', async () => {
     await page.goto('http://localhost:5000/board');
+    await page.waitFor(5000);
     await page.waitForSelector('.flowchart');
+    await page.waitFor(5000);
 
     await page.waitForSelector('.list-board');
-    await page.waitFor(5000);
+
 
     const imageListBoard = await page.screenshot();
     expect(imageListBoard).toMatchImageSnapshot();
@@ -41,9 +43,8 @@ describe('Card Page', () => {
     await page.click('.create-name-flowchart');
 
     await page.waitForSelector('.back-ground');
-
-    await page.click('.div-svg-process');
     await page.waitFor(5000);
+    await page.click('.div-svg-process');
 
     const viewBoard = await page.screenshot();
     expect(viewBoard).toMatchImageSnapshot();

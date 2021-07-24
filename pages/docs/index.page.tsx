@@ -1,16 +1,16 @@
 import React from 'react'
 import EditorView from './UI/editor_view'
-import InlineToolbar from '../../components/inline_toolbar/inline_toolbar'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import { updateDocs } from './logic/docs_actions'
 import { RootState } from 'redux/reducers_registration'
-import { handleToolbarActions } from './logic/docs_inline_toolbar_actions'
 import { Input } from '@material-ui/core'
 import PrimaryButtonUI from '@components/primary_button/primary_button'
 import { createNewPage, savePage } from './logic/docs_apis'
 import { EditorState } from 'draft-js'
 import { DocProject, PageContent } from './logic/docs_reducer'
 import { checkTrueInArray } from 'helpers/check_true_in_array'
+import InlineToolbar from '@components/inline_toolbar/inline_toolbar'
+import { handleToolbarActions } from './logic/docs_inline_toolbar_actions'
 
 interface DocsPageData {
   displayInlineToolbar: boolean

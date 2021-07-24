@@ -14,6 +14,7 @@ interface DocsValue {
   selectedPage?: PageContent
   projectAccessOfUsers: ProjectAccessMapOfUsers
   usersInCompanyMap: UsersInCompanyMap
+  drawerLoading: boolean
 }
 
 export interface UsersInCompanyMap {
@@ -106,14 +107,15 @@ const initialState: DocsValue = {
   loading: false,
   projectAccessOfUsers: {},
   usersInCompanyMap: {},
+  drawerLoading: false,
 }
 
 export type DocsValueType = DocsValue
 
 function updateSelectedItemInDrawer(data, state: DocsValue) {
-  const { pageID, projectID, ...restData }: UpdateSelectedItemInDrawerType  = data
-  const project = state?.docProjectsMap?.[projectID ?? '']
-  const page = project?.pages?.[pageID ?? '']
+  const { pageID = '', projectID = '', ...restData }: UpdateSelectedItemInDrawerType  = data
+  const project = state?.docProjectsMap?.[projectID]
+  const page = project?.pages?.[pageID]
 
   if (project) {
     state.selectedDocProject = project
@@ -146,13 +148,6 @@ const docsReducer = (state = initialState, action) => {
         ...state,
         ...action.data,
       }
-    case DocsActionTypes.UpdateDocsInDrawer:
-
-      return {
-        ...state,
-        ...action.data,
-      }
-
     case DocsActionTypes.UpdateSelectedItemInDrawer:
 
       return updateSelectedItemInDrawer(action.data, state)

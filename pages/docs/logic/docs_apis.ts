@@ -40,7 +40,7 @@ export const createNewPage = () => async (dispatch, getState) => {
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
+    dispatch(updateDocs({ drawerLoading: true }))
 
     const rawBlocks = convertToRaw(editorState?.getCurrentContent())
 
@@ -64,7 +64,7 @@ export const createNewPage = () => async (dispatch, getState) => {
     const pagesInProject = newProjectsMap?.[docProjectID]?.pages
 
     if (!pagesInProject) {
-      dispatch(updateDocs({ loading: false }))
+      dispatch(updateDocs({ drawerLoading: false }))
 
       return
     }
@@ -83,9 +83,9 @@ export const createNewPage = () => async (dispatch, getState) => {
 
     accessForNewPage[pageID] = [DocsRole.WRITE, DocsRole.READ]
 
-    dispatch(updateDocs({ projectAccessOfUsers, loading: false, docProjectsMap: newProjectsMap }))
+    dispatch(updateDocs({ projectAccessOfUsers, drawerLoading: false, docProjectsMap: newProjectsMap }))
   } catch (error) {
-    dispatch(updateDocs({ loading: false }))
+    dispatch(updateDocs({ drawerLoading: false }))
   }
 }
 
@@ -166,7 +166,7 @@ export const deletePage = () => async (dispatch, getState) => {
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
+    dispatch(updateDocs({ drawerLoading: true }))
 
     await axios.delete(
       `${config.BASE_URL}/docProjects/${docProjectID}/docPages/${selectedPageID}`,
@@ -181,16 +181,16 @@ export const deletePage = () => async (dispatch, getState) => {
 
     delete newDocProjectsMap[docProjectID]?.pages?.[selectedPageID]
 
-    dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }))
+    dispatch(updateDocs({ drawerLoading: false, docProjectsMap: newDocProjectsMap }))
   } catch (error) {
-    dispatch(updateDocs({ loading: false }))
+    dispatch(updateDocs({ drawerLoading: false }))
   }
 }
 
 function blendProjectWithoutPagesAndHavingPages(docProjects, docPagesIntoDocProjectsMap) {
   const newProjectsMap = docPagesIntoDocProjectsMap
 
-  docProjects?.data?.list?.forEach((docProject) => {
+  docProjects.forEach((docProject) => {
     if (!docProject) {
 
       return
@@ -230,8 +230,6 @@ export const getDocProjects = () => async (dispatch, getState) => {
     if (!companyID) {
       return
     }
-
-    dispatch(updateDocs({ loading: true }))
 
     const docPages = await axios.get(`${config.BASE_URL}/docPages`,
       {
@@ -276,10 +274,7 @@ export const getDocProjects = () => async (dispatch, getState) => {
       )
     }
 
-    dispatch(updateDocs({
-      loading: false,
-      docProjectsMap: docPagesIntoDocProjectsMap,
-    }))
+    dispatch(updateDocs({ docProjectsMap: docPagesIntoDocProjectsMap }))
   } catch (error) {
     dispatch(updateDocs({ loading: false }))
   }
@@ -303,7 +298,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
+    dispatch(updateDocs({ drawerLoading: true }))
 
     const res = await axios.post(
       `${config.BASE_URL}/docProjects`,
@@ -330,7 +325,7 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
     })
 
     if (!validNewData) {
-      dispatch(updateDocs({ loading: false }))
+      dispatch(updateDocs({ drawerLoading: false }))
 
       return
     }
@@ -357,9 +352,9 @@ export const createNewDocProject = ({ projectName }) => async (dispatch, getStat
 
     projectAccessOfUsers[userID] = accessOfUser
 
-    dispatch(updateDocs({ projectAccessOfUsers, loading: false, docProjectsMap: newDocProjectsMap }))
+    dispatch(updateDocs({ projectAccessOfUsers, drawerLoading: false, docProjectsMap: newDocProjectsMap }))
   } catch (error) {
-    dispatch(updateDocs({ loading: false }))
+    dispatch(updateDocs({ drawerLoading: false }))
   }
 }
 
@@ -372,7 +367,7 @@ export const deleteDocProject = ({ projectID }) => async (dispatch, getState) =>
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
+    dispatch(updateDocs({ drawerLoading: true }))
 
     await axios.delete(
       `${config.BASE_URL}/docProjects/${projectID}`,
@@ -387,9 +382,9 @@ export const deleteDocProject = ({ projectID }) => async (dispatch, getState) =>
 
     delete newDocProjectsMap[projectID]
 
-    dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }))
+    dispatch(updateDocs({ drawerLoading: false, docProjectsMap: newDocProjectsMap }))
   } catch (error) {
-    dispatch(updateDocs({ loading: false }))
+    dispatch(updateDocs({ drawerLoading: false }))
   }
 }
 
