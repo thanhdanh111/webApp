@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import {
-  Drawer, ListItemIcon, List, ListItem, Hidden, ListItemText, ListSubheader, Typography,
+  Drawer, ListItemIcon, List, ListItem,
+  Hidden, ListItemText, ListSubheader, Typography,
 } from '@material-ui/core'
 import { useRouter } from 'next/router'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
@@ -11,6 +12,8 @@ import { EqualizerOutlined } from '@material-ui/icons'
 import EventNoteIcon from '@material-ui/icons/EventNote'
 import BusinessIcon from '@material-ui/icons/Business'
 import DashboardIcon from '@material-ui/icons/Dashboard'
+import EditIcon from '@material-ui/icons/Edit'
+import DocsDrawer from 'pages/docs/UI/docs_drawer'
 
 const elementIcons = {
   account: <AccountCircleIcon />,
@@ -19,6 +22,7 @@ const elementIcons = {
   home: <HomeIcon />,
   invite_members: <img alt='logo' width='24px' src='../send_mail.svg' />,
   time_off: <EventNoteIcon />,
+  docs: <EditIcon />,
   event_logs: <EventNoteIcon />,
   projects: <EventNoteIcon />,
   company: <BusinessIcon />,
@@ -26,7 +30,7 @@ const elementIcons = {
 }
 
 const drawerElements = {
-  general: ['home', 'users', 'statistics'],
+  general: ['home', 'users', 'statistics', 'docs'],
   management: ['account', 'company', 'invite_members', 'time_off', 'event_logs', 'projects', 'board'],
 }
 
@@ -72,8 +76,21 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
     return items
   }
 
-  const drawer = (
-    <div>
+  async function handleChangeRoute(pathName) {
+    if (typeof pathName !== 'string' || !pathName.length) {
+      return
+    }
+
+    await router.push(`/${pathName}`)
+  }
+
+  function handleDrawer() {
+    const currentPath = window?.location?.pathname
+    if (currentPath === '/docs') {
+      return  <DocsDrawer />
+    }
+
+    return <div>
       <List component='nav' aria-label='main mailbox folders'>
         <ListItem>
           <ListItemIcon>
@@ -83,23 +100,19 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
         {listItems()}
       </List>
     </div>
-  )
-
-  async function handleChangeRoute(pathName) {
-    if (typeof pathName !== 'string' || !pathName.length) {
-      return
-    }
-
-    await router.push(`/${pathName}`)
   }
+
+  const drawer = handleDrawer()
+  const container = window !== undefined ? () => window.document.body : undefined
 
   return (
     <nav className='drawer-nav' aria-label='mailbox folders'>
-      <Hidden mdUp implementation='css'>
+      <Hidden mdUp implementation='js'>
         <Drawer
           className='temporary-drawer'
           onClose={() => onChangeDrawerOpen()}
           variant='temporary'
+          container={container}
           anchor='left'
           open={isDrawerOpen}
           classes={{
