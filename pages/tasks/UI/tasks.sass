@@ -96,30 +96,6 @@
   .grid-icon
     height: 40px
 
-    .icon-add
-      .date-text
-        font-size: 11px
-
-    .urgent-icon
-      color: #f24423
-
-    .high-icon
-      color: #ffcd37
-
-    .normal-icon
-      color: #70dcfc
-
-    .low-icon
-      color: #d8d8d8
-
-    .clear-icon
-      color: #f8b6b1
-
-  .date-add
-    width: 0
-    height: 0
-    visibility: hidden
-
   .save-add
     background-color: #50ac55
     font-size: 10px
@@ -203,6 +179,9 @@
         .icon-close
           font-size: 14px
 
+          &.close-detail
+            z-index: 1301
+
         &.close-detail
           z-index: 1301
 
@@ -215,7 +194,7 @@
           color: #50ac55
           border-color: #50ac55
 
-    .tag-border
+    .border-dashed-icon
       border-radius: 50px
       border: 1px dashed #d3d3d3
       color: #d3d3d3
@@ -244,8 +223,8 @@
 
       .priority-icon
         padding: 6px
-        width: 35px
-        height: 35px
+        width: 30px
+        height: 30px
 
     .header-modal-detail
       border-bottom: 1px solid #dedede
@@ -340,6 +319,55 @@
         position: absolute
         z-index: -1
 
+    .detail-time
+      display: flex
+      align-items: center
+      color: #928f8f
+      padding: 15px 0
+      font-size: 12px
+      border-bottom: 0.5px solid #dedede
+
+      .item-time
+        padding: 0 20px
+        height: 30px
+
+      .detail-tracked
+        border-left: 1px solid
+        border-right: 1px solid
+
+        .tracked-icon
+          font-size: 12px
+          color: #50ac55
+
+      .detail-due-date
+        display: flex
+        align-items: center
+
+        .due-date
+          font-size: 30px
+          padding: 5px
+
+      .text-time
+        margin: 0
+        text-align: center
+
+    .content-activity
+      .tabs-container
+        display: flex
+        justify-content: center
+
+        .label-icon
+          font-size: 12px
+          width: auto
+
+      .content-log
+        margin: 8px
+        color: #c5c5c5
+
+        .user-log
+          color: #50ac55
+
+
 .attachment-detail-popup
   .option-attachment
     font-size: 12px
@@ -358,3 +386,33 @@
     width: 25px
     height: 25px
     font-size: 10px
+
+.date-time-picker
+  .icon-add
+    .date-text
+      font-size: 11px
+
+  .date-add
+    position: absolute
+    z-index: -111
+    visibility: hidden;
+
+.popup-status-detail
+  z-index: 1300
+  background-color: #fff
+  box-shadow: 0 0 5px #c5c5c5
+  max-height: 150px
+  overflow: auto
+
+  .list-status
+    .item-status
+      text-align: center
+
+      &:hover
+        background-color: #50ac55
+        color: #fff
+
+@media (min-width: 600px)
+  .content-activity
+    .MuiTab-root
+      min-width: unset

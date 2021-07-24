@@ -150,8 +150,8 @@ export interface Task {
   _id: string
   companyID?: Company
   departmentID?: Department
-  taskStatusID: string
-  tagIDs?: string[]
+  taskStatusID: TaskStatus
+  tagIDs?: Tag[] | string[]
   userIDs?: User[]
   title: string
   description?: string

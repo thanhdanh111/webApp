@@ -16,7 +16,15 @@ export function convertArrayObjectToObject<T>(array: T[], key: string){
     return { }
   }
   const obj = { }
-  array.forEach((item) => obj[item[key]] = item)
+  array.forEach((item) => obj[getValue(key, item)] = item)
 
   return obj
+}
+
+const getValue = (keys, obj) => {
+  const splitedKeys = keys.split('.')
+
+  return splitedKeys.reduce((accumulator, currentValue) => {
+    return accumulator[currentValue]
+  }, obj)
 }

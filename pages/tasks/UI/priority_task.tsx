@@ -1,71 +1,67 @@
-import { Menu, Tooltip } from '@material-ui/core'
+import { Menu } from '@material-ui/core'
 import React from 'react'
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
-import OutlinedFlagIcon from '@material-ui/icons/OutlinedFlag'
-import { RootStateOrAny, useSelector } from 'react-redux'
 import PriorityItem from './priority_item'
 
-enum TypePiority {
-  URGENT = 'urgent-icon',
-  HIGH = 'high-icon',
-  NORMAL = 'normal-icon',
-  LOW = 'low-icon',
-}
+export const priorityLevels = {
 
-const priorityLevels = [
-  {
+  URGENT: {
     text: 'Urgent',
     value: 'URGENT',
     color: '#F24423',
   },
-  {
+  HIGH: {
     text: 'High',
     value: 'HIGH',
     color: '#FFCD37',
   },
-  {
+  NORMAL: {
     text: 'Normal',
     value: 'NORMAL',
     color: '#70DCFC',
   },
-  {
+  LOW: {
     text: 'Low',
     value: 'LOW',
     color: '#D8D8D8',
   },
-  {
+  default: {
     text: 'Clear',
     value: '',
     color: '#F8B6B1',
   },
-]
+}
 
-const Priority: React.FC = () => {
-  const newTask = useSelector((state: RootStateOrAny) => state.taskBoards?.newTask)
+interface InitialProp {
+  getPriority: (tags) => void
+}
+
+const Priority: React.FC<InitialProp> = (props) => {
 
   return (
     <PopupState variant='popover'>
-    {(popupState) => (
-      <React.Fragment>
-        <Tooltip title='Set Priority' arrow={true} placement='top'>
-            <OutlinedFlagIcon
-              fontSize='small'
-              className={`icon-add ${TypePiority[newTask?.priority || '']}`}
-              {...bindTrigger(popupState)}
-            />
-        </Tooltip>
-        <Menu
-          {...bindMenu(popupState)}
-          autoFocus={false}
-          className='priority-popup'
-        >
-          {priorityLevels.map((val, key) => (
-            <PriorityItem key={key} priorityLevel={val} close={() => popupState.close()}/>
-          ))}
-        </Menu>
-      </React.Fragment>
-    )}
-  </PopupState>
+      {(popupState) => (
+        <React.Fragment>
+          <div {...bindTrigger(popupState)}>{props.children}</div>
+          <Menu
+            {...bindMenu(popupState)}
+            autoFocus={false}
+            className='priority-popup'
+          >
+            {Object.values(priorityLevels).map((val, key) => (
+              <PriorityItem
+                key={key}
+                priorityLevel={val}
+                changePriority={() => {
+                  props.getPriority(val.value)
+                  popupState.close()
+                }}
+              />
+            ))}
+          </Menu>
+        </React.Fragment>
+      )}
+    </PopupState>
   )
 }
 
