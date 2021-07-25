@@ -15,6 +15,7 @@ interface DocsDrawerData {
   docProjectsMap: DocProjectMap
   selectedDocProject: DocProject
   selectedPage: PageContent
+  accountUserID: string
 }
 
 type DocsDrawerDataType = DocsDrawerData
@@ -25,6 +26,7 @@ const DocsDrawer = () => {
     docProjectsMap,
     selectedDocProject,
     selectedPage,
+    accountUserID,
   }: DocsDrawerDataType = useSelector((state: RootState) => {
 
     return {
@@ -32,6 +34,7 @@ const DocsDrawer = () => {
       drawerLoading: state?.docs?.drawerLoading,
       selectedDocProject: state?.docs?.selectedDocProject,
       selectedPage: state?.docs?.selectedPage,
+      accountUserID: state?.userInfo?.userID,
     }
   }, shallowEqual)
   const router = useRouter()
@@ -105,6 +108,7 @@ const DocsDrawer = () => {
             const pagesLength = pages?.length
 
             return <DocsDrawerProjectUI
+              accountUserID={accountUserID}
               key={project?._id}
               project={project}
               pagesLength={pagesLength}

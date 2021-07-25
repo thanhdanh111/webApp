@@ -9,9 +9,12 @@ import { createNewPage, savePage } from './logic/docs_apis'
 import { EditorState } from 'draft-js'
 import { DocProject, PageContent } from './logic/docs_reducer'
 import { checkTrueInArray } from 'helpers/check_true_in_array'
+import InlineToolbar from '@components/inline_toolbar/inline_toolbar'
+import { handleToolbarActions } from './logic/docs_inline_toolbar_actions'
 
 interface DocsPageData {
   displayInlineToolbar: boolean
+  selectionRect:  DOMRect | undefined
   editorState: EditorState
   title: string
   loading: boolean
@@ -25,6 +28,7 @@ const DocsPage = () => {
   const dispatch = useDispatch()
   const {
     displayInlineToolbar,
+    selectionRect,
     editorState,
     title,
     loading,
@@ -34,6 +38,7 @@ const DocsPage = () => {
 
     return {
       displayInlineToolbar: state?.docs?.displayInlineToolbar,
+      selectionRect: state?.docs?.selectionRect,
       editorState: state?.docs?.editorState,
       title: state?.docs?.title,
       loading: state?.docs?.loading,
@@ -49,6 +54,16 @@ const DocsPage = () => {
       !selectedProject._id,
     ],
   })
+
+  function onClickOptionInToolbar(action) {
+    if (!action) {
+      return
+    }
+
+    dispatch(updateDocs({
+      editorState: handleToolbarActions(editorState, action),
+    }))
+  }
 
   function onChangeTitle(event) {
     if (typeof event?.target?.value !== 'string') {
@@ -96,6 +111,12 @@ const DocsPage = () => {
         displayInlineToolbar={displayInlineToolbar}
       />
     </div>
+      <InlineToolbar
+        editorState={editorState}
+        onClickOption={onClickOptionInToolbar}
+        displayInlineToolbar={displayInlineToolbar}
+        selectionRect={selectionRect}
+      />
   </div>
 }
 
