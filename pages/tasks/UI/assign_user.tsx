@@ -1,10 +1,10 @@
-import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state'
 import { Menu } from '@material-ui/core'
 import { RootStateOrAny, useSelector } from 'react-redux'
 import GroupUserAssigned from './group_user_assigned'
 import UsersPopupUI from 'components/users_popup/users_popup'
 import { User } from 'helpers/type'
 import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array'
+import { useState } from 'react'
 
 interface InitialProps {
   usersAssigned: (User)[]
@@ -15,6 +15,11 @@ interface InitialProps {
 const AssignUser: React.FC<InitialProps> = (props) => {
   const userInfo = useSelector((state: RootStateOrAny) => state.userInfo)
   const { usersAssigned, handleAssign, sizes }: InitialProps = props
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget)
+  }
 
   const handleUsersAssign = (user) => {
     let tempAssign = usersAssigned || []
@@ -33,22 +38,35 @@ const AssignUser: React.FC<InitialProps> = (props) => {
   }
 
   return (
-    <PopupState variant='popover'>
-      {(popupState) => (
-        <div>
-          <div {...bindTrigger(popupState)} className='choose-assign-user'>
-            <GroupUserAssigned currentUser={userInfo} usersAssigned={usersAssigned} sizes={sizes} />
-          </div>
-          <Menu
-            {...bindMenu(popupState)}
-            autoFocus={false}
-            className='user-popup'
-          >
-            <UsersPopupUI chooseUser={handleUsersAssign} usersAssigned={usersAssigned}/>
-          </Menu>
-        </div>
-      )}
-    </PopupState>
+    <>
+      <div className='choose-assign-user' onClick={handleClick}>
+        <GroupUserAssigned
+          currentUser={userInfo}
+          usersAssigned={usersAssigned}
+          sizes={sizes}
+        />
+      </div>
+      <Menu
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        autoFocus={false}
+        className='user-popup'
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        onClose={() => setAnchorEl(null)}
+      >
+        <UsersPopupUI
+          chooseUser={handleUsersAssign}
+          usersAssigned={usersAssigned}
+        />
+      </Menu>
+    </>
   )
 }
 

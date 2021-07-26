@@ -4,7 +4,6 @@ import { ProjectAccessMapOfUsers } from './get_folder_access'
 
 export enum DocsActionTypes {
   UpdateDocs = 'UpdateDocs',
-  UpdateDocsInDrawer = 'UpdateDocsInDrawer',
   UpdateSelectedItemInDrawer = 'updateSelectedItemInDrawer',
 }
 
@@ -23,19 +22,13 @@ interface UpdateDocs {
   displayShare?: boolean
   projectAccessOfUsers?: ProjectAccessMapOfUsers
   usersInCompanyMap?: UsersInCompanyMap
+  drawerLoading?: boolean
 }
 
 export const updateDocs = (data: UpdateDocs) => {
   return {
     data,
     type: DocsActionTypes.UpdateDocs,
-  }
-}
-
-export const updateDocsInDrawer = (data: UpdateDocs) => {
-  return {
-    data,
-    type: DocsActionTypes.UpdateDocsInDrawer,
   }
 }
 

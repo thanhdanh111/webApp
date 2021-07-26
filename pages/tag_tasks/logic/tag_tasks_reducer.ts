@@ -1,13 +1,16 @@
-import { Tag } from '../../../helpers/type'
+import { Tag, Task } from '../../../helpers/type'
 import { createTag, deleteTag, getTag, updateTag } from './tag_tasks_action'
 import { tagTasksActionType } from './tag_tasks_type_action'
 import axios from 'axios'
 import { config } from '../../../helpers/get_config'
 import { pushNewNotifications } from '../../../redux/common/notifications/reducer'
 import { convertArrayObjectToObject } from 'helpers/convert_array_to_object'
+import { getTaskByID, getTasks } from 'pages/tasks/logic/task_action'
 
 export interface TagTaksType {
-  tags: {[key: string]: Tag}
+  tags: {[key: string]: Tag},
+  cursor: string,
+  totalCount: number,
 }
 
 export enum NotificationTypes {
@@ -17,6 +20,8 @@ export enum NotificationTypes {
 
 const initialState: TagTaksType = {
   tags: {},
+  cursor: '',
+  totalCount: 0,
 }
 
 export  const tagTasksReducer = (state = initialState, action) => {
@@ -24,7 +29,9 @@ export  const tagTasksReducer = (state = initialState, action) => {
     case tagTasksActionType.GET_TAG:
       return {
         ...state,
-        tags: action.payload,
+        tags: action.payload.tags,
+        cursor: action.payload.cursor,
+        totalCount: action.payload.totalCount,
       }
     case tagTasksActionType.CREATE_TAG:
       return {
@@ -48,14 +55,24 @@ export  const tagTasksReducer = (state = initialState, action) => {
       return state
   }
 }
-
-export const getTagsThunkAction = () => async (dispatch, getState) => {
+export const getTagsThunkAction = (searchTag, isNewSearchTag) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
     const companyID = getState()?.userInfo?.currentCompany?._id
     if (!token || !companyID) {
       return
     }
+    let cursor = ''
+    let listTags = {}
+
+    if (!isNewSearchTag) {
+      cursor = getState()?.tagTasks.cursor
+      if (cursor === 'END'){
+        return
+      }
+      listTags = getState()?.tagTasks.tags
+    }
+
     const res = await axios.get(`${config.BASE_URL}/tags`,
       {
         headers: {
@@ -63,10 +80,16 @@ export const getTagsThunkAction = () => async (dispatch, getState) => {
           Authorization: `Bearer ${token}`,
         },
         params: {
+          cursor,
           companyID,
+          limit: 10,
+          name: searchTag,
+          sortDirection: 'ASC',
+          sortBy: 'name',
         },
       })
-    dispatch(getTag(convertArrayObjectToObject(res.data.list, '_id')))
+    const dataConvert = convertArrayObjectToObject(res.data.list, '_id')
+    dispatch(getTag({ tags: { ...listTags, ...dataConvert }, cursor: res.data.cursor, totalCount : res.data.totalCount }))
   } catch (error) {
     throw error
   }
@@ -76,12 +99,11 @@ export const createTagThunkAction = (tag) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
     const companyID = getState()?.userInfo?.currentCompany?._id
-    const departmentID = getState()?.userInfo?.currentDepartment?._id
     if (!token || !companyID) {
       return
     }
     const res = await axios.post(`${config.BASE_URL}/companies/${companyID}/tags`,
-      { ...tag, departmentID },
+      { ...tag },
       {
         headers: {
           'Content-Type': 'application/json',
@@ -96,14 +118,17 @@ export const createTagThunkAction = (tag) => async (dispatch, getState) => {
   }
 }
 
-export const updateTagThunkAction = (tag) => async (dispatch, getState) => {
+export const updateTagThunkAction = (tagID, dataUpdateTag) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
     const companyID = getState()?.userInfo?.currentCompany?._id
+    const { tasks, currentTask }: {tasks: {[key: string] : Task}, currentTask: Task} = getState()?.tasks
+
     if (!token || !companyID) {
       return
     }
-    const res = await axios.put(`${config.BASE_URL}/companies/${companyID}/tags/${tag._id}`,
+    const res = await axios.put(`${config.BASE_URL}/companies/${companyID}/tags/${tagID}`,
+    dataUpdateTag,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -111,6 +136,12 @@ export const updateTagThunkAction = (tag) => async (dispatch, getState) => {
         },
       })
     dispatch(updateTag(res.data))
+    currentTask.tagIDs = updateTagInTags(currentTask?.tagIDs as Tag[] || [], res.data)
+    dispatch(getTaskByID(currentTask))
+    Object.keys(tasks).map((key) => {
+      tasks[key].tagIDs = updateTagInTags(tasks[key]?.tagIDs as Tag[] || [], res.data)
+    })
+    dispatch(getTasks(tasks))
   } catch (error) {
     throw error
   }
@@ -120,6 +151,8 @@ export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
     const companyID = getState()?.userInfo?.currentCompany?._id
+    const { tasks, currentTask }: {tasks: {[key: string] : Task}, currentTask: Task} = getState()?.tasks
+
     if (!token || !companyID) {
       return
     }
@@ -132,6 +165,13 @@ export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
       })
     if (res.data?.isDeleted){
       dispatch(deleteTag(id))
+      currentTask.tagIDs = (currentTask?.tagIDs as Tag[])?.filter((tag) => tag._id !== id)
+      dispatch(getTaskByID(currentTask))
+      Object.keys(tasks).map((key) => {
+        tasks[key].tagIDs = (tasks[key]?.tagIDs as Tag[])?.filter((tag) => tag._id !== id)
+      })
+      dispatch(getTasks(tasks))
+
     }
   } catch (error) {
     dispatch(
@@ -143,4 +183,8 @@ export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
     )
     throw error
   }
+}
+
+const updateTagInTags = (tags: Tag[], tagUpdate: Tag) => {
+  return tags.map((tag) => tag._id === tagUpdate._id ? tagUpdate : tag)
 }

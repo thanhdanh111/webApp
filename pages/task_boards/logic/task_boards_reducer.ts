@@ -11,6 +11,7 @@ import {
 } from './task_boards_action'
 import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications'
+import { getTaskByID } from 'pages/tasks/logic/task_action'
 
 export interface TaskBoardsType {
   loading: boolean
@@ -280,6 +281,7 @@ export const updateTaskToTaskStatusByIdThunkAction = ({
   try {
     const localAccess = localStorage.getItem('access_token')
     const companyID = getState().userInfo.currentCompany._id
+    const currentTask = getState().tasks.currentTask
 
     if (!localAccess || !companyID || !taskID) {
       return
@@ -305,6 +307,9 @@ export const updateTaskToTaskStatusByIdThunkAction = ({
     })
 
     const notification = notificationsType[res.status]
+    if (taskID === currentTask._id){
+      dispatch(getTaskByID(res.data))
+    }
     await dispatch(setLoading(false))
     await dispatch(pushNewNotifications({ variant: 'success' , message: notification }))
   } catch (error) {

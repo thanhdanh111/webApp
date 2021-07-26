@@ -5,6 +5,7 @@ import { taskActionType } from './task_action_type'
 import {
   createdTask,
   deletedTask,
+  getTaskByID,
   getTasks,
   setAssigned,
   setLoading,
@@ -38,7 +39,7 @@ const initialState: TaskType = {
   limitTasks: 100,
   temporaryTask: {
     _id: '',
-    taskStatusID: '',
+    taskStatusID: { _id: '', taskIDs: [], taskBoardID: '', title: '' },
     title: '',
   },
   temporaryAssigned: [],
@@ -49,7 +50,7 @@ const initialState: TaskType = {
   currentTask: {
     _id: '',
     title: '',
-    taskStatusID: '',
+    taskStatusID: { _id: '', taskIDs: [], taskBoardID: '', title: '' },
   },
 }
 
@@ -313,6 +314,7 @@ export const updateAssignUserThunkAction = (
   try {
     const localAccess = localStorage.getItem('access_token')
     const companyID = getState().userInfo.currentCompany._id
+    const currentTask = getState().tasks.currentTask
 
     if (!companyID || !taskID) {
       return
@@ -335,6 +337,9 @@ export const updateAssignUserThunkAction = (
       taskStatusID: res?.data?.taskStatusID?._id || res?.data?.taskStatuaID,
     }
 
+    if (taskID === currentTask?._id){
+      dispatch(getTaskByID(res.data))
+    }
     await dispatch(updateUserAssigned(formatData))
     await dispatch(setLoading(false))
     await dispatch(pushNewNotifications({ variant: 'success' , message: 'updated users assigned for task successfully!' }))
@@ -355,14 +360,14 @@ export const getTaskByIDThunkAction = (taskID: string) => async (dispatch, getSt
       return
     }
 
-    // const res = await axios.get(`${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`, {
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // })
+    const res = await axios.get(`${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
 
-    // await dispatch(getTaskByID(res.data))
+    await dispatch(getTaskByID(res.data))
     await dispatch(setLoading(false))
   } catch (error) {
     throw error
@@ -416,3 +421,29 @@ export const getTaskByIDThunkAction = (taskID: string) => async (dispatch, getSt
 //     throw error
 //   }
 // }
+export const updateTaskThunkAction = (taskID, dataUpdateTask) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token')
+    const companyID = getState()?.userInfo?.currentCompany?._id
+    const { tasks }: {tasks: {[key: string]: Task}} = getState().tasks
+
+    if (!token || !companyID) {
+      return
+    }
+    const res = await axios.put(`${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
+      dataUpdateTask,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    if (taskID === getState()?.tasks?.currentTask?._id) {
+      dispatch(getTaskByID(res.data))
+    }
+    tasks[res.data?._id] = res.data
+    dispatch(getTasks(tasks))
+  } catch (error) {
+    throw error
+  }
+}

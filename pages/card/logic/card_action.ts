@@ -29,3 +29,10 @@ export const setCard = (res) => {
     },
   }
 }
+
+export const deleteCardAction = (id) => {
+  return {
+    type: cardsActionType.DELETE_CARD,
+    payload: id,
+  }
+}

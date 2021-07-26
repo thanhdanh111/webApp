@@ -4,13 +4,14 @@ import { CardsPage, BoardsPage } from 'helpers/type'
 import { cardsActionType } from './card_type_action'
 import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import { convertCardData } from './convert_card_data'
-import { createCardAction, getCardsAction } from './card_action'
+import { createCardAction, getCardsAction, deleteCardAction } from './card_action'
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 
 export enum NotificationTypes {
   failedAddCard = 'Failed to add card',
   failedGetCard = 'Failed to get cards!',
   companyTokenNotification = 'You have not registered any companies for workspace',
+  failedDeleteCard = 'Failed to Delete Card',
 }
 export enum Arrow {
   OUT_LINE = 'OUT_LINE',
@@ -42,6 +43,15 @@ export const cardsReducer = (state = initialState, action) => {
       return {
         ...state,
         cards: {},
+      }
+    case cardsActionType.DELETE_CARD:
+      // const resolveCard = state.cards.filter((card) => card._id !== action.payload)
+      const cards = { ...state.cards }
+      delete cards[action.payload]
+
+      return {
+        ...state,
+        cards: { ...cards },
       }
     default:
       return state
@@ -112,4 +122,32 @@ export const getCards = (boardID) => async (dispatch) => {
     dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedGetCard }))
   }
 
+}
+
+export const deleteCardMiddleWare = (cardID) => async (dispatch, getState) => {
+  try {
+    const token = localStorage.getItem('access_token')
+    const userInfo = getState()?.userInfo
+    const companyID = userInfo?.currentCompany?._id
+
+    if (!companyID || !cardID) {
+
+      return
+    }
+
+    const res = await axios.delete(`${config.BASE_URL}/cards/${cardID}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (res.data) {
+      dispatch(deleteCardAction(cardID))
+    }
+
+  } catch (error) {
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failedDeleteCard }))
+  }
 }

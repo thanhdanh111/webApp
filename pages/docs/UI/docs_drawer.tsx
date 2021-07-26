@@ -13,9 +13,9 @@ import { DocProject, DocProjectMap, PageContent } from '../logic/docs_reducer'
 
 interface DocsDrawerData {
   docProjectsMap: DocProjectMap
-  loading: boolean
   selectedDocProject: DocProject
   selectedPage: PageContent
+  accountUserID: string
 }
 
 type DocsDrawerDataType = DocsDrawerData
@@ -26,13 +26,15 @@ const DocsDrawer = () => {
     docProjectsMap,
     selectedDocProject,
     selectedPage,
+    accountUserID,
   }: DocsDrawerDataType = useSelector((state: RootState) => {
 
     return {
       docProjectsMap: state?.docs?.docProjectsMap,
-      loading: state?.docs?.loading,
+      drawerLoading: state?.docs?.drawerLoading,
       selectedDocProject: state?.docs?.selectedDocProject,
       selectedPage: state?.docs?.selectedPage,
+      accountUserID: state?.userInfo?.userID,
     }
   }, shallowEqual)
   const router = useRouter()
@@ -61,6 +63,11 @@ const DocsDrawer = () => {
   }
 
   function onClickPage(props) {
+    if (selectedPage?._id === props?.page?._id) {
+
+      return
+    }
+
     dispatch(updateSelectedItemInDrawer({
       pageID: props?.page?._id,
       projectID: props.project?._id,
@@ -77,26 +84,6 @@ const DocsDrawer = () => {
     handleClose()
   }
 
-  function showListTreeOfDocProjects() {
-    const projects = Object.values(docProjectsMap)
-    const listTreeOfDocProjects: JSX.Element[] = projects?.map((project) => {
-
-      const onSelectedProject = !selectedPage?._id &&
-        selectedDocProject?._id === project?._id
-
-      return <DocsDrawerProjectUI
-        key={project?._id}
-        project={project}
-        pages={project?.pages ?? {}}
-        onClickPage={onClickPage}
-        onClickProject={onClickProject}
-        selected={onSelectedProject}
-      />
-    })
-
-    return listTreeOfDocProjects
-  }
-
   return (
     <>
       <div className='docs-drawer-back-home-layout'>
@@ -110,11 +97,34 @@ const DocsDrawer = () => {
         </div>
       </div>
       <List component='nav'>
-        {showListTreeOfDocProjects()}
+        {
+          Object.values(docProjectsMap)?.map((project) => {
+
+            const onSelectedProject = !selectedPage?._id &&
+              selectedDocProject?._id === project?._id
+            const pages = Object.values(project?.pages ?? {}) as PageContent[]
+            const pageIDs = Object.keys(project?.pages ?? {})
+            const selectedPageInProject = pageIDs?.includes(selectedPage?._id ?? '')
+            const pagesLength = pages?.length
+
+            return <DocsDrawerProjectUI
+              accountUserID={accountUserID}
+              key={project?._id}
+              project={project}
+              pagesLength={pagesLength}
+              selectedPageInProject={selectedPageInProject}
+              pages={pages}
+              onClickPage={onClickPage}
+              onClickProject={onClickProject}
+              selected={onSelectedProject}
+              selectedPage={selectedPage}
+            />
+          })
+        }
       </List>
       <CreateNewProjectDialog handleCreate={handleCreate}/>
     </>
   )
 }
 
-export default React.memo(DocsDrawer, () => true)
+export default DocsDrawer

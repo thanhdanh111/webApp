@@ -34,7 +34,7 @@ export function handleToolbarActions(editorState, action) {
 
   return EditorState?.acceptSelection(
     newEditorState,
-    oldSelection.merge({ hasFocus: false }),
+    oldSelection,
   )
 }
 

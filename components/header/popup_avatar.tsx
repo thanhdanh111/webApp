@@ -94,7 +94,7 @@ const DropDown = () => {
             <BusinessIcon />
           </Avatar>
         </Grid>
-        <Grid item xs justify='center' className='drop-down--company-info'>
+        <Grid item xs justify='center'>
           <Typography >{currentCompany.name}</Typography>
           {!currentCompany?.emails?.length ? <div /> : <Typography >{currentCompany.emails?.[0]}</Typography>}
         </Grid>
