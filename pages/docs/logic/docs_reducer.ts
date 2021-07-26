@@ -153,13 +153,6 @@ const docsReducer = (state = initialState, action) => {
         ...state,
         ...action.data,
       }
-    case DocsActionTypes.UpdateDocsInDrawer:
-
-      return {
-        ...state,
-        ...action.data,
-      }
-
     case DocsActionTypes.UpdateSelectedItemInDrawer:
 
       return updateSelectedItemInDrawer(action.data, state)

@@ -126,7 +126,7 @@ const DocsPage = () => {
         />
       </div>
       <Input
-        style={{ marginTop: '20px', paddingLeft: '45px', marginBottom: '20px' }}
+        style={{ marginTop: '20px', paddingLeft: '60px', marginBottom: '20px' }}
         value={title}
         className='docs-page--title'
         disableUnderline
