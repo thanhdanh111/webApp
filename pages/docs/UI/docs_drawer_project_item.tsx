@@ -7,6 +7,11 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import FolderIcon from '@material-ui/icons/Folder'
 import DocsDrawerPageUI from './docs_drawer_page_item'
 import { DocProject, PageContent } from '../logic/docs_reducer'
+import SideToolbarButton from '@components/my_editor/side_toolbar_button'
+import { deleteDocProject } from '../logic/docs_apis'
+import MoreHoriz from '@material-ui/icons/MoreHoriz'
+import DeleteIcon from '@material-ui/icons/Delete'
+import { useDispatch } from 'react-redux'
 
 interface DocsDrawerProject {
   project: DocProject
@@ -15,6 +20,7 @@ interface DocsDrawerProject {
   onClickPage: (props) => void
   onClickProject: (project) => void
   selected: boolean
+  accountUserID: string
   pagesLength?: number
   selectedPageInProject?: boolean
 }
@@ -26,9 +32,11 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   onClickProject,
   selected,
   selectedPage,
+  accountUserID,
 }) => {
   const [open, setOpen] = React.useState(true)
   let renderPages: null | JSX.Element[] = null
+  const dispatch = useDispatch()
 
   const handleClick = () => {
     if (!selected) {
@@ -53,6 +61,7 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
   }
 
   function renderEndIcons() {
+    const canDeleteProject = (project?.createdBy?.['_id'] ?? project?.createdBy) === accountUserID
 
     const expandedIcon = renderPages !== null ?
       (open ?
@@ -60,7 +69,27 @@ const DocsDrawerProjectUI: FunctionComponent<DocsDrawerProject> = ({
         <ExpandMore className='doc-project-expanded-icon' />
       ) : <div />
 
-    return expandedIcon
+    const sideToolbarActions = [
+      {
+        type: 'normal',
+        label: 'Delete Project',
+        startIcon: <DeleteIcon />,
+        disabled: !canDeleteProject,
+        function: () => dispatch(deleteDocProject({ projectID: project?._id })),
+      },
+    ]
+
+    return <SideToolbarButton
+      contentBlock={{}}
+      onClickSideToolbar={() => 'handled'}
+      disableProtal={true}
+      children={undefined}
+      buttonIcon={<div className='doc-project-start-icons'>
+        {expandedIcon}
+        <MoreHoriz className='doc-project-hover-icon-options' />
+      </div>}
+      actionsNeedToRender={sideToolbarActions}
+    />
   }
 
   return <>

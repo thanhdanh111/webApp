@@ -1,0 +1,136 @@
+.block-wrapper
+  align-items: center
+  position: relative
+  padding-right: 10px
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important
+
+  span
+    &[data-text]
+      display: inline
+      white-space: pre-wrap
+      word-break: break-word
+      overflow-wrap: break-word
+      cursor: text
+
+  &:hover
+    .block-wrapper--btns > .block-wrapper--btn
+      opacity: 1
+
+.block-wrapper > .block-wrapper--btns
+  display: flex
+  position: absolute
+  left: -55px
+  user-select: none
+  caret-color: rgba(0, 0, 0, 0)
+  width: 50px
+  height: 20px
+  justify-content: flex-end
+
+.block-wrapper > .block-wrapper--btns > .block-wrapper--btn
+  height: 20px
+  color: rgb(102, 102, 102)
+  user-select: none
+  padding: 0
+  opacity: 0
+
+  .block-wrapper--icon
+    height: 17px
+    width: 20px
+
+.custom-code-block
+  width: 800px
+  min-height: 20px
+  background-color: rgb(250, 250, 250)
+  border: 1px solid rgb(198, 198, 198)
+  border-top: none
+  border-bottom: none
+  box-sizing: border-box
+  display: block
+  text-align: left
+  user-select: text
+  font-size: 13.92px
+  font-weight: var(--font-weight-regular)
+  line-height: var(--font-line-height-large)
+  padding: 0  var(--font-padding-horizontal-code)
+
+  span
+    &:not(.MuiButton-label)
+      display: inline
+      white-space: pre-wrap
+      word-break: break-word
+      overflow-wrap: break-word
+
+  font-family: Hack, Andale Mono, Consolas, Lucida Console, monospace !important
+
+  .block-wrapper--btns
+    left: -65px
+
+.initial-code-block
+  border-top: 1px solid rgb(198, 198, 198)
+  border-bottom: 1px solid rgb(198, 198, 198)
+  padding: var(--font-padding-vertical-code) var(--font-padding-horizontal-code)
+  min-height: 50px
+  margin-top: 10px
+  margin-bottom: 10px
+
+.last-code-block
+  padding-bottom: var(--font-padding-vertical-code)
+  border-bottom: 1px solid rgb(198, 198, 198)
+  min-height: 36px
+
+.first-code-block
+  padding-top: var(--font-padding-vertical-code)
+  border-top: 1px solid rgb(198, 198, 198)
+  min-height: 36px
+
+.header-one
+  font-size: 32px
+  font-weight: 600
+  min-height: 40px
+  margin-block-start: 0
+  margin-block-end: 5px
+
+  .block-wrapper--btns
+    transform: translateY(65%)
+
+.header-two
+  font-size: 24px
+  font-weight: 600
+  min-height: 35px
+  margin-block-end: 3px
+  margin-block-start: 0
+  
+  .block-wrapper--btns
+    transform: translateY(40%)
+
+.header-three
+  font-size: 20px
+  font-weight: 600
+  min-height: 32px
+  margin-block-end: 1px
+  margin-block-start: 0
+
+  .block-wrapper--btns
+    transform: translateY(20%)
+
+.docs-link-href
+  color: #3b5998
+  cursor: pointer
+
+  &:hover
+    text-decoration: underline
+
+.custom-block--index-element
+  font-size: 0.875rem
+  line-height: 1.43
+  font-weight: 400
+  margin-left: 10px
+  margin-right: 5px
+  user-select: none
+
+.checkable-list-item
+  width: 20px
+  
+  .MuiSvgIcon-root
+    height: 20px
+    width: 20px

@@ -166,7 +166,7 @@ export const deletePage = () => async (dispatch, getState) => {
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
+    dispatch(updateDocs({ drawerLoading: true }))
 
     await axios.delete(
       `${config.BASE_URL}/docProjects/${docProjectID}/docPages/${selectedPageID}`,
@@ -181,9 +181,9 @@ export const deletePage = () => async (dispatch, getState) => {
 
     delete newDocProjectsMap[docProjectID]?.pages?.[selectedPageID]
 
-    dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }))
+    dispatch(updateDocs({ drawerLoading: false, docProjectsMap: newDocProjectsMap }))
   } catch (error) {
-    dispatch(updateDocs({ loading: false }))
+    dispatch(updateDocs({ drawerLoading: false }))
   }
 }
 
@@ -367,7 +367,7 @@ export const deleteDocProject = ({ projectID }) => async (dispatch, getState) =>
       return
     }
 
-    dispatch(updateDocs({ loading: true }))
+    dispatch(updateDocs({ drawerLoading: true }))
 
     await axios.delete(
       `${config.BASE_URL}/docProjects/${projectID}`,
@@ -382,9 +382,9 @@ export const deleteDocProject = ({ projectID }) => async (dispatch, getState) =>
 
     delete newDocProjectsMap[projectID]
 
-    dispatch(updateDocs({ loading: false, docProjectsMap: newDocProjectsMap }))
+    dispatch(updateDocs({ drawerLoading: false, docProjectsMap: newDocProjectsMap }))
   } catch (error) {
-    dispatch(updateDocs({ loading: false }))
+    dispatch(updateDocs({ drawerLoading: false }))
   }
 }
 
