@@ -32,31 +32,38 @@ describe('Pots Page', () => {
     await page.goto('http://localhost:5000/home')
     await page.waitForSelector('.board')
     await page.waitForSelector('.status')
+    const hasStatusTestTag = await page.$$eval('.test-tag', (e) => e.length)
+    const hasTask = await page.$$eval('.test-tag .task-name', (e) => e.length)
 
-    await page.waitForSelector('.add-task-text')
-    await page.click('.add-task-text')
-    await page.waitForSelector('.add-status-modal')
-    await page.click('.add-status-input')
-    await page.type('.add-status-input', 'test tag')
+    if (!hasStatusTestTag) {
+        // add statuss open
+      await page.waitForSelector('.add-task-text')
+      await page.click('.add-task-text')
+      await page.waitForSelector('.add-status-modal')
+      await page.click('.add-status-input')
+      await page.type('.add-status-input', 'test tag')
 
-    await page.click('.submit-create-status')
-    await page.click('.close-create-status')
+      await page.click('.submit-create-status')
+      await page.click('.close-create-status')
+    }
 
-    await page.waitForSelector('.test-tag .add-task')
+    if (!hasTask) {
+      await page.waitForSelector('.test-tag .add-task')
 
-    await page.click('.test-tag .add-task')
-    await page.waitForSelector('.task-add')
+      await page.click('.test-tag .add-task')
+      await page.waitForSelector('.task-add')
 
-    await page.waitForSelector('input[name=title]')
+      await page.waitForSelector('input[name=title]')
 
-    await page.click('input[name=title]')
-    await page.type('input[name=title]', 'feat/created task for task')
+      await page.click('input[name=title]')
+      await page.type('input[name=title]', 'feat/created task for task')
 
-    await page.waitForSelector('.save-add')
-    await page.click('.save-add')
+      await page.waitForSelector('.save-add')
+      await page.click('.save-add')
+    }
 
   // task detail
-    await page.waitFor(5000)
+    await page.waitForSelector('.test-tag .task-name')
     await page.click('.test-tag .task-name')
     await page.waitForSelector('.detail-modal')
     await page.waitForSelector('.tag-add')
@@ -70,11 +77,10 @@ describe('Pots Page', () => {
     await page.type('.input-search-tag', 'snt-app')
     await page.keyboard.press('Enter')
 
+    await page.waitForSelector('.tag-item-list >span')
+
     const addTagSuccess = await page.screenshot()
     expect(addTagSuccess).toMatchImageSnapshot()
-
-    await page.waitFor(5000)
-    await page.waitForSelector('.tag-item-list')
 
   //add tag to task
     await page.click('.tag-item-list >span')
