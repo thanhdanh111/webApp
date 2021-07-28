@@ -35,25 +35,36 @@ describe('Home page', () => {
     await page.goto('http://localhost:5000/home')
     await page.waitForSelector('.board')
     await page.waitForSelector('.status')
-  // add statuss open
-    await page.waitForSelector('.add-task-text')
-    await page.click('.add-task-text')
-    await page.waitForSelector('.add-status-modal')
 
-    await page.click('.add-status-input')
-    await page.type('.add-status-input', 'open')
+    const hasStatusOpen = await page.$$eval('.open', (e) => e.length)
+    const hasStatusChangeStatus = await page.$$eval('.task-status-content.change-status', (e) => e.length)
 
-    await page.click('.submit-create-status')
-    await page.click('.close-create-status')
-  // add status change status
-    await page.click('.add-task-text')
-    await page.waitForSelector('.add-status-modal')
+    if (!hasStatusOpen) {
+        // add statuss open
+      await page.waitForSelector('.add-task-text')
+      await page.click('.add-task-text')
+      await page.waitForSelector('.add-status-modal')
 
-    await page.click('.add-status-input')
-    await page.type('.add-status-input', 'change status')
+      await page.click('.add-status-input')
+      await page.type('.add-status-input', 'open')
 
-    await page.click('.submit-create-status')
-    await page.click('.close-create-status')
+      await page.click('.submit-create-status')
+      await page.click('.close-create-status')
+    }
+
+    if (!hasStatusChangeStatus){
+      // add status change status
+
+      await page.click('.add-task-text')
+      await page.waitForSelector('.add-status-modal')
+
+      await page.click('.add-status-input')
+      await page.type('.add-status-input', 'change status')
+
+      await page.click('.submit-create-status')
+      await page.click('.close-create-status')
+    }
+
   // add task
     await page.waitForSelector('.open .add-task')
 
@@ -68,17 +79,15 @@ describe('Home page', () => {
     await page.click('input[name=title]')
     await page.type('input[name=title]', 'feat/created task for task')
 
-    await page.waitForSelector('.save-add')
     await page.click('.save-add')
+    await page.waitForSelector('.open .task-name')
 
-    await page.waitFor(5000)
 
     const image = await page.screenshot()
     expect(image).toMatchImageSnapshot()
 
   // task detail
-    await page.waitFor(5000)
-    await page.click('.task-name')
+    await page.click('.open .task-name')
     await page.waitForSelector('.detail-modal')
 
     const taskDetail = await page.screenshot()
@@ -106,7 +115,7 @@ describe('Home page', () => {
     const changePrioritySuccess = await page.screenshot()
     expect(changePrioritySuccess).toMatchImageSnapshot()
 
-  //remove assigned user
+   //remove assigned user
 
     await page.waitForSelector('.status-modal .choose-assign-user')
     await page.click('.status-modal .choose-assign-user')
@@ -121,7 +130,6 @@ describe('Home page', () => {
     const removeUserSuccess = await page.screenshot()
     expect(removeUserSuccess).toMatchImageSnapshot()
 
-
   // assign user
     await page.click('.status-modal .choose-assign-user')
     await page.waitForSelector('.user-unaccept .name-popup')
@@ -135,65 +143,63 @@ describe('Home page', () => {
     expect(assignUserSuccess).toMatchImageSnapshot()
 
   // change status
-    // await page.waitForSelector('.detail-modal .status-detail')
-    // await page.click('.detail-modal .status-detail')
-    // await page.waitForSelector('.popup-status-detail .list-status')
-    // const changeStatus = await page.screenshot()
-    // expect(changeStatus).toMatchImageSnapshot()
 
-    // await page.click('.item-status.change-status')
-    // const changeStatusSuccess = await page.screenshot()
-    // expect(changeStatusSuccess).toMatchImageSnapshot()
+    await page.waitForSelector('.detail-modal .status-detail')
+    await page.click('.detail-modal .status-detail')
+    await page.waitForSelector('.popup-status-detail .list-status')
+    const changeStatus = await page.screenshot()
+    expect(changeStatus).toMatchImageSnapshot()
 
-  // change due date
-    // await page.click('.date-time-picker .due-date')
+    await page.click('.item-status.item-change-status')
+    const changeStatusSuccess = await page.screenshot()
+    expect(changeStatusSuccess).toMatchImageSnapshot()
+
+    // change due date
+    // await page.click('.date-time-picker')
     // await page.waitForSelector('.MuiPickersBasePicker-pickerView')
 
     // const changeDueDate = await page.screenshot()
     // expect(changeDueDate).toMatchImageSnapshot()
 
-    // await page.click('.MuiPickersCalendar-weekContainer:last-child .MuiPickersDay-dayWithMargin:last-child')
+    // await page.$$eval('.MuiPickersDay-dayWithMargin:last-child', (e) => { e.map(((btn) => btn.click())) })
+
     // await page.waitForSelector('.MuiPickersClock-pin')
     // await page.click('.MuiPickersClock-pin')
     // await page.waitForSelector('.MuiPickersClock-pin')
     // await page.click('.MuiPickersClock-pin')
 
-    // const changeDueDateSuccess = await page.screenshot()
-    // expect(changeDueDateSuccess).toMatchImageSnapshot()
+    await page.waitForSelector('.MuiCollapse-wrapperInner .MuiButton-text')
+    await page.$$eval('.MuiCollapse-wrapperInner .MuiButton-text', (e) => { e.map(((btn) => btn.click())) })
+
+    // close detail
     await page.waitFor(5000)
-    await page.waitForSelector('.close-detail')
-    await page.click('.close-detail')
+    await page.click('.close-detail span')
 
   // delete task
 
     const closeDetailModalImage = await page.screenshot()
     expect(closeDetailModalImage).toMatchImageSnapshot()
 
-    await page.waitForSelector('.task-item  .delete-task')
-    await page.click('.open .delete-task')
-    await page.waitFor(5000)
+    // await page.waitForSelector('.change-status .task-item .delete-task')
+    await page.click('.change-status .delete-task')
+    await page.waitForSelector('.confirm-dialog--yes-btn')
 
     const deletedTaskImage = await page.screenshot()
     expect(deletedTaskImage).toMatchImageSnapshot()
 
-    await page.waitForSelector('.confirm-dialog--yes-btn')
     await page.click('.confirm-dialog--yes-btn')
     await page.click('.confirm-dialog--no-btn')
     await page.waitFor(5000)
-    await page.waitForSelector('.board-tasks')
 
     const confirmDeletedTaskImage = await page.screenshot()
     expect(confirmDeletedTaskImage).toMatchImageSnapshot()
 
   // delete status
 
-    await page.waitForSelector('.open .action-status-btn')
     await page.click('.open .action-status-btn')
-
     await page.waitForSelector('.popper-action-status')
     await page.waitForSelector('.delete-status-menu-item')
     await page.click('.delete-status-menu-item')
-    await page.waitFor(5000)
 
     // delete status 'change status'
 
