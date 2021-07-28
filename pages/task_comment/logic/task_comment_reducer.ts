@@ -14,10 +14,11 @@ export interface CommentType {
 }
 
 export enum NotificationTypes {
-  failCreateTag = 'Failed to send comment',
-  failDeleteTag = 'Failed to delete comment',
+  failCreateTaskComment = 'Failed to send comment',
   succeededSaveComment = 'succeeded To Save Comment',
+  failSaveComment = 'Failed to Save Comment',
   succeededDeleteComment = 'succeeded To Delete Comment',
+  failDeleteComment = 'Failed to Delete Comment',
 }
 
 const initialState: CommentType = {
@@ -121,7 +122,7 @@ export const addTaskComentsThunkAction = (content, taskID) => async (dispatch) =
       )
     dispatch(addTaskComents(res.data))
   } catch (error) {
-    throw error
+    dispatch(pushNewNotifications({ variant: 'success', message: NotificationTypes.failCreateTaskComment }))
   }
 }
 
@@ -150,7 +151,7 @@ export const updateTaskCommentThunkAction = (content, taskID , taskCommentID) =>
       dispatch(pushNewNotifications({ variant: 'success', message: NotificationTypes.succeededSaveComment }))
     }
   } catch (error) {
-    throw error
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failSaveComment }))
   }
 }
 
@@ -176,6 +177,6 @@ export const deleteTaskCommentThunkAction = (taskID , taskCommentID) => async (d
       dispatch(pushNewNotifications({ variant: 'success', message: NotificationTypes.succeededDeleteComment }))
     }
   } catch (error) {
-    throw error
+    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failDeleteComment }))
   }
 }

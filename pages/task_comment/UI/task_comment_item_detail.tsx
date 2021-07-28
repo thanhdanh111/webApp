@@ -23,6 +23,11 @@ const TaskCommentItemDetail = ({ comment }) => {
     setOpen(!open)
   }
   const handleChange = () => {
+    setContentTaskComment(undefined)
+    setHandle(!handle)
+  }
+  const handleCancel = () => {
+    setContentTaskComment(undefined)
     setHandle(!handle)
   }
   const onChangeTaskComment = (event) => {
@@ -46,7 +51,7 @@ const TaskCommentItemDetail = ({ comment }) => {
             />
           ) : (
             <Typography component='span' className='text-label-comment'>
-              {comment.content}
+              {contentTaskComment ? contentTaskComment : comment.content}
             </Typography>
           )}
         </Container>
@@ -86,7 +91,7 @@ const TaskCommentItemDetail = ({ comment }) => {
         <Container className='comment-item-content-action comment-item-content-action-hide'>
           <Button
             className='comment-item-content-action-cancel'
-            onClick={handleChange}
+            onClick={handleCancel}
           >
             Cancel
           </Button>
