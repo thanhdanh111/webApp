@@ -34,7 +34,7 @@ export const ModalTaskDetail = () => {
               </Box>
             </LeftContentDetail>
           </Box>
-          <Box  width={'50%'}>
+          <Box  width={'50%'} className='modal-task-right-content'>
             <RightContentDetail>
               <TimeDetail/>
               <LogDetail/>

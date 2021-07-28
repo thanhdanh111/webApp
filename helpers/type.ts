@@ -359,3 +359,22 @@ export interface TaskBoard {
   updatedBy?: User
   createdBy?: User | string
 }
+
+export interface RenderContentComment {
+  content: string,
+  taggedUser: string,
+}
+
+export interface Comment {
+  _id: string
+  renderContent: RenderContentComment[]
+  taskID: string
+  attachments: string[]
+  taggedUIDs: string[]
+  companyID?: Company
+  departmentID?: Department
+  createdAt: string
+  createdBy: string
+  updateAt?: string
+  content: string
+}

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined'
 import VerticalSplitIcon from '@material-ui/icons/VerticalSplit'
 import { RootStateOrAny, useSelector } from 'react-redux'
+import TaskCommentUI from 'pages/task_comment/UI/task_comment'
 
 export const typeLog = {
   CREATE : 'created this task',
@@ -28,7 +29,7 @@ const LogDetail: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0)
 
   return (
-    <Box>
+    <Box height='100%'>
       <Box className='content-activity' m={'15px'} alignItems='center'>
         <TabsUi
           tabs={['comments', 'logs']}
@@ -72,8 +73,8 @@ const ContentLogs = () => {
 
 const ContentComments = () => {
   return (
-    <Box>
-      Comment
+    <Box height='100%'>
+      <TaskCommentUI />
     </Box>
   )
 }

@@ -14,7 +14,7 @@ const TaskDetail: React.FC<InitialProp> = ({ close, children }) => {
           <CloseOutlinedIcon className='icon-detail icon-close'/>
         </Button>
         </Box>
-        <Box display='flex' justifyItems='center' height='calc(100% - 100px)'>
+        <Box display='flex' justifyItems='center' height='calc(100% - 100px)' className='content-model-detail'>
           {children}
         </Box>
         <FooterDetail/>

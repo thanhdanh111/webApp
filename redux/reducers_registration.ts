@@ -17,6 +17,7 @@ import { statusesReducer } from 'pages/task_statuses/logic/task_statuses_reducer
 import { tasksReducer } from 'pages/tasks/logic/task_reducer'
 import { tagTasksReducer } from 'pages/tag_tasks/logic/tag_tasks_reducer'
 import docsReducer from 'pages/docs/logic/docs_reducer'
+import { CommentReducer } from 'pages/task_comment/logic/task_comment_reducer'
 
 const rootReducer = combineReducers({
   accountReducer,
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   statuses: statusesReducer,
   tasks: tasksReducer,
   tagTasks: tagTasksReducer,
+  taskComment: CommentReducer,
 })
 
 export default rootReducer

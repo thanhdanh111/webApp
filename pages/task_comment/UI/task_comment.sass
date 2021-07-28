@@ -1,0 +1,77 @@
+.task-comment-ui
+  height: 100%
+  display: flex
+  flex-direction: column
+
+  .task-comment-content
+    padding: 0
+    height: calc(100% - 8%)
+
+    .task-comment-item
+      display: flex      
+
+      .comment-user
+        margin: .5rem
+        transform: translateX(5px)
+
+      .comment-content
+        width: 100%
+        height: 80px
+        margin: .5rem 1rem 0
+        border-radius: 10px
+        background-color: rgb(102, 255, 102)
+        box-sizing: unset-box
+
+        &:hover
+          .menu-action-comment
+            list-style-type: none
+            display: flex
+            justify-content: flex-end
+
+        .menu-action-comment
+          display: none
+
+  .task-comment
+    padding: 0
+    position: relative
+    max-height: fit-content
+
+    .comment-input-ui
+      padding: 0
+      position: relative
+      background-color: #180909;
+
+      .comment-input
+        min-height: 60px
+        width: 100%
+        box-shadow: 0 -11px 20px 0 #dedede
+        padding: 0 20px
+        font-size: 14px
+        white-space: break-spaces
+        border: none
+        border-bottom: .5px solid #e9e9e9
+        max-width: 100%
+        position: relative
+        top: 65%
+
+        &:focus
+          outline: none
+
+      .action-new-comment
+        position: absolute
+        top: 18px
+        right: 16px
+
+.tabs-container
+  padding: 0
+  border-bottom: .5px solid #dedede
+
+  .MuiTabs-root
+    height: 100%
+    padding: 10px 30px
+
+.tab-pannel
+  position: relative
+  width: 100%
+  flex: 1
+
