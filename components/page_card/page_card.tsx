@@ -5,13 +5,13 @@ import {
 } from '@material-ui/core'
 
 interface DataType {
-  references: string[]
+  references?: string[]
   heading: string
 }
 
 type BodyProps = DataType
 
-const PageCardUi: FunctionComponent<BodyProps> = ({ references, heading }) => {
+const PageCardUi: FunctionComponent<BodyProps> = ({ references = [], heading }) => {
 
   const subtitlesComponents: JSX.Element[]  = references.map((value, index) => {
     if  (index === (references.length - 1)){
@@ -38,9 +38,9 @@ const PageCardUi: FunctionComponent<BodyProps> = ({ references, heading }) => {
         <Typography className='page-card-heading' variant='h6'>
           {heading}
         </Typography>
-        <Breadcrumbs aria-label='breadcrumb' separator={<span className='subtitle-span' >•</span>}>
+        {!!references?.length && <Breadcrumbs aria-label='breadcrumb' separator={<span className='subtitle-span' >•</span>}>
           {subtitlesComponents}
-        </Breadcrumbs>
+        </Breadcrumbs>}
       </CardContent>
     </Card>
   )

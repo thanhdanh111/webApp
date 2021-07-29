@@ -158,6 +158,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               inputLabel='Company'
               handleFillingInfo={handleFillingInfo}
               formName='selectedCompany'
+              shouldNeedInputBase={true}
             />
             <DateAndTimePicker
               name='endDate'
@@ -183,6 +184,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               inputLabel='Department'
               handleFillingInfo={handleFillingInfo}
               formName='selectedDepartment'
+              shouldNeedInputBase={true}
             />
           </div>
 
