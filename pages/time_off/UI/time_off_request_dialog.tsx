@@ -109,9 +109,9 @@ const TimeOffRequetDialog: FunctionComponent = () => {
   }
 
   return (
-    <div>
-      <IconButton className='request-time-off-btn' aria-label='light mode' color='inherit' onClick={handleOpenOrClose}>
-          <MarkunreadIcon className='btn-appbar' />
+    <>
+      <IconButton className='request-time-off-btn' onClick={handleOpenOrClose}>
+          <MarkunreadIcon className='btn-appbar' color={onRequest ? 'primary' : 'secondary'}/>
       </IconButton>
 
       <Dialog
@@ -214,7 +214,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
           </Button>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   )
 }
 

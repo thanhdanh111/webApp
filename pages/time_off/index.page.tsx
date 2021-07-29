@@ -29,29 +29,33 @@ const TimeOff = () => {
   }: TimeOffValueType = useSelector((state: RootState) => state.timeoff)
 
   useEffect(() => {
-    if (membersTimeOffsLoading || membersTimeOffs.length || !access?.length) {
-
+    if (membersTimeOffs?.length) {
       return
     }
 
-    dispatch(getMembersDaysOffApi({ userID, limit: 30 }))
+    dispatch(getMembersDaysOffApi({ userID, cursor: membersTimeOffsCursor }))
   }, [access])
 
   useEffect(() => {
-    if (ownTimeOffsLoading || !userID || ownTimeOffs.length || !access?.length) {
+
+    dispatch(getUserDaysOffApi({ userID, cursor: ownTimeOffsCursor }))
+  }, [userID, access])
+
+  function fetchUserDaysOffData() {
+    if (ownTimeOffsCursor === 'END') {
+
+      return
+    }
+    dispatch(getUserDaysOffApi({ userID, cursor: ownTimeOffsCursor, infiniteScroll: true }))
+  }
+
+  function fetchMembersDaysOffData() {
+    if (membersTimeOffsCursor === 'END') {
 
       return
     }
 
-    dispatch(getUserDaysOffApi({ userID, limit: 30, cursor: membersTimeOffsCursor }))
-  }, [userID, access])
-
-  function fetchUserDaysOffData() {
-    dispatch(getUserDaysOffApi({ userID , limit: 30, cursor: ownTimeOffsCursor, infiniteScroll: true }))
-  }
-
-  function fetchMembersDaysOffData() {
-    dispatch(getMembersDaysOffApi({ userID, limit: 30, cursor: membersTimeOffsCursor, infiniteScroll: true }))
+    dispatch(getMembersDaysOffApi({ userID, cursor: membersTimeOffsCursor, infiniteScroll: true }))
   }
 
   function acceptMemberDayOff({ itemIndex, baseTableName, timeOffID }) {

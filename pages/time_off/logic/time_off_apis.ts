@@ -17,7 +17,6 @@ import { dateTimeUiFormat } from 'constants/date_time_ui_format'
 import { checkValidAccess } from 'helpers/check_valid_access'
 import { Roles } from 'constants/roles'
 import { getIDsOfValidAccesses } from 'helpers/get_ids_of_valid_accesses'
-import { checkTrueInObject } from 'helpers/check_true_object'
 
 const notificationsType = {
   201: 'Sent your letter successfully',
@@ -40,25 +39,21 @@ function getTimeOffsByModel(
     userID = '',
     rolesInCompany,
     rolesInDepartments,
-    isExceptMeInMembers = true,
   }
 : GetTimeOffsByModel) {
   const timeOffs: TimeOffModel[] = []
 
-  if (!data || !data.length || typeof data === 'string') {
+  if (!data || !data.length) {
 
     return timeOffs
   }
 
-  const isTypeMembers = !!userID && type === 'members'
-
   const checkExceptMember = (timeOff) => {
-    const invalidApiData = checkTrueInObject(timeOff)
-    const exceptMeInMembers = isTypeMembers && userID === timeOff?.createdBy?._id
+    const validFieldsShouldHaveData = ['companyID', 'startTime', 'endTime', '_id']
+    const validApiData = validFieldsShouldHaveData.every((field) => !!timeOff[field])
+    const exceptMeInMembers = type === 'members' && userID === timeOff?.createdBy?._id
 
-    const isValid = !invalidApiData || (isExceptMeInMembers && exceptMeInMembers)
-
-    return isValid
+    return !validApiData || exceptMeInMembers
   }
 
   data.forEach((timeOff) => {
@@ -89,6 +84,7 @@ function getTimeOffsByModel(
       reason: timeOff?.reason ?? '',
       name: `${timeOff?.createdBy?.lastName ?? ''} ${timeOff?.createdBy?.firstName ?? ''}`,
       departmentName: timeOff?.departmentID?.name ?? '',
+      createdAt: timeOff?.createdAt,
     })
   })
 
@@ -96,7 +92,7 @@ function getTimeOffsByModel(
 }
 
 interface GetUserDaysOffApi {
-  limit: number
+  limit?: number
   userID: string
   cursor?: string
   infiniteScroll?: boolean
@@ -125,7 +121,6 @@ export const getUserDaysOffApi = ({
       limit,
       cursor,
       createdBy: userID,
-      sortBy: 'createdAt',
       sortDirection: 'DESC',
     }
 
@@ -162,13 +157,15 @@ export const getUserDaysOffApi = ({
       },
     )
 
+    const timeOffsLength = timeOffs?.length
+
     await dispatch(
       updatePaginationTimeOff({
         loadingStatus: {
           ownTimeOffsLoading: false,
         },
         pagination: {
-          notFoundAnyOwnTimeOffs: !timeOffs || !timeOffs?.length,
+          notFoundAnyOwnTimeOffs: !timeOffsLength,
           ownTimeOffs: timeOffs,
           ownTimeOffsCursor: getDaysoff?.data?.cursor,
           ownTimeOffsTotalCount: getDaysoff?.data?.totalCount,
@@ -185,7 +182,7 @@ export const getUserDaysOffApi = ({
 }
 
 interface GetMembersDaysOffApi {
-  limit: number
+  limit?: number
   cursor?: string
   infiniteScroll?: boolean
   userID: string
@@ -196,16 +193,19 @@ export const getMembersDaysOffApi = ({
   limit = 10,
   cursor,
   infiniteScroll = false,
-  userID,
   isExceptMeInMembers = true,
+  userID,
 }: GetMembersDaysOffApi) => async (dispatch, getState) =>  {
   try {
     const token: Token =  localStorage.getItem('access_token')
-    const state = getState()
-    const userInfo = state?.userInfo
+    const userInfo = getState()?.userInfo
     const isAdmin = userInfo?.isAdmin
-    const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER]
-    const couldGetDaysOffOfMember = checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany })
+    const validAccesses = [Roles.COMPANY_MANAGER]
+    const couldGetDaysOffInCompany = checkValidAccess({ validAccesses, rolesInCompany: userInfo?.rolesInCompany })
+    const departmentIDs = getIDsOfValidAccesses({
+      objectMap: userInfo?.rolesInDepartments,
+      validAccesses: [Roles.DEPARTMENT_MANAGER],
+    })
 
     if (!infiniteScroll) {
       await dispatch(updateTimeOffLoadingStatus({
@@ -216,39 +216,50 @@ export const getMembersDaysOffApi = ({
     }
 
     const queryParams = () => {
-      let queryArrayParams = ''
+      let stringCompanies: string[] = []
+      let stringDepartments: string[] = []
 
-      if (!isAdmin && couldGetDaysOffOfMember) {
+      if (couldGetDaysOffInCompany) {
         const currentCompanyID = userInfo?.currentCompany?._id
 
-        const stringCompanies = [currentCompanyID].
-            map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`)
-
-        const departmentIDs = getIDsOfValidAccesses({
-          objectMap: userInfo?.rolesInDepartments,
-          validAccesses: [Roles.DEPARTMENT_MANAGER],
-        })
-
-        const stringDepartments = userInfo?.rolesInCompany.includes(Roles.COMPANY_MANAGER)
-          ? []
-          : departmentIDs.
-            map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`)
-
-        queryArrayParams = `?${[...stringCompanies, ...stringDepartments].join('&')}`
+        stringCompanies = [currentCompanyID].
+          map((companyID, index) => `orCompanyIDs[${index}]=${companyID}`)
       }
 
-      return queryArrayParams
+      if (!couldGetDaysOffInCompany && departmentIDs?.length) {
+        stringDepartments = departmentIDs.
+          map((departmentID, index) => `orDepartmentIDs[${index}]=${departmentID}`)
+      }
+
+      return `${[...stringCompanies, ...stringDepartments].join('&')}`
     }
 
     const params = {
       limit,
       cursor,
-      sortBy: 'createdAt',
       sortDirection: 'DESC',
     }
 
+    const queryString = isAdmin ? '' : queryParams()
+    const shouldNotContinue = checkOnlyTrueInArray({
+      conditionsArray: [
+        !isAdmin,
+        !queryString?.length,
+      ]},
+    )
+
+    if (shouldNotContinue) {
+      await dispatch(updateTimeOffLoadingStatus({
+        loadingStatus: {
+          membersTimeOffsLoading: false,
+        },
+      }))
+
+      return
+    }
+
     const getDaysoff = await axios.get(
-      `${config.BASE_URL}/daysoff${queryParams()}`,
+      `${config.BASE_URL}/daysoff?${queryString}`,
       {
         params,
         method: 'GET',
@@ -259,16 +270,6 @@ export const getMembersDaysOffApi = ({
       },
     )
 
-    if (!getDaysoff?.data) {
-      await dispatch(updateTimeOffLoadingStatus({
-        loadingStatus: {
-          membersTimeOffsLoading: false,
-        },
-      }))
-
-      return
-    }
-
     const timeOffs = getTimeOffsByModel(
       getDaysoff?.data?.list,
       {
@@ -277,6 +278,7 @@ export const getMembersDaysOffApi = ({
         type: 'members',
       },
     )
+    const timeOffsLength = timeOffs?.length ?? 0
 
     await dispatch(
       updatePaginationTimeOff({
@@ -285,8 +287,8 @@ export const getMembersDaysOffApi = ({
         },
         pagination: {
           membersTimeOffs: timeOffs,
-          notFoundAnyMembersTimeOffs: !timeOffs || !timeOffs?.length,
-          membersTimeOffsCursor: getDaysoff?.data?.cursor,
+          notFoundAnyMembersTimeOffs: !timeOffsLength,
+          membersTimeOffsCursor: timeOffsLength < 1 ? 'END' : timeOffs?.[timeOffsLength - 1]?.id,
           membersTimeOffsTotalCount: getDaysoff?.data?.totalCount,
         },
       },
@@ -516,7 +518,7 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
 
     await dispatch(pushNewNotifications({ variant: 'success' , message: handleMessage }))
     dispatch(updateTimeOffsReducer({ ownTimeOffs: [myNewTimeOff, ...timeOffsState?.ownTimeOffs] }))
-    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, onRequest: false, reason: '' }))
+    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, onRequest: false, reason: '', selectedContent: {} }))
   } catch (error) {
 
     const handleMessage = notificationsType[error?.response?.data?.statusCode] || 'Something went wrong'
