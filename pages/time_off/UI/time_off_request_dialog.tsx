@@ -20,7 +20,6 @@ const TimeOffRequetDialog: FunctionComponent = () => {
     companies,
     onRequest,
     onSendingRequest,
-    selectedCompany,
     startDate,
     endDate,
     startTime,
@@ -35,15 +34,18 @@ const TimeOffRequetDialog: FunctionComponent = () => {
   const isEndDateBeforeCurrent = moment(endDate).isBefore(startDate)
   const isStartTimeAfterCurrent =  unixStartDateAndTime > moment().unix()
   const isEndTimeAfterStartTime =  unixEndDateAndTime > unixStartDateAndTime
+  const departments = [
+    { name: 'None' },
+    ...companies?.[0]?.departments ?? [],
+  ]
   const couldSubmit = checkOnlyTrueInArray({
     conditionsArray: [
-      !!selectedCompany,
-      !!selectedCompany?.companyID,
       !!reason,
       !isStartDateBeforeCurrent,
       !isEndDateBeforeCurrent,
       isStartTimeAfterCurrent,
       isEndTimeAfterStartTime,
+      !onSendingRequest,
     ],
   })
 
@@ -60,7 +62,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
     </option>,
   )
 
-  const secondOptions = selectedCompany?.departments?.map((department, index) =>
+  const secondOptions = departments?.map((department, index) =>
     <option
       key={index}
       value={department?.departmentID}
@@ -78,16 +80,8 @@ const TimeOffRequetDialog: FunctionComponent = () => {
     selectedContent[stateName] = event.target.value
 
     switch (stateName) {
-      case 'selectedCompany':
-        let departments = companies[index].departments ?? []
-        departments = [{ name: 'None' } , ...departments]
-        selectedContent[stateName] = {
-          ...companies[index],
-          departments,
-        }
-        break
       case 'selectedDepartment':
-        selectedContent[stateName] = selectedCompany?.departments?.[index]
+        selectedContent[stateName] = departments?.[index]
         break
     }
 
@@ -158,6 +152,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               inputLabel='Company'
               handleFillingInfo={handleFillingInfo}
               formName='selectedCompany'
+              disabled={true}
             />
             <DateAndTimePicker
               name='endDate'
@@ -178,7 +173,6 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               value={endTime}
             />
             <OptionsSelect
-              disabled={!selectedCompany}
               options={secondOptions ?? [undefinedOption]}
               inputLabel='Department'
               handleFillingInfo={handleFillingInfo}

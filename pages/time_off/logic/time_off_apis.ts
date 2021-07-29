@@ -17,6 +17,7 @@ import { dateTimeUiFormat } from 'constants/date_time_ui_format'
 import { checkValidAccess } from 'helpers/check_valid_access'
 import { Roles } from 'constants/roles'
 import { getIDsOfValidAccesses } from 'helpers/get_ids_of_valid_accesses'
+import { checkTrueInArray } from 'helpers/check_true_in_array'
 
 const notificationsType = {
   201: 'Sent your letter successfully',
@@ -415,10 +416,7 @@ export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
     const companies = getDepartmentsIntoCompanies({ departments: getDepartments?.data?.list })
 
     await dispatch(updateTimeOffCompaniesToRequest({
-      companies: [
-        { name: 'None' },
-        ...companies,
-      ],
+      companies,
     }))
 
   } catch (error) {
@@ -442,6 +440,8 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
     const token: Token =  localStorage.getItem('access_token')
     const timeOffRequestState: TimeOffRequestProps = getState().timeOffRequest
     const timeOffsState = getState()?.timeoff
+    const userInfo = getState()?.userInfo
+    const company = userInfo?.currentCompany
 
     if (timeOffRequestState.onSendingRequest) {
       return
@@ -453,7 +453,7 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
         !!timeOffRequestState.startTime,
         !!timeOffRequestState.endDate,
         !!timeOffRequestState.endTime,
-        !!timeOffRequestState.selectedCompany?.companyID,
+        !!company?._id,
         !!timeOffRequestState?.reason,
       ],
     })
@@ -469,14 +469,13 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
 
     const startTime = moment(`${timeOffRequestState.startDate}T${timeOffRequestState.startTime}`).toISOString()
     const endTime =  moment(`${timeOffRequestState.endDate}T${timeOffRequestState.endTime}`).toISOString()
-    const selectedCompany = timeOffRequestState?.selectedCompany
     const selectedDepartment = timeOffRequestState?.selectedDepartment
     const payload = {
       startTime,
       endTime,
+      companyID: company?._id,
       reason: timeOffRequestState?.reason ?? null,
       departmentID: selectedDepartment?.departmentID ?? null,
-      companyID: selectedCompany?.companyID ?? null,
     }
 
     const res = await axios.post(
@@ -489,7 +488,6 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
         },
       })
 
-    const userInfo = getState()?.userInfo
     const timeOff = res?.data
     const validRolesInDepartment = checkValidAccess({
       rolesInDepartments: userInfo?.rolesInDepartments,
@@ -500,18 +498,23 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
       rolesInCompany: userInfo?.rolesInCompany,
       validAccesses: [Roles.COMPANY_MANAGER],
     })
-    const isManager = validRolesInCompany || validRolesInDepartment
+    const isManager = checkTrueInArray({
+      conditionsArray: [
+        validRolesInCompany,
+        validRolesInDepartment,
+      ],
+    })
 
     const myNewTimeOff = {
       isManager,
       id: timeOff?._id,
-      companyName: selectedCompany?.name,
+      companyName: company?.name,
       startTime: moment(timeOff?.startTime).format(dateTimeUiFormat),
       endTime:  moment(timeOff?.endTime).format(dateTimeUiFormat),
       status: timeOff?.status,
       reason: timeOff?.reason ?? '',
       name: `${userInfo?.profile?.lastName ?? ''} ${userInfo?.profile.firstName ?? ''}`,
-      departmentName: selectedDepartment?.name ?? '',
+      departmentName: selectedDepartment?.name === 'None' ? '' : selectedDepartment?.name ,
     }
 
     const handleMessage = notificationsType[res?.status]
