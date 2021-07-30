@@ -49,24 +49,24 @@ const TimeOffTab: FunctionComponent = () => {
 
   return (
     <div className='daysoff-dashboard'>
-      <Box className='daysoff-container shadow-container'>
-        <Typography className='table-title' >DaysOff - {today.toLocaleString('default', { month: 'long' })}</Typography>
+    <Typography className='table-title' >DaysOff - {today.toLocaleString('default', { month: 'long' })}</Typography>
 
-        {(loadMemberData && <BaseTable
-          needCheckBox={false}
-          headCells={headCells}
-          data={membersTimeOffs}
-          length={membersTimeOffsTotalCount}
-          loading={membersTimeOffsLoading}
-          actions={[]}
-          fetchData={fetchDaysOffData}
-          redButtonName='REJECT'
-          baseTableName={'daysoff-table'}
-          notFoundAnyData={notFoundAnyMembersTimeOffs}
-          notFoundWarning='Not found any time offs today'
-        />
-        )}
-      </Box>
+    {(loadMemberData && <BaseTable
+      needStickyHeader={true}
+      needCheckBox={false}
+      headCells={headCells}
+      data={membersTimeOffs}
+      length={membersTimeOffsTotalCount}
+      loading={membersTimeOffsLoading}
+      actions={[]}
+      fixedHeightInfiniteScroll={400}
+      fetchData={fetchDaysOffData}
+      redButtonName='REJECT'
+      baseTableName={'daysoff-table'}
+      notFoundAnyData={notFoundAnyMembersTimeOffs}
+      notFoundWarning='Not found any time offs today'
+    />
+    )}
     </div>
   )
 }
