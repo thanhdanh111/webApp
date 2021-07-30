@@ -81,11 +81,13 @@ const TimeOffRequetDialog: FunctionComponent = () => {
 
     switch (stateName) {
       case 'selectedCompany':
-        const departments = companies[index].departments ?? []
-        selectedContent[stateName] = {
-          ...companies[index],
-          departments,
+        if (index < 0) {
+          selectedContent[stateName] = undefined
+
+          break
         }
+
+        selectedContent[stateName] = companies?.[index]
         break
       case 'selectedDepartment':
         if (index < 0) {
