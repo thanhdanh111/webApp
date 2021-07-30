@@ -33,12 +33,12 @@ const TimeOff = () => {
       return
     }
 
-    dispatch(getMembersDaysOffApi({ userID, cursor: membersTimeOffsCursor }))
+    dispatch(getMembersDaysOffApi({ userID, cursor: membersTimeOffsCursor, limit: 100 }))
   }, [access])
 
   useEffect(() => {
 
-    dispatch(getUserDaysOffApi({ userID, cursor: ownTimeOffsCursor }))
+    dispatch(getUserDaysOffApi({ userID, cursor: ownTimeOffsCursor, limit: 100 }))
   }, [userID, access])
 
   function fetchUserDaysOffData() {

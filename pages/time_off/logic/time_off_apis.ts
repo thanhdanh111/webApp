@@ -4,7 +4,7 @@ import { RolesInDepartments, Token } from 'helpers/type'
 import {
   updatePaginationTimeOff, updateTimeOffIndexLoading,
   updateStatusTimeOff, updateTimeOffLoadingStatus,
-  updateOnSendingTimeOffRequest, updateTimeOffCompaniesToRequest, updateTimeOffsReducer,
+  updateOnSendingTimeOffRequest, updateTimeOffsReducer,
   updateTimeOffRequestReducer,
   getTimeOffByID,
 } from './time_off_actions'
@@ -404,32 +404,21 @@ export const getDepartmentsAndCompanies = () => async (dispatch, getState) => {
 
     if (noData) {
 
-      await dispatch(updateTimeOffCompaniesToRequest({
-        companies: [
-          { name: 'None' },
-        ],
-      }))
-
       return
     }
 
     const companies = getDepartmentsIntoCompanies({ departments: getDepartments?.data?.list })
 
-    await dispatch(updateTimeOffCompaniesToRequest({
+    await dispatch(updateTimeOffRequestReducer({
       companies,
+      selectedCompany: companies[0],
     }))
-
   } catch (error) {
 
     const handleMessage = notificationsType[error?.response?.data?.statusCode]
       || 'Something went wrong'
 
     await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }))
-    await dispatch(updateTimeOffCompaniesToRequest({
-      companies: [
-        { name: 'None' },
-      ],
-    }))
   }
 }
 
@@ -453,7 +442,7 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
         !!timeOffRequestState.startTime,
         !!timeOffRequestState.endDate,
         !!timeOffRequestState.endTime,
-        !!company?._id,
+        !!timeOffRequestState.selectedCompany?.companyID,
         !!timeOffRequestState?.reason,
       ],
     })
@@ -469,13 +458,14 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
 
     const startTime = moment(`${timeOffRequestState.startDate}T${timeOffRequestState.startTime}`).toISOString()
     const endTime =  moment(`${timeOffRequestState.endDate}T${timeOffRequestState.endTime}`).toISOString()
+    const selectedCompany = timeOffRequestState?.selectedCompany
     const selectedDepartment = timeOffRequestState?.selectedDepartment
     const payload = {
       startTime,
       endTime,
-      companyID: company?._id,
       reason: timeOffRequestState?.reason ?? null,
       departmentID: selectedDepartment?.departmentID ?? null,
+      companyID: selectedCompany?.companyID ?? null,
     }
 
     const res = await axios.post(
@@ -514,19 +504,24 @@ export const submitTimeOffRequest = () => async (dispatch, getState) => {
       status: timeOff?.status,
       reason: timeOff?.reason ?? '',
       name: `${userInfo?.profile?.lastName ?? ''} ${userInfo?.profile.firstName ?? ''}`,
-      departmentName: selectedDepartment?.name === 'None' ? '' : selectedDepartment?.name ,
+      departmentName: selectedDepartment?.name ?? '',
     }
 
     const handleMessage = notificationsType[res?.status]
 
     await dispatch(pushNewNotifications({ variant: 'success' , message: handleMessage }))
     dispatch(updateTimeOffsReducer({ ownTimeOffs: [myNewTimeOff, ...timeOffsState?.ownTimeOffs] }))
-    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, onRequest: false, reason: '', selectedContent: {} }))
+    dispatch(updateTimeOffRequestReducer({
+      onSendingRequest: false,
+      onRequest: false,
+      reason: '',
+      selectedDepartment: undefined,
+    }))
   } catch (error) {
 
     const handleMessage = notificationsType[error?.response?.data?.statusCode] || 'Something went wrong'
 
-    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, selectedCompany: undefined, selectedDepartment: undefined }))
+    dispatch(updateTimeOffRequestReducer({ onSendingRequest: false, selectedDepartment: undefined }))
     await dispatch(pushNewNotifications({ variant: 'error' , message: handleMessage }))
   }
 }

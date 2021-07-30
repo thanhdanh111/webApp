@@ -44,7 +44,7 @@ const TimeOffTab: FunctionComponent = () => {
   }, [userID])
 
   const fetchDaysOffData = () => {
-    dispatch(getMembersDaysOffApi({ userID, limit: 30, infiniteScroll: true, cursor: membersTimeOffsCursor }))
+    dispatch(getMembersDaysOffApi({ userID, limit: 100, infiniteScroll: true, cursor: membersTimeOffsCursor }))
   }
 
   return (
