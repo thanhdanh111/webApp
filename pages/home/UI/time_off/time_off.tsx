@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import React, { FunctionComponent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'redux/reducers_registration'
