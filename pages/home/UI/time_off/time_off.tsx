@@ -59,7 +59,7 @@ const TimeOffTab: FunctionComponent = () => {
       length={membersTimeOffsTotalCount}
       loading={membersTimeOffsLoading}
       actions={[]}
-      fixedHeightInfiniteScroll={400}
+      fixedHeightInfiniteScroll={membersTimeOffs.length < 5 ? 100 : 300}
       fetchData={fetchDaysOffData}
       redButtonName='REJECT'
       baseTableName={'daysoff-table'}
