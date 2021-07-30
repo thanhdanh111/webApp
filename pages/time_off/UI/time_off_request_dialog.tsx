@@ -106,6 +106,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
   function handleOpenOrClose() {
     if (onRequest) {
       selectedContent['selectedDepartment'] = undefined
+      selectedContent['reason'] = ''
     }
 
     selectedContent['onRequest'] = !onRequest
