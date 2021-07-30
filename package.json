@@ -12,7 +12,7 @@
     "debug": "export NODE_ENV=local && next dev -p 5000",
     "build": "NODE_ENV=production next build && next export",
     "build:staging": "NODE_ENV=staging next build && next export",
-    "test": "NODE_ENV=test jest /home/tuan/tuan/work/web-app/pages/account/test/account.test.ts",
+    "test": "NODE_ENV=test jest",
     "tslint": "tslint -p . -c tslint.json",
     "sasslint": "sass-lint -v -q",
     "linter-folder": "ts-node --project tsconfig.server.json linter/linter_folder.ts",
