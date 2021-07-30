@@ -114,15 +114,15 @@ const InviteMembersUI: FunctionComponent = () => {
 
         {
           inviteMembers.map((member, index) => {
-            const isFirst = index === 0
+            const isFirst = index === 0 && inviteMembersLength === 1
             let firstInputLabel
             let secondInputLabel
             let thirdInputLabel
-            const defaultValues = [
-              member.email,
-              member.role,
-              member.departmentID,
-            ]
+            const defaultValues = {
+              email: member.email,
+              role: member.role,
+              departmentID: member.departmentID,
+            }
 
             if (isFirst) {
               firstInputLabel = 'Email Address'
@@ -167,7 +167,7 @@ const InviteMembersUI: FunctionComponent = () => {
       </div>
 
       <PrimaryButtonUI
-        title={inviteLoading ? 'Sending your request' : `Invite ${inviteMembersLength} Person`}
+        title={inviteLoading ? 'Sending your invite' : `Invite ${inviteMembersLength} Person`}
         disabled={inviteLoading}
         handleClick={() => inviteMembersBtn()}
       />
