@@ -111,7 +111,9 @@ const DropDown = () => {
           <UserAvatar alt='user icon' style='info-avatar' user={userInfo?.profile}/>
           </Button>
           <Menu {...bindMenu(popupState)} className='menu-drop'>
-            <InfoUser />
+            <MenuItem disableGutters className='info-user' onClick={() => onPushToPage('account')}>
+              <InfoUser />
+            </MenuItem>
             <Divider />
             <MenuItem disableGutters className='info-company' onClick={() => onPushToPage('company')}>
               <InfoCompany />

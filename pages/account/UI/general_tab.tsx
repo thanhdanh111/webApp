@@ -28,6 +28,11 @@ const labels = [
     disabled: true,
   },
   {
+    fieldName: 'Day of Birth',
+    stateName: 'dob',
+    type: 'date',
+  },
+  {
     fieldName: 'Gender',
     stateName: 'gender',
     type: 'select',
@@ -40,11 +45,6 @@ const labels = [
   {
     fieldName: 'Address',
     stateName: 'address',
-  },
-  {
-    fieldName: 'Day of Birth',
-    stateName: 'dob',
-    type: 'date',
   },
 ]
 
