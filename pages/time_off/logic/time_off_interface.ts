@@ -66,6 +66,7 @@ export interface TimeOffModel {
   reason: string
   name: string
   isManager: boolean
+  createdAt: string
 }
 
 export type SelectedTimeOffDataType = SelectedTimeOffData
