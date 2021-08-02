@@ -23,7 +23,6 @@ const TaskCommentItemDetail = ({ comment }) => {
     setOpen(!open)
   }
   const handleChange = () => {
-    setContentTaskComment(undefined)
     setHandle(!handle)
   }
   const handleCancel = () => {
@@ -51,7 +50,7 @@ const TaskCommentItemDetail = ({ comment }) => {
             />
           ) : (
             <Typography component='span' className='text-label-comment'>
-              {contentTaskComment ? contentTaskComment : comment.content}
+              {contentTaskComment || comment.content}
             </Typography>
           )}
         </Container>
