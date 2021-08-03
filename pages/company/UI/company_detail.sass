@@ -1,12 +1,12 @@
 .company-page
   display: flex !important;
   position: relative;
-  transform: translateY(50%);
+  transform: translateY(20%);
 
   .company-photo
     .img-company
-      height: 9rem;
-      width: 9rem;
+      height: 11rem;
+      width: 11rem;
       background-color: #9e9e9e;
       border: none;
       box-shadow: -9px 13px 2px 1px #ced0cf;
@@ -36,6 +36,13 @@
 
           .content-info-company
             color: #00ab55
+
+@media screen and (max-width: 1440px)
+  .company-page
+    .company-photo
+      .img-company
+        height: 8rem
+        width: 8rem
 
 @media screen and (max-width: 1024px)
   .company-page
