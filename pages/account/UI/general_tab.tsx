@@ -1,23 +1,42 @@
 import React, { FunctionComponent } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import moment from 'moment'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto'
-import {
-Box, Typography, FormControlLabel, Switch,
-  TextField,
-} from '@material-ui/core'
+import { Box, Typography, TextField } from '@material-ui/core'
 import PrimaryButtonUI from '@components/primary_button/primary_button'
-import { publicProfile, saveAccountInfo } from '../logic/account_actions'
 import { RootState } from 'redux/reducers_registration'
 import UserAvatar from '@components/user_avatar/info_user'
+import { OptionsSelect, SelectColor, SelectVariant } from '@components/options_select/options_select'
+import { saveUserInfo } from '../logic/account_apis'
 
 const labels = [
   {
-    fieldName: 'Name',
-    stateName: 'name',
+    fieldName: 'First Name',
+    stateName: 'firstName',
+    disabled: true,
+    splitComponents: true,
+  },
+  {
+    fieldName: 'Last Name',
+    stateName: 'lastName',
+    disabled: true,
+    splitComponents: true,
   },
   {
     fieldName: 'Email Address',
     stateName: 'email',
+    disabled: true,
+  },
+  {
+    fieldName: 'Day of Birth',
+    stateName: 'dob',
+    type: 'date',
+  },
+  {
+    fieldName: 'Gender',
+    stateName: 'gender',
+    type: 'select',
+    selectValues: ['OTHER', 'FEMALE', 'MALE'],
   },
   {
     fieldName: 'Phone Number',
@@ -27,77 +46,103 @@ const labels = [
     fieldName: 'Address',
     stateName: 'address',
   },
-  {
-    fieldName: 'Country',
-    stateName: 'country',
-  },
-  {
-    fieldName: 'State/Region',
-    stateName: 'region',
-  },
-  {
-    fieldName: 'City',
-    stateName: 'city',
-  },
-  {
-    fieldName: 'Zip/Code',
-    stateName: 'zipCode',
-  },
-  {
-    fieldName: 'About',
-    stateName: 'about',
-  },
 ]
 
 const GeneralTabUi: FunctionComponent = ({}) => {
-  const accountState = useSelector((state: RootState) => state.account)
-  const userProfile = useSelector((state: RootState) => state?.userInfo?.profile)
+  const loading = useSelector((state: RootState) => state?.account?.loading)
+  const userProfile = useSelector((state: RootState) => {
+
+    return {
+      profilePhoto: state?.userInfo?.profile?.profilePhoto,
+      email: state?.userInfo?.profile?.email,
+      lastName: state?.userInfo?.profile?.lastName,
+      firstName: state?.userInfo?.profile?.firstName,
+      gender: state?.userInfo?.extendedProfile?.gender,
+      phoneNumber: state?.userInfo?.extendedProfile?.phoneNumber,
+      dob: state?.userInfo?.extendedProfile?.dob ?? state?.userInfo?.extendedProfile?.createdAt,
+      address: state?.userInfo?.extendedProfile?.address,
+    }
+  })
   const dispatch = useDispatch()
   const newState = { }
 
   function handleSaveChanges() {
-    return dispatch(saveAccountInfo({ changedInfo: newState }))
+    return dispatch(saveUserInfo(newState))
   }
 
   function uploadImage() {
     return 'uploaded'
   }
 
+  function handleSelectChange({ event }) {
+    newState[event.target.name] = event.target.value
+
+    return
+  }
+
   function onFilling(event: React.ChangeEvent<HTMLInputElement>) {
+    const id = event.target.id
+
+    if (id === 'dob') {
+      newState[id] = moment(event?.target?.value ?? userProfile?.dob).toISOString()
+
+      return
+    }
+
     newState[event.target.id] = event.target.value
 
     return
   }
 
   const FillOutTextFields = labels.map((label, index) => {
-    if (index === labels.length - 1) {
-      return <Box key={`${label.fieldName}-${index}`} className={'large-container'} >
-        <form noValidate autoComplete='off' className='text-field-form' >
-          <TextField
-            id={label.stateName}
-            color='secondary'
-            rows={3}
-            multiline
-            className='text-field'
-            label={label.fieldName}
-            variant='outlined'
-            onChange={onFilling}
-            defaultValue={accountState[label.stateName]}
-          />
-        </form>
+    const fieldName = label.fieldName
+    if (label?.type === 'select') {
+
+      const options = label?.selectValues?.map((value) =>
+          <option
+            value={value}
+            key={value}
+          >
+            {value}
+          </option>,
+        )
+
+      return <Box key={`${fieldName}-${index}`} className='text-field-container'>
+        <OptionsSelect
+          defaultValue={userProfile?.[label.stateName]}
+          htmlFor='outlined-gender-select'
+          handleFillingInfo={handleSelectChange}
+          options={options ?? []}
+          inputLabel={fieldName}
+          formName='gender'
+          color={SelectColor.secondary}
+          variant={SelectVariant.outlined}
+        />
       </Box>
     }
 
-    return <Box key={`${label.fieldName}-${index}`} className={'text-field-container'} >
+    return <Box
+      key={`${fieldName}-${index}`}
+      className={
+        label.splitComponents ?
+          'text-field-container--split-components' :
+          'text-field-container'
+        }
+    >
       <form noValidate autoComplete='off' className='text-field-form' >
         <TextField
           id={label.stateName}
           color='secondary'
+          disabled={label.disabled}
           className='text-field'
+          type={label.type}
           label={label.fieldName}
           onChange={onFilling}
           variant='outlined'
-          defaultValue={accountState[label.stateName]}
+          defaultValue={label.type === 'date' ?
+            moment(userProfile?.[label.stateName]).format('YYYY-MM-DD') :
+            userProfile?.[label.stateName]
+          }
         />
       </form>
     </Box>
@@ -119,16 +164,10 @@ const GeneralTabUi: FunctionComponent = ({}) => {
         <Typography className='upload-avatar-text'>
           Max size of 3.1 MB
         </Typography>
-        <FormControlLabel
-          control={<Switch checked={accountState.isPublicProfile} onChange={() => dispatch(publicProfile())} name='isPublic'/>}
-          label='Public Profile'
-          className='public-switch-text'
-          labelPlacement='start'
-        />
       </Box>
       <Box className='information-fillout'>
         {FillOutTextFields}
-        <PrimaryButtonUI handleClick={() => handleSaveChanges()} title='Save Changes' />
+        <PrimaryButtonUI disabled={loading} handleClick={() => handleSaveChanges()} title='Save Changes' />
       </Box>
     </Box>
   )

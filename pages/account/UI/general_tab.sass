@@ -92,7 +92,7 @@
   margin: 5px
   justify-content: center
   align-items: center
-  height: 550px
+  min-height: 60vh
   width: 60%
   display: flex
   flex-wrap: wrap
@@ -102,10 +102,24 @@
   box-shadow: rgba(145, 158, 171, 0.24) 0 0 2px 0, rgba(145, 158, 171, 0.24) 0 16px 32px -4px
 
 .text-field-container
-  width: 40%
+  width: 75%
+
+.text-field-container--split-components
+  width: 37.5%
+
+  &:first-child
+    .text-field-form > .text-field
+      width: 99%
+
+  .text-field-form > .text-field
+    width: 100%
+
+.text-field-container > .form-control
+  min-width: 120px
+  width: 100%
 
 .text-field-container > .text-field-form > .text-field
-  width: 95%
+  width: 100%
 
 .large-container
   width: 80%
@@ -134,12 +148,20 @@
 
   .general-tab > .information-fillout
     width: 100%
-    height: 100%
+    min-height: 60vh
     flex-grow: 1
   
   .text-field-container
     width: 90%
     padding-top: 2rem
+
+  .text-field-container--split-components
+    width: 90%
+    padding-top: 2rem
+
+    &:first-child
+      .text-field-form > .text-field
+        width: 100%
 
   .text-field-container > .text-field-form > .text-field
     width: 100%
@@ -200,6 +222,14 @@
   .text-field-container > .text-field-form > .text-field
     width: 100%
 
+  .text-field-container--split-components
+    width: 90%
+    padding-top: 2rem
+
+    &:first-child
+      .text-field-form > .text-field
+        width: 100%
+
   .large-container
     width: 90%
     padding-top: 2rem
@@ -229,6 +259,7 @@
     & > .update-image-icon
       top: 23.8%
       left: 38.74%
+
 @media screen and (max-width: 480px) and (min-width: 320px)
   .general-tab
     flex-wrap: wrap
@@ -250,6 +281,9 @@
   .text-field-container
     width: 90%
     padding-top: 2rem
+
+  .text-field-container--split-components
+    width: 90%
 
   .text-field-container > .text-field-form > .text-field
     width: 100%
