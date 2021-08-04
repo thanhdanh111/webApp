@@ -75,21 +75,25 @@ const GeneralTabUi: FunctionComponent = ({}) => {
   }
 
   function handleSelectChange({ event }) {
-    newState[event.target.name] = event.target.value
+    const name = event?.target?.name
+    const value = event?.target?.value
+
+    newState[name] = value
 
     return
   }
 
   function onFilling(event: React.ChangeEvent<HTMLInputElement>) {
-    const id = event.target.id
+    const name = event?.target?.name
+    const value = event?.target?.value
 
-    if (id === 'dob') {
-      newState[id] = moment(event?.target?.value ?? userProfile?.dob).toISOString()
+    if (name === 'dob') {
+      newState[name] = moment(value ?? userProfile?.dob).toISOString()
 
       return
     }
 
-    newState[event.target.id] = event.target.value
+    newState[name] = value
 
     return
   }
@@ -131,7 +135,7 @@ const GeneralTabUi: FunctionComponent = ({}) => {
     >
       <form noValidate autoComplete='off' className='text-field-form' >
         <TextField
-          id={label.stateName}
+          name={label.stateName}
           color='secondary'
           disabled={label.disabled}
           className='text-field'
