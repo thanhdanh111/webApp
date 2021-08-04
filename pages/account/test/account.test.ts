@@ -33,12 +33,12 @@ beforeAll(async () => {
 describe('Pots Page', () => {
   test('Test account page successfully after login', async () => {
     await page.goto('http://localhost:5000/account')
-    await page.waitForSelector('.tabs-container')
+    await page.waitForSelector('.account-page')
 
     const image = await page.screenshot()
 
     await page.click('.drop-avt')
-    await page.click('.info-company')
+    await page.click('.info-user')
     await page.click('.drop-avt')
     await page.waitFor(5000)
 

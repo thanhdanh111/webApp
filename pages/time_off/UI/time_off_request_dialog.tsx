@@ -166,6 +166,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               inputLabel='Company'
               handleFillingInfo={handleFillingInfo}
               formName='selectedCompany'
+              shouldNeedInputBase={true}
               disabled={companies?.length < 2}
               defaultValue={selectedCompany?.companyID}
             />
@@ -192,6 +193,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               inputLabel='Department'
               handleFillingInfo={handleFillingInfo}
               formName='selectedDepartment'
+              shouldNeedInputBase={true}
             />
           </div>
 
