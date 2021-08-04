@@ -1,23 +1,23 @@
+.statistics-page
+  overflow: auto
+  height: 100%
+
 .statistics-header
-  padding-bottom: 8rem
   padding-top: 3rem
   background: #fff
-  position: relative
 
   .page-card   
     border: none
     box-shadow: 0 0 5px 0 #c6c6c6
 
 .statistics-body
-  position: absolute
-  top: 22rem
-  width: 85%
-  padding: 0 17px
+  width: 100%
+  padding: 20px 17px
 
   .statistics-body-options
     display: flex
     justify-content: flex-end
-    margin: 5px 10px 5px 5px
+    padding-bottom: 10px
 
   .bg-gradient-default
     background: #fff
@@ -26,7 +26,6 @@
 
 @media screen and (max-width: 768px)
   .statistics-page
-    height: 100vh
     overflow-y: scroll
 
     .statistics-header
@@ -43,7 +42,6 @@
           flex-basis: 55%
 
     .statistics-body
-      position: relative
       top: 0
       width: 100%
       padding: 0 17px
@@ -82,7 +80,6 @@
 
 @media screen and (max-width: 1024px)
   .statistics-page
-    height: 100vh
     overflow-y: scroll
 
     .statistics-header
@@ -99,7 +96,6 @@
           flex-basis: 55%
 
     .statistics-body
-      position: relative
       top: 0
       width: 100%
       padding: 0 17px
@@ -156,14 +152,12 @@
           flex-basis: 55%
 
     .statistics-body
-      position: relative
       top: 0
       width: 100%
       padding: 0 17px
 
       .statistics-body-options
         width: 100%
-        margin: 0 auto
 
       .bg-gradient-default
         background: #fff
@@ -199,7 +193,6 @@
 
 @media screen and (max-width: 480px)
   .statistics-page
-    height: 100vh
     overflow-y: scroll
 
     .statistics-header
@@ -217,14 +210,12 @@
           min-width: 100%
 
     .statistics-body
-      position: relative
       top: 0
       width: 100%
       padding: 0 17px
 
       .statistics-body-options
         width: 100%
-        margin: 0 auto
 
         .statistics-body-options-icon
           font-size: 1.8rem
@@ -267,7 +258,6 @@
 
 @media screen and (max-width: 360px)
   .statistics-page
-    height: 100vh
     overflow-y: scroll
 
     .statistics-header
@@ -285,14 +275,12 @@
           margin: 0 auto
 
     .statistics-body
-      position: relative
       top: 0
       width: 100%
       margin: 0 auto
 
       .statistics-body-options
         width: 100%
-        margin: 0 auto
 
         .statistics-body-options-icon
           font-size: 1.5rem
@@ -327,7 +315,3 @@
 
           .select-name-formcontrol 
             max-width: 4em
-
-@media screen and ( min-width: 960px )
-  .statistics-body-options
-    width: calc(100vw - 1.7rem - var(--drawer-width))

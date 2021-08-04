@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box, Typography, IconButton } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
-import PersonIcon from '@material-ui/icons/Person'
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt'
 import { updateOnConfirmDialog, updateOptionState } from '../logic/time_off_actions'
 import BaseTable from '@components/table/table'
@@ -30,7 +29,6 @@ export const individualActions: string[] = ['cancel']
 const TimeOffColumns = ({
   timeOffs,
   title,
-  meDisableButton,
   memberDisableButton,
   totalCount,
   loading,
@@ -68,16 +66,6 @@ const TimeOffColumns = ({
       <TimeOffRequetDialog />
 
       <IconButton
-        onClick={() => handleNavigateOptionsState('me')}
-        name='me'
-        disabled={meDisableButton}
-        disableRipple
-        disableFocusRipple
-        size='medium'
-      >
-        <PersonIcon name='me' color={meDisableButton ? 'primary' : 'secondary'} />
-      </IconButton>
-      <IconButton
         onClick={() => handleNavigateOptionsState('members')}
         name='members'
         disabled={memberDisableButton}
@@ -105,7 +93,7 @@ const TimeOffColumns = ({
           fetchData={fetchData}
           redButtonName='REJECT'
           actionFunc={actionFunc}
-          fixedHeightInfiniteScroll={300}
+          fixedHeightInfiniteScroll={timeOffs?.length < 5 ? 200 : 400}
           baseTableName={name}
           loadingIndex={loadingIndex}
           loadingStateName={loadingOptionStateName}

@@ -1,10 +1,16 @@
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useState, useEffect } from 'react'
 import { NativeSelect, InputBase, FormControl, IconButton, InputLabel } from '@material-ui/core'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 
+interface DefaultValues {
+  departmentID?: string
+  role?: string
+  email?: string
+}
+
 interface InputAndOptionsSelect {
   index: number
-  defaultValues: (string | undefined)[]
+  defaultValues: DefaultValues
   firstOptions: JSX.Element[]
   secondOptions: JSX.Element[]
   firstFormName: string
@@ -37,6 +43,27 @@ export const InputAndOptionsSelect: FunctionComponent<InputAndOptionsSelectType>
   disableButton = false,
   layoutClassName,
 }) => {
+  const [values, setValues] = useState(defaultValues)
+
+  useEffect(() => {
+
+    setValues(defaultValues)
+  }, [defaultValues])
+
+  function handleOnChange(event) {
+    const fieldName = event?.target?.name
+    const value = event?.target?.value
+    if (value === undefined || !fieldName) {
+
+      return
+    }
+
+    handleFillingInfo(event, index)
+    setValues({
+      ...values,
+      [fieldName]: value,
+    })
+  }
 
   return (
     <div className={`input-and-options-content ${layoutClassName}`}>
@@ -47,15 +74,15 @@ export const InputAndOptionsSelect: FunctionComponent<InputAndOptionsSelectType>
             htmlFor='email-input'
             className='input-and-options-content--input-label'
           >
-              {firstInputLabel}
+            {firstInputLabel}
           </InputLabel>
         }
         <InputBase
           name={firstFormName}
-          onChange={(event) => handleFillingInfo(event, index)}
+          onChange={(event) => handleOnChange(event)}
           className='sub-input-base'
           type='email'
-          defaultValue={defaultValues[0]}
+          value={values?.[firstFormName]}
           placeholder='email@domain.com'
         />
       </FormControl>
@@ -73,8 +100,8 @@ export const InputAndOptionsSelect: FunctionComponent<InputAndOptionsSelectType>
         <NativeSelect
           name={secondFormName}
           key={`${secondFormName}-${index}`}
-          defaultValue={defaultValues[1]}
-          onChange={(event) => handleFillingInfo(event, index)}
+          value={values?.[secondFormName]}
+          onChange={(event) => handleOnChange(event)}
           inputProps={{ 'aria-label': `${secondFormName}-input-${index}` }}
           input={<InputBase className='sub-input-base' />}
         >
@@ -96,8 +123,8 @@ export const InputAndOptionsSelect: FunctionComponent<InputAndOptionsSelectType>
         <NativeSelect
           name={thirdFormName}
           key={`${thirdFormName}-${index}`}
-          defaultValue={defaultValues[2]}
-          onChange={(event) => handleFillingInfo(event, index)}
+          value={values?.[thirdFormName]}
+          onChange={(event) => handleOnChange(event)}
           inputProps={{ 'aria-label': `${thirdFormName}-input-${index}` }}
           input={<InputBase className='sub-input-base'/>}
         >
@@ -110,7 +137,7 @@ export const InputAndOptionsSelect: FunctionComponent<InputAndOptionsSelectType>
         disableRipple
         disableFocusRipple
         key={`remove-icon-${index}`}
-        className='remove-icon'
+        className={disableButton ? 'remove-icon-disable' : 'remove-icon'}
         onClick={() => onClickCrossButton(index)}
       >
         <HighlightOffIcon />
