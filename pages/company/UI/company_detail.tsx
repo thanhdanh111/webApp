@@ -42,7 +42,7 @@ const CompanyDetailTab = () => {
                   {infoCompany.map((info, index) => {
                     if (!info?.value?.length) {
 
-                      return <div />
+                      return <> </>
                     }
 
                     return  (
