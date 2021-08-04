@@ -21,6 +21,10 @@ const CompanyDetailTab = () => {
       name: 'Address',
       value: company?.address,
     },
+    {
+      name: 'Description',
+      value: company?.description,
+    },
   ]
 
   return (
@@ -35,20 +39,21 @@ const CompanyDetailTab = () => {
           <div className='company-information-div'>
               <Table className='table-info-company'>
                 <TableBody>
-                  {infoCompany.map((info, index) => (
-                    <TableRow key={index} >
-                      <TableCell className='info-cell-company label-info-company'>{info?.name}</TableCell>
-                      <TableCell className='info-cell-company content-info-company'>{info?.value}</TableCell>
-                    </TableRow>
-                  ))}
+                  {infoCompany.map((info, index) => {
+                    if (!info?.value?.length) {
+
+                      return <> </>
+                    }
+
+                    return  (
+                      <TableRow key={index} >
+                        <TableCell className='info-cell-company label-info-company'>{info?.name}</TableCell>
+                        <TableCell className='info-cell-company content-info-company'>{info?.value}</TableCell>
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
               </Table>
-          </div>
-          <div className='company-information-description'>
-          {(company?.description) ??
-            <Typography className='company-description' component='span'>
-            {company?.description}
-            </Typography>}
           </div>
         </Container>
       </Box>

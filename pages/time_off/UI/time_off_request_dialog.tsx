@@ -35,6 +35,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
   const isEndDateBeforeCurrent = moment(endDate).isBefore(startDate)
   const isStartTimeAfterCurrent =  unixStartDateAndTime > moment().unix()
   const isEndTimeAfterStartTime =  unixEndDateAndTime > unixStartDateAndTime
+
   const couldSubmit = checkOnlyTrueInArray({
     conditionsArray: [
       !!selectedCompany,
@@ -44,6 +45,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
       !isEndDateBeforeCurrent,
       isStartTimeAfterCurrent,
       isEndTimeAfterStartTime,
+      !onSendingRequest,
     ],
   })
 
@@ -69,24 +71,31 @@ const TimeOffRequetDialog: FunctionComponent = () => {
     </option>,
   )
 
-  const undefinedOption = <option key='none' value='none'>{'None'}</option>
+  const undefinedOption = <option key='none' value='none'>None</option>
 
   function handleFillingInfo({ event }) {
     const stateName = event.target.name
-    const index = event.target.selectedIndex
+    const index = event.target.selectedIndex - 1
 
     selectedContent[stateName] = event.target.value
 
     switch (stateName) {
       case 'selectedCompany':
-        let departments = companies[index].departments ?? []
-        departments = [{ name: 'None' } , ...departments]
-        selectedContent[stateName] = {
-          ...companies[index],
-          departments,
+        if (index < 0) {
+          selectedContent[stateName] = undefined
+
+          break
         }
+
+        selectedContent[stateName] = companies?.[index]
         break
       case 'selectedDepartment':
+        if (index < 0) {
+          selectedContent[stateName] = undefined
+
+          break
+        }
+
         selectedContent[stateName] = selectedCompany?.departments?.[index]
         break
     }
@@ -97,7 +106,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
   function handleOpenOrClose() {
     if (onRequest) {
       selectedContent['selectedDepartment'] = undefined
-      selectedContent['selectedCompany'] = undefined
+      selectedContent['reason'] = ''
     }
 
     selectedContent['onRequest'] = !onRequest
@@ -109,9 +118,9 @@ const TimeOffRequetDialog: FunctionComponent = () => {
   }
 
   return (
-    <div>
-      <IconButton className='request-time-off-btn' aria-label='light mode' color='inherit' onClick={handleOpenOrClose}>
-          <MarkunreadIcon className='btn-appbar' />
+    <>
+      <IconButton className='request-time-off-btn' onClick={handleOpenOrClose}>
+          <MarkunreadIcon className='btn-appbar' color={onRequest ? 'primary' : 'secondary'}/>
       </IconButton>
 
       <Dialog
@@ -150,14 +159,16 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               value={startTime}
             />
             <OptionsSelect
-              options={
-                !firstOptions?.length ?
-                  [undefinedOption] :
-                  firstOptions
-              }
+              options={[
+                undefinedOption,
+                ...(firstOptions ?? []),
+              ]}
               inputLabel='Company'
               handleFillingInfo={handleFillingInfo}
               formName='selectedCompany'
+              shouldNeedInputBase={true}
+              disabled={companies?.length < 2}
+              defaultValue={selectedCompany?.companyID}
             />
             <DateAndTimePicker
               name='endDate'
@@ -178,11 +189,11 @@ const TimeOffRequetDialog: FunctionComponent = () => {
               value={endTime}
             />
             <OptionsSelect
-              disabled={!selectedCompany}
-              options={secondOptions ?? [undefinedOption]}
+              options={[undefinedOption, ...(secondOptions ?? [])]}
               inputLabel='Department'
               handleFillingInfo={handleFillingInfo}
               formName='selectedDepartment'
+              shouldNeedInputBase={true}
             />
           </div>
 
@@ -214,7 +225,7 @@ const TimeOffRequetDialog: FunctionComponent = () => {
           </Button>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   )
 }
 

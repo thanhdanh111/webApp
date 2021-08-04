@@ -65,7 +65,7 @@ const ConnectSlackTabUi: FunctionComponent = () => {
           className='text-field'
           onChange={(event) => handleFillingToken(event)}
           variant='outlined'
-          label='Please enter your SLACK token here'
+          label='Enter your SLACK token here'
           disabled={(!loadMemberData) ? true : false}
         />
       </form>

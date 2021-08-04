@@ -45,7 +45,7 @@ export const inviteMembersApi = ({ inviteMembers = [] }) => async (dispatch, get
     dispatch(updateInviteMembers({ inviteLoading: false }))
   } catch (error) {
     await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.error403 }))
-    await dispatch(updateInviteMembers({ loading: false }))
+    await dispatch(updateInviteMembers({ inviteLoading: false }))
   }
 }
 
