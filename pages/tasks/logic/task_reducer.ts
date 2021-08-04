@@ -74,7 +74,7 @@ export const tasksReducer = (state = initialState, action) => {
     case taskActionType.SET_TEMPORARY_TASK:
       return {
         ...state,
-        temporaryTask: { ...action.payload },
+        temporaryTask: action.payload ,
       }
     case taskActionType.CREATE_TASK:
       const newTasks = {
@@ -246,8 +246,8 @@ export const createdTaskThunkAction = (data) => async (dispatch, getState) => {
       dispatch(createdTask(res?.data)),
       dispatch(setTasksToStatus({ taskStatusID: data?.taskStatusID, tasks: res?.data })),
       dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateTask })),
-      dispatch(setAssigned('')),
       dispatch(setCurrentStatus('')),
+      dispatch(resetTermTask()),
     ])
     await dispatch(setLoading(false))
 
@@ -446,4 +446,13 @@ export const updateTaskThunkAction = (taskID, dataUpdateTask) => async (dispatch
   } catch (error) {
     throw error
   }
+}
+
+export const resetTermTask = () => (dispatch) => {
+  dispatch(setAssigned(''))
+  dispatch(setTempararyTask({
+    _id: '',
+    taskStatusID: { _id: '', taskIDs: [], taskBoardID: '', title: '' },
+    title: '',
+  }))
 }

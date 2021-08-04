@@ -1,5 +1,5 @@
 import { Box, Button, InputBase } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import CloseIcon from '@material-ui/icons/Close'
 import Tooltip from '@material-ui/core/Tooltip'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
@@ -13,16 +13,17 @@ import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { UserInfoType } from 'helpers/type'
 
 interface InitProps {
-  taskStatusID: string
+  taskStatusID: string,
 }
 
 const TaskNew: React.FC<InitProps> = (props) => {
   const dispatch = useDispatch()
   const { userID, profile }: UserInfoType = useSelector((state: RootStateOrAny) => state.userInfo)
   const { temporaryAssigned, temporaryTask }: TaskType = useSelector((state: RootStateOrAny) => state.tasks)
+  const newTaskRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-
+    scrollInput()
     if (checkIfEmptyArray(temporaryAssigned)) {
       return
     }
@@ -50,7 +51,7 @@ const TaskNew: React.FC<InitProps> = (props) => {
   }
 
   const addNewTask = () => {
-    if (!temporaryTask?.title) {
+    if (!temporaryTask?.title.trim()) {
       return
     }
 
@@ -70,6 +71,14 @@ const TaskNew: React.FC<InitProps> = (props) => {
     )
   }
 
+  const scrollInput = () => {
+    if (!newTaskRef.current) {
+      return
+    }
+
+    newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+
   return (
     <Box className='task-add' position='relative'>
       <Box display='flex' flexDirection='row' alignItems='center'>
@@ -78,6 +87,7 @@ const TaskNew: React.FC<InitProps> = (props) => {
           placeholder="Task name or type '/' for commands"
           name='title'
           onKeyUp={onChangeTitle}
+          ref={newTaskRef}
         />
         <AssignUser usersAssigned={temporaryAssigned} handleAssign={handleAssign} sizes='assigned-user-avatar'/>
       </Box>

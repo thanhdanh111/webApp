@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import CheckIcon from '@material-ui/icons/Check'
 import CloseIcon from '@material-ui/icons/Close'
@@ -22,7 +22,6 @@ const RenameStatusUI = (props: InitialProps) => {
     setRetitleStatus,
   }: InitialProps = props
   const { tempTitleStatus }: StatusesType = useSelector((state: RootState) => state.statuses)
-  const newTaskRef = useRef<HTMLTitleElement>(null)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -32,7 +31,7 @@ const RenameStatusUI = (props: InitialProps) => {
   if (!renaming) {
     return (
       <>
-        <Typography className='name-status' ref={newTaskRef}>{taskStatusID?.title}</Typography>
+        <Typography className='name-status'>{taskStatusID?.title}</Typography>
         <Typography className='quality-task'>{taskStatusID?.taskIDs?.length}</Typography>
       </>
     )
