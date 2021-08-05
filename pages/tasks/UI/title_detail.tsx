@@ -4,28 +4,27 @@ import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import TagTask from '../../../pages/tag_tasks/UI/tag'
 import { TaskType, updateTaskThunkAction } from '../logic/task_reducer'
 import { useEffect, useState } from 'react'
-import { useDebounce } from 'helpers/debounce'
 import { Tag } from 'helpers/type'
 
 const TitleDetail: React.FC = () => {
   const dispatch = useDispatch()
   const { currentTask }: TaskType = useSelector((state: RootStateOrAny) => state.tasks)
   const [textChange, setTextChange] = useState({ title: '', description: '' })
-  const textDebounce = useDebounce(textChange, 500)
 
   useEffect(() => {
     setTextChange({ title: currentTask.title, description: currentTask.description || '' })
-  }, [currentTask.title, currentTask.description])
+  }, [])
 
-  useEffect(() => {
-    if (!textDebounce.title){
+  const updateTextTask = (value, type) => {
+    if (type === 'title' && value.trim() === ''){
       return
     }
-    if (textDebounce.title === currentTask.title && textDebounce.description === currentTask.description){
+
+    if (currentTask[type] ? currentTask[type] === value : value.trim() === ''){
       return
     }
-    dispatch(updateTaskThunkAction(currentTask?._id, textDebounce))
-  }, [textDebounce])
+    dispatch(updateTaskThunkAction(currentTask?._id, { [type]: value }))
+  }
 
   const updateTask = (tags) => {
     const tagIDs = tags.map((tag) => tag._id)
@@ -42,6 +41,7 @@ const TitleDetail: React.FC = () => {
           rowsMax={5}
           value={textChange?.title || ''}
           onChange={(e) => setTextChange({ ...textChange, title: e.target.value })}
+          onBlur={(e) => updateTextTask(e.target.value, 'title')}
         />
       </Box>
       <Box pb={2} px={2} className='title-detail'>
@@ -51,6 +51,7 @@ const TitleDetail: React.FC = () => {
           placeholder="Description or type '/' for commands"
           value={textChange?.description}
           onChange={(e) => setTextChange({ ...textChange, description: e.target.value })}
+          onBlur={(e) => updateTextTask(e.target.value, 'description')}
         />
       </Box>
       <AttachmentInBody />
