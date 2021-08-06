@@ -171,7 +171,7 @@ export const updateChannelIDMiddleWare = (projectID: string, channelID: string, 
     if (res.data) {
 
       await dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }))
-      router.push('/projects')
+      await router.push('/projects')
     }
   } catch (error) {
 
@@ -252,7 +252,7 @@ export const createProjectMiddleWare = (
     if (res.data) {
 
       await dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }))
-      router.push('/projects')
+      await router.push('/projects')
     }
   } catch (error) {
 
