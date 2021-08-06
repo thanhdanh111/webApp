@@ -59,10 +59,6 @@ const CreateProject: FunctionComponent = () => {
     dispatch(createProjectMiddleWare(name.trim(), channelID, description, router))
   }
 
-  // const redirect = () => {
-  //   router.push('/projects')
-  // }
-
   return (
     <Box className='create-project'>
       <h1 className='text-create-projects'>Create a new Project</h1>

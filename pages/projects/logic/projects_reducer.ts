@@ -2,6 +2,7 @@ import axios from 'axios'
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { config } from 'helpers/get_config'
 import { ProjectsPage } from 'helpers/type'
+import { NextRouter } from 'next/router'
 import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import {
   getChannelsByCompany,
@@ -137,7 +138,7 @@ export const getProjectDetailData = (detailsProjectID) => async (dispatch) => {
   }
 }
 
-export const updateChannelIDMiddleWare = (projectID: string, channelID: string, redirect: () => void) => async (dispatch) => {
+export const updateChannelIDMiddleWare = (projectID: string, channelID: string, router: NextRouter) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token')
 
@@ -170,7 +171,7 @@ export const updateChannelIDMiddleWare = (projectID: string, channelID: string, 
     if (res.data) {
 
       await dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }))
-      redirect()
+      router.push('/projects')
     }
   } catch (error) {
 
@@ -219,7 +220,7 @@ export const createProjectMiddleWare = (
   name: string,
   channelID: string,
   description: string,
-  router,
+  router: NextRouter,
 ) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
@@ -251,7 +252,6 @@ export const createProjectMiddleWare = (
     if (res.data) {
 
       await dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }))
-      // redirect()
       router.push('/projects')
     }
   } catch (error) {

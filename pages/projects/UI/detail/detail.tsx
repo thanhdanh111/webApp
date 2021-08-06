@@ -58,11 +58,7 @@ const ProjectDetail: FunctionComponent = () => {
     if (!loadMemberData) {
       return
     }
-    dispatch(updateChannelIDMiddleWare(selectedProject._id, dataUpdate, redirect))
-  }
-
-  const redirect = () => {
-    router.push('/projects')
+    dispatch(updateChannelIDMiddleWare(selectedProject._id, dataUpdate, router))
   }
 
   return (
