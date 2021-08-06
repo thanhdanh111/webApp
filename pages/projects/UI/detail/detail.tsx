@@ -58,7 +58,11 @@ const ProjectDetail: FunctionComponent = () => {
     if (!loadMemberData) {
       return
     }
-    dispatch(updateChannelIDMiddleWare(selectedProject._id, dataUpdate))
+    dispatch(updateChannelIDMiddleWare(selectedProject._id, dataUpdate, redirect))
+  }
+
+  const redirect = () => {
+    router.push('/projects')
   }
 
   return (
@@ -85,6 +89,7 @@ const ProjectDetail: FunctionComponent = () => {
               required={!selectedChannelID}
               handleChange={changeChannelID}
               disabled={(!loadMemberData) ? true : false}
+              style='border'
             />
           </div>
         </div>

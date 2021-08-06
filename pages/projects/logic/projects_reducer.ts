@@ -137,7 +137,7 @@ export const getProjectDetailData = (detailsProjectID) => async (dispatch) => {
   }
 }
 
-export const updateChannelIDMiddleWare = (projectID: string, channelID: string) => async (dispatch) => {
+export const updateChannelIDMiddleWare = (projectID: string, channelID: string, redirect: () => void) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token')
 
@@ -169,11 +169,12 @@ export const updateChannelIDMiddleWare = (projectID: string, channelID: string) 
 
     if (res.data) {
 
-      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }))
+      await dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }))
+      redirect()
     }
   } catch (error) {
 
-    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateChannel }))
+    await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateChannel }))
   }
 }
 
@@ -214,7 +215,12 @@ export const getExtendedCompaniesMiddleWare = () => async (dispatch, getState) =
   }
 }
 
-export const createProjectMiddleWare = (name: string, channelID: string, description: string) => async (dispatch, getState) => {
+export const createProjectMiddleWare = (
+  name: string,
+  channelID: string,
+  description: string,
+  router,
+) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
     const userInfo = getState()?.userInfo
@@ -240,14 +246,14 @@ export const createProjectMiddleWare = (name: string, channelID: string, descrip
           Authorization: `Bearer ${token}`,
         },
       },
-     )
+      )
 
     if (res.data) {
 
-      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }))
+      await dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }))
+      // redirect()
+      router.push('/projects')
     }
-
-    return
   } catch (error) {
 
     dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedCreateProject }))

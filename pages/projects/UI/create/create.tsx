@@ -2,6 +2,7 @@ import SelectOption from '@components/option_select/option_select'
 import PrimaryButtonUI from '@components/primary_button/primary_button'
 import { Box, TextareaAutosize, TextField } from '@material-ui/core'
 import { ProjectsPage } from 'helpers/type'
+import { useRouter } from 'next/router'
 import { createProjectMiddleWare, getExtendedCompaniesMiddleWare } from 'pages/projects/logic/projects_reducer'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,7 +18,8 @@ const CreateProject: FunctionComponent = () => {
   const [name, setName] = useState('')
   const [channelID, setChannel] = useState('')
   const [description, setDescription] = useState('')
-  const [errorName, setErrorName] = useState(true)
+  const [validFields, setValidFields] = useState({ name: true, channelID: true })
+  const router = useRouter()
 
   useEffect(() => {
     void fetchData()
@@ -29,19 +31,16 @@ const CreateProject: FunctionComponent = () => {
 
   const changeChannelID = (event) => {
     if (event.target.value === channelID) {
+
       return
     }
+    setValidFields({ ...validFields, channelID: true })
+
     setChannel(event.target.value)
   }
 
   const onChangeNameProject = (event) => {
-    if (!event.target.value) {
-      setErrorName(true)
-      setName('')
-
-      return
-    }
-    setErrorName(false)
+    setValidFields({ ...validFields, name: true })
     setName(event.target.value)
 
   }
@@ -51,13 +50,18 @@ const CreateProject: FunctionComponent = () => {
   }
 
   function createProjectBtn() {
-    if (errorName || !channelID) {
-      setErrorName(true)
+    if (!name.trim() || !channelID){
+      setValidFields({ name : !!name.trim(), channelID: !!channelID })
 
       return
     }
-    dispatch(createProjectMiddleWare(name, channelID, description))
+
+    dispatch(createProjectMiddleWare(name.trim(), channelID, description, router))
   }
+
+  // const redirect = () => {
+  //   router.push('/projects')
+  // }
 
   return (
     <Box className='create-project'>
@@ -71,7 +75,7 @@ const CreateProject: FunctionComponent = () => {
                 <TextField
                   placeholder='Project name'
                   className='input-label-text'
-                  error={errorName}
+                  error={!validFields.name}
                   value={name}
                   onChange={onChangeNameProject}
                   label='Project name'
@@ -84,7 +88,7 @@ const CreateProject: FunctionComponent = () => {
                   <SelectOption
                     list={channels}
                     value={channelID}
-                    required={!channelID}
+                    required={!validFields.channelID}
                     handleChange={changeChannelID}
                     style='border'
                     label='Select Channel'
