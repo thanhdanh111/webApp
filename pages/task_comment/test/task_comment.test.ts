@@ -45,7 +45,6 @@ describe('Home page', () => {
 
     await page.click('.submit-create-status')
     await page.click('.close-create-status')
-  // add status change status
     await page.click('.add-task-text')
     await page.waitForSelector('.add-status-modal')
 
@@ -54,7 +53,6 @@ describe('Home page', () => {
 
     await page.click('.submit-create-status')
     await page.click('.close-create-status')
-  // add task
     await page.waitForSelector('.open .add-task')
 
     await page.click('.open .add-task')
@@ -74,7 +72,12 @@ describe('Home page', () => {
     await page.waitForSelector('.detail-modal')
     await page.waitForSelector('.collapse-content')
     await page.waitForSelector('.detail-content')
+    await page.waitForSelector('.content-model-detail')
     await page.waitForSelector('.modal-task-right-content')
+    await page.waitForSelector('.content-activity')
+    await page.waitForSelector('.tab-pannel')
+    await page.waitForSelector('.task-comment-ui')
+    await page.waitForSelector('.task-comment-content')
     const taskCommentDetail = await page.screenshot()
     expect(taskCommentDetail).toMatchImageSnapshot()
 
