@@ -64,7 +64,7 @@ const DrawerUi: FunctionComponent<DrawerUi> = ({ isDrawerOpen, onChangeDrawerOpe
 
         return items.push(
           <ListItem key={name} className='drawer-btn' button onClick={() => handleChangeRoute(name)}>
-            <ListItemIcon>
+            <ListItemIcon style={{ minWidth: '35px' }}>
               {elementIcons[name] ?? <InsertDriveFileIcon />}
             </ListItemIcon>
             <ListItemText primary={withoutDashName} className='drawer-btn-text' />
