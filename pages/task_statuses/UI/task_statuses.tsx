@@ -1,5 +1,5 @@
 import { Container, Link, Typography } from '@material-ui/core'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import TasksUI from '../../tasks/UI/tasks'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +10,7 @@ import ActionTaskStatusUI from './action_task_status'
 import RenameStatusUI from './ui_rename_task_status'
 import { StatusesType } from '../logic/task_statuses_reducer'
 import { RootState } from 'redux/reducers_registration'
-import { TaskType } from 'pages/tasks/logic/task_reducer'
+import { resetTermTask, TaskType } from 'pages/tasks/logic/task_reducer'
 import { setCurrentStatus } from '../logic/task_statuses_action'
 import { TaskStatus } from 'helpers/type'
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
@@ -24,7 +24,6 @@ const TaskStatusUI = (props: InitProps) => {
   const { loading, currentStatusID }: StatusesType = useSelector((state: RootState) => state.statuses)
   const { tasks }: TaskType = useSelector((state: RootState) => state.tasks)
   const dispatch = useDispatch()
-  const newTaskRef = useRef<HTMLTitleElement>(null)
   const style = taskStatusID && taskStatusID?.title?.split(' ').join('-').toLowerCase()
   const [retitling, setRetitling] = useState(false)
 
@@ -33,12 +32,6 @@ const TaskStatusUI = (props: InitProps) => {
   }
 
   const TaskStatusContent = () => {
-    const scrollInput = () => {
-      if (!newTaskRef.current) {
-        return
-      }
-      newTaskRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }
 
     const generateTask = () => {
       if (!checkIfEmptyArray(taskStatusID?.taskIDs)) {
@@ -74,6 +67,14 @@ const TaskStatusUI = (props: InitProps) => {
       })
     }
 
+    const onOpenNewTask = () => {
+      if (currentStatusID === taskStatusID?._id){
+        return
+      }
+      dispatch(resetTermTask())
+      dispatch(setCurrentStatus(taskStatusID?._id || ''))
+    }
+
     return (
       <>
       <Droppable droppableId={taskStatusID?._id} type='TASK_STATUS'>
@@ -98,7 +99,7 @@ const TaskStatusUI = (props: InitProps) => {
                   />
                   <Link
                     className='actions-status add-action'
-                    onClick={() => dispatch(setCurrentStatus(taskStatusID?._id || ''))}
+                    onClick={onOpenNewTask}
                   >
                     <AddIcon />
                   </Link>
@@ -116,10 +117,7 @@ const TaskStatusUI = (props: InitProps) => {
                 currentStatusID !== taskStatusID?._id &&
                   <div
                     className='add-task'
-                    onClick={() => {
-                      dispatch(setCurrentStatus(taskStatusID?._id))
-                      scrollInput()
-                    }}
+                    onClick={onOpenNewTask}
                   >
                     <Link className='icon-add-task'><AddIcon /></Link>
                     <Typography component='span' className='text-add-task'>NEW TASK</Typography>

@@ -70,13 +70,9 @@ const Panel: React.FC = () => {
           }
           title='Due Date'
           minDateTime={
-            newTask?.startDate
-              ? moment(newTask?.startDate) > moment()
-                ? newTask?.startDate
-                : moment()
-              : moment()
+            newTask?.startDate || moment()
           }
-          date={newTask?.startDate}
+          date={newTask?.dueDate}
         >
           <EventAvailableOutlinedIcon fontSize='small' />
         </DatetimeIconPicker>

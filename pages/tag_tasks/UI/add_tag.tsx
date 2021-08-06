@@ -97,7 +97,7 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
 
     const notSeletedTag = Object.values(tags).filter((tag: Tag) => !checkArrayObjectHasObjectByKey(props.selectedTag, tag?._id || '', '_id'))
 
-    if (notSeletedTag.length < 5){
+    if (notSeletedTag.length < 7){
       if (cursor !== 'END'){
         getData()
 
@@ -123,6 +123,7 @@ const AddTagPopup: React.FC<InitialPropTag> = (props) => {
           <input
             className='input-name-tag'
             value={nameTag}
+            id='input-tag-name'
             onChange={(event) => setNameTag(event.target.value)}
             onBlur={() => onBlurChangeNameTag(tag)}
             onKeyUp={(event) => onKeyUpChangeNameTag(event, tag)}

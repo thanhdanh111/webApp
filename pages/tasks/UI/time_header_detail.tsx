@@ -13,7 +13,7 @@ const TimeDetail: React.FC = () => {
   return (
     <Box className='detail-time'>
       <Tooltip
-        title={`Created by Phạm Thị Yến on ${moment(task.createdAt).format('MMM DD, hh:ss a')} Updated on ${moment(task.updatedAt).format('MMM DD, hh:ss a')}`}
+        title={`Created by ${task.createdBy?.firstName} ${task.createdBy?.lastName} on ${moment(task.createdAt).format('MMM DD, hh:ss a')} Updated on ${moment(task.updatedAt).format('MMM DD, hh:ss a')}`}
       >
         <Box className='item-time detail-created-time'>
           <p className='text-time'>CREATED</p>
@@ -30,7 +30,7 @@ const TimeDetail: React.FC = () => {
       <Box className='item-time detail-due-date'>
         <DatetimeIconPicker
           title='Due date'
-          minDateTime={moment()}
+          minDateTime={task.startDate || moment()}
           onChangeDate={(dateTime) =>
             dispatch(updateTaskThunkAction(task._id, { dueDate: dateTime.toString() }))
           }

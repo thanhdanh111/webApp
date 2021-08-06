@@ -31,7 +31,7 @@ const DateIconPicker: React.FC<InitProps> = (props) => {
         onClose={() => setOpenDatePicker(false)}
         value={props.date}
         onChange={(event) => {
-          props.onChangeDate({ name: props?.name, value: event })
+          props.onChangeDate(event)
         }}
         minDate={props?.minDate || ''}
         renderInput={(propsDate) => (
