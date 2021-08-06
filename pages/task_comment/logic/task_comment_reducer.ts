@@ -52,17 +52,12 @@ export  const CommentReducer = (state = initialState, action) => {
         comments: { ...state.comments, [action.payload?.createdAt]: action.payload },
       }
     case taskCommentsActionType.DELETE_TASK_COMMENT:
-      const createdAtTaskComment   = Object.keys(state.comments).find((key) => state.comments[key]._id === action.payload)
       const comments = { ...state.comments }
-      delete comments[`${createdAtTaskComment}`]
+      delete comments[action.payload]
 
       return {
         ...state,
         comments: { ...comments },
-      }
-    case taskCommentsActionType.SET_TASK_COMMENT:
-      return {
-        ...state,
       }
     default:
       return state
@@ -155,7 +150,7 @@ export const updateTaskCommentThunkAction = (content, taskID , taskCommentID) =>
   }
 }
 
-export const deleteTaskCommentThunkAction = (taskID , taskCommentID) => async (dispatch) => {
+export const deleteTaskCommentThunkAction = (taskID , taskCommentID, taskCommentCreatedAt) => async (dispatch) => {
   try {
     await dispatch(setLoading(true))
     const token = localStorage.getItem('access_token')
@@ -173,7 +168,7 @@ export const deleteTaskCommentThunkAction = (taskID , taskCommentID) => async (d
       },
     )
     if (res){
-      dispatch(deleteTaskComments(taskCommentID))
+      dispatch(deleteTaskComments(taskCommentCreatedAt))
       dispatch(pushNewNotifications({ variant: 'success', message: NotificationTypes.succeededDeleteComment }))
     }
   } catch (error) {

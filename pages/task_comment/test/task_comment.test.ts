@@ -72,9 +72,11 @@ describe('Home page', () => {
     await page.waitFor(5000)
     await page.click('.task-name')
     await page.waitForSelector('.detail-modal')
-
-    const taskDetail = await page.screenshot()
-    expect(taskDetail).toMatchImageSnapshot()
+    await page.waitForSelector('.collapse-content')
+    await page.waitForSelector('.detail-content')
+    await page.waitForSelector('.modal-task-right-content')
+    const taskCommentDetail = await page.screenshot()
+    expect(taskCommentDetail).toMatchImageSnapshot()
 
   })
 })

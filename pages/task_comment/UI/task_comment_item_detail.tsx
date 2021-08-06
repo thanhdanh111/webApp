@@ -12,30 +12,55 @@ import {
 } from '../logic/task_comment_reducer'
 import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog'
 
+const TaskCommentEditDetail = (handleCancel, saveEditTaskComment) => {
+
+  return (
+    <div className='comment-item-content'>
+      <Container className='comment-item-content-action comment-item-content-action-hide'>
+        <Button
+          className='comment-item-content-action-cancel'
+          onClick={handleCancel}
+        >
+          Cancel
+        </Button>
+        <Button
+          className='comment-item-content-action-save'
+          onClick={saveEditTaskComment}
+        >
+          Save
+        </Button>
+      </Container>
+    </div>
+  )
+}
 const TaskCommentItemDetail = ({ comment }) => {
   const { profile }: UserInfoType = useSelector((state: RootStateOrAny) => state?.userInfo)
   const { currentTask }: {currentTask : Task} = useSelector((state: RootStateOrAny) => state.tasks)
   const [contentTaskComment, setContentTaskComment] = useState()
   const dispatch = useDispatch()
-  const [handle, setHandle] = useState(false)
+  const [openTaskCommentEditDetail, setOpenTaskCommentEditDetail] = useState(false)
   const [open, setOpen] = useState(false)
   const setOpenDeteleConfirm = () => {
     setOpen(!open)
   }
-  const handleChange = () => {
-    setHandle(!handle)
+  const handleOpenTaskCommentEditDetail = () => {
+    setOpenTaskCommentEditDetail(!openTaskCommentEditDetail)
   }
   const handleCancel = () => {
     setContentTaskComment(undefined)
-    setHandle(!handle)
+    setOpenTaskCommentEditDetail(!openTaskCommentEditDetail)
   }
   const onChangeTaskComment = (event) => {
     setContentTaskComment(event.target.value)
   }
   const deleteTaskComments = () => {
-    dispatch(deleteTaskCommentThunkAction(currentTask._id, comment._id))
+    dispatch(deleteTaskCommentThunkAction(currentTask._id, comment._id, comment.createdAt))
   }
-  const CommentHeader = () => {
+  const saveEditTaskComment = () => {
+    dispatch(updateTaskCommentThunkAction(contentTaskComment, currentTask._id, comment._id))
+    setOpenTaskCommentEditDetail(!openTaskCommentEditDetail)
+  }
+  const Commentcontent = () => {
 
     return (
       <div className='comment-head'>
@@ -43,7 +68,7 @@ const TaskCommentItemDetail = ({ comment }) => {
           <Typography component='span' className='created-comment-user-name'>
             {}
           </Typography>
-          {handle ? (
+          {openTaskCommentEditDetail ? (
             <input
               defaultValue={comment.content}
               onChange={onChangeTaskComment}
@@ -54,10 +79,10 @@ const TaskCommentItemDetail = ({ comment }) => {
             </Typography>
           )}
         </Container>
-        {handle ? null : (
+        {openTaskCommentEditDetail ? null : (
           <Container className='comment-head-right'>
             <ul className='menu-action-comment'>
-              <li onClick={handleChange}>
+              <li onClick={handleOpenTaskCommentEditDetail}>
                 <EditIcon />
               </li>
               <li onClick={setOpenDeteleConfirm}>
@@ -78,41 +103,14 @@ const TaskCommentItemDetail = ({ comment }) => {
     )
   }
 
-  const CommentContent = () => {
-
-    const saveEditTaskComment = () => {
-      dispatch(updateTaskCommentThunkAction(contentTaskComment, currentTask._id, comment._id))
-      setHandle(!handle)
-    }
-
-    return (
-      <div className='comment-item-content'>
-        <Container className='comment-item-content-action comment-item-content-action-hide'>
-          <Button
-            className='comment-item-content-action-cancel'
-            onClick={handleCancel}
-          >
-            Cancel
-          </Button>
-          <Button
-            className='comment-item-content-action-save'
-            onClick={saveEditTaskComment}
-          >
-            Save
-          </Button>
-        </Container>
-      </div>
-    )
-  }
-
   return (
     <Box className='task-comment-item'>
       <div className='comment-user'>
         <UserAvatar user={profile} style='user-avatar-commented' />
       </div>
       <div className='comment-content'>
-        {CommentHeader()}
-        {handle ? CommentContent() : null}
+        {Commentcontent()}
+        {openTaskCommentEditDetail ? TaskCommentEditDetail(handleCancel, saveEditTaskComment) : null}
       </div>
     </Box>
   )
