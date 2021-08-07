@@ -2,6 +2,7 @@ import axios from 'axios'
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { config } from 'helpers/get_config'
 import { ProjectsPage } from 'helpers/type'
+import { NextRouter } from 'next/router'
 import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import {
   getChannelsByCompany,
@@ -137,7 +138,7 @@ export const getProjectDetailData = (detailsProjectID) => async (dispatch) => {
   }
 }
 
-export const updateChannelIDMiddleWare = (projectID: string, channelID: string) => async (dispatch) => {
+export const updateChannelIDMiddleWare = (projectID: string, channelID: string, router: NextRouter) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token')
 
@@ -169,11 +170,12 @@ export const updateChannelIDMiddleWare = (projectID: string, channelID: string) 
 
     if (res.data) {
 
-      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }))
+      await dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedUpdateChannel }))
+      await router.push('/projects')
     }
   } catch (error) {
 
-    dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateChannel }))
+    await dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedUpdateChannel }))
   }
 }
 
@@ -214,7 +216,12 @@ export const getExtendedCompaniesMiddleWare = () => async (dispatch, getState) =
   }
 }
 
-export const createProjectMiddleWare = (name: string, channelID: string, description: string) => async (dispatch, getState) => {
+export const createProjectMiddleWare = (
+  name: string,
+  channelID: string,
+  description: string,
+  router: NextRouter,
+) => async (dispatch, getState) => {
   try {
     const token = localStorage.getItem('access_token')
     const userInfo = getState()?.userInfo
@@ -240,14 +247,13 @@ export const createProjectMiddleWare = (name: string, channelID: string, descrip
           Authorization: `Bearer ${token}`,
         },
       },
-     )
+      )
 
     if (res.data) {
 
-      dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }))
+      await dispatch(pushNewNotifications({ variant: 'success' , message: NotificationTypes.succeedCreateProject }))
+      await router.push('/projects')
     }
-
-    return
   } catch (error) {
 
     dispatch(pushNewNotifications({ variant: 'error' , message: NotificationTypes.failedCreateProject }))
