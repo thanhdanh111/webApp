@@ -2,9 +2,11 @@ import React, { FunctionComponent } from 'react'
 import MyEditor from '@components/my_editor/my_editor'
 import { useDispatch } from 'react-redux'
 import { updateDocs } from '../logic/docs_actions'
-import { SelectionState, EditorState } from 'draft-js'
+import { SelectionState, EditorState, CompositeDecorator } from 'draft-js'
 import { handleSideToolbarActions, onMoveBlockAction } from '../logic/docs_side_toolbar_actions'
 import { showUpToolbarAndUpdateState } from '../logic/docs_inline_toolbar_actions'
+import { docsLinkDecorator } from 'pages/docs/UI/decorator_link'
+import { docsImageDecorator } from './decorator_image'
 
 interface EditorView {
   readOnly: boolean
@@ -52,6 +54,11 @@ const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState }) =>
     }))
   }
 
+  const decorator = new CompositeDecorator([
+    docsLinkDecorator,
+    docsImageDecorator,
+  ])
+
   return <div className='editor-view'>
     <MyEditor
       handleOnChangeLineStyle={onClickOptionInSideToolbar}
@@ -63,7 +70,7 @@ const EditorView: FunctionComponent<EditorView> = ({ readOnly, editorState }) =>
       })}
       readOnly={readOnly}
       handleChangeEditorState={handleChangeEditorState}
-      editorState={editorState ?? EditorState.createEmpty()}
+      editorState={editorState ?? EditorState.createEmpty(decorator)}
       onClickSideToolbar={onClickSideToolbar}
     />
   </div>

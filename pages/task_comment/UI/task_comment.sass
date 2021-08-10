@@ -5,7 +5,7 @@
 
   .task-comment-content
     padding: 0
-    height: calc(100% - 8%)
+    height: 100%
 
     .task-comment-item
       display: flex      
@@ -16,20 +16,110 @@
 
       .comment-content
         width: 100%
-        height: 80px
+        height: 100px
         margin: .5rem 1rem 0
         border-radius: 10px
-        background-color: rgb(80, 172, 85)
-        box-sizing: unset-box
+        border: 1px solid #e9ebf0
 
         &:hover
-          .menu-action-comment
-            list-style-type: none
-            display: flex
-            justify-content: flex-end
+          .comment-head
 
-        .menu-action-comment
-          display: none
+            .created-comment-moment
+              display: none
+
+            .menu-action-comment
+              list-style-type: none
+              display: flex
+              justify-content: flex-end
+              position: absolute
+              top: 1px
+              right: 1px
+              margin: 3px 5px
+              transition: all 1s
+          
+
+        .comment-head
+          position: relative
+          height: 60px
+
+          .created-comment-user-name
+            position: absolute
+            top: 1px
+            margin: 3px 5px
+
+            .created-comment-name
+              color: #50ac55
+              font-size: 14px
+          
+          .created-comment-moment
+            position: absolute
+            margin: 3px 5px
+            top: 1px
+            right: 1px
+            font-size: 14px
+            transition: all 1s
+
+          .text-label-comment
+            position: absolute
+            padding: 30px 20px 1px 20px
+            word-break: break-all
+          
+          .comment-head-input
+            width: 100%
+            border: none
+            height: 60px
+            outline: none
+            border-radius: 10px
+            font-size: 14px
+            padding: 0 20px
+            overflow: auto
+            margin-top: 8px
+
+          .menu-action-comment
+            display: none
+
+            .menu-action-comment-detail
+              display: inline-flex
+              margin: 0 8px
+              align-items: center
+              cursor: pointer
+
+              .taskComment-icon
+                font-size: 14px
+            
+        .comment-item-content
+          display: flex
+          justify-content: flex-end
+          border-top: 1px solid #aeacb0
+
+          .comment-item-content-action-cancel
+            cursor: pointer
+            font-size: 13px
+            border: 1px solid #aeacb0
+            color: #aeacb0
+            padding: 0 10px
+            border-radius: 3px
+            text-transform: uppercase
+            margin: 5px 7px 5px
+            height: 30px
+
+            &:hover
+              background-color: #aeacb0
+              border: 1px solid #aeacb0
+              color: #fff
+              transition: none
+          
+          .comment-item-content-action-save
+            cursor: pointer
+            font-size: 13px
+            border: 1px solid #aeacb0
+            color: #aeacb0
+            padding: 0 20px
+            border-radius: 3px
+            text-transform: uppercase
+            margin: 5px 10px 5px
+            background-color: #50ac55
+            height: 30px
 
   .task-comment
     padding: 0
@@ -74,4 +164,5 @@
   position: relative
   width: 100%
   flex: 1
+
 

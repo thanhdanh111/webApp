@@ -81,6 +81,8 @@ export const getTaskCommentThunkAction = (taskID: string) => async (dispatch) =>
         },
         params: {
           taskID,
+          sortDirection: 'ASC',
+          sortBy: 'createdAt',
         },
       },
     )

@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@material-ui/core'
+import { Box, Button, TextareaAutosize, Typography } from '@material-ui/core'
 import { Task, UserInfoType } from 'helpers/type'
 import { Container } from 'next/app'
 import { useState } from 'react'
@@ -11,9 +11,9 @@ import {
   updateTaskCommentThunkAction,
 } from '../logic/task_comment_reducer'
 import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog'
+import moment from 'moment'
 
 const TaskCommentEditDetail = (handleCancel, saveEditTaskComment) => {
-
   return (
     <div className='comment-item-content'>
       <Container className='comment-item-content-action comment-item-content-action-hide'>
@@ -35,10 +35,12 @@ const TaskCommentEditDetail = (handleCancel, saveEditTaskComment) => {
 }
 const TaskCommentItemDetail = ({ comment }) => {
   const { profile }: UserInfoType = useSelector((state: RootStateOrAny) => state?.userInfo)
-  const { currentTask }: {currentTask : Task} = useSelector((state: RootStateOrAny) => state.tasks)
+  const { currentTask }: { currentTask: Task } = useSelector((state: RootStateOrAny) => state.tasks)
   const [contentTaskComment, setContentTaskComment] = useState()
+  const userName = `${comment?.createdBy?.lastName} ${comment?.createdBy?.firstName}`
   const dispatch = useDispatch()
-  const [openTaskCommentEditDetail, setOpenTaskCommentEditDetail] = useState(false)
+  const [openTaskCommentEditDetail, setOpenTaskCommentEditDetail] =
+    useState(false)
   const [open, setOpen] = useState(false)
   const setOpenDeteleConfirm = () => {
     setOpen(!open)
@@ -61,32 +63,53 @@ const TaskCommentItemDetail = ({ comment }) => {
     setOpenTaskCommentEditDetail(!openTaskCommentEditDetail)
   }
   const Commentcontent = () => {
-
     return (
       <div className='comment-head'>
         <Container className='comment-head-left'>
-          <Typography component='span' className='created-comment-user-name'>
-            {}
-          </Typography>
           {openTaskCommentEditDetail ? (
-            <input
+            <TextareaAutosize
               defaultValue={comment.content}
               onChange={onChangeTaskComment}
+              className='comment-head-input'
             />
           ) : (
-            <Typography component='span' className='text-label-comment'>
-              {contentTaskComment || comment.content}
-            </Typography>
+            <>
+              <Typography
+                component='span'
+                className='created-comment-user-name'
+              >
+                {profile.email === comment?.createdBy?.email ? (
+                  <span className='created-comment-name'>You</span>
+                ) : (
+                  <span className='created-comment-name'>
+                    {comment?.createdBy?.profilePhoto ? userName : 'You'}
+                  </span>
+                )}
+                <span style={{ fontSize: '14px' }}> commented</span>
+              </Typography>
+              <Typography component='span' className='created-comment-moment'>
+                {moment(comment.createdAt).format('MMM DD, hh:ss a')}
+              </Typography>
+              <Typography component='span' className='text-label-comment'>
+                {contentTaskComment || comment.content}
+              </Typography>
+            </>
           )}
         </Container>
         {openTaskCommentEditDetail ? null : (
           <Container className='comment-head-right'>
             <ul className='menu-action-comment'>
-              <li onClick={handleOpenTaskCommentEditDetail}>
-                <EditIcon />
+              <li
+                onClick={handleOpenTaskCommentEditDetail}
+                className='menu-action-comment-detail'
+              >
+                <EditIcon className='taskComment-icon' /> <span>Edit</span>
               </li>
-              <li onClick={setOpenDeteleConfirm}>
-                <DeleteIcon />
+              <li
+                onClick={setOpenDeteleConfirm}
+                className='menu-action-comment-detail'
+              >
+                <DeleteIcon className='taskComment-icon' /> <span>Delete</span>
               </li>
               <ConfirmDialog
                 warning='Are you sure you want to CONTINUE?'
@@ -106,11 +129,16 @@ const TaskCommentItemDetail = ({ comment }) => {
   return (
     <Box className='task-comment-item'>
       <div className='comment-user'>
-        <UserAvatar user={profile} style='user-avatar-commented' />
+        <UserAvatar
+          user={comment?.createdBy?.profilePhoto ? comment?.createdBy : profile}
+          style='user-avatar-commented'
+        />
       </div>
       <div className='comment-content'>
         {Commentcontent()}
-        {openTaskCommentEditDetail ? TaskCommentEditDetail(handleCancel, saveEditTaskComment) : null}
+        {openTaskCommentEditDetail
+          ? TaskCommentEditDetail(handleCancel, saveEditTaskComment)
+          : null}
       </div>
     </Box>
   )

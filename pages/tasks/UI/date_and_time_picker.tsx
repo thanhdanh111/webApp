@@ -12,6 +12,17 @@ interface InitProps {
 
 const DatetimeIconPicker: React.FC<InitProps> = (props) => {
   const [openDatePicker, setOpenDatePicker] = useState(false)
+  const [dateTime, setDateTime] = useState<Moment | string>('')
+
+  const onGetDateTime = () => {
+    setOpenDatePicker(false)
+
+    if (!dateTime) {
+      return
+    }
+    props.onChangeDate(dateTime)
+
+  }
 
   return (
     <div className='date-time-picker'>
@@ -27,10 +38,10 @@ const DatetimeIconPicker: React.FC<InitProps> = (props) => {
       <DateTimePicker
         open={openDatePicker}
         onOpen={() => setOpenDatePicker(true)}
-        onClose={() => setOpenDatePicker(false)}
-        value={props.date || moment()}
+        onClose={onGetDateTime}
+        value={props.date || props.minDateTime}
         onChange={(event) =>
-          props.onChangeDate(event)
+          setDateTime(event || '')
         }
         minDateTime={props.minDateTime || ''}
         renderInput={(propsDate) => (

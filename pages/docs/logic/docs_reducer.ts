@@ -1,6 +1,8 @@
 import { DocsActionTypes, UpdateSelectedItemInDrawerType } from './docs_actions'
-import { EditorState, convertFromRaw } from 'draft-js'
+import { EditorState, CompositeDecorator, convertFromRaw } from 'draft-js'
 import { Company, User } from 'helpers/type'
+import { docsImageDecorator } from '../UI/decorator_image'
+import { docsLinkDecorator } from '../UI/decorator_link'
 import { ProjectAccessMapOfUsers } from './get_folder_access'
 
 interface DocsValue {
@@ -113,13 +115,17 @@ const initialState: DocsValue = {
 export type DocsValueType = DocsValue
 
 function updateSelectedItemInDrawer(data, state: DocsValue) {
-  const { pageID = '', projectID = '', ...restData }: UpdateSelectedItemInDrawerType  = data
-  const project = state?.docProjectsMap?.[projectID]
-  const page = project?.pages?.[pageID]
+  const { pageID, projectID, ...restData }: UpdateSelectedItemInDrawerType  = data
+  const decorator = new CompositeDecorator([
+    docsLinkDecorator,
+    docsImageDecorator,
+  ])
+  const project = state?.docProjectsMap?.[projectID ?? '']
+  const page = project?.pages?.[pageID ?? '']
 
   if (project) {
     state.selectedDocProject = project
-    state.editorState = EditorState.createEmpty()
+    state.editorState = EditorState.createEmpty(decorator)
     state.title = ''
     state.selectedPage = {}
   }
@@ -131,6 +137,7 @@ function updateSelectedItemInDrawer(data, state: DocsValue) {
     state.title = page.title ?? ''
     state.editorState = EditorState.createWithContent(
       newContentState,
+      decorator,
     )
   }
 

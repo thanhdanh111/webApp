@@ -58,7 +58,7 @@ const ProjectDetail: FunctionComponent = () => {
     if (!loadMemberData) {
       return
     }
-    dispatch(updateChannelIDMiddleWare(selectedProject._id, dataUpdate))
+    dispatch(updateChannelIDMiddleWare(selectedProject._id, dataUpdate, router))
   }
 
   return (
@@ -85,6 +85,7 @@ const ProjectDetail: FunctionComponent = () => {
               required={!selectedChannelID}
               handleChange={changeChannelID}
               disabled={(!loadMemberData) ? true : false}
+              style='border'
             />
           </div>
         </div>
