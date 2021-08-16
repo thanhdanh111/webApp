@@ -1,11 +1,11 @@
 import { checkIfEmptyArray } from './check_if_empty_array'
 
-export const checkIfNotEmpty = ({ feilds }) => {
-  if (!feilds) {
+export const checkIfNotEmpty = ({ fields }) => {
+  if (!fields) {
     return
   }
 
-  return feilds.some((field) => {
+  return fields.some((field) => {
     if (Array.isArray(field)) {
       return checkIfEmptyArray(field)
     }

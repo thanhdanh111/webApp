@@ -1,7 +1,7 @@
 import {
   TaskBoardsType, updateTaskToTaskStatusByIdThunkAction,
 } from '../logic/task_boards_reducer'
-import React, { FunctionComponent, useState, useCallback } from 'react'
+import React, { FunctionComponent, useState, useCallback, useEffect } from 'react'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import { DisappearedLoading } from 'react-loadingg'
 import TaskStatusUI from '../../task_statuses/UI/task_statuses'
@@ -17,7 +17,8 @@ import { checkValidAccess } from 'helpers/check_valid_access'
 import { createStatusThunkAction } from 'pages/task_statuses/logic/task_statuses_reducer'
 import { updateTaskIDsToStatusByID } from '../logic/task_boards_action'
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
-
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { getTasksThunkAction, TaskType } from 'pages/tasks/logic/task_reducer'
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF]
 
 interface IDroppable {
@@ -59,15 +60,32 @@ const BoardTasks: FunctionComponent = () => {
     currentTaskBoard,
   }: TaskBoardsType = useSelector((state: RootStateOrAny) => state.taskBoards)
   const {
+    tasks,
+    totalCountTask,
+    filteringTaskByUser,
+    selectedUserIDs,
+    selectedTags,
+    selectedTitle,
+  }: TaskType = useSelector((state: RootState) => state.tasks)
+  const {
     isAdmin,
     rolesInCompany,
-  }: UserInfoType =  useSelector((state: RootState) => state?.userInfo)
+  }: UserInfoType = useSelector((state: RootState) => state?.userInfo)
   const checkUserScope = isAdmin || checkValidAccess({ rolesInCompany, validAccesses })
   const dispatch = useDispatch()
   const [isAddStatus, setIsAddStatus] = useState(false)
   const [title, setTitle] = useState('')
-
   const addStatusStyle = !isAddStatus ? 'no-add-status' : 'add-status-style'
+
+  useEffect(() => {
+    fetchTasksData()
+  }, [
+    selectedUserIDs,
+    selectedTags,
+    selectedTitle,
+    filteringTaskByUser,
+    currentTaskBoard,
+  ])
 
   const GenerateTaskStatuses = useCallback(() => {
     if (!currentTaskBoard || !currentTaskBoard?.taskStatusIDs) {
@@ -170,29 +188,41 @@ const BoardTasks: FunctionComponent = () => {
     )
   }
 
+  const fetchTasksData = () => {
+    dispatch(getTasksThunkAction(currentTaskBoard))
+  }
+
   return (
     <div className='board'>
       <NavClickUp />
-      <div className='board-tasks'>
-          {!loading &&
+      {!loading &&
+        <InfiniteScroll
+          className='board-tasks'
+          dataLength={Object.keys(tasks).length}
+          hasMore={Object.keys(tasks).length < totalCountTask}
+          next={fetchTasksData}
+          loader={loading ?? <DisappearedLoading color={'#67cb48'} />}
+          scrollThreshold={0.8}
+          height={300}
+        >
           <>
             <DragDropContext onDragEnd={onDragEnd}>
-              <GenerateTaskStatuses/>
+              <GenerateTaskStatuses />
             </DragDropContext>
             <div className='add-task task-status'>
               <div className='status'>
                 {isAddStatus ?
                   addTaskStatusUI() :
-                  <Typography component='span' className='add-task-text'  onClick={() => setIsAddStatus(true)}>
+                  <Typography component='span' className='add-task-text' onClick={() => setIsAddStatus(true)}>
                     NEW STATUS
                   </Typography>
                 }
               </div>
             </div>
-          </>}
-            {loading && <DisappearedLoading color={'#67cb48'}/>}
-        </div>
-      </div>
+          </>
+        </InfiniteScroll>
+      }
+    </div>
   )
 }
 

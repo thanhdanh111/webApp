@@ -16,24 +16,18 @@ import { Roles } from 'constants/roles'
 import { useDebounce } from 'helpers/debounce'
 import FilteringTaskByUserAssignUI from './filtering_tasks_by_assigned'
 import { setFilteringTaskByCurrentUser, setSelectedTitle } from 'pages/tasks/logic/task_action'
-import { getTasksThunkAction, TaskType } from 'pages/tasks/logic/task_reducer'
-import { TaskBoardsType } from '../logic/task_boards_reducer'
-
+import { TaskType } from 'pages/tasks/logic/task_reducer'
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER, Roles.COMPANY_STAFF, Roles.DEPARTMENT_STAFF]
 
 const NavClickUp: React.FC = () => {
   const dispatch = useDispatch()
   const {
     filteringTaskByUser,
-    selectedUserIDs,
-    selectedTags,
-    selectedTitle,
   }: TaskType = useSelector((state: RootState) => state.tasks)
   const {
     isAdmin,
     rolesInCompany,
   }: UserInfoType =  useSelector((state: RootState) => state?.userInfo)
-  const { currentTaskBoard }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards)
   const loadData = isAdmin || checkValidAccess({ rolesInCompany, validAccesses })
   const btnShow = filteringTaskByUser ? 'btn-show-me' : 'btn-show-all'
   const [searchTerm, setSearchTerm] = useState('')
@@ -51,16 +45,6 @@ const NavClickUp: React.FC = () => {
 
     return
   }, [])
-
-  useEffect(() => {
-    dispatch(getTasksThunkAction(currentTaskBoard))
-  }, [
-    selectedUserIDs,
-    selectedTags,
-    selectedTitle,
-    filteringTaskByUser,
-    currentTaskBoard,
-  ])
 
   const getSearchTaskData = async () => {
     if (debouncedSearchTerm) {

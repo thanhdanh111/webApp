@@ -1,7 +1,13 @@
 import { Task } from 'helpers/type'
 import { taskActionType } from './task_action_type'
 
-export const getTasks = (tasks: { [key: string]: Task }) => {
+interface GetTasksType {
+  tasks: { [key: string]: Task }
+  cursorTask?: string
+  totalCountTask?: number
+}
+
+export const getTasks = (tasks: GetTasksType) => {
   return {
     type: taskActionType.GET_TASKS,
     payload: tasks,
@@ -82,5 +88,18 @@ export const setFilteringTaskByCurrentUser = (data: boolean) => {
   return {
     type: taskActionType.SET_FILLTERING_BY_CURRENT_USER,
     payload: data,
+  }
+}
+
+export const resetTasksByCurrentTaskBoar = () => {
+  return {
+    type: taskActionType.RESET_TASKS_BY_CURRENT_TASK_BOARD,
+  }
+}
+
+export const setFiltering = (filtering: boolean) => {
+  return {
+    payload: filtering,
+    type: taskActionType.SET_FILTERING,
   }
 }
