@@ -21,6 +21,7 @@ import { RootState } from 'redux/reducers_registration'
 import { UserInfoType } from 'helpers/type'
 import { checkValidAccess } from 'helpers/check_valid_access'
 import { getPaginationThunkAction } from 'pages/users/logic/users_reducer'
+import { resetTasksByCurrentTaskBoar } from 'pages/tasks/logic/task_action'
 
 const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER]
 
@@ -55,8 +56,11 @@ const TaskBoardUI = () => {
     }
 
     taskBoards.map((taskBoard) => {
-      if (taskBoard._id === event.target.value) {
-        dispatch(setSelectedTaskBoard(taskBoard))
+      if (taskBoard._id === event.target.value && taskBoard._id !== currentTaskBoard._id) {
+        return Promise.all([
+          dispatch(resetTasksByCurrentTaskBoar()),
+          dispatch(setSelectedTaskBoard(taskBoard)),
+        ])
       }
 
       return

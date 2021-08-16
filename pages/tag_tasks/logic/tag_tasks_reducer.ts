@@ -141,7 +141,7 @@ export const updateTagThunkAction = (tagID, dataUpdateTag) => async (dispatch, g
     Object.keys(tasks).map((key) => {
       tasks[key].tagIDs = updateTagInTags(tasks[key]?.tagIDs as Tag[] || [], res.data)
     })
-    dispatch(getTasks(tasks))
+    dispatch(getTasks({ tasks }))
   } catch (error) {
     throw error
   }
@@ -170,7 +170,7 @@ export const deleteTagThunkAction = (id) => async (dispatch, getState) => {
       Object.keys(tasks).map((key) => {
         tasks[key].tagIDs = (tasks[key]?.tagIDs as Tag[])?.filter((tag) => tag._id !== id)
       })
-      dispatch(getTasks(tasks))
+      dispatch(getTasks({ tasks }))
 
     }
   } catch (error) {
