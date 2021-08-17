@@ -62,7 +62,6 @@ describe('Home page', () => {
 
     await page.click('.submit-create-status')
     await page.waitForSelector('.testing .status')
-    await page.click('.close-create-status')
 
     const confirmAddStatus = await page.screenshot()
     expect(confirmAddStatus).toMatchImageSnapshot()

@@ -1,75 +1,76 @@
 .nav-click_up
   .menu-content-value
-    width: 45vw;
-    display: inline-flex;
-    position: relative;
-    padding: 0;
-    margin: 0;
+    width: 45vw
+    display: inline-flex
+    position: relative
+    padding: 0
+    margin: 0
 
     .input-of-menu-value
-      width: 37%;
-      margin: 5px 0;
-      list-style: none;
-      min-height: 31px;
-      border: 1px solid #ccc;
-      padding: 2px 28px 2px 6px;
-      border-radius: 10px;
-      color: #343434;
-      line-height: 2;
-      flex-grow: 1;
-      font-size: 12px;
+      margin: 5px 0
+      border: 1px solid #ccc
+      padding: 0 10px
+      border-radius: 10px
+      color: #343434
+      font-size: 12px
+      cursor: default
+      display: flex
+      align-items: center
+      justify-content: space-between
+      min-height: 35px
 
       .value-item
-        padding: 0 6px;
-        background: #00ab55;
-        border-radius: 8px;
-        margin: 3px 2px;
-        color: #fff;
-        align-items: flex-end;
-        width: fit-content;
+        padding: 0 6px
+        background: #00ab55
+        border-radius: 8px
+        margin: 3px 2px
+        color: #fff
+        align-items: center
+        width: fit-content
+        height: 25px
 
         .text-value-item
-          font-size: 14px;
-          text-transform: capitalize;
+          font-size: 14px
+          text-transform: capitalize
+          font-weight: 600
+          margin-left: 5px
 
         .icon-value-item
-          .icon-close-item
-            .icon-item
-              opacity: 0;
-              font-size: 14px;
-              vertical-align: middle;
+          width: 15px
+          height: 15px
+          color: #fff
+          margin-left: 5px
+
+          .delete
+            width: 15px
+            height: 15px
 
       .value-item
-        display: inline-flex;
+        display: inline-flex
 
         &:hover
           .text-value-item
-            white-space: normal;
+            white-space: normal
 
           .icon-value-item
             .icon-close-item
               .icon-item
-                justify-content: center;
-                align-items: center;
-                right: 0;
-                color: #fff;
-                display: inline;
-                padding: 0 2px;
-                opacity: 1;
+                justify-content: center
+                align-items: center
+                right: 0
+                color: #fff
+                display: inline
+                padding: 0 2px
+                opacity: 1
 
-    .btn-menu-content    
-      background: no-repeat;
-      border: none;
-      box-shadow: none;
-      position: absolute;
-      min-width: fit-content;
-      top: 7px;
-      right: 34rem;
-      padding: 0;
+.action-status-btn-menu-content
+  width: 30px
+  height: 30px
+  margin-left: 10px !important
 
-      .action-status-btn-menu-content
-        padding: 0;
-        background: none;
+.input-of-menu-value--content
+  width: 90%
 
-        svg
-          vertical-align: middle;
+.action-status-btn
+  width: 30px
+  height: 30px

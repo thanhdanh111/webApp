@@ -26,7 +26,7 @@ const GroupUserAssigned: React.FC<InitProps> = (props) => {
 
           return (
             <Badge
-              key={user._id}
+              key={user?._id}
               overlap='circle'
               anchorOrigin={{
                 vertical: 'top',
@@ -44,7 +44,7 @@ const GroupUserAssigned: React.FC<InitProps> = (props) => {
               >
                 <Avatar
                   className={`avata-task ${sizes}`}
-                  src={user.profilePhoto}
+                  src={user?.profilePhoto}
                 />
               </Tooltip>
             </Badge>

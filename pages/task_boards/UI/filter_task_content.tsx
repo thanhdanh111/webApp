@@ -1,5 +1,5 @@
-import { Box, Button, IconButton, Popover } from '@material-ui/core'
-import React, { useState } from 'react'
+import { Box, IconButton, Popover } from '@material-ui/core'
+import React from 'react'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
@@ -11,35 +11,25 @@ interface InitialProps {
 }
 
 const FilterTaskContentUI: React.FC<InitialProps> = ({ component, valueElement, filterLabel }) => {
-  const [open, setOpen] = useState(false)
   const anchorRef = React.useRef<HTMLButtonElement>(null)
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen)
-  }
 
   return (
     <>
-      <ul className='input-of-menu-value' >
-        {checkIfEmptyArray(valueElement) ? valueElement : `Filtering tasks by ${filterLabel}`}
-      </ul>
-
-      <PopupState variant='popover' popupId='demo-popup-popover'>
+      <div className='input-of-menu-value' >
+        <div className='input-of-menu-value--content'>
+          {checkIfEmptyArray(valueElement) ? valueElement : `Filtering tasks by ${filterLabel}`}
+        </div>
+        <PopupState variant='popover' popupId='demo-popup-popover'>
         {(popupState) => (
-          <div>
-            <Button variant='contained' color='primary' {...bindTrigger(popupState)} className='btn-menu-content'>
-              <IconButton
-                ref={anchorRef}
-                aria-controls={open ? 'menu-list-grow' : undefined}
-                aria-haspopup='true'
-                onClick={handleToggle}
-                className='action-status-btn-menu-content'
-              >
-                <div className='action action-filter'>
-                  <ArrowDropDownIcon />
-                </div>
-              </IconButton>
-            </Button>
+          <>
+            <IconButton
+              ref={anchorRef}
+              aria-haspopup='true'
+              {...bindTrigger(popupState)}
+              className='action-status-btn-menu-content'
+            >
+              <ArrowDropDownIcon />
+            </IconButton>
             <Popover
               {...bindPopover(popupState)}
               anchorOrigin={{
@@ -55,9 +45,10 @@ const FilterTaskContentUI: React.FC<InitialProps> = ({ component, valueElement, 
                 {component}
               </Box>
             </Popover>
-          </div>
+          </>
         )}
       </PopupState>
+      </div>
     </>
   )
 }

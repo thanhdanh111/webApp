@@ -6,11 +6,11 @@ import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import Panel from './panel_task'
 import AssignUser from './assign_user'
 import DirectNewTask from './direct_new_task'
-import { setAssigned, setTempararyTask } from '../logic/task_action'
 import { createdTaskThunkAction, TaskType } from '../logic/task_reducer'
 import { setCurrentStatus } from 'pages/task_statuses/logic/task_statuses_action'
 import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { UserInfoType } from 'helpers/type'
+import { setAssigned, setTempararyTask } from '../logic/task_action'
 
 interface InitProps {
   taskStatusID: string,
@@ -67,8 +67,8 @@ const TaskNew: React.FC<InitProps> = (props) => {
   const handleClose = async () => {
     await Promise.all([
       dispatch(setCurrentStatus('')),
-      dispatch(setAssigned(''))],
-    )
+      dispatch(setAssigned('')),
+    ])
   }
 
   const scrollInput = () => {
@@ -88,8 +88,15 @@ const TaskNew: React.FC<InitProps> = (props) => {
           name='title'
           onKeyUp={onChangeTitle}
           ref={newTaskRef}
+          autoFocus
         />
-        <AssignUser usersAssigned={temporaryAssigned} handleAssign={handleAssign} sizes='assigned-user-avatar'/>
+        <div onClick={(event) => event.stopPropagation()}>
+          <AssignUser
+            usersAssigned={temporaryAssigned}
+            handleAssign={handleAssign}
+            sizes='assigned-user-avatar'
+          />
+        </div>
       </Box>
       <Box display='flex' px={2} pb={'10px'} mt={'25px'} fontWeight={100}>
         <Panel/>

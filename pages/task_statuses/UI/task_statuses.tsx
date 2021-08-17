@@ -43,27 +43,23 @@ const TaskStatusUI = (props: InitProps) => {
           return
         }
 
-        return (
-          <>
-            <Draggable
-              key={key}
-              draggableId={key}
-              index={index}
-            >
-              {(provideTask) => {
-                return (
-                  <div
-                    ref={provideTask.innerRef}
-                    {...provideTask.draggableProps}
-                    {...provideTask.dragHandleProps}
-                  >
-                    <TasksUI key={key} task={tasks[key]}/>
-                  </div>
-                )
-              }}
-            </Draggable>
-          </>
-        )
+        return <Draggable
+          key={key}
+          draggableId={key}
+          index={index}
+        >
+          {(provideTask) => {
+            return (
+              <div
+                ref={provideTask.innerRef}
+                {...provideTask.draggableProps}
+                {...provideTask.dragHandleProps}
+              >
+                <TasksUI key={key} task={tasks[key]}/>
+              </div>
+            )
+          }}
+        </Draggable>
       })
     }
 
@@ -80,7 +76,7 @@ const TaskStatusUI = (props: InitProps) => {
       <Droppable droppableId={taskStatusID?._id} type='TASK_STATUS'>
         {(provided) => (
           <div
-            className={`task-status task-status-content ${style}`}
+            className={`task-status-content ${style}`}
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
@@ -91,8 +87,11 @@ const TaskStatusUI = (props: InitProps) => {
                     renaming={retitling}
                     setRetitleStatus={setRetitleStatus}
                   />
+
               </Container>
               <Container className='status-right'>
+                  <Typography className='quality-task'>{taskStatusID?.taskIDs?.length}</Typography>
+
                   <ActionTaskStatusUI
                     taskStatusID={taskStatusID?._id}
                     setRenameStatus={setRetitleStatus}
@@ -120,7 +119,7 @@ const TaskStatusUI = (props: InitProps) => {
                     onClick={onOpenNewTask}
                   >
                     <Link className='icon-add-task'><AddIcon /></Link>
-                    <Typography component='span' className='text-add-task'>NEW TASK</Typography>
+                    <Typography component='span' className='text-add-task'>New Task</Typography>
                   </div>
                 }
             </div>

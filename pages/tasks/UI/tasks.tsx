@@ -29,7 +29,7 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
 
   const handleDeleteTask = () => {
     setOpen(false)
-    dispatch(deletedTaskThunkAction({ taskID: task?._id, taskStatusID: task?.taskStatusID._id }))
+    dispatch(deletedTaskThunkAction({ taskID: task?._id, taskStatusID: task?.taskStatusID?._id ?? task?.taskStatusID }))
   }
 
   const getTask = () => {
@@ -38,35 +38,44 @@ const TasksUI: FunctionComponent<InitialProp> = (props: InitialProp) => {
 
   return (
     <>
-        <div className='task-item'>
+        <div className='task-item' onClick={() => getTask()}>
             <Typography className='text-board' component='span'>Team</Typography>
-            <div className='task-title'>
+            <div className='task-title' title={taskName}>
                 <Typography
                   component='span'
                   className='task-name'
-                  onClick={() => {
-                    getTask()
-                  }}
                 >{taskName}
                 </Typography>
-                <AssignUser usersAssigned={task?.userIDs || []} handleAssign={handleAssign} sizes='assigned-user-avatar'/>
+                <div onClick={(event) => event.stopPropagation()}>
+                  <AssignUser
+                    usersAssigned={task?.userIDs || []}
+                    handleAssign={handleAssign}
+                    sizes='assigned-user-avatar'
+                  />
+                </div>
             </div>
             <div className='footer-task'>
               <Typography className='task-id'>{`#${taskID}`}</Typography>
-              <IconButton className='delete-task' onClick={() => setOpen(true)}>
+              <IconButton
+                className='delete-task'
+                onClick={(event) => {
+                  setOpen(true)
+                  event.stopPropagation()
+                }}
+              >
                 <DeleteIcon className='delete-task-icon' />
               </IconButton>
-              <ConfirmDialog
-                warning='Are you sure you want to CONTINUE?'
-                onOpen={open}
-                handleClose={cancelDelete}
-                handleNo={cancelDelete}
-                handleYes={handleDeleteTask}
-                status='REMOVE'
-                style='deleted-task-dialog'
-              />
             </div>
         </div>
+        <ConfirmDialog
+          warning='Are you sure you want to CONTINUE?'
+          onOpen={open}
+          handleClose={cancelDelete}
+          handleNo={cancelDelete}
+          handleYes={handleDeleteTask}
+          status='REMOVE'
+          style='deleted-task-dialog'
+        />
     </>
   )
 }

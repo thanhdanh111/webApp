@@ -28,12 +28,14 @@ beforeAll(async () => {
 })
 
 describe('Pots Page', () => {
-  test('Test statistics page successfully after login', async () => {
+  test('Test tag tasks successfully after login', async () => {
     await page.goto('http://localhost:5000/home')
     await page.waitForSelector('.board')
     await page.waitForSelector('.status')
-    const hasStatusTestTag = await page.$$eval('.test-tag', (e) => e.length)
-    const hasTask = await page.$$eval('.test-tag .task-name', (e) => e.length)
+    await page.waitFor(5000)
+
+    const hasStatusTestTag = await page.$$eval('div.test-tag', (e) => e.length)
+    const hasTask = await page.$$eval('div > div.test-tag div.task-item', (e) => e.length)
 
     if (!hasStatusTestTag) {
         // add statuss open
@@ -44,27 +46,26 @@ describe('Pots Page', () => {
       await page.type('.add-status-input', 'test tag')
 
       await page.click('.submit-create-status')
-      await page.click('.close-create-status')
+
+      await page.waitForResponse((response) => response.url().includes('/taskStatuses') && response.status() === 201)
     }
 
     if (!hasTask) {
-      await page.waitForSelector('.test-tag .add-task')
-
+      await page.waitForSelector('div.test-tag .add-task')
       await page.click('.test-tag .add-task')
       await page.waitForSelector('.task-add')
 
-      await page.waitForSelector('input[name=title]')
-
-      await page.click('input[name=title]')
-      await page.type('input[name=title]', 'feat/created task for task')
+      await page.keyboard.type('feat/created task for task')
 
       await page.waitForSelector('.save-add')
       await page.click('.save-add')
+
+      await page.waitForResponse((response) => response.url().includes('/tasks') && response.status() === 201)
     }
 
   // task detail
-    await page.waitForSelector('.test-tag .task-name')
-    await page.click('.test-tag .task-name')
+    await page.waitForSelector('div.test-tag .task-name')
+    await page.click('div.test-tag .task-name')
     await page.waitForSelector('.detail-modal')
     await page.waitForSelector('.tag-add')
     await page.click('.tag-add')
@@ -159,7 +160,6 @@ describe('Pots Page', () => {
     await page.waitForSelector('.delete-status-menu-item')
     await page.click('.delete-status-menu-item')
     await page.waitFor(5000)
-
   })
 
 })

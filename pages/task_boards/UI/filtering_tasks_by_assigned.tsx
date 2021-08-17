@@ -1,6 +1,5 @@
 import UsersPopupUI from '@components/users_popup/users_popup'
-import { Container, Typography } from '@material-ui/core'
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
+import { Container, IconButton, Typography } from '@material-ui/core'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'redux/reducers_registration'
@@ -21,30 +20,39 @@ const FilteringTaskByUserAssignUI: React.FC = () => {
     dispatch(setSelectedUserIDs(removeUser))
   }
 
-  const showUserValue = checkIfEmptyArray(selectedUserIDs) ? selectedUserIDs?.map((each) => {
+  const FilteredUser = ({ user }) => {
+
     return (
-        <li className='value-item' key={each?._id}>
-          <Typography className='text-value-item'>
-          {(each.firstName?.trim() || each.lastName?.trim())
-          ? `${each.firstName} ${each.lastName}`
-          : `${each.email}`}
-          </Typography>
-          <div className='icon-value-item' onClick={() => handleRemoveUser(each?._id)}>
-            <div className='icon-close-item'>
-              <CloseIcon
-                className='icon-item delete'
-              />
-            </div>
-          </div>
-        </li>
+      <div className='value-item' key={user?._id}>
+        <Typography className='text-value-item'>
+        {(user.firstName?.trim() || user.lastName?.trim())
+        ? `${user.firstName} ${user.lastName}`
+        : `${user.email}`}
+        </Typography>
+        <IconButton className='icon-value-item' onClick={() => handleRemoveUser(user?._id)}>
+          <CloseIcon className='icon-item delete' />
+        </IconButton>
+      </div>
     )
-  }) : []
+  }
+
+  const showUsers = selectedUserIDs?.length > 2 ? [0, 1, 2].map((index) => {
+    if (index === 2) {
+      return <div className='value-item'>
+        <Typography className='text-value-item'>
+          {`+ ${selectedUserIDs?.length - 2} person`}
+        </Typography>
+      </div>
+    }
+
+    return <FilteredUser key={selectedUserIDs?.[index]?._id} user={selectedUserIDs[index]} />
+  }) : selectedUserIDs?.map((user) => (<FilteredUser user={user} key={user?._id} />))
 
   return (
     <Container>
       <FilterTaskContentUI
         component={<UsersPopupUI chooseUser={setSelectedUserIDs} type='reduxAction' usersAssigned={selectedUserIDs} />}
-        valueElement={showUserValue}
+        valueElement={showUsers}
         filterLabel='users'
       />
     </Container>

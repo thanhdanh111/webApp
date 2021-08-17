@@ -4,9 +4,7 @@
   display: flex
   flex-direction: column
   width: 270px
-  padding: 0 5px 0 0
-  margin-left: 15px
-  margin-top: 15px
+  margin-left: 5px
   min-height: 50px
 
   .status
@@ -24,6 +22,7 @@
     cursor: pointer
     position: relative
     border-top: 2px solid #00ab55
+    height: 50px
 
     .status-left
       display: flex
@@ -45,12 +44,6 @@
       .name-status
         font-size: 1em
         margin-right: 3px
-
-      .quality-task
-        padding: 0 5px
-        border: 0.01px solid #acacac
-        border-radius: 50%
-        font-size: 0.8em
 
       .rename-status
         display: flex;
@@ -92,6 +85,13 @@
       justify-content: flex-end;
       align-items: center;
       padding: 0;
+    
+    .quality-task
+      padding: 0 5px
+      border: 0.01px solid #acacac
+      border-radius: 50%
+      font-size: 0.8em
+      margin-right: 5px
 
     .no-add-status
       background: #fff;
@@ -143,3 +143,7 @@
 .add-task
   .status
     padding: 10px 10px 12px;
+
+.status-task-list
+  &:focus
+    outline: none
