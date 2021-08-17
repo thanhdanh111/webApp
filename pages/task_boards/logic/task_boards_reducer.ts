@@ -4,19 +4,22 @@ import axios from 'axios'
 import { config } from 'helpers/get_config'
 import {
   setLoading,
-  getTaskBoard,
   createdTaskBoard,
-  setSelectedTaskBoard,
   updateTaskIDsToStatusByID,
+  getTaskBoard,
+  setSelectedTaskBoard,
 } from './task_boards_action'
 import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications'
+import { convertArrayObjectToObject } from 'helpers/convert_array_to_object'
 import { getTaskByID } from 'pages/tasks/logic/task_action'
 
 export interface TaskBoardsType {
   loading: boolean
   currentTaskBoard: TaskBoard
-  taskBoards: TaskBoard[]
+  taskBoards: {
+    [taskBoardID: string]: TaskBoard,
+  },
   hasNoData: boolean
   onSendingRequest: boolean
 }
@@ -28,13 +31,15 @@ export enum NotificationTypes {
   failDeleteTag = 'Failed Delete Tag',
 }
 
+export type TaskBoardsReducerType = TaskBoardsType
+
 const initialState: TaskBoardsType = {
   loading: true,
   currentTaskBoard: {
     _id: '',
     title: '',
   },
-  taskBoards: [],
+  taskBoards: {},
   hasNoData: false,
   onSendingRequest: false,
 }
@@ -62,6 +67,7 @@ interface IUpdateTask {
 // tslint:disable-next-line: cyclomatic-complexity
 export  const taskBoardsReducer = (state = initialState, action) => {
   switch (action.type) {
+
     case taskBoardsActionType.SET_LOADING:
       return {
         ...state,
@@ -75,12 +81,13 @@ export  const taskBoardsReducer = (state = initialState, action) => {
     case taskBoardsActionType.GET_TASK_BOARD:
       return {
         ...state,
-        taskBoards: action?.data?.list,
+        taskBoards: action?.data,
       }
     case taskBoardsActionType.CREATE_TASK_BOARD:
+      state.taskBoards[action?.data?._id ?? ''] = action?.data
+
       return {
         ...state,
-        taskBoards: [...state.taskBoards, action?.data],
       }
     case taskBoardsActionType.CREATE_TASK_STATUS:
       const newTaskStatus = action.payload
@@ -218,17 +225,20 @@ export const getTaskBoardThunkAction = () => async (dispatch, getState) => {
         },
       })
 
-    if (res.data.totalCount === 0){
+    if (!res?.data?.list?.length){
       await dispatch(setLoading(false))
 
       return
     }
 
-    await dispatch(getTaskBoard(res?.data))
-    await dispatch(setSelectedTaskBoard(res?.data?.list[0]))
+    const taskBoards = convertArrayObjectToObject<TaskBoard>(res?.data?.list, '_id')
+    const firstTaskBoardID = res?.data?.list?.[0]?._id
+
+    await dispatch(getTaskBoard(taskBoards))
+    await dispatch(setSelectedTaskBoard(taskBoards[firstTaskBoardID]))
     await dispatch(setLoading(false))
   } catch (error) {
-    throw error
+    await dispatch(setLoading(false))
   }
 }
 
@@ -307,10 +317,11 @@ export const updateTaskToTaskStatusByIdThunkAction = ({
     })
 
     const notification = notificationsType[res.status]
+
     if (taskID === currentTask._id){
       dispatch(getTaskByID(res.data))
     }
-    await dispatch(setLoading(false))
+
     await dispatch(pushNewNotifications({ variant: 'success' , message: notification }))
   } catch (error) {
     const errorNotification = returnNotification({ type: 'failed' })

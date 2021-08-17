@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setSelectedTaskBoard } from '../logic/task_boards_action'
 import { createTaskBoardThunkAction, getTaskBoardThunkAction, TaskBoardsType } from '../logic/task_boards_reducer'
 import { Close } from '@material-ui/icons'
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { Roles } from 'constants/roles'
 import { RootState } from 'redux/reducers_registration'
 import { UserInfoType } from 'helpers/type'
@@ -27,7 +26,7 @@ const validAccesses = [Roles.COMPANY_MANAGER, Roles.DEPARTMENT_MANAGER]
 
 const TaskBoardUI = () => {
   const dispatch = useDispatch()
-  const { taskBoards, currentTaskBoard, loading, hasNoData }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards)
+  const { taskBoards, currentTaskBoard, loading }: TaskBoardsType = useSelector((state: RootState) => state.taskBoards)
   const {
     isAdmin,
     rolesInCompany,
@@ -36,8 +35,8 @@ const TaskBoardUI = () => {
   const [open, setOpen] = useState(false)
   const [titleTaskBoard, setTileTaskBoard] = useState('')
   const [descriptionTaskBoard, setDescriptionTaskBoard] = useState('')
-
   const classRequire = !titleTaskBoard ? 'title-required' : ''
+  const taskBoardsArray = Object.values(taskBoards)
 
   useEffect(() => {
     void fetchData()
@@ -50,22 +49,21 @@ const TaskBoardUI = () => {
     ])
   }
 
-  const changeSelectedTaskBoard = (event) => {
+  const changeSelectedTaskBoard = async (event) => {
     if (event.target.value === currentTaskBoard._id) {
       return
     }
 
-    taskBoards.map((taskBoard) => {
-      if (taskBoard._id === event.target.value && taskBoard._id !== currentTaskBoard._id) {
-        return Promise.all([
-          dispatch(resetTasksByCurrentTaskBoar()),
-          dispatch(setSelectedTaskBoard(taskBoard)),
-        ])
-      }
+    const taskBoard = taskBoards[event?.target?.value ?? '']
 
-      return
-    })
+    if (taskBoard) {
+      await Promise.all([
+        dispatch(resetTasksByCurrentTaskBoar()),
+        dispatch(setSelectedTaskBoard(taskBoard)),
+      ])
+    }
 
+    dispatch(setSelectedTaskBoard(taskBoard))
   }
 
   const handleOpenOrClose = () => {
@@ -170,25 +168,29 @@ const TaskBoardUI = () => {
       </IconButton>
       {creatTaskBoardModal()}
       <Select
-          value={currentTaskBoard?._id}
-          onChange={changeSelectedTaskBoard}
-          className='nav-click-up-task-board-select'
+        disableUnderline
+        value={currentTaskBoard?._id}
+        onChange={changeSelectedTaskBoard}
+        className='nav-click-up-task-board-select'
       >
-        {(checkIfEmptyArray(taskBoards) && !hasNoData) ? taskBoards.map((item, index) => {
+        {taskBoardsArray?.length ? taskBoardsArray.map((item, index) => {
           return (
             <MenuItem
+              title={item?.title}
               key={item?._id ?? index}
               className='item'
               value={item?._id}
+              classes={{
+                selected: 'nav-click-up-task-board-select--item-selected',
+              }}
             >
               {item?.title}
             </MenuItem>
           )
         }) :
-        <div className='empty-state'>
-          <img alt='logo' width='100px' src='../document.svg'/>
-          <Typography color='textSecondary' className='empty-state--text'>Not found any TaskBoards</Typography>
-        </div>
+        <MenuItem>
+          None
+        </MenuItem>
       }
       </Select>
     </div>

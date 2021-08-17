@@ -1,9 +1,7 @@
 import { taskStatusesActionType } from './task_statuses_action_type'
 import axios from 'axios'
 import { config } from '../../../helpers/get_config'
-import {
-  setLoading, setTempTitleStatus,
-} from './task_statuses_action'
+import { setLoading, setTempTitleStatus } from './task_statuses_action'
 import { pushNewNotifications } from '../../../redux/common/notifications/reducer'
 import { createdStatus, deletedTaskStatus, renameStatus } from 'pages/task_boards/logic/task_boards_action'
 
@@ -91,8 +89,6 @@ export const createStatusThunkAction = (title: string) => async (dispatch, getSt
       return
     }
 
-    await dispatch(setLoading(true))
-
     const data = {
       title,
       taskBoardID,
@@ -110,7 +106,6 @@ export const createStatusThunkAction = (title: string) => async (dispatch, getSt
     const notification = notificationsType[res.status]
     await dispatch(setTempTitleStatus(''))
     await dispatch(createdStatus(res.data))
-
     await Promise.all([
       dispatch(setLoading(false)),
       dispatch(pushNewNotifications({ variant: 'success' , message: notification })),

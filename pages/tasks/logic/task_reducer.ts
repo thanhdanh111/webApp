@@ -17,9 +17,8 @@ import {
 import { convertArrayObjectToObject, convertArrayStringToObject } from '../../../helpers/convert_array_to_object'
 import { pushNewNotifications } from 'redux/common/notifications/reducer'
 import { returnNotification } from 'pages/invite_members/logic/invite_error_notifications'
-import { setCurrentStatus } from 'pages/task_statuses/logic/task_statuses_action'
-import { checkIfEmptyArray } from 'helpers/check_if_empty_array'
 import { checkArrayObjectHasObjectByKey } from 'helpers/check_in_array'
+import { setCurrentStatus } from 'pages/task_statuses/logic/task_statuses_action'
 import { removeTasksFfromStatus, setTasksToStatus } from 'pages/task_boards/logic/task_boards_action'
 import { checkTrueInArray } from 'helpers/check_true_in_array'
 
@@ -212,8 +211,7 @@ export const getTasksThunkAction = (currentTaskBoard: TaskBoard) => async (dispa
     const tags = selectedTags?.map((tag) => tag?._id)
     const tempUserIDs = selectedUserIDs?.map((user) => user?._id)
     const title = selectedTitle
-    const tempStatuses = checkIfEmptyArray(currentTaskBoard.taskStatusIDs) &&
-      currentTaskBoard?.taskStatusIDs?.map((each) => each?._id)
+    const tempStatuses = currentTaskBoard?.taskStatusIDs?.map((each) => each?._id)
 
     let cursor = cursorTask
 
@@ -272,7 +270,7 @@ export const getTasksThunkAction = (currentTaskBoard: TaskBoard) => async (dispa
     await dispatch(getTasks({ tasks, cursorTask: res.data?.cursor, totalCountTask: res.data?.totalCount }))
     await dispatch(setLoading(false))
   } catch (error) {
-    throw error
+    await dispatch(setLoading(false))
   }
 }
 
@@ -290,6 +288,7 @@ export const createdTaskThunkAction = (data) => async (dispatch, getState) => {
 
       return
     }
+
     const res = await axios.post(`${config.BASE_URL}/companies/${companyID}/tasks`,
       data,
       {
@@ -308,8 +307,6 @@ export const createdTaskThunkAction = (data) => async (dispatch, getState) => {
       dispatch(resetTermTask()),
     ])
     await dispatch(setLoading(false))
-
-    return
   } catch (error) {
     await dispatch(
       pushNewNotifications({
@@ -318,8 +315,8 @@ export const createdTaskThunkAction = (data) => async (dispatch, getState) => {
           error?.response?.data?.message || NotificationTypes.failCreateTask,
       }),
     )
+
     await dispatch(setLoading(false))
-    throw error
   }
 }
 
@@ -358,10 +355,6 @@ export const deletedTaskThunkAction = (data: { taskID: string, taskStatusID: str
   } catch (error) {
     await dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failDeleteTask }))
     await dispatch(setLoading(false))
-
-    throw error
-
-    return
   }
 }
 
@@ -398,6 +391,7 @@ export const updateAssignUserThunkAction = (
     if (taskID === currentTask?._id) {
       dispatch(getTaskByID(res.data))
     }
+
     await dispatch(updateUserAssigned(formatData))
     await dispatch(setLoading(false))
     await dispatch(pushNewNotifications({ variant: 'success', message: 'updated users assigned for task successfully!' }))
@@ -410,6 +404,7 @@ export const updateAssignUserThunkAction = (
 export const getTaskByIDThunkAction = (taskID: string) => async (dispatch, getState) => {
   try {
     await dispatch(setLoading(true))
+
     const token = localStorage.getItem('access_token')
     const { currentCompany }: UserInfoType = getState().userInfo
     const companyID = currentCompany?._id
@@ -428,7 +423,7 @@ export const getTaskByIDThunkAction = (taskID: string) => async (dispatch, getSt
     await dispatch(getTaskByID(res.data))
     await dispatch(setLoading(false))
   } catch (error) {
-    throw error
+    await dispatch(setLoading(false))
   }
 }
 
@@ -486,8 +481,10 @@ export const updateTaskThunkAction = (taskID, dataUpdateTask) => async (dispatch
     const { tasks }: { tasks: { [key: string]: Task } } = getState().tasks
 
     if (!token || !companyID) {
+
       return
     }
+
     const res = await axios.put(`${config.BASE_URL}/companies/${companyID}/tasks/${taskID}`,
       dataUpdateTask,
       {
@@ -496,6 +493,7 @@ export const updateTaskThunkAction = (taskID, dataUpdateTask) => async (dispatch
           Authorization: `Bearer ${token}`,
         },
       })
+
     if (taskID === getState()?.tasks?.currentTask?._id) {
       dispatch(getTaskByID(res.data))
     }

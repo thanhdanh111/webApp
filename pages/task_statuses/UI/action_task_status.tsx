@@ -39,12 +39,15 @@ const ActionTaskStatusUI = (props: InitialProps) => {
 
   const actionFunc = {
     delete: handleRemoveStatus,
-    rename: setRenameStatus,
+    rename: (event) => {
+      setRenameStatus()
+      handleClose(event)
+    },
   }
 
   function handleReturnActionsList(action, index) {
     return <MenuItem
-      onClick={() => actionFunc?.[action]?.()}
+      onClick={(event) => actionFunc?.[action]?.(event)}
       component='div'
       key={`action-in-users-page-${index}`}
       className={`${action}-status-menu-item`}

@@ -8,8 +8,8 @@ import DateIconPicker from './date_picker'
 import DatetimeIconPicker from './date_and_time_picker'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import Priority, { priorityLevels } from './priority_task'
-import { setTempararyTask } from '../logic/task_action'
 import OutlinedFlagIcon from '@material-ui/icons/OutlinedFlag'
+import { setTempararyTask } from '../logic/task_action'
 
 const Panel: React.FC = () => {
   const newTask = useSelector((state: RootStateOrAny) => state.tasks?.temporaryTask)
@@ -24,6 +24,7 @@ const Panel: React.FC = () => {
 
       return
     }
+
     dispatch(setTempararyTask({ ...newTask, [event.name]: event.value.toString() }))
   }
 
