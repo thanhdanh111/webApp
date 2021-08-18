@@ -6,6 +6,8 @@ export interface UpdateAccountState {
   gender?: string
   dob?: string
   loading?: boolean
+  isValidDateOfBirth?: boolean
+  isValidPhoneNumber?: boolean
 }
 
 export enum AccountActionTypes {

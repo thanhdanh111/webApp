@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto'
@@ -7,7 +7,9 @@ import PrimaryButtonUI from '@components/primary_button/primary_button'
 import { RootState } from 'redux/reducers_registration'
 import UserAvatar from '@components/user_avatar/info_user'
 import { OptionsSelect, SelectColor, SelectVariant } from '@components/options_select/options_select'
-import { saveUserInfo } from '../logic/account_apis'
+import { SaveUserInfo, saveUserInfo } from '../logic/account_apis'
+import { AccountValue } from '../logic/account_reducer'
+import { updateAccountState } from '../logic/account_actions'
 
 const labels = [
   {
@@ -48,8 +50,10 @@ const labels = [
   },
 ]
 
-const GeneralTabUi: FunctionComponent = ({}) => {
-  const loading = useSelector((state: RootState) => state?.account?.loading)
+const GeneralTabUi: FunctionComponent = ({ }) => {
+  const minDateOfBirth = new Date('1990-01-01')
+  const maxDateOfBirth = new Date(moment().format('YYYY-MM-DD'))
+  const { loading, isValidDateOfBirth, isValidPhoneNumber }: AccountValue = useSelector((state: RootState) => state?.account)
   const userProfile = useSelector((state: RootState) => {
 
     return {
@@ -64,10 +68,19 @@ const GeneralTabUi: FunctionComponent = ({}) => {
     }
   })
   const dispatch = useDispatch()
-  const newState = { }
+  const [updateData, setUpdateDate] = useState<SaveUserInfo>({
+    dob: userProfile?.dob,
+    gender: userProfile?.gender,
+    phoneNumber: userProfile?.phoneNumber,
+    address: userProfile?.address,
+  })
+
+  useEffect(() => {
+    dispatch(updateAccountState({ isValidDateOfBirth: true, isValidPhoneNumber: true }))
+  }, [])
 
   function handleSaveChanges() {
-    return dispatch(saveUserInfo(newState))
+    return dispatch(saveUserInfo(updateData, minDateOfBirth, maxDateOfBirth))
   }
 
   function uploadImage() {
@@ -78,7 +91,10 @@ const GeneralTabUi: FunctionComponent = ({}) => {
     const name = event?.target?.name
     const value = event?.target?.value
 
-    newState[name] = value
+    setUpdateDate((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
 
     return
   }
@@ -88,12 +104,31 @@ const GeneralTabUi: FunctionComponent = ({}) => {
     const value = event?.target?.value
 
     if (name === 'dob') {
-      newState[name] = moment(value ?? userProfile?.dob).toISOString()
+
+      setUpdateDate((prevState) => ({
+        ...prevState,
+        [name]: moment(value ?? userProfile?.dob).format('YYYY-MM-DD'),
+      }))
 
       return
     }
 
-    newState[name] = value
+    setUpdateDate((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+
+    return
+  }
+
+  const showInvalid = (label: string) => {
+    if (label === 'phoneNumber' && !isValidPhoneNumber) {
+      return <Typography className='phone-error'>Please enter a valid phone number</Typography>
+    }
+
+    if (label === 'dob' && !isValidDateOfBirth) {
+      return <Typography className='phone-error'>Please enter a valid date</Typography>
+    }
 
     return
   }
@@ -103,13 +138,13 @@ const GeneralTabUi: FunctionComponent = ({}) => {
     if (label?.type === 'select') {
 
       const options = label?.selectValues?.map((value) =>
-          <option
-            value={value}
-            key={value}
-          >
-            {value}
-          </option>,
-        )
+        <option
+          value={value}
+          key={value}
+        >
+          {value}
+        </option>,
+      )
 
       return <Box key={`${fieldName}-${index}`} className='text-field-container'>
         <OptionsSelect
@@ -131,24 +166,29 @@ const GeneralTabUi: FunctionComponent = ({}) => {
         label.splitComponents ?
           'text-field-container--split-components' :
           'text-field-container'
-        }
+      }
     >
       <form noValidate autoComplete='off' className='text-field-form' >
         <TextField
+          inputProps={label.type === 'date' ? {
+            max: moment(maxDateOfBirth).format('YYYY-MM-DD'),
+            min: moment(minDateOfBirth).format('YYYY-MM-DD'),
+          } : undefined}
           name={label.stateName}
           color='secondary'
           disabled={label.disabled}
-          className='text-field'
+          className={`text-field ${label.stateName}`}
           type={label.type}
           label={label.fieldName}
           onChange={onFilling}
           variant='outlined'
           defaultValue={label.type === 'date' ?
-            moment(userProfile?.[label.stateName]).format('YYYY-MM-DD') :
-            userProfile?.[label.stateName]
+            moment(updateData?.[label.stateName]).format('YYYY-MM-DD') :
+            updateData?.[label.stateName]
           }
         />
       </form>
+      {showInvalid(label.stateName)}
     </Box>
   })
 
