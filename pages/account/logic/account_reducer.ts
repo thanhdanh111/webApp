@@ -1,6 +1,6 @@
 import { AccountActionTypes } from './account_actions'
 
-interface AccountValue {
+export interface AccountValue {
   profilePhoto?: string
   email?: string
   lastName?: string
@@ -8,9 +8,14 @@ interface AccountValue {
   dob?: string
   address?: string
   loading?: boolean
+  isValidDateOfBirth?: boolean
+  isValidPhoneNumber?: boolean
 }
 
-const initialState: AccountValue = { }
+const initialState: AccountValue = {
+  isValidDateOfBirth: true,
+  isValidPhoneNumber: true,
+}
 
 export type AccountStateType = AccountValue
 
