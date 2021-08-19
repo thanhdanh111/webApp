@@ -374,7 +374,7 @@ export interface Comment {
   companyID?: Company
   departmentID?: Department
   createdAt: string
-  createdBy: string
+  createdBy: User | string
   updateAt?: string
   content: string
 }

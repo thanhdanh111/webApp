@@ -90,7 +90,6 @@ export const getTaskCommentThunkAction = (taskID: string) => async (dispatch) =>
     if (!res) {
       return
     }
-
     const formatData = convertArrayObjectToObject(res.data?.list, 'createdAt')
     await dispatch(getTaskComments(formatData))
     await dispatch(setLoading(false))
@@ -99,7 +98,7 @@ export const getTaskCommentThunkAction = (taskID: string) => async (dispatch) =>
   }
 }
 
-export const addTaskComentsThunkAction = (content, taskID) => async (dispatch) => {
+export const addTaskComentsThunkAction = (content, taggedUIDs, taskID) => async (dispatch) => {
   try {
     const token = localStorage.getItem('access_token')
     if (!token || !taskID) {
@@ -109,6 +108,7 @@ export const addTaskComentsThunkAction = (content, taskID) => async (dispatch) =
     const res = await axios.post(`${config.BASE_URL}/tasks/${taskID}/comments`,
       {
         content,
+        taggedUIDs,
       },
       {
         headers: {
@@ -119,7 +119,7 @@ export const addTaskComentsThunkAction = (content, taskID) => async (dispatch) =
       )
     dispatch(addTaskComents(res.data))
   } catch (error) {
-    dispatch(pushNewNotifications({ variant: 'success', message: NotificationTypes.failCreateTaskComment }))
+    dispatch(pushNewNotifications({ variant: 'error', message: NotificationTypes.failCreateTaskComment }))
   }
 }
 

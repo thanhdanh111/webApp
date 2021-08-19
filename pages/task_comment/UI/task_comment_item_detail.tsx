@@ -1,10 +1,9 @@
 import { Box, Button, TextareaAutosize, Typography } from '@material-ui/core'
 import { Task, UserInfoType } from 'helpers/type'
-import { Container } from 'next/app'
 import { useState } from 'react'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
-import EditIcon from '@material-ui/icons/Edit'
-import DeleteIcon from '@material-ui/icons/Delete'
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined'
 import UserAvatar from '@components/user_avatar/info_user'
 import {
   deleteTaskCommentThunkAction,
@@ -13,10 +12,17 @@ import {
 import { ConfirmDialog } from '@components/confirm_dialog/confirm_dialog'
 import moment from 'moment'
 
-const TaskCommentEditDetail = (handleCancel, saveEditTaskComment) => {
+const TaskCommentEditDetail = (handleCancel, saveEditTaskComment, comment, onChangeTaskComment) => {
   return (
     <div className='comment-item-content'>
-      <Container className='comment-item-content-action comment-item-content-action-hide'>
+      <div className='comment-item-content-input' >
+        <TextareaAutosize
+          defaultValue={comment.content}
+          onChange={onChangeTaskComment}
+          className='comment-head-input'
+        />
+      </div>
+      <div className='comment-item-content-action comment-item-content-action-hide'>
         <Button
           className='comment-item-content-action-cancel'
           onClick={handleCancel}
@@ -29,7 +35,7 @@ const TaskCommentEditDetail = (handleCancel, saveEditTaskComment) => {
         >
           Save
         </Button>
-      </Container>
+      </div>
     </div>
   )
 }
@@ -37,11 +43,11 @@ const TaskCommentItemDetail = ({ comment }) => {
   const { profile }: UserInfoType = useSelector((state: RootStateOrAny) => state?.userInfo)
   const { currentTask }: { currentTask: Task } = useSelector((state: RootStateOrAny) => state.tasks)
   const [contentTaskComment, setContentTaskComment] = useState()
-  const userName = `${comment?.createdBy?.lastName} ${comment?.createdBy?.firstName}`
   const dispatch = useDispatch()
   const [openTaskCommentEditDetail, setOpenTaskCommentEditDetail] =
     useState(false)
   const [open, setOpen] = useState(false)
+  const userName = `${comment?.createdBy?.lastName} ${comment?.createdBy?.firstName}`
   const setOpenDeteleConfirm = () => {
     setOpen(!open)
   }
@@ -62,54 +68,40 @@ const TaskCommentItemDetail = ({ comment }) => {
     dispatch(updateTaskCommentThunkAction(contentTaskComment, currentTask._id, comment._id))
     setOpenTaskCommentEditDetail(!openTaskCommentEditDetail)
   }
+  const checkUserIsOnline = () => {
+    if (!(comment?.createdBy.email)){
+      return true
+    }
+    if (comment?.createdBy.email === profile.email){
+      return true
+    }
+
+    return false
+  }
   const Commentcontent = () => {
     return (
-      <div className='comment-head'>
-        <Container className='comment-head-left'>
-          {openTaskCommentEditDetail ? (
-            <TextareaAutosize
-              defaultValue={comment.content}
-              onChange={onChangeTaskComment}
-              className='comment-head-input'
-            />
-          ) : (
-            <>
-              <Typography
-                component='span'
-                className='created-comment-user-name'
-              >
-                {profile.email === comment?.createdBy?.email ? (
-                  <span className='created-comment-name'>You</span>
-                ) : (
-                  <span className='created-comment-name'>
-                    {comment?.createdBy?.profilePhoto ? userName : 'You'}
-                  </span>
-                )}
-                <span style={{ fontSize: '14px' }}> commented</span>
-              </Typography>
-              <Typography component='span' className='created-comment-moment'>
-                {moment(comment.createdAt).format('MMM DD, hh:ss a')}
-              </Typography>
-              <Typography component='span' className='text-label-comment'>
-                {contentTaskComment || comment.content}
-              </Typography>
-            </>
-          )}
-        </Container>
-        {openTaskCommentEditDetail ? null : (
-          <Container className='comment-head-right'>
-            <ul className='menu-action-comment'>
+      <>
+      {openTaskCommentEditDetail ? TaskCommentEditDetail(handleCancel, saveEditTaskComment, comment, onChangeTaskComment) :
+        <div className='comment-head'>
+        <div className='comment-header-content'>
+          <Typography component='span' className='text-label-comment'>
+              <span className='text-label-comment-span'>{checkUserIsOnline() ? 'You' : userName}</span> commented
+          </Typography>
+          <Typography component='span' className='created-comment-moment'>
+            {moment(comment.createdAt).format('MMM DD, hh:ss a')}
+          </Typography>
+          <ul className='menu-action-comment'>
               <li
                 onClick={handleOpenTaskCommentEditDetail}
                 className='menu-action-comment-detail'
               >
-                <EditIcon className='taskComment-icon' /> <span>Edit</span>
+                <EditOutlinedIcon className='taskComment-icon' /> <span>Edit</span>
               </li>
               <li
                 onClick={setOpenDeteleConfirm}
                 className='menu-action-comment-detail'
               >
-                <DeleteIcon className='taskComment-icon' /> <span>Delete</span>
+                <DeleteOutlineOutlinedIcon className='taskComment-icon' /> <span>Delete</span>
               </li>
               <ConfirmDialog
                 warning='Are you sure you want to CONTINUE?'
@@ -120,9 +112,13 @@ const TaskCommentItemDetail = ({ comment }) => {
                 status='REMOVE'
               />
             </ul>
-          </Container>
-        )}
+        </div>
+        <div className='comment-content-show'>
+          {contentTaskComment || comment.content}
+        </div>
       </div>
+      }
+      </>
     )
   }
 
@@ -130,15 +126,12 @@ const TaskCommentItemDetail = ({ comment }) => {
     <Box className='task-comment-item'>
       <div className='comment-user'>
         <UserAvatar
-          user={comment?.createdBy?.profilePhoto ? comment?.createdBy : profile}
+          user={comment?.createdBy.email ? comment?.createdBy : profile}
           style='user-avatar-commented'
         />
       </div>
       <div className='comment-content'>
         {Commentcontent()}
-        {openTaskCommentEditDetail
-          ? TaskCommentEditDetail(handleCancel, saveEditTaskComment)
-          : null}
       </div>
     </Box>
   )

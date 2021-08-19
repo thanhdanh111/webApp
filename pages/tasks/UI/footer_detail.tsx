@@ -5,7 +5,6 @@ const FooterDetail: React.FC = () => {
   return(
     <Box display='flex' className='footer-detail-task' alignItems='center'>
       <AttachmentInFooter/>
-      <CommentFooter/>
     </Box>
   )
 }
