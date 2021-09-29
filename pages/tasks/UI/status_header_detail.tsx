@@ -110,11 +110,13 @@ const StatusDetail = () => {
           {renderStatuses()}
         </List>
       </Popper>
-      <AssignUser
-        usersAssigned={currentTask?.userIDs as User[]}
-        handleAssign={getAssignUser}
-        sizes='assigned-user-avatar'
-      />
+      <div onClick={(event) => event.stopPropagation()}>
+        <AssignUser
+          usersAssigned={currentTask?.userIDs as User[]}
+          handleAssign={getAssignUser}
+          sizes='assigned-user-avatar'
+        />
+      </div>
       <Box className='priority-detail' display='flex' alignItems='center'>
         <Priority
           getPriority={(priority) =>

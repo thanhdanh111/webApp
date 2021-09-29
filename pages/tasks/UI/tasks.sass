@@ -13,6 +13,10 @@
   flex-direction: column
   min-height: max-content
 
+  &:focus
+    outline: none
+    border: none
+
   .text-board
     white-space: nowrap
     overflow: hidden
@@ -420,7 +424,13 @@
         background-color: #50ac55
         color: #fff
 
+div
+  &[data-rbd-draggable-context-id='0']
+    &:focus
+      outline: none
+
 @media (min-width: 600px)
   .content-activity
     .MuiTab-root
       min-width: unset
+

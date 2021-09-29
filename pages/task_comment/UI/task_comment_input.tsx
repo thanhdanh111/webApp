@@ -56,6 +56,8 @@ const TaskCommentInputUI = () => {
     const nameUser = `${user?.userID?.lastName} ${user?.userID?.firstName}`
     setTagUSer([...tagUser, user])
     setTaskCommentInput(`${taskCommentInput}${nameUser} `)
+
+    return (<div>{nameUser}</div>)
   }
 
   return (

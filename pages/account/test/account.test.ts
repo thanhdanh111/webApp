@@ -47,6 +47,19 @@ describe('Pots Page', () => {
     expect(accountLinksTab).toMatchImageSnapshot()
     expect(image).toMatchImageSnapshot()
   })
+
+  test('Test update account page successfully after login', async () => {
+    await page.goto('http://localhost:5000/account')
+    await page.waitForSelector('.account-page')
+
+    await page.click('.phoneNumber')
+    await page.type('.phoneNumber', '000')
+    await page.click('.btn-primary')
+    await page.waitFor(5000)
+
+    const updateFail = await page.screenshot()
+    expect(updateFail).toMatchImageSnapshot()
+  })
 })
 
 afterAll(() => {

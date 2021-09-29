@@ -3,14 +3,14 @@ import { UserAccess } from 'helpers/type'
 
 interface InitProps {
   userAccess: UserAccess
-  handleAssign?: () => void
+  handleAssign?: (event) => void
   isAssigned?: boolean
 }
 const UserItem: React.FC<InitProps> = (props) => {
   const { userAccess, handleAssign, isAssigned }: InitProps = props
 
   return (
-    <MenuItem onClick={handleAssign} className='menu-item-users-popup'>
+    <MenuItem key={userAccess?._id} onClick={handleAssign} className='menu-item-users-popup'>
       <Box
         display='flex'
         alignItems='center'

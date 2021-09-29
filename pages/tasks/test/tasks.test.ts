@@ -35,10 +35,11 @@ describe('Home page', () => {
     await page.goto('http://localhost:5000/home')
     await page.waitForSelector('.board')
     await page.waitForSelector('.status')
+    await page.waitFor(5000)
 
-    const hasStatusOpen = await page.$$eval('.open', (e) => e.length)
-    const hasStatusChangeStatus = await page.$$eval('.task-status-content.change-status', (e) => e.length)
-
+    const hasStatusOpen = await page.$$eval('div > div.open', (e) => e.length)
+    const hasStatusChangeStatus = await page.$$eval('div.change-status', (e) => e.length)
+  
     if (!hasStatusOpen) {
         // add statuss open
       await page.waitForSelector('.add-task-text')
@@ -49,12 +50,11 @@ describe('Home page', () => {
       await page.type('.add-status-input', 'open')
 
       await page.click('.submit-create-status')
-      await page.click('.close-create-status')
+      await page.waitForResponse((response) => response.url().includes('/taskStatuses') && response.status() === 201)
     }
 
     if (!hasStatusChangeStatus){
       // add status change status
-
       await page.click('.add-task-text')
       await page.waitForSelector('.add-status-modal')
 
@@ -62,23 +62,18 @@ describe('Home page', () => {
       await page.type('.add-status-input', 'change status')
 
       await page.click('.submit-create-status')
-      await page.click('.close-create-status')
     }
 
-  // add task
-    await page.waitForSelector('.open .add-task')
+    // add task
+    await page.waitForSelector('div.open .add-task')
 
-    await page.click('.open .add-task')
+    await page.click('div.open .add-task')
     await page.waitForSelector('.task-add')
 
     const addTaskImage = await page.screenshot()
     expect(addTaskImage).toMatchImageSnapshot()
 
-    await page.waitForSelector('input[name=title]')
-
-    await page.click('input[name=title]')
-    await page.type('input[name=title]', 'feat/created task for task')
-
+    await page.keyboard.type('feat/created task for task')
     await page.click('.save-add')
     await page.waitForSelector('.open .task-name')
 
@@ -150,7 +145,7 @@ describe('Home page', () => {
     const changeStatus = await page.screenshot()
     expect(changeStatus).toMatchImageSnapshot()
 
-    await page.click('.item-status.item-change-status')
+    await page.click('div.item-status')
     const changeStatusSuccess = await page.screenshot()
     expect(changeStatusSuccess).toMatchImageSnapshot()
 
@@ -181,7 +176,7 @@ describe('Home page', () => {
     expect(closeDetailModalImage).toMatchImageSnapshot()
 
     // await page.waitForSelector('.change-status .task-item .delete-task')
-    await page.click('.change-status .delete-task')
+    await page.click('button.delete-task')
     await page.waitForSelector('.confirm-dialog--yes-btn')
 
     const deletedTaskImage = await page.screenshot()
@@ -202,7 +197,6 @@ describe('Home page', () => {
     await page.click('.delete-status-menu-item')
 
     // delete status 'change status'
-
     await page.waitForSelector('.change-status .action-status-btn')
     await page.click('.change-status .action-status-btn')
 
@@ -213,9 +207,8 @@ describe('Home page', () => {
     await page.waitFor(5000)
 
     const deleteStatusSuccessImg = await page.screenshot()
-    expect(deleteStatusSuccessImg).toMatchImageSnapshot()
+    expect(deleteStatusSuccessImg).toMatchImageSnapshot() 
   })
-
 })
 
 afterAll(() => {

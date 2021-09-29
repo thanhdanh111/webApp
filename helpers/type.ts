@@ -25,10 +25,11 @@ export interface User {
   gender?: string
   address?: string
   phoneNumber?: string
-  email: string
+  email?: string
   facebookID?: string
   googleID?: string
   status?: string
+  fullName?: string
 }
 
 export interface Company {

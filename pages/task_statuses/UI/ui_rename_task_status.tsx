@@ -30,10 +30,9 @@ const RenameStatusUI = (props: InitialProps) => {
 
   if (!renaming) {
     return (
-      <>
+      <div title={taskStatusID?.title}>
         <Typography className='name-status'>{taskStatusID?.title}</Typography>
-        <Typography className='quality-task'>{taskStatusID?.taskIDs?.length}</Typography>
-      </>
+      </div>
     )
   }
 
@@ -59,9 +58,10 @@ const RenameStatusUI = (props: InitialProps) => {
     <div className='rename-status'>
       <input
         type='text'
-        value={tempTitleStatus || taskStatusID?.title}
+        defaultValue={taskStatusID?.title}
         className='add-status-input'
         onChange={handleChangeTitle}
+        autoFocus
       />
       <div className='close-create-status' onClick={handleCloseChange}>
         <CloseIcon className='close-create-status-icon' />
